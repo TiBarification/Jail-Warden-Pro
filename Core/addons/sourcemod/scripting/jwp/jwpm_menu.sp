@@ -74,6 +74,8 @@ void Cmd_ShowMenu(int client, int pos = 0)
 			g_aSortedMenu.GetString(i, id, sizeof(id));
 			if (strcmp("resign", id, true) == 0)
 				menu.AddItem(id, "Покинуть пост");
+			else if (strcmp("zam", id, true) == 0)
+				menu.AddItem(id, "Выбрать ЗАМа");
 			else if (g_sMainMenuMap.GetArray(id, tmp, sizeof(tmp)))
 			{
 				bool result = true;
@@ -99,11 +101,32 @@ public int Cmd_ShowMenu_Handler(Menu menu, MenuAction action, int client, int sl
 	{
 		case MenuAction_Select:
 		{
-			char info[16];
+			char info[16], cName[MAX_NAME_LENGTH];
 			menu.GetItem(slot, info, sizeof(info));
 			
 			if (Flood(client)) return;
 			else if (strcmp("resign", info, true) == 0) RemoveCmd();
+			else if (strcmp("zam", info, true) == 0)
+			{
+				if (!g_iZamWarden)
+				{
+					Menu PList = new Menu(PList_Handler);
+					PList.SetTitle("Выберите ЗАМа:\n");
+					for (int i = 1; i <= MaxClients; ++i)
+					{
+						if (CheckClient(i) && i != g_iWarden && GetClientTeam(i) == CS_TEAM_CT)
+						{
+							FormatEx(cName, sizeof(cName), "%N", i);
+							IntToString(i, info, sizeof(info));
+							PList.AddItem(info, cName);
+						}
+					}
+					PList.ExitButton = true;
+					PList.Display(client, MENU_TIME_FOREVER);
+				}
+				else
+					PrintToChat(client, "%s Замом был назначен %N", PREFIX, g_iZamWarden);
+			}
 			else
 			{
 				bool result = false;
@@ -124,6 +147,25 @@ public int Cmd_ShowMenu_Handler(Menu menu, MenuAction action, int client, int sl
 		case MenuAction_End: menu.Close();
 	}
 }
+
+public int PList_Handler(Menu menu, MenuAction action, int client, int slot)
+{
+	switch (action)
+	{
+		case MenuAction_End: menu.Close();
+		case MenuAction_Cancel: Cmd_ShowMenu(client);
+		case MenuAction_Select:
+		{
+			char info[4];
+			menu.GetItem(slot, info, sizeof(info));
+			int target = StringToInt(info);
+			if (SetZam(target))
+				PrintToChatAll("%s %N назначил ЗАМа %N", PREFIX, client, g_iZamWarden);
+			Cmd_ShowMenu(client);
+		}
+	}
+}
+
 
 //ANTI-FLOOD
 bool Flood(int client)

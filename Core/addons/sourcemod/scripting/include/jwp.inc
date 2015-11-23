@@ -96,12 +96,20 @@ native void JWP_ShowMainMenu(int client);
 native bool JWP_IsWarden(int client);
 
 /**
+ *	Is player zam warden ?
+ *	-
+ *	@return true if warden zam, false otherwise
+*/
+native bool JWP_IsZamWarden(int client);
+
+/**
  *	Index of warden, if 0 then no warden
  *	-
  *	@return index of warden
 */
 
 native int JWP_GetWarden();
+
 /**
  *	Set client as warden or 0 to remove exist warden
  *	-
@@ -109,3 +117,16 @@ native int JWP_GetWarden();
 */
 native int JWP_SetWarden(int client);
 
+/**
+ *	Index of warden zam, if 0 then no zam
+ *	-
+ *	@return index of warden
+*/
+native int JWP_GetZamWarden();
+
+/**
+ *	Set client as zam of warden or 0 to remove exist zam
+ *	-
+ *	@noreturn
+*/
+native int JWP_SetWarden(int client);

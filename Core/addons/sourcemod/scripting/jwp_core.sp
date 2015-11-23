@@ -7,7 +7,7 @@
 #define PLUGIN_VERSION "0.0.2-dev"
 #define PREFIX "\x01[\x03КМД\x01]"
 
-int g_iWarden;
+int g_iWarden, g_iZamWarden;
 
 bool is_started;
 
@@ -75,12 +75,14 @@ public void Event_OnRoundStart(Event event, const char[] name, bool dontBroadcas
 	for (int i = 1; i <= MaxClients; i++)
 		g_bWasWarden[i] = false;
 	g_iWarden = 0;
+	g_iZamWarden = 0;
 }
 
 public void Event_OnPlayerDeath(Event event, const char[] name, bool dontBroadcast)
 {
 	int client = GetClientOfUserId(event.GetInt("userid"));
 	if (IsWarden(client)) g_iWarden = 0;
+	else if (IsZamWarden(client)) g_iZamWarden = 0;
 }
 
 public Action Command_BecomeWarden(int client, int args)
@@ -145,7 +147,7 @@ void OnReadyToStart()
 
 bool CheckClient(int client)
 {
-	if (client && !IsFakeClient(client) && IsClientInGame(client)) return true;
+	if (client && IsClientConnected(client) && !IsFakeClient(client) && IsClientInGame(client)) return true;
 	return false;
 }
 
@@ -160,7 +162,7 @@ bool BecomeCmd(int client)
 	{
 		g_iWarden = client;
 		Forward_OnWardenChosen(client);
-		// g_bWasWarden[client] = true;
+		g_bWasWarden[client] = true;
 		return true;
 	}
 	else
@@ -175,9 +177,31 @@ void RemoveCmd(bool themself = true)
 	if (g_iWarden) g_iWarden = 0;
 }
 
+void RemoveZam()
+{
+	if (g_iZamWarden) g_iZamWarden = 0;
+}
+
+bool SetZam(int client)
+{
+	if (CheckClient(client) && IsPlayerAlive(client) && client != g_iWarden)
+	{
+		g_iZamWarden = client;
+		// Give user ability to be warden if no warden
+		if (g_bWasWarden[client]) g_bWasWarden[client] = false;
+		return true;
+	}
+	return false;
+}
+
 bool IsWarden(int client)
 {
 	return (client == g_iWarden)
+}
+
+bool IsZamWarden(int client)
+{
+	return (client == g_iZamWarden)
 }
 
 bool IsStarted()
