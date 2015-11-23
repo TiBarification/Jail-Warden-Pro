@@ -1,0 +1,6 @@
+"warden_menu"
+{
+	"resign"
+	{
+	}
+}
