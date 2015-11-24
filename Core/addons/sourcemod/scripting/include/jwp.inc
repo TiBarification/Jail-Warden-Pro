@@ -21,6 +21,9 @@ forward int JWC_Started();
 // Alive ct became warden.
 forward int JWP_OnWardenChosen(int client);
 
+// Alive ct became zam of warden.
+forward int JWP_OnWardenZamChosen(int client);
+
 /**
  * Warden Resigned
  * If bool:himself true, then resigned by himself.
@@ -113,9 +116,9 @@ native int JWP_GetWarden();
 /**
  *	Set client as warden or 0 to remove exist warden
  *	-
- *	@noreturn
+ *	@return true if success, otherwise false
 */
-native int JWP_SetWarden(int client);
+native bool JWP_SetWarden(int client);
 
 /**
  *	Index of warden zam, if 0 then no zam
@@ -127,6 +130,13 @@ native int JWP_GetZamWarden();
 /**
  *	Set client as zam of warden or 0 to remove exist zam
  *	-
- *	@noreturn
+ *	@return true if success, otherwise false
 */
-native int JWP_SetWarden(int client);
+native bool JWP_SetZamWarden(int client);
+
+/**
+ *	Convert (r g b a) string to int array
+ *	-
+ *	@return true if success, otherwise false
+*/
+native bool JWP_ConvertToColor(char[] str, int[] array)

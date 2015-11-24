@@ -121,6 +121,8 @@ public int Cmd_ShowMenu_Handler(Menu menu, MenuAction action, int client, int sl
 							PList.AddItem(info, cName);
 						}
 					}
+					if (!PList.ItemCount)
+						PList.AddItem("", "Нет доступных КТ для ЗАМа", ITEMDRAW_DISABLED);
 					PList.ExitButton = true;
 					PList.Display(client, MENU_TIME_FOREVER);
 				}
@@ -159,8 +161,11 @@ public int PList_Handler(Menu menu, MenuAction action, int client, int slot)
 			char info[4];
 			menu.GetItem(slot, info, sizeof(info));
 			int target = StringToInt(info);
-			if (SetZam(target))
-				PrintToChatAll("%s %N назначил ЗАМа %N", PREFIX, client, g_iZamWarden);
+			if (!g_iZamWarden)
+			{
+				SetZam(target);
+				PrintToChatAll("%s %N назначил ЗАМа %N", PREFIX, client, target);
+			}
 			Cmd_ShowMenu(client);
 		}
 	}
