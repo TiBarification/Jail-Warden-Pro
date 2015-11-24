@@ -159,8 +159,11 @@ public int PList_Handler(Menu menu, MenuAction action, int client, int slot)
 			char info[4];
 			menu.GetItem(slot, info, sizeof(info));
 			int target = StringToInt(info);
-			if (SetZam(target))
-				PrintToChatAll("%s %N назначил ЗАМа %N", PREFIX, client, g_iZamWarden);
+			if (!g_iZamWarden)
+			{
+				SetZam(target);
+				PrintToChatAll("%s %N назначил ЗАМа %N", PREFIX, client, target);
+			}
 			Cmd_ShowMenu(client);
 		}
 	}

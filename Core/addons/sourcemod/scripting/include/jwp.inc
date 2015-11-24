@@ -19,14 +19,17 @@
 forward int JWC_Started();
 
 // Alive ct became warden.
-forward int JWP_OnWardenChosen(int client);
+forward void JWP_OnWardenChosen(int client);
+
+// Alive ct became zam of warden.
+forward void JWP_OnWardenZamChosen(int client);
 
 /**
  * Warden Resigned
  * If bool:himself true, then resigned by himself.
  * Else if he changed own team or disconnected.
 **/
-forward int JWP_OnWardenResigned(int client, bool himself);
+forward void JWP_OnWardenResigned(int client, bool himself);
 
 /**
  *	Checks whether the jail warden pro has been started
