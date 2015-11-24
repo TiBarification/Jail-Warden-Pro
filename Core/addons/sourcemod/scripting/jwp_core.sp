@@ -46,6 +46,8 @@ public void OnPluginStart()
 	RegConsoleCmd("sm_com", Command_BecomeWarden, "Warden menu");
 	RegConsoleCmd("sm_w", Command_BecomeWarden, "Warden menu");
 	
+	RegServerCmd("jwp_menu_reload", Command_JwpMenuReload, "Reload menu list");
+	
 	HookEvent("round_start", Event_OnRoundStart, EventHookMode_PostNoCopy);
 	HookEvent("round_freeze_end", Event_OnRoundFreezeEnd, EventHookMode_PostNoCopy);
 	HookEvent("round_end", Event_OnRoundEnd);
@@ -148,6 +150,14 @@ public Action Event_OnRoundEnd(Event event, const char[] name, bool dontBroadcas
 	}
 	
 	return Plugin_Continue;
+}
+
+public Action Command_JwpMenuReload(int args)
+{
+	g_aSortedMenu.Clear();
+	Load_SortingWardenMenu();
+	PrintToServer("[JWP] Menu has been succesfully reloaded");
+	return Plugin_Handled;
 }
 
 public Action Command_BecomeWarden(int client, int args)
@@ -265,7 +275,7 @@ bool SetZam(int client)
 	if (CheckClient(client) && IsPlayerAlive(client) && client != g_iWarden)
 	{
 		g_iZamWarden = client;
-		// Forward_OnWardenZamChosen(client);
+		Forward_OnWardenZamChosen(client);
 		// Give user ability to be warden if no warden
 		if (g_bWasWarden[client]) g_bWasWarden[client] = false;
 		return true;
@@ -290,12 +300,10 @@ bool IsStarted()
 
 int JWP_GetTeamClient(int team, bool alive)
 {
-	int i = 1;
-	while (i <= MaxClients)
+	for (int i = 1; i <= MaxClients; ++i)
 	{
 		if (IsClientInGame(i) && GetClientTeam(i) == team && (alive && IsPlayerAlive(i)))
 			return i;
-		i++;
 	}
 	return 0;
 }

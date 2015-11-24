@@ -22,6 +22,7 @@ public Plugin myinfo =
 public void OnPluginStart()
 {
 	Cvar_FF = FindConVar("mp_friendlyfire");
+	g_bTurnOn = Cvar_FF.BoolValue;
 	if (JWP_IsStarted()) JWC_Started();
 }
 
@@ -37,18 +38,15 @@ public void OnPluginEnd()
 
 public bool OnFuncDisplay(int client, char[] buffer, int maxlength)
 {
-	FormatEx(buffer, maxlength, "%s Огонь по своим", (!g_bTurnOn) ? "[ВКЛ]" : "[ВЫКЛ]");
+	FormatEx(buffer, maxlength, "[%s]Огонь по своим", (g_bTurnOn) ? "-" : "+");
 	return true;
 }
 
 public bool OnFuncSelect(int client)
 {
 	g_bTurnOn = !g_bTurnOn;
-	if (!g_bTurnOn)
-		Cvar_FF.SetBool(true, false, false);
-	else
-		Cvar_FF.SetBool(false, false, false);
-	PrintToChatAll("Дружественный огонь: \x02%s", (!g_bTurnOn) ? "ВКЛЮЧЕН":"ВЫКЛЮЧЕН");
+	Cvar_FF.SetBool(g_bTurnOn, false, false);
+	PrintToChatAll("Дружественный огонь: \x02%s", (g_bTurnOn) ? "ВКЛЮЧЕН":"ВЫКЛЮЧЕН");
 	JWP_ShowMainMenu(client);
 	return true;
 }

@@ -121,6 +121,8 @@ public int Cmd_ShowMenu_Handler(Menu menu, MenuAction action, int client, int sl
 							PList.AddItem(info, cName);
 						}
 					}
+					if (!PList.ItemCount)
+						PList.AddItem("", "Нет доступных КТ для ЗАМа", ITEMDRAW_DISABLED);
 					PList.ExitButton = true;
 					PList.Display(client, MENU_TIME_FOREVER);
 				}

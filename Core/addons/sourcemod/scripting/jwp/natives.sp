@@ -6,6 +6,7 @@ void Native_Initialization()
 	CreateNative("JWP_SetWarden", Native_SetWarden);
 	CreateNative("JWP_GetZamWarden", Native_GetZamWarden);
 	CreateNative("JWP_SetZamWarden", Native_SetZamWarden);
+	CreateNative("JWP_ConvertToColor", Native_ConvertToColor);
 }
 
 public int Native_IsWarden(Handle plugin, int numParams)
@@ -62,4 +63,27 @@ public int Native_SetZamWarden(Handle plugin, int numParams)
 		return true;
 	}
 	return false;
+}
+
+public int Native_ConvertToColor(Handle plugin, int numParams)
+{
+	int rgba_len; char buffer[4][12];
+	
+	GetNativeStringLength(1, rgba_len);
+	
+	if (rgba_len <= 0) return ThrowNativeError(SP_ERROR_NATIVE, "Length of your string incorrect: %d", rgba_len);
+	
+	char[] rgba = new char[rgba_len+1];
+	GetNativeString(1, rgba, rgba_len+1);
+	
+	int color[4];
+	GetNativeArray(2, color, sizeof(color));
+	
+	TrimString(rgba);
+	if (strlen(rgba) < 7) return 0;
+	if (ExplodeString(rgba, " ", buffer, sizeof(buffer), sizeof(buffer[]), false) < 4) return 0;
+	
+	for (int i = 0; i < 4; i++)
+		color[i] = StringToInt(buffer[i], 10);
+	return 1
 }

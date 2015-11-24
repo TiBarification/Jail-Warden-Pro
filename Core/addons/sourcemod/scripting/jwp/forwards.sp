@@ -5,7 +5,7 @@ Handle	g_fwdOnWardenChosen,
 void Forward_Initialization()
 {
 	g_fwdOnWardenChosen = CreateGlobalForward("JWP_OnWardenChosen", ET_Ignore, Param_Cell);
-	g_fwdOnWardenChosen = CreateGlobalForward("JWP_OnWardenZamChosen", ET_Ignore, Param_Cell);
+	g_fwdOnWardenZamChosen = CreateGlobalForward("JWP_OnWardenZamChosen", ET_Ignore, Param_Cell);
 	g_fwdOnWardenResigned = CreateGlobalForward("JWP_OnWardenResigned", ET_Ignore, Param_Cell, Param_Cell);
 }
 

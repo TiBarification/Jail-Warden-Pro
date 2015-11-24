@@ -10,7 +10,12 @@
 Handle g_BeamTimer;
 bool g_bLightActive;
 int g_iGlowEnt;
+int g_iColor[4] = {255, 0, 0, 255};
 float LastLaser[3] = {0.0, 0.0, 0.0};
+
+ConVar	g_CvarColor,
+		g_CvarLife,
+		g_CvarSize;
 /* char GlowLightPath[PLATFORM_MAX_PATH] = "sprites/animglow01.vmt",
 	GlowLightColorPick[] = "0 255 0",
 	GlowLightSizePick[] = "0.6"; */
@@ -27,6 +32,14 @@ public Plugin myinfo =
 public void OnPluginStart()
 {
 	// Add cvars jwp_glow_dir_life and jwp_glow_dir_size
+	g_CvarColor = CreateConVar("jwp_laser_beam_color", "255 0 0 255", "Цвет луча (rgba)", FCVAR_PLUGIN);
+	g_CvarLife = CreateConVar("jwp_laser_beam_life", "25.0", "Время жизни луча", FCVAR_PLUGIN, true, 1.0, true, 30.0);
+	g_CvarSize = CreateConVar("jwp_laser_beam_size", "0.6", "Ширина луча", FCVAR_PLUGIN, true, 0.1, true, 5.0);
+	
+	g_CvarColor.AddChangeHook(OnCvarChange);
+	g_CvarLife.AddChangeHook(OnCvarChange);
+	g_CvarSize.AddChangeHook(OnCvarChange);
+	
 	if (JWP_IsStarted()) JWC_Started();
 }
 
@@ -35,8 +48,23 @@ public void OnMapStart()
 	LastLaser[0] = 0.0;
 	LastLaser[1] = 0.0;
 	LastLaser[2] = 0.0;
-	// PrecacheModel(GlowLightPath);
 	g_iGlowEnt = PrecacheModel("materials/sprites/laserbeam.vmt", true);
+}
+
+public void OnConfigsExecuted()
+{
+	ConvertToColor(g_CvarColor);
+}
+
+public void OnCvarChange(ConVar cvar, const char[] oldValue, const char[] newValue)
+{
+	if (cvar == g_CvarColor)
+	{
+		g_CvarColor.SetString(newValue);
+		ConvertToColor(g_CvarColor);
+	}
+	else if (cvar == g_CvarLife) g_CvarLife.SetFloat(StringToFloat(newValue));
+	else if (cvar == g_CvarSize) g_CvarSize.SetFloat(StringToFloat(newValue));
 }
 
 public int JWC_Started()
@@ -52,7 +80,7 @@ public void OnPluginEnd()
 
 public bool OnFuncDisplay(int client, char[] buffer, int maxlength)
 {
-	FormatEx(buffer, maxlength, "[+/-] Направляющий свет");
+	FormatEx(buffer, maxlength, "[%s]Направляющий свет", (g_bLightActive) ? "-":"+");
 	return true;
 }
 
@@ -104,7 +132,7 @@ void TraceEye(int client, float pos[3])
 
 void Laser(float start[3], float end[3])
 {
-	TE_SetupBeamPoints(start, end, g_iGlowEnt, 0, 0, 0, 25.0, 2.0, 2.0, 10, 0.0, {255, 0, 0, 255}, 0);
+	TE_SetupBeamPoints(start, end, g_iGlowEnt, 0, 0, 0, g_CvarLife.FloatValue, g_CvarSize.FloatValue, g_CvarSize.FloatValue, 10, 0.0, g_iColor, 0);
 	TE_SendToAll();
 }
 
@@ -120,4 +148,16 @@ void KillBeamTimer()
 		KillTimer(g_BeamTimer);
 		g_BeamTimer = null;
 	}
+}
+
+void ConvertToColor(ConVar cvar)
+{
+	char rgba[36], buffer[4][12];
+	cvar.GetString(rgba, sizeof(rgba));
+	TrimString(rgba);
+	if (strlen(rgba) < 7) return;
+	if (ExplodeString(rgba, " ", buffer, sizeof(buffer), sizeof(buffer[]), false) < 4) return;
+	
+	for (int i = 0; i < 4; i++)
+		g_iColor[i] = StringToInt(buffer[i], 10);
 }
