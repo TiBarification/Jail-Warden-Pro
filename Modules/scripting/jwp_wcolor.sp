@@ -1,5 +1,4 @@
 #include <sourcemod>
-#include <shop>
 #include <jwp>
 
 #pragma newdecls required
@@ -21,8 +20,8 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
-	g_CvarWardenColor = CreateConVar("jwp_warden_rgba", "255 255 0 255", "Цвет скина который получит командир (rgba)", FCVAR_PLUGIN);
-	g_CvarWardenZamColor = CreateConVar("jwp_warden_zam_rgba", "0 255 255 255", "Цвет скина который получит зам командира (rgba)", FCVAR_PLUGIN);
+	g_CvarWardenColor = CreateConVar("jwp_warden_rgba", "255 255 0 255", "Р¦РІРµС‚ СЃРєРёРЅР° РєРѕС‚РѕСЂС‹Р№ РїРѕР»СѓС‡РёС‚ РєРѕРјР°РЅРґРёСЂ (rgba)", FCVAR_PLUGIN);
+	g_CvarWardenZamColor = CreateConVar("jwp_warden_zam_rgba", "0 255 255 255", "Р¦РІРµС‚ СЃРєРёРЅР° РєРѕС‚РѕСЂС‹Р№ РїРѕР»СѓС‡РёС‚ Р·Р°Рј РєРѕРјР°РЅРґРёСЂР° (rgba)", FCVAR_PLUGIN);
 	
 	g_CvarWardenColor.AddChangeHook(OnCvarChange);
 	g_CvarWardenZamColor.AddChangeHook(OnCvarChange);

@@ -94,12 +94,16 @@ native void JWP_ShowMainMenu(int client);
 /**
  *	Is player warden ?
  *	-
+ *	@param client			Client index
+ *	-
  *	@return true if warden, false otherwise
 */
 native bool JWP_IsWarden(int client);
 
 /**
  *	Is player zam warden ?
+ *	-
+ *	@param client			Client index
  *	-
  *	@return true if warden zam, false otherwise
 */
@@ -110,11 +114,12 @@ native bool JWP_IsZamWarden(int client);
  *	-
  *	@return index of warden
 */
-
 native int JWP_GetWarden();
 
 /**
  *	Set client as warden or 0 to remove exist warden
+ *	-
+ *	@param client			Client index
  *	-
  *	@return true if success, otherwise false
 */
@@ -123,12 +128,14 @@ native bool JWP_SetWarden(int client);
 /**
  *	Index of warden zam, if 0 then no zam
  *	-
- *	@return index of warden
+ *	@return client index of warden zam and 0 if no zam
 */
 native int JWP_GetZamWarden();
 
 /**
  *	Set client as zam of warden or 0 to remove exist zam
+ *	-
+ *	@param client			Client index
  *	-
  *	@return true if success, otherwise false
 */
@@ -137,6 +144,50 @@ native bool JWP_SetZamWarden(int client);
 /**
  *	Convert (r g b a) string to int array
  *	-
+ *	@param str				String which convert
+ *	@param array			Array of converted items 
+ *	-
  *	@return true if success, otherwise false
 */
 native bool JWP_ConvertToColor(char[] str, int[] array)
+
+/**
+ *	Print action as warden to all
+ *	-
+ *	@param msg				Message can be formatted via this function like Format
+ *	@param ...				Message arguments
+ *	-
+ *	@noreturn
+*/
+native void JWP_ActionMsgAll(const char[] msg, any ...);
+
+/**
+ *	Print action as warden to client
+ *	-
+ *	@param client			Client index
+ *	@param msg				Message can be formatted via this function like Format
+ *	@param ...				Message arguments
+ *	-
+ *	@noreturn
+*/
+native void JWP_ActionMsg(int client, const char[] msg, any ...);
+
+/**
+ *	Get random player from team
+ *	-
+ *	@param team				Number of team (0 - unassigned, 1 - spec, 2 - terr, 3 - counter-terr)
+ *	@param alive			Changing it to true can exclude dead players (with specs) from random system
+ *	-
+ *	@return random client index
+*/
+native int JWP_GetRandomTeamClient(int team, bool alive = false);
+
+/**
+ *	Function for anti-flood in menu
+ *	-
+ *	@param client			Client index
+ *	@param delay			Delay for flood protect in seconds. Recommended 1 or 2.
+ *	-
+ *	@return true if flooding, false otherwise
+*/
+native bool JWP_IsFlood(int client, int delay = 1);

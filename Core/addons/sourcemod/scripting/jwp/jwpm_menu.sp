@@ -54,6 +54,7 @@ public int Cmd_ShowMainMenu(Handle plugin, int numParams)
 	char error[64];
 	if (!CheckClient(client))
 		ThrowNativeError(SP_ERROR_NATIVE, error);
+	else if (!IsWarden(client)) return;
 	Cmd_ShowMenu(client);
 }
 
@@ -104,7 +105,7 @@ public int Cmd_ShowMenu_Handler(Menu menu, MenuAction action, int client, int sl
 			char info[16], cName[MAX_NAME_LENGTH];
 			menu.GetItem(slot, info, sizeof(info));
 			
-			if (Flood(client)) return;
+			if (Flood(client, 1)) return;
 			else if (strcmp("resign", info, true) == 0) RemoveCmd();
 			else if (strcmp("zam", info, true) == 0)
 			{
@@ -173,14 +174,14 @@ public int PList_Handler(Menu menu, MenuAction action, int client, int slot)
 
 
 //ANTI-FLOOD
-bool Flood(int client)
+bool Flood(int client, int delay)
 {
 	static int last_time[MAXPLAYERS+1]; static int curr_time; static int time;
 	curr_time = GetTime();
 	time = curr_time - last_time[client];
-	if (time < 1)
+	if (time < delay)
 	{
-		ReplyToCommand(client, "%s Не флуди командой, подожди %d с.", PREFIX, 1 - time);
+		ReplyToCommand(client, "%s Не флуди командой, подожди %d с.", PREFIX, delay - time);
 		return true;
 	}
 	last_time[client] = curr_time;
