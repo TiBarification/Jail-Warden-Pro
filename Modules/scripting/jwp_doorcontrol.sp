@@ -42,5 +42,6 @@ public bool OnFuncSelect(int client)
 {
 	SJD_ToggleDoors();
 	JWP_ShowMainMenu(client);
+	JWP_ActionMsgAll("%N открыл клетки джайлов");
 	return true;
 }

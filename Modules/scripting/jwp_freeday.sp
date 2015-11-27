@@ -49,7 +49,6 @@ public void OnConfigsExecuted()
 {
 	char buffer[48];
 	g_CvarRGBA.GetString(buffer, sizeof(buffer));
-	// ConvertToColor(g_CvarRGBA);
 	JWP_ConvertToColor(buffer, g_iColor);
 }
 
@@ -60,7 +59,6 @@ public void OnCvarChange(ConVar cvar, const char[] oldValue, const char[] newVal
 		char buffer[48];
 		g_CvarRGBA.SetString(newValue);
 		strcopy(buffer, sizeof(buffer), newValue);
-		// ConvertToColor(g_CvarRGBA);
 		JWP_ConvertToColor(buffer, g_iColor);
 	}
 }
@@ -145,7 +143,7 @@ public int PList_Callback(Menu menu, MenuAction action, int client, int slot)
 											(g_bHasFreeday[target]) ? g_iColor[1] : 255,
 											(g_bHasFreeday[target]) ? g_iColor[2] : 255,
 											(g_bHasFreeday[target]) ? g_iColor[3] : 255);
-				PrintToChatAll("\x01(КОМАНДИР) %N: %N %s право на фридей.", client, target, (g_bHasFreeday[target]) ? "\x03получил\x01" : "\x02потерял\x01")
+				JWP_ActionMsgAll("%N: %N %s право на фридей.", client, target, (g_bHasFreeday[target]) ? "\x03получил\x01" : "\x02потерял\x01")
 			}
 			menu.RemoveItem(slot);
 			

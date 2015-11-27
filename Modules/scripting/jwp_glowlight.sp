@@ -16,9 +16,6 @@ float LastLaser[3] = {0.0, 0.0, 0.0};
 ConVar	g_CvarColor,
 		g_CvarLife,
 		g_CvarSize;
-/* char GlowLightPath[PLATFORM_MAX_PATH] = "sprites/animglow01.vmt",
-	GlowLightColorPick[] = "0 255 0",
-	GlowLightSizePick[] = "0.6"; */
 
 public Plugin myinfo = 
 {
@@ -31,7 +28,6 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
-	// Add cvars jwp_glow_dir_life and jwp_glow_dir_size
 	g_CvarColor = CreateConVar("jwp_laser_beam_color", "255 0 0 255", "Цвет луча (rgba)", FCVAR_PLUGIN);
 	g_CvarLife = CreateConVar("jwp_laser_beam_life", "25.0", "Время жизни луча", FCVAR_PLUGIN, true, 1.0, true, 30.0);
 	g_CvarSize = CreateConVar("jwp_laser_beam_size", "0.6", "Ширина луча", FCVAR_PLUGIN, true, 0.1, true, 5.0);
@@ -53,15 +49,19 @@ public void OnMapStart()
 
 public void OnConfigsExecuted()
 {
-	ConvertToColor(g_CvarColor);
+	char buffer[48];
+	g_CvarColor.GetString(buffer, sizeof(buffer));
+	JWP_ConvertToColor(buffer, g_iColor);
 }
 
 public void OnCvarChange(ConVar cvar, const char[] oldValue, const char[] newValue)
 {
 	if (cvar == g_CvarColor)
 	{
+		char buffer[48];
 		g_CvarColor.SetString(newValue);
-		ConvertToColor(g_CvarColor);
+		strcopy(buffer, sizeof(buffer), newValue);
+		JWP_ConvertToColor(buffer, g_iColor);
 	}
 	else if (cvar == g_CvarLife) g_CvarLife.SetFloat(StringToFloat(newValue));
 	else if (cvar == g_CvarSize) g_CvarSize.SetFloat(StringToFloat(newValue));
@@ -148,16 +148,4 @@ void KillBeamTimer()
 		KillTimer(g_BeamTimer);
 		g_BeamTimer = null;
 	}
-}
-
-void ConvertToColor(ConVar cvar)
-{
-	char rgba[36], buffer[4][12];
-	cvar.GetString(rgba, sizeof(rgba));
-	TrimString(rgba);
-	if (strlen(rgba) < 7) return;
-	if (ExplodeString(rgba, " ", buffer, sizeof(buffer), sizeof(buffer[]), false) < 4) return;
-	
-	for (int i = 0; i < 4; i++)
-		g_iColor[i] = StringToInt(buffer[i], 10);
 }

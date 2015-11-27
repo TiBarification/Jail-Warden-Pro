@@ -4,7 +4,7 @@
 // Force new syntax
 #pragma newdecls required
 
-#define PLUGIN_VERSION "0.0.2-dev"
+#define PLUGIN_VERSION "0.0.3-dev"
 #define PREFIX "\x01[\x03КМД\x01]"
 
 int g_iWarden, g_iZamWarden;
@@ -112,8 +112,8 @@ public void Event_OnPlayerDeath(Event event, const char[] name, bool dontBroadca
 	int client = GetClientOfUserId(event.GetInt("userid"));
 	if (IsWarden(client))
 	{
-		g_iWarden = 0;
-		JWP_FindNewWarden();
+		PrintToChatAll("%s Командир %N сдох.", client);
+		RemoveCmd(false);
 	}
 	else if (IsZamWarden(client)) g_iZamWarden = 0;
 }
@@ -314,7 +314,7 @@ void JWP_FindNewWarden()
 		return;
 	else if (g_iZamWarden)
 	{
-		g_iWarden = g_iZamWarden;
+		BecomeCmd(g_iZamWarden);
 		g_iZamWarden = 0;
 	}
 	else if (g_CvarChooseMode.IntValue == 1 || g_iZamWarden > 0)

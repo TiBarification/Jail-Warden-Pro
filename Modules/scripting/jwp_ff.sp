@@ -1,5 +1,4 @@
 #include <sourcemod>
-#include <shop>
 #include <jwp>
 
 #pragma newdecls required
@@ -46,7 +45,7 @@ public bool OnFuncSelect(int client)
 {
 	g_bTurnOn = !g_bTurnOn;
 	Cvar_FF.SetBool(g_bTurnOn, false, false);
-	PrintToChatAll("Дружественный огонь: \x02%s", (g_bTurnOn) ? "ВКЛЮЧЕН":"ВЫКЛЮЧЕН");
+	JWP_ActionMsgAll("Дружественный огонь: \x02%s", (g_bTurnOn) ? "ВКЛЮЧЕН":"ВЫКЛЮЧЕН");
 	JWP_ShowMainMenu(client);
 	return true;
 }

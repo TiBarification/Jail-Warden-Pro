@@ -7,6 +7,10 @@ void Native_Initialization()
 	CreateNative("JWP_GetZamWarden", Native_GetZamWarden);
 	CreateNative("JWP_SetZamWarden", Native_SetZamWarden);
 	CreateNative("JWP_ConvertToColor", Native_ConvertToColor);
+	CreateNative("JWP_ActionMsgAll", Native_ActionMsgAll);
+	CreateNative("JWP_ActionMsg", Native_ActionMsg);
+	CreateNative("JWP_GetRandomTeamClient", Native_GetRandomTeamClient);
+	CreateNative("JWP_IsFlood", Native_IsFlood);
 }
 
 public int Native_IsWarden(Handle plugin, int numParams)
@@ -86,4 +90,34 @@ public int Native_ConvertToColor(Handle plugin, int numParams)
 	for (int i = 0; i < 4; i++)
 		color[i] = StringToInt(buffer[i], 10);
 	return 1
+}
+
+public int Native_ActionMsgAll(Handle plugin, int numParams)
+{
+	char buffer[192];
+	
+	FormatNativeString(0, 1, 2, sizeof(buffer), _, buffer);
+	PrintToChatAll("%s %s", PREFIX, buffer);
+}
+
+public int Native_ActionMsg(Handle plugin, int numParams)
+{
+	char buffer[192];
+	int client = GetNativeCell(1);
+	FormatNativeString(0, 2, 3, sizeof(buffer), _, buffer);
+	PrintToChat(client, "%s %s", PREFIX, buffer);
+}
+
+public int Native_GetRandomTeamClient(Handle plugin, int numParams)
+{
+	int team = GetNativeCell(1);
+	bool alive = GetNativeCell(2);
+	return JWP_GetRandomTeamClient(team, alive, true);
+}
+
+public int Native_IsFlood(Handle plugin, int numParams)
+{
+	int client = GetNativeCell(1);
+	int delay = GetNativeCell(2);
+	return Flood(client, delay);
 }
