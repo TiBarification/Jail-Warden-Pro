@@ -25,6 +25,7 @@ public void OnPluginStart()
 	
 	g_CvarWardenColor.AddChangeHook(OnCvarChange);
 	g_CvarWardenZamColor.AddChangeHook(OnCvarChange);
+	AutoExecConfig(true, "wcolor", "jwp");
 }
 
 public void OnConfigsExecuted()

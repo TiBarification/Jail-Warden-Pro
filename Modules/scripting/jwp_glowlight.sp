@@ -37,6 +37,7 @@ public void OnPluginStart()
 	g_CvarSize.AddChangeHook(OnCvarChange);
 	
 	if (JWP_IsStarted()) JWC_Started();
+	AutoExecConfig(true, ITEM, "jwp");
 }
 
 public void OnMapStart()
@@ -80,7 +81,7 @@ public void OnPluginEnd()
 
 public bool OnFuncDisplay(int client, char[] buffer, int maxlength)
 {
-	FormatEx(buffer, maxlength, "[%s]Направляющий свет", (g_bLightActive) ? "-":"+");
+	FormatEx(buffer, maxlength, "[%s]Направляющий свет", (g_bLightActive) ? '-' : '+');
 	return true;
 }
 
@@ -89,6 +90,7 @@ public bool OnFuncSelect(int client)
 	g_bLightActive = !g_bLightActive;
 	if (g_bLightActive)
 		CreateGlowLight(client);
+	JWP_RehashMenu();
 	JWP_ShowMainMenu(client);
 	return true;
 }

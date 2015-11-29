@@ -11,7 +11,6 @@
 
 ConVar g_CvarRGBA;
 
-bool g_bHasFreeday[MAXPLAYERS+1] = {false, ...};
 int g_iColor[4] = {0, 255, 0, 255};
 
 public Plugin myinfo = 
@@ -31,12 +30,30 @@ public void OnPluginStart()
 	if (JWP_IsStarted()) JWC_Started();
 	
 	HookEvent("round_start", Event_OnRoundStart, EventHookMode_PostNoCopy);
+	HookEvent("player_death", Event_OnPlayerDeath);
+	HookEvent("player_team", Event_OnPlayerTeam);
+	
+	AutoExecConfig(true, ITEM, "jwp");
 }
 
 public void Event_OnRoundStart(Event event, const char[] name, bool dontBroadcast)
 {
 	for (int i = 1; i <= MaxClients; ++i)
-		g_bHasFreeday[i] = false;
+		JWP_PrisonerSetFreeday(i, false);
+}
+
+public void Event_OnPlayerDeath(Event event, const char[] name, bool dontBroadcast)
+{
+	int client = GetClientOfUserId(event.GetInt("userid"));
+	if (JWP_PrisonerHasFreeday(client))
+		JWP_PrisonerSetFreeday(client, false);
+}
+
+public void Event_OnPlayerTeam(Event event, const char[] name, bool dontBroadcast)
+{
+	int client = GetClientOfUserId(event.GetInt("userid"));
+	if (JWP_PrisonerHasFreeday(client))
+		JWP_PrisonerSetFreeday(client, false);
 }
 
 public int JWC_Started()
@@ -69,6 +86,11 @@ public void OnPluginEnd()
 	JWP_RemoveFromMainMenu(FDTAKE, OnFuncFDTakeDisplay, OnFuncFDTakeSelect);
 }
 
+public void OnClientDisconnect_Post(int client)
+{
+	if (JWP_PrisonerHasFreeday(client)) JWP_PrisonerSetFreeday(client, false);
+}
+
 public bool OnFuncFDGiveDisplay(int client, char[] buffer, int maxlength)
 {
 	FormatEx(buffer, maxlength, "Дать фридей");
@@ -95,7 +117,7 @@ public bool OnFuncFDTakeSelect(int client)
 
 void ShowFreedayMenu(int client, bool fd_players)
 {
-	char id[4], name[36];
+	char id[4], name[MAX_NAME_LENGTH];
 	Menu PList = new Menu(PList_Callback);
 	if (fd_players)
 		PList.SetTitle("У кого забрать фридей: \n");
@@ -105,13 +127,14 @@ void ShowFreedayMenu(int client, bool fd_players)
 	{
 		if (CheckClient(i))
 		{
-			Format(name, sizeof(name), "%N", i);
-			if (fd_players && g_bHasFreeday[i])
+			GetClientName(i, name, sizeof(name))
+			// Format(name, sizeof(name), "%N", i);
+			if (fd_players && JWP_PrisonerHasFreeday(i))
 			{
 				IntToString(i, id, sizeof(id));
 				PList.AddItem(id, name);
 			}
-			else if (!fd_players && !g_bHasFreeday[i])
+			else if (!fd_players && !JWP_PrisonerHasFreeday(i))
 			{
 				IntToString(i, id, sizeof(id));
 				PList.AddItem(id, name);
@@ -134,26 +157,28 @@ public int PList_Callback(Menu menu, MenuAction action, int client, int slot)
 			char info[4];
 			menu.GetItem(slot, info, sizeof(info));
 			int target = StringToInt(info, sizeof(info));
-			
+			bool state = JWP_PrisonerHasFreeday(target);
+			bool b = state;
 			if (target && CheckClient(target))
 			{
-				g_bHasFreeday[target] = !g_bHasFreeday[target];
+				state = !state;
+				JWP_PrisonerSetFreeday(target, state);
+				
 				SetEntityRenderMode(target, RENDER_TRANSCOLOR);
-				SetEntityRenderColor(target, (g_bHasFreeday[target]) ? g_iColor[0] : 255,
-											(g_bHasFreeday[target]) ? g_iColor[1] : 255,
-											(g_bHasFreeday[target]) ? g_iColor[2] : 255,
-											(g_bHasFreeday[target]) ? g_iColor[3] : 255);
-				JWP_ActionMsgAll("%N: %N %s право на фридей.", client, target, (g_bHasFreeday[target]) ? "\x03получил\x01" : "\x02потерял\x01")
+				SetEntityRenderColor(target, (state) ? g_iColor[0] : 255,
+											(state) ? g_iColor[1] : 255,
+											(state) ? g_iColor[2] : 255,
+											(state) ? g_iColor[3] : 255);
+				JWP_ActionMsgAll("%N %s фридей %N.", client, (state) ? "\x03дал\x01" : "\x02забрал\x01", target);
 			}
 			menu.RemoveItem(slot);
 			
-			ShowFreedayMenu(client, g_bHasFreeday[target])
+			ShowFreedayMenu(client, b);
 		}
 	}
 }
 
 bool CheckClient(int client)
 {
-	if (IsClientInGame(client) && GetClientTeam(client) == CS_TEAM_T && IsPlayerAlive(client)) return true;
-	return false;
+	return (IsClientInGame(client) && !IsFakeClient(client) && GetClientTeam(client) == CS_TEAM_T && IsPlayerAlive(client));
 }

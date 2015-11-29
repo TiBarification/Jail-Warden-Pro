@@ -25,6 +25,7 @@ public void OnPluginStart()
 	
 	g_CvarWardenSkin.AddChangeHook(OnCvarChange);
 	g_CvarWardenZamSkin.AddChangeHook(OnCvarChange);
+	AutoExecConfig(true, ITEM, "jwp");
 }
 
 public void OnCvarChange(ConVar cvar, const char[] oldValue, const char[] newValue)
