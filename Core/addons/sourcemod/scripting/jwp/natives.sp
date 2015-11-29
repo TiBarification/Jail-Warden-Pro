@@ -11,6 +11,8 @@ void Native_Initialization()
 	CreateNative("JWP_ActionMsg", Native_ActionMsg);
 	CreateNative("JWP_GetRandomTeamClient", Native_GetRandomTeamClient);
 	CreateNative("JWP_IsFlood", Native_IsFlood);
+	CreateNative("JWP_PrisonerHasFreeday", Native_PrisonerHasFreeday);
+	CreateNative("JWP_PrisonerSetFreeday", Native_PrisonerSetFreeday);
 }
 
 public int Native_IsWarden(Handle plugin, int numParams)
@@ -111,7 +113,7 @@ public int Native_ActionMsg(Handle plugin, int numParams)
 public int Native_GetRandomTeamClient(Handle plugin, int numParams)
 {
 	int team = GetNativeCell(1);
-	bool alive = GetNativeCell(2);
+	bool alive = view_as<bool>GetNativeCell(2);
 	return JWP_GetRandomTeamClient(team, alive, true);
 }
 
@@ -120,4 +122,17 @@ public int Native_IsFlood(Handle plugin, int numParams)
 	int client = GetNativeCell(1);
 	int delay = GetNativeCell(2);
 	return Flood(client, delay);
+}
+
+public int Native_PrisonerHasFreeday(Handle plugin, int numParams)
+{
+	int client = GetNativeCell(1);
+	return PrisonerHasFreeday(client);
+}
+
+public int Native_PrisonerSetFreeday(Handle plugin, int numParams)
+{
+	int client = GetNativeCell(1);
+	bool state = view_as<bool>GetNativeCell(2);
+	return PrisonerSetFreeday(client, state);
 }

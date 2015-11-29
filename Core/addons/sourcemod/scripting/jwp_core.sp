@@ -4,16 +4,18 @@
 // Force new syntax
 #pragma newdecls required
 
-#define PLUGIN_VERSION "0.0.3-dev"
-#define PREFIX "\x01[\x03КМД\x01]"
+#define PLUGIN_VERSION "0.0.4-dev"
+#define PREFIX "\x01[\x03КОМАНДИР\x01]"
 
 int g_iWarden, g_iZamWarden;
+bool g_bHasFreeday[MAXPLAYERS+1];
 
 bool is_started;
 bool g_bRoundEnd;
 
 bool g_bWasWarden[MAXPLAYERS+1];
 ArrayList g_aSortedMenu;
+ArrayList g_aFlags;
 
 ConVar	g_CvarChooseMode,
 		g_CvarRandomWait,
@@ -26,6 +28,7 @@ Handle g_hChooseTimer;
 #include "jwp/natives.sp"
 #include "jwp/kv_reader.sp"
 #include "jwp/voting.sp"
+#include "jwp/dev.sp"
 
 public Plugin myinfo = 
 {
@@ -52,12 +55,14 @@ public void OnPluginStart()
 	HookEvent("round_freeze_end", Event_OnRoundFreezeEnd, EventHookMode_PostNoCopy);
 	HookEvent("round_end", Event_OnRoundEnd);
 	HookEvent("player_death", Event_OnPlayerDeath);
+	HookEvent("player_team", Event_OnPlayerTeam);
 	
 	g_CvarChooseMode.AddChangeHook(OnCvarChange);
 	g_CvarRandomWait.AddChangeHook(OnCvarChange);
 	g_CvarVoteTime.AddChangeHook(OnCvarChange);
 	
-	g_aSortedMenu = new ArrayList(16);
+	g_aSortedMenu = new ArrayList(66);
+	g_aFlags = new ArrayList(1);
 	Load_SortingWardenMenu();
 	
 	AutoExecConfig(true, "jwp", "jwp");
@@ -93,9 +98,12 @@ public void OnConfigsExecuted()
 	OnReadyToStart();
 }
 
-public void OnClientDisconnect(int client)
+public void OnClientDisconnect_Post(int client)
 {
-	if (IsWarden(client)) g_iWarden = 0;
+	if (IsWarden(client))
+		RemoveCmd(false);
+	else if (g_bIsDeveloper[client]) g_bIsDeveloper[client] = false;
+	g_iVoteResult[client] = 0;
 }
 
 public void Event_OnRoundStart(Event event, const char[] name, bool dontBroadcast)
@@ -112,9 +120,17 @@ public void Event_OnPlayerDeath(Event event, const char[] name, bool dontBroadca
 	int client = GetClientOfUserId(event.GetInt("userid"));
 	if (IsWarden(client))
 	{
-		PrintToChatAll("%s Командир %N сдох.", client);
+		PrintToChatAll("%s Командир %N сдох.", PREFIX, client);
 		RemoveCmd(false);
 	}
+	else if (IsZamWarden(client)) g_iZamWarden = 0;
+}
+
+public void Event_OnPlayerTeam(Event event, const char[] name, bool dontBroadcast)
+{
+	int client = GetClientOfUserId(event.GetInt("userid"));
+	if (IsWarden(client))
+		RemoveCmd(false);
 	else if (IsZamWarden(client)) g_iZamWarden = 0;
 }
 
@@ -155,6 +171,7 @@ public Action Event_OnRoundEnd(Event event, const char[] name, bool dontBroadcas
 public Action Command_JwpMenuReload(int args)
 {
 	g_aSortedMenu.Clear();
+	g_aFlags.Clear();
 	Load_SortingWardenMenu();
 	PrintToServer("[JWP] Menu has been succesfully reloaded");
 	return Plugin_Handled;
@@ -291,6 +308,19 @@ bool IsWarden(int client)
 bool IsZamWarden(int client)
 {
 	return (client == g_iZamWarden)
+}
+
+bool PrisonerHasFreeday(int client)
+{
+	if (!CheckClient(client)) return false;
+	return g_bHasFreeday[client];
+}
+
+bool PrisonerSetFreeday(int client, bool state = true)
+{
+	if (!CheckClient(client)) return false;
+	g_bHasFreeday[client] = state;
+	return true;
 }
 
 bool IsStarted()

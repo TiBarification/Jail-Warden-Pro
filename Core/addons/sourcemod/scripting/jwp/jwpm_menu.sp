@@ -8,6 +8,7 @@
 
 // ArrayList g_hMainMenuArray;
 StringMap g_sMainMenuMap;
+int g_iLastMenuItemPos;
 
 void Cmd_MenuCreateNatives()
 {
@@ -55,7 +56,7 @@ public int Cmd_ShowMainMenu(Handle plugin, int numParams)
 	if (!CheckClient(client))
 		ThrowNativeError(SP_ERROR_NATIVE, error);
 	else if (!IsWarden(client)) return;
-	Cmd_ShowMenu(client);
+	Cmd_ShowMenu(client, g_iLastMenuItemPos);
 }
 
 void Cmd_ShowMenu(int client, int pos = 0)
@@ -65,30 +66,40 @@ void Cmd_ShowMenu(int client, int pos = 0)
 	menu.ExitButton = true;
 	int size = g_aSortedMenu.Length;
 	
-	if (size)
+	if (!size)
+		menu.AddItem("", "Меню не имеет элементов", ITEMDRAW_DISABLED);
+	else
 	{
 		
 		any tmp[3]; char id[16], display[64];
+		int bitflag;
 		display[0] = '\0';
 		for (int i = 0; i < size; i++)
 		{
 			g_aSortedMenu.GetString(i, id, sizeof(id));
+			bitflag = g_aFlags.Get(i);
+			
+			
+			/*----------------------*/
 			if (strcmp("resign", id, true) == 0)
-				menu.AddItem(id, "Покинуть пост");
-			else if (strcmp("zam", id, true) == 0)
-				menu.AddItem(id, "Выбрать ЗАМа");
-			else if (g_sMainMenuMap.GetArray(id, tmp, sizeof(tmp)))
+					menu.AddItem(id, "Покинуть пост");
+			if (JWPM_HasFlag(client, bitflag))
 			{
-				bool result = true;
-				
-				Call_StartFunction(tmp[CMDMENU_PLUGIN], tmp[CMDMENU_DISPLAY]);
-				Call_PushCell(client);
-				Call_PushStringEx(display, sizeof(display), SM_PARAM_STRING_UTF8|SM_PARAM_STRING_COPY, SM_PARAM_COPYBACK);
-				Call_PushCell(sizeof(display))
-				Call_Finish(result);
-				
-				if (!display[0] || !result) continue;
-				menu.AddItem(id, display);
+				if (strcmp("zam", id, true) == 0)
+					menu.AddItem(id, "Выбрать ЗАМа");
+				else if (g_sMainMenuMap.GetArray(id, tmp, sizeof(tmp)))
+				{
+					bool result = true;
+					
+					Call_StartFunction(tmp[CMDMENU_PLUGIN], tmp[CMDMENU_DISPLAY]);
+					Call_PushCell(client);
+					Call_PushStringEx(display, sizeof(display), SM_PARAM_STRING_UTF8|SM_PARAM_STRING_COPY, SM_PARAM_COPYBACK);
+					Call_PushCell(sizeof(display))
+					Call_Finish(result);
+					
+					if (!display[0] || !result) continue;
+					menu.AddItem(id, display);
+				}
 			}
 		}
 	}
@@ -104,9 +115,11 @@ public int Cmd_ShowMenu_Handler(Menu menu, MenuAction action, int client, int sl
 		{
 			char info[16], cName[MAX_NAME_LENGTH];
 			menu.GetItem(slot, info, sizeof(info));
+			// Get and save last position of element
+			g_iLastMenuItemPos = menu.Selection;
 			
-			if (Flood(client, 1)) return;
-			else if (strcmp("resign", info, true) == 0) RemoveCmd();
+			if (Flood(client, 1)) return;		
+			else if (strcmp("resign", info, true) == 0) Resign_Confirm(client);
 			else if (strcmp("zam", info, true) == 0)
 			{
 				if (!g_iZamWarden)
@@ -172,6 +185,42 @@ public int PList_Handler(Menu menu, MenuAction action, int client, int slot)
 	}
 }
 
+void Resign_Confirm(int client)
+{
+	if (CheckClient(client) && IsWarden(client))
+	{
+		Menu ConfirmMenu = new Menu(ConfirmMenu_Callback);
+		ConfirmMenu.SetTitle("Вы действительно хотите покинуть пост командира?");
+		ConfirmMenu.ExitButton = false;
+		ConfirmMenu.ExitBackButton = false;
+		ConfirmMenu.AddItem("y", "ДА");
+		ConfirmMenu.AddItem("n", "НЕТ");
+		ConfirmMenu.Display(client, MENU_TIME_FOREVER);
+	}
+}
+
+public int ConfirmMenu_Callback(Menu menu, MenuAction action, int client, int slot)
+{
+	switch (action)
+	{
+		case MenuAction_End: menu.Close();
+		case MenuAction_Select:
+		{
+			if (IsWarden(client))
+			{
+				if (!slot) RemoveCmd(true);
+				else Cmd_ShowMenu(client);
+			}
+		}
+	}
+}
+
+bool JWPM_HasFlag(int client, int bitflag)
+{
+	if (!bitflag) return true;
+	else if (bitflag != 0 && (GetUserFlagBits(client) & bitflag) && GetUserAdmin(client) != INVALID_ADMIN_ID) return true;
+	return false;
+}
 
 //ANTI-FLOOD
 bool Flood(int client, int delay)

@@ -22,7 +22,15 @@ public void OnPluginStart()
 {
 	Cvar_FF = FindConVar("mp_friendlyfire");
 	g_bTurnOn = Cvar_FF.BoolValue;
+	
+	HookEvent("round_start", Event_OnRoundStart, EventHookMode_PostNoCopy);
 	if (JWP_IsStarted()) JWC_Started();
+}
+
+public void Event_OnRoundStart(Event event, const char[] name, bool dontBroadcast)
+{
+	Cvar_FF.RestoreDefault(false, false);
+	g_bNoblock = false;
 }
 
 public int JWC_Started()

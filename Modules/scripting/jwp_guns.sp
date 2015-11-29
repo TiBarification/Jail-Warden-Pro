@@ -10,6 +10,7 @@
 char cPath[18] = "cfg/jwp/guns.txt";
 
 Menu g_WeaponMenu;
+StringMap g_Slot;
 
 public Plugin myinfo = 
 {
@@ -22,6 +23,7 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
+	g_Slot = new StringMap();
 	if (JWP_IsStarted()) JWC_Started();
 }
 
@@ -68,6 +70,10 @@ void LoadGunsFile()
 			kv.GetString("text", text, sizeof(text), buffer);
 			Format(buffer, sizeof(buffer), "weapon_%s", buffer);
 			g_WeaponMenu.AddItem(buffer, text);
+			
+			// Get slot for item
+			int slot = kv.GetNum("slot", 0);
+			g_Slot.SetValue(buffer, slot);
 		}
 	} while (kv.GotoNextKey(true));
 	
@@ -81,13 +87,15 @@ public int g_WeaponMenu_Callback(Menu menu, MenuAction action, int client, int s
 		case MenuAction_Cancel: JWP_ShowMainMenu(client);
 		case MenuAction_Select:
 		{
-			if (JWP_IsFlood(client, 3)) return;
-			char info[32];
+			if (JWP_IsFlood(client, 2)) return;
+			int islot; char info[32];
 			menu.GetItem(slot, info, sizeof(info));
+			g_Slot.GetValue(info, islot);
 			
-			int weapon = GetPlayerWeaponSlot(client, 0);
+			int weapon = GetPlayerWeaponSlot(client, islot);
 			if (IsValidEdict(weapon))
 				AcceptEntityInput(weapon, "Kill");
+			
 			GivePlayerItem(client, info);
 			
 			g_WeaponMenu.Display(client, MENU_TIME_FOREVER);

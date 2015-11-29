@@ -117,7 +117,7 @@ void CreateOrderMsg(int client, const char[] order)
 	char text[250]; /* tag[150], name[MAX_NAME_LENGTH]; */
 	strcopy(text, sizeof(text), order);
 	ReplaceString(text, sizeof(text), "+", "\n", true);
-	PrintToChatAll("\x01(КОМАНДИР) %N: %s", client, text);
+	PrintToChatAll("\x01(\x03КОМАНДИР\x01) \x03%N\x01: %s", client, text);
 	
 	// И покажем террористам приказ в меню
 	Format(text, sizeof(text), "(КОМАНДИР) %N: %s\n \n", client, text);
