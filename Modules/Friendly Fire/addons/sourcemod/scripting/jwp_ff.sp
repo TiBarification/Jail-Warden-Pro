@@ -30,7 +30,7 @@ public void OnPluginStart()
 public void Event_OnRoundStart(Event event, const char[] name, bool dontBroadcast)
 {
 	Cvar_FF.RestoreDefault(false, false);
-	g_bNoblock = false;
+	g_bTurnOn = false;
 }
 
 public int JWC_Started()
@@ -45,7 +45,7 @@ public void OnPluginEnd()
 
 public bool OnFuncDisplay(int client, char[] buffer, int maxlength)
 {
-	FormatEx(buffer, maxlength, "[%s]Огонь по своим", (g_bTurnOn) ? "-" : "+");
+	FormatEx(buffer, maxlength, "[%s]Огонь по своим", (g_bTurnOn) ? '-' : '+');
 	return true;
 }
 
@@ -54,6 +54,7 @@ public bool OnFuncSelect(int client)
 	g_bTurnOn = !g_bTurnOn;
 	Cvar_FF.SetBool(g_bTurnOn, false, false);
 	JWP_ActionMsgAll("Дружественный огонь: \x02%s", (g_bTurnOn) ? "ВКЛЮЧЕН":"ВЫКЛЮЧЕН");
+	JWP_RehashMenu();
 	JWP_ShowMainMenu(client);
 	return true;
 }

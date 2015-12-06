@@ -13,6 +13,10 @@ void Native_Initialization()
 	CreateNative("JWP_IsFlood", Native_IsFlood);
 	CreateNative("JWP_PrisonerHasFreeday", Native_PrisonerHasFreeday);
 	CreateNative("JWP_PrisonerSetFreeday", Native_PrisonerSetFreeday);
+	CreateNative("JWP_IsPrisonerIsolated", Native_IsPrisonerIsolated);
+	CreateNative("JWP_PrisonerIsolated", Native_PrisonerIsolated);
+	CreateNative("JWP_RehashMenu", Native_RehashMenu);
+	CreateNative("JWP_GetMenuItemCount", Native_JWPGetMenuItemCount);
 }
 
 public int Native_IsWarden(Handle plugin, int numParams)
@@ -96,18 +100,26 @@ public int Native_ConvertToColor(Handle plugin, int numParams)
 
 public int Native_ActionMsgAll(Handle plugin, int numParams)
 {
-	char buffer[192];
+	char buffer[192], prefix[52];
 	
 	FormatNativeString(0, 1, 2, sizeof(buffer), _, buffer);
-	PrintToChatAll("%s %s", PREFIX, buffer);
+	FormatEx(prefix, sizeof(prefix), "%t", "Core_Prefix");
+	if (g_bIsCSGO)
+		CGOPrintToChatAll("%s %s", prefix, buffer);
+	else
+		CPrintToChatAll("%s %s", prefix, buffer);
 }
 
 public int Native_ActionMsg(Handle plugin, int numParams)
 {
-	char buffer[192];
+	char buffer[192], prefix[52];
 	int client = GetNativeCell(1);
 	FormatNativeString(0, 2, 3, sizeof(buffer), _, buffer);
-	PrintToChat(client, "%s %s", PREFIX, buffer);
+	FormatEx(prefix, sizeof(prefix), "%t", "Core_Prefix");
+	if (g_bIsCSGO)
+		CGOPrintToChat(client, "%s %s", prefix, buffer);
+	else
+		CPrintToChat(client, "%s %s", prefix, buffer);
 }
 
 public int Native_GetRandomTeamClient(Handle plugin, int numParams)
@@ -135,4 +147,28 @@ public int Native_PrisonerSetFreeday(Handle plugin, int numParams)
 	int client = GetNativeCell(1);
 	bool state = view_as<bool>GetNativeCell(2);
 	return PrisonerSetFreeday(client, state);
+}
+
+public int Native_IsPrisonerIsolated(Handle plugin, int numParams)
+{
+	int client = GetNativeCell(1);
+	return IsPrisonerIsolated(client);
+}
+
+public int Native_PrisonerIsolated(Handle plugin, int numParams)
+{
+	int client = GetNativeCell(1);
+	bool state = view_as<bool>GetNativeCell(2);
+	return PrisonerIsolated(client, state);
+}
+
+public int Native_RehashMenu(Handle plugin, int numParams)
+{
+	RehashMenu();
+	return 0;
+}
+
+public int Native_JWPGetMenuItemCount(Handle plugin, int numParams)
+{
+	return g_aSortedMenu.Length;
 }

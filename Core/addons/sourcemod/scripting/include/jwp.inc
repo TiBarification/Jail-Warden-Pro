@@ -149,7 +149,7 @@ native bool JWP_SetZamWarden(int client);
  *	-
  *	@return true if success, otherwise false
 */
-native bool JWP_ConvertToColor(char[] str, int[] array)
+native bool JWP_ConvertToColor(char[] str, int[] array);
 
 /**
  *	Print action as warden to all
@@ -210,3 +210,40 @@ native bool JWP_PrisonerHasFreeday(int client);
  *	@return true if player state has been successfully changed, false otherwise
 */
 native bool JWP_PrisonerSetFreeday(int client, bool state = true);
+
+/**
+ *	Function to check if player in isolator
+ *	-
+ *	@param client			Client index
+ *	-
+ *	@return true if player in isolator, false otherwise
+*/
+native bool JWP_IsPrisonerIsolated(int client);
+
+/**
+ *	Function to set player in isolator
+ *	-
+ *	@param client			Client index
+ *	@param state			True to push into isolator, or false to bring him back
+ *	-
+ *	@return true if player state has been successfully changed, false otherwise
+*/
+native bool JWP_PrisonerIsolated(int client, bool state = true);
+
+/**
+ * Function to rehash menu (simple update menu items)
+ * -
+ * @noparams
+ * -
+ * @noreturn
+*/
+native void JWP_RehashMenu();
+
+/**
+ * Function to get menu item count
+ * -
+ * @noparams
+ * -
+ * @return item count of menu
+*/
+native int JWP_GetMenuItemCount();

@@ -81,7 +81,7 @@ public int g_VoteMenu_Callback(Menu menu, MenuAction action, int client, int slo
 				{
 					if (menu.RemoveItem(slot) && menu.ItemCount > 0)
 					{
-						PrintCenterText(client, "Игрок не найден. Выберите другого.");
+						PrintCenterText(client, "%t", "vote_player_not_found");
 						g_VoteMenu.Display(client, MENU_TIME_FOREVER);
 					}
 					else
@@ -110,8 +110,16 @@ public Action g_VoteTimer_Callback(Handle timer)
 {
 	if (g_iWarden || !JWP_GetTeamClient(CS_TEAM_T, true) || !JWP_GetTeamClient(CS_TEAM_CT, true))
 	{
-		PrintToChatAll("\x04Голосование за выбор командира остановлено.");
-		PrintHintTextToAll("ГОЛОСОВАНИЕ ОСТАНОВЛЕНО");
+		if (g_bIsCSGO)
+		{
+			CGOPrintToChatAll("%t", "warden_vote_chat_stopped");
+			CGOPrintHintTextToAll("%t", "warden_vote_hint_stopped");
+		}
+		else
+		{
+			CPrintToChatAll("%t", "warden_vote_chat_stopped");
+			PrintHintTextToAll("%t", "warden_vote_hint_stopped");
+		}
 		g_VoteTimer = null;
 		return Plugin_Stop;
 	}
@@ -187,6 +195,12 @@ void CheckVoteWinner()
 	}
 	
 	if (ct > 0) BecomeCmd(ct);
-	else PrintHintTextToAll("Командир не выбран");
+	else
+	{
+		if (g_bIsCSGO)
+			CGOPrintHintTextToAll("%t", "warden_vote_no_warden");
+		else
+			PrintHintTextToAll("%t", "warden_vote_no_warden");
+	}
 	g_bVoteFinished = true;
 }

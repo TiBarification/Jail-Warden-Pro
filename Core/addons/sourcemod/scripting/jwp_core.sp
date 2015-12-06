@@ -1,17 +1,21 @@
 #include <sourcemod>
 #include <cstrike>
+#undef REQUIRE_PLUGIN
+#tryinclude <csgo_colors>
+#tryinclude <morecolors>
 
 // Force new syntax
 #pragma newdecls required
 
-#define PLUGIN_VERSION "0.0.4-dev"
-#define PREFIX "\x01[\x03КОМАНДИР\x01]"
+#define PLUGIN_VERSION "0.0.5-dev"
 
 int g_iWarden, g_iZamWarden;
 bool g_bHasFreeday[MAXPLAYERS+1];
+bool g_bIsolated[MAXPLAYERS+1];
 
 bool is_started;
 bool g_bRoundEnd;
+bool g_bIsCSGO;
 
 bool g_bWasWarden[MAXPLAYERS+1];
 ArrayList g_aSortedMenu;
@@ -23,16 +27,16 @@ ConVar	g_CvarChooseMode,
 
 Handle g_hChooseTimer;
 
+#include "jwp/kv_reader.sp"
 #include "jwp/jwpm_menu.sp"
 #include "jwp/forwards.sp"
 #include "jwp/natives.sp"
-#include "jwp/kv_reader.sp"
 #include "jwp/voting.sp"
 #include "jwp/dev.sp"
 
 public Plugin myinfo = 
 {
-	name = "[JWP-DEV] Core",
+	name = "[JWP] Core",
 	description = "Jail Warden Pro Core",
 	author = "White Wolf",
 	version = PLUGIN_VERSION,
@@ -66,6 +70,10 @@ public void OnPluginStart()
 	Load_SortingWardenMenu();
 	
 	AutoExecConfig(true, "jwp", "jwp");
+	
+	g_bIsCSGO = (GetEngineVersion() == Engine_CSGO) ? true : false;
+	
+	LoadTranslations("jwp.phrases");
 }
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
@@ -120,7 +128,11 @@ public void Event_OnPlayerDeath(Event event, const char[] name, bool dontBroadca
 	int client = GetClientOfUserId(event.GetInt("userid"));
 	if (IsWarden(client))
 	{
-		PrintToChatAll("%s Командир %N сдох.", PREFIX, client);
+		if (g_bIsCSGO)
+			CGOPrintToChatAll("%t %t", "Core_Prefix", "warden_death", client);
+		else
+			CPrintToChatAll("%t %t", "Core_Prefix", "warden_death", client);
+		// PrintToChatAll("%s Командир %N сдох.", PREFIX, client);
 		RemoveCmd(false);
 	}
 	else if (IsZamWarden(client)) g_iZamWarden = 0;
@@ -143,7 +155,12 @@ public void Event_OnRoundFreezeEnd(Event event, const char[] name, bool dontBroa
 		if (client) BecomeCmd(client);
 	}
 	else if (g_CvarChooseMode.IntValue == 2)
-		PrintToChatAll("%s Чтобы стать командиром пропишите в чат \x02!w", PREFIX);
+	{
+		if (g_bIsCSGO)
+			CGOPrintToChatAll("%t %t", "Core_Prefix", "use_warden_cmd");
+		else
+			CPrintToChatAll("%t %t", "Core_Prefix", "use_warden_cmd");
+	}
 	else if (g_CvarChooseMode.IntValue == 3)
 		JWP_StartVote();
 }
@@ -170,10 +187,8 @@ public Action Event_OnRoundEnd(Event event, const char[] name, bool dontBroadcas
 
 public Action Command_JwpMenuReload(int args)
 {
-	g_aSortedMenu.Clear();
-	g_aFlags.Clear();
-	Load_SortingWardenMenu();
-	PrintToServer("[JWP] Menu has been succesfully reloaded");
+	RehashMenu();
+	PrintToServer("%t", "menu_success_reloaded");
 	return Plugin_Handled;
 }
 
@@ -182,30 +197,58 @@ public Action Command_BecomeWarden(int client, int args)
 	if (CheckClient(client))
 	{
 		if (g_bRoundEnd)
-			PrintToChat(client, "%s \x04Дождитесь начала нового раунда", PREFIX);
+		{
+			if (g_bIsCSGO)
+				CGOPrintToChat(client, "%t %t", "Core_Prefix", "wait_for_new_round");
+			else
+				CPrintToChat(client, "%t %t", "Core_Prefix", "wait_for_new_round");
+		}
 		else if (g_iWarden > 0)
 		{
 			if (IsWarden(client))
 				Cmd_ShowMenu(client);
+			else if (g_bIsCSGO)
+				CGOPrintToChat(client, "%t %t", "Core_Prefix", "warden_exists", g_iWarden);
 			else
-				PrintToChat(client, "%s Командиром является %N.", PREFIX, g_iWarden);
+				CPrintToChat(client, "%t %t", "Core_Prefix", "warden_exists", g_iWarden);
 		}
 		else
 		{
 			if (g_CvarChooseMode.IntValue == 1)
-				PrintToChat(client, "%s \x04Командир выбирается случайно", PREFIX);
+			{
+				if (g_bIsCSGO)
+					CGOPrintToChat(client, "%t %t", "Core_Prefix", "warden_choose_random");
+				else
+					CPrintToChat(client, "%t %t", "Core_Prefix", "warden_choose_random");
+			}
 			else if (g_CvarChooseMode.IntValue == 3)
 			{
 				if (!g_bVoteFinished)
-					PrintToChat(client, "%s \x04Команда сейчас недоступна", PREFIX);
+				{
+					if (g_bIsCSGO)
+						CGOPrintToChat(client, "%t %t", "Core_Prefix", "cmd_not_available");
+					else
+						CPrintToChat(client, "%t %t", "Core_Prefix", "cmd_not_available");
+				}
 				else
-					PrintToChat(client, "%s \x04Выбор командира только по голосованию.", PREFIX);
+				{
+					if (g_bIsCSGO)
+						CGOPrintToChat(client, "%t %t", "Core_Prefix", "warden_choose_vote");
+					else
+						CPrintToChat(client, "%t %t", "Core_Prefix", "warden_choose_vote");
+				}
 			}
 			else if (g_CvarChooseMode.IntValue == 2 && GetClientTeam(client) == CS_TEAM_CT)
 			{
 				if (BecomeCmd(client)) Cmd_ShowMenu(client);
 			}
-			else PrintToChat(client, "%s Командиром может быть только КТ.", PREFIX);
+			else
+			{
+				if (g_bIsCSGO)
+					CGOPrintToChat(client, "%t %t", "Core_Prefix", "warden_only_ct");
+				else
+					CPrintToChat(client, "%t %t", "Core_Prefix", "warden_only_ct");
+			}
 		}
 	}
 	
@@ -258,7 +301,10 @@ bool BecomeCmd(int client)
 {
 	if (g_bWasWarden[client])
 	{
-		PrintToChat(client, "%s Вы уже были командиром.", PREFIX);
+		if (g_bIsCSGO)
+			CGOPrintToChat(client, "%t %t", "Core_Prefix", "already_was_warden");
+		else
+			CPrintToChat(client, "%t %t", "Core_Prefix", "already_was_warden");
 		return false;
 	}
 	else if (IsPlayerAlive(client))
@@ -266,19 +312,36 @@ bool BecomeCmd(int client)
 		g_iWarden = client;
 		Forward_OnWardenChosen(client);
 		g_bWasWarden[client] = true;
-		PrintToChatAll("%s Командиром стал %N", PREFIX, g_iWarden);
+		if (g_bIsCSGO)
+			CGOPrintToChatAll("%t %t", "Core_Prefix", "warden_become", g_iWarden);
+		else
+			CPrintToChatAll("%t %t", "Core_Prefix", "warden_become", g_iWarden);
 		return true;
 	}
 	else
-		PrintToChat(client, "%s Вы должны быть живы.", PREFIX);
+	{
+		if (g_bIsCSGO)
+			CGOPrintToChat(client, "%t %t", "Core_Prefix", "warden_must_be_alive");
+		else
+			CPrintToChat(client, "%t %t", "Core_Prefix", "warden_must_be_alive");
+	}
 	return false;
 }
 
 void RemoveCmd(bool themself = true)
 {
 	Forward_OnWardenResigned(g_iWarden, themself);
-	if (themself) PrintToChatAll("%s %N покинул пост.", PREFIX, g_iWarden);
+	if (themself)
+	{
+		if (g_bIsCSGO)
+			CGOPrintToChatAll("%t %t", "Core_Prefix", "warden_resign", g_iWarden);
+		else
+			CPrintToChatAll("%t %t", "Core_Prefix", "warden_resign", g_iWarden);
+	}
+	EmptyPanel(g_iWarden);
 	if (g_iWarden) g_iWarden = 0;
+	delete g_mMainMenu;
+	
 	JWP_FindNewWarden();
 }
 
@@ -312,14 +375,23 @@ bool IsZamWarden(int client)
 
 bool PrisonerHasFreeday(int client)
 {
-	if (!CheckClient(client)) return false;
 	return g_bHasFreeday[client];
 }
 
 bool PrisonerSetFreeday(int client, bool state = true)
 {
-	if (!CheckClient(client)) return false;
 	g_bHasFreeday[client] = state;
+	return true;
+}
+
+bool IsPrisonerIsolated(int client)
+{
+	return g_bIsolated[client];
+}
+
+bool PrisonerIsolated(int client, bool state = true)
+{
+	g_bIsolated[client] = state;
 	return true;
 }
 
@@ -357,7 +429,12 @@ void JWP_FindNewWarden()
 		g_hChooseTimer = CreateTimer(g_CvarRandomWait.FloatValue, g_ChooseTimer_Callback);
 	}
 	else if (g_CvarChooseMode.IntValue == 2 || g_CvarChooseMode.IntValue == 3)
-		PrintToChatAll("%s Чтобы стать командиром пропишите в чат \x02!w", PREFIX);
+	{
+		if (g_bIsCSGO)
+			CGOPrintToChatAll("%t %t", "Core_Prefix", "use_warden_cmd");
+		else
+			CPrintToChatAll("%t %t", "Core_Prefix", "use_warden_cmd");
+	}
 }
 
 public Action g_ChooseTimer_Callback(Handle timer)
@@ -384,15 +461,9 @@ public int JWP_GetRandomTeamClient(int team, bool alive, bool ignore_resign)
 		if (IsClientInGame(i) && GetClientTeam(i) == team && (alive && IsPlayerAlive(i)))
 		{
 			if (!(ignore_resign && g_bWasWarden[i]))
-			{
-				count++;
-				Players[count] = i;
-			}
+				Players[count++] = i;
 		}
 		i++;
 	}
-	if (count > 0)
-		return Players[GetRandomInt(0, count)];
-	else
-		return 0;
+	return (!count) ? 0 : Players[GetRandomInt(0, count)];
 }
