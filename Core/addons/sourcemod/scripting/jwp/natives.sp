@@ -100,18 +100,26 @@ public int Native_ConvertToColor(Handle plugin, int numParams)
 
 public int Native_ActionMsgAll(Handle plugin, int numParams)
 {
-	char buffer[192];
+	char buffer[192], prefix[52];
 	
 	FormatNativeString(0, 1, 2, sizeof(buffer), _, buffer);
-	PrintToChatAll("%s %s", PREFIX, buffer);
+	FormatEx(prefix, sizeof(prefix), "%t", "Core_Prefix");
+	if (g_bIsCSGO)
+		CGOPrintToChatAll("%s %s", prefix, buffer);
+	else
+		CPrintToChatAll("%s %s", prefix, buffer);
 }
 
 public int Native_ActionMsg(Handle plugin, int numParams)
 {
-	char buffer[192];
+	char buffer[192], prefix[52];
 	int client = GetNativeCell(1);
 	FormatNativeString(0, 2, 3, sizeof(buffer), _, buffer);
-	PrintToChat(client, "%s %s", PREFIX, buffer);
+	FormatEx(prefix, sizeof(prefix), "%t", "Core_Prefix");
+	if (g_bIsCSGO)
+		CGOPrintToChat(client, "%s %s", prefix, buffer);
+	else
+		CPrintToChat(client, "%s %s", prefix, buffer);
 }
 
 public int Native_GetRandomTeamClient(Handle plugin, int numParams)

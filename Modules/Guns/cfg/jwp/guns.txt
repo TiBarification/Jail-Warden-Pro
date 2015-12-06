@@ -1,0 +1,19 @@
+// Какое оружие командир может получать через меню (без префикса weapon_)
+// Список оружия CS: Global Offensive : https://wiki.alliedmods.net/Counter-Strike:_Global_Offensive_Weapons
+// Список оружия CS: Source : https://wiki.alliedmods.net/Counter-Strike:_Source_Weapons
+// "text" "Текст в меню"
+// "slot" слот оружия в игре: 0 - первичный слот, 1 - вторичный слот, 2 - слот ножей, 3 - слот гранат
+
+"guns"
+{
+	"hegrenade"
+	{
+		"text"	"Боевая граната"
+		"slot"	"3"
+	}
+	"m4a1"
+	{
+		"text"	"M-16"
+		"slot"	"0"
+	}
+}

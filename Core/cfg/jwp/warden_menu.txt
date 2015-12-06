@@ -1,15 +1,67 @@
 "warden_menu"
 {
-	"resign"
-	{
-	}
 	"zam"
 	{
+		"flag"	""
+	}
+	"resign"
+	{
+		"flag"	""
+	}
+	"guns"
+	{
+		"flag"	""
+	}
+	"speed"
+	{
+		"flag"	""
 	}
 	"ff"
 	{
+		"flag"	"f"
 	}
-	"msg"
+	"laserbeam"
 	{
+		"flag"	""
+	}
+	"order"
+	{
+		"flag"	""
+	}
+	"freeday_give"
+	{
+		"flag"	""
+	}
+	"freeday_take"
+	{
+		"flag"	""
+	}
+	"slay"
+	{
+		"flag" "f"
+	}
+	"coloring"
+	{
+		"flag"	""
+	}
+	"tojail"
+	{
+		"flag"	""
+	}
+	"stripknife"
+	{
+		"flag"	""
+	}
+	"isolator"
+	{
+		"flag"	""
+	}
+	"mute_give"
+	{
+		"flag"	"f"
+	}
+	"mute_take"
+	{
+		"flag"	"f"
 	}
 }

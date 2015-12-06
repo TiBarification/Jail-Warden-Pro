@@ -67,13 +67,18 @@ void Cmd_ShowMenu(int client, int pos = 0)
 
 void MenuItemInitialization(int client) // Run at first time as client become warden
 {
+	char buffer[48];
 	g_mMainMenu = new Menu(Cmd_ShowMenu_Handler);
-	g_mMainMenu.SetTitle("Меню командования:");
+	FormatEx(buffer, sizeof(buffer), "%t", "warden_menu_title");
+	g_mMainMenu.SetTitle(buffer);
 	g_mMainMenu.ExitButton = true;
 	int size = g_aSortedMenu.Length;
 	
 	if (!size)
-		g_mMainMenu.AddItem("", "Меню не имеет элементов", ITEMDRAW_DISABLED);
+	{
+		FormatEx(buffer, sizeof(buffer), "%t", "warden_menu_empty");
+		g_mMainMenu.AddItem("", buffer, ITEMDRAW_DISABLED);
+	}
 	else
 	{
 		any tmp[3]; char id[16], display[64];
@@ -87,11 +92,17 @@ void MenuItemInitialization(int client) // Run at first time as client become wa
 			
 			/*----------------------*/
 			if (strcmp("resign", id, true) == 0)
-					g_mMainMenu.AddItem(id, "Покинуть пост");
+			{
+					FormatEx(buffer, sizeof(buffer), "%t", "warden_menu_resign");
+					g_mMainMenu.AddItem(id, buffer);
+			}
 			if (JWPM_HasFlag(client, bitflag))
 			{
 				if (strcmp("zam", id, true) == 0)
-					g_mMainMenu.AddItem(id, "Выбрать ЗАМа");
+				{
+					FormatEx(buffer, sizeof(buffer), "%t", "warden_menu_zam");
+					g_mMainMenu.AddItem(id, buffer);
+				}
 				else if (g_sMainMenuMap.GetArray(id, tmp, sizeof(tmp)))
 				{
 					bool result = true;
@@ -139,12 +150,20 @@ public int Cmd_ShowMenu_Handler(Menu menu, MenuAction action, int client, int sl
 						}
 					}
 					if (!PList.ItemCount)
-						PList.AddItem("", "Нет доступных КТ для ЗАМа", ITEMDRAW_DISABLED);
+					{
+						FormatEx(cName, sizeof(cName), "%t", "no_available_ct");
+						PList.AddItem("", cName, ITEMDRAW_DISABLED);
+					}
 					PList.ExitButton = true;
 					PList.Display(client, MENU_TIME_FOREVER);
 				}
 				else
-					PrintToChat(client, "%s Замом был назначен %N", PREFIX, g_iZamWarden);
+				{
+					if (g_bIsCSGO)
+						CGOPrintToChat(client, "%t %t", "Core_Prefix", "zam_chosen", g_iZamWarden);
+					else
+						CPrintToChat(client, "%t %t", "Core_Prefix", "zam_chosen", g_iZamWarden);
+				}
 			}
 			else
 			{
@@ -181,7 +200,10 @@ public int PList_Handler(Menu menu, MenuAction action, int client, int slot)
 			if (!g_iZamWarden)
 			{
 				SetZam(target);
-				PrintToChatAll("%s %N назначил ЗАМа %N", PREFIX, client, target);
+				if (g_bIsCSGO)
+					CGOPrintToChatAll("%t %t", "Core_Prefix", "zam_notify", client, target);
+				else
+					CPrintToChatAll("%t %t", "Core_Prefix", "zam_notify", client, target);
 			}
 			Cmd_ShowMenu(client);
 		}
@@ -218,6 +240,20 @@ public int ConfirmMenu_Callback(Menu menu, MenuAction action, int client, int sl
 	}
 }
 
+void EmptyPanel(int client)
+{
+	/* close menu if exists with empty panel */
+	Panel panel = new Panel();
+	panel.SetTitle(" ");
+	panel.Send(client, EmptyPanel_Callback, 2);
+}
+
+public int EmptyPanel_Callback(Menu menu, MenuAction action, int client, int slot)
+{
+	if (action == MenuAction_End)
+		menu.Close();
+}
+
 void RehashMenu()
 {
 	g_aSortedMenu.Clear();
@@ -245,7 +281,10 @@ bool Flood(int client, int delay)
 	time = curr_time - last_time[client];
 	if (time < delay)
 	{
-		ReplyToCommand(client, "%s Не флуди командой, подожди %d с.", PREFIX, delay - time);
+		if (g_bIsCSGO)
+			ReplyToCommand(client, "%t", "anti_flood", delay - time);
+		else
+			CReplyToCommand(client, "%t %t", "Core_Prefix", "anti_flood", delay - time);
 		return true;
 	}
 	last_time[client] = curr_time;

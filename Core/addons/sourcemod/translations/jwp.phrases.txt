@@ -1,0 +1,140 @@
+"Phrases"
+{
+	"Core_Prefix"
+	{
+		"en"		"{DEFAULT}[{GREEN}WARDEN{DEFAULT}]"	
+		"ru"		"{DEFAULT}[{GREEN}КОМАНДИР{DEFAULT}]"	
+	}
+	"warden_death"
+	{
+		"#format"	"{1:N}"
+		"en"		"Warden %N is dead."
+		"ru"		"Командир %N сдох."
+	}
+	"use_warden_cmd"
+	{
+		"en"		"{GREEN}To become {LIGHTGREEN}warden{GREEN}, write in chat {DEFAULT}!w"
+		"ru"		"{GREEN}Чтобы стать {LIGHTGREEN}командиром{GREEN}, пишите в чат {DEFAULT}!w"
+	}
+	"menu_success_reloaded"
+	{
+		"en"		"[JWP] Menu has been successfully reloaded"
+		"ru"		"[JWP] Menu has been successfully reloaded"
+	}
+	"wait_for_new_round"
+	{
+		"en"		"{LIGHTGREEN}Wait for new round."
+		"ru"		"{LIGHTGREEN}Дождитесь начала нового раунда"
+	}
+	"warden_exists"
+	{
+		"#format"	"{1:N}"
+		"en"		"Warden is {1}"
+		"ru"		"Командиром является {1}"
+	}
+	"warden_choose_random"
+	{
+		"en"		"{LIGHTGREEN}Warden is chosing random"
+		"ru"		"{LIGHTGREEN}Командир выбирается случайно"
+	}
+	"cmd_not_available"
+	{
+		"en"		"{RED}The command is currently unavailable"
+		"ru"		"{RED}Команда сейчас недоступна"
+	}
+	"warden_choose_vote"
+	{
+		"en"		"{LIGHTGREEN}Warden chosing only by voting"
+		"ru"		"{LIGHTGREEN}Выбор командира только по голосованию"
+	}
+	"warden_vote_no_warden"
+	{
+		"en"		"No warden exists"
+		"ru"		"Командир не выбран"
+	}
+	"warden_vote_chat_stopped"
+	{
+		"en"		"Voting for chosing warden has been stopped!"
+		"ru"		"Голосование за выбор командира остановлено"
+	}
+	"warden_vote_hint_stopped"
+	{
+		"en"		"Voting STOPPED!"
+		"ru"		"ГОЛОСОВАНИЕ ОСТАНОВЛЕНО"
+	}
+	"warden_only_ct"
+	{
+		"en"		"{RED}Warden can be only ct"
+		"ru"		"{RED}Командиром может быть только КТ"
+	}
+	"already_was_warden"
+	{
+		"en"		"You already have been warden"
+		"ru"		"Вы уже были командиром"
+	}
+	"warden_become"
+	{
+		"#format"	"{1:N}"
+		"en"		"Warden become {1}"
+		"ru"		"Командиром стал {1}"
+	}
+	"warden_must_be_alive"
+	{
+		"en"		"You must be alive"
+		"ru"		"Вы должны быть живы"
+	}
+	"warden_resign"
+	{
+		"#format"	"{1:N}"
+		"en"		"Warden {1} resigned"
+		"ru"		"{1} покинул пост"
+	}
+	"warden_menu_title"
+	{
+		"en"		"Warden menu"
+		"ru"		"Меню командования:"
+	}
+	"warden_menu_empty"
+	{
+		"en"		"Empty menu with no elements"
+		"ru"		"Меню не имеет элементов"
+	}
+	"warden_menu_resign"
+	{
+		"en"		"Resign"
+		"ru"		"Покинуть пост"
+	}
+	"warden_menu_zam"
+	{
+		"en"		"Set Zam"
+		"ru"		"Выбрать ЗАМа"
+	}
+	"no_available_ct"
+	{
+		"en"		"No available CT"
+		"ru"		"Нет доступных КТ для ЗАМа"
+	}
+	"zam_chosen"
+	{
+		"#format"	"{1:N}"
+		"en"		"{1} was appointed deputy"
+		"ru"		"Замом был назначен {1}"
+	}
+	"zam_notify"
+	{
+		"#format"	"{1:N},{2:N}"
+		"en"		"{1} appointed deputy to {2}"
+		"ru"		"{1} назначил ЗАМа {2}"
+	}
+	"anti_flood"
+	{
+		"#format"	"{1:d}"
+		"en"		"Stop flood, wait {1} s."
+		"ru"		"Не флуди командой, подожди {1} с."
+	}
+	"vote_player_not_found"
+	{
+		"en"		"Player not found. Choose another."
+		"ru"		"Игрок не найден. Выберите другого."
+	}
+}
