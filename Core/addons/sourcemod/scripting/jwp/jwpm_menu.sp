@@ -132,7 +132,7 @@ public int Cmd_ShowMenu_Handler(Menu menu, MenuAction action, int client, int sl
 			// Get and save last position of element
 			g_iLastMenuItemPos = menu.Selection;
 			
-			if (Flood(client, 1)) return;		
+			if (!g_CvarDisableAntiFlood.BoolValue && Flood(client, 1)) return;		
 			else if (strcmp("resign", info, true) == 0) Resign_Confirm(client);
 			else if (strcmp("zam", info, true) == 0)
 			{
@@ -242,10 +242,13 @@ public int ConfirmMenu_Callback(Menu menu, MenuAction action, int client, int sl
 
 void EmptyPanel(int client)
 {
-	/* close menu if exists with empty panel */
-	Panel panel = new Panel();
-	panel.SetTitle(" ");
-	panel.Send(client, EmptyPanel_Callback, 2);
+	if (CheckClient(client))
+	{
+		/* close menu if exists with empty panel */
+		Panel panel = new Panel();
+		panel.SetTitle(" ");
+		panel.Send(client, EmptyPanel_Callback, 2);
+	}
 }
 
 public int EmptyPanel_Callback(Menu menu, MenuAction action, int client, int slot)

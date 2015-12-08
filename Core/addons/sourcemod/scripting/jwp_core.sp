@@ -7,7 +7,7 @@
 // Force new syntax
 #pragma newdecls required
 
-#define PLUGIN_VERSION "0.0.5-dev"
+#define PLUGIN_VERSION "0.0.6-dev"
 
 int g_iWarden, g_iZamWarden;
 bool g_bHasFreeday[MAXPLAYERS+1];
@@ -23,7 +23,8 @@ ArrayList g_aFlags;
 
 ConVar	g_CvarChooseMode,
 		g_CvarRandomWait,
-		g_CvarVoteTime;
+		g_CvarVoteTime,
+		g_CvarDisableAntiFlood;
 
 Handle g_hChooseTimer;
 
@@ -49,9 +50,13 @@ public void OnPluginStart()
 	g_CvarChooseMode = CreateConVar("jwp_choose_mode", "2", "How to choose warden 1:random 2:command 3:voting", FCVAR_PLUGIN, true, 1.0, true, 3.0);
 	g_CvarRandomWait = CreateConVar("jwp_random_wait", "5", "Time before warden randomly picked if choose mode = 1", FCVAR_PLUGIN, true, 1.0, true, 30.0);
 	g_CvarVoteTime = CreateConVar("jwp_vote_time", "30", "Time for voting if choose mode = 3", FCVAR_PLUGIN, true, 10.0, true, 60.0);
+	g_CvarDisableAntiFlood = CreateConVar("jwp_disable_antiflood", "1", "Protect menu from random selecting", FCVAR_PLUGIN, true, 0.0, true, 1.0);
 	
 	RegConsoleCmd("sm_com", Command_BecomeWarden, "Warden menu");
 	RegConsoleCmd("sm_w", Command_BecomeWarden, "Warden menu");
+	RegConsoleCmd("sm_warden", Command_BecomeWarden, "Warden menu");
+	RegConsoleCmd("sm_control", Command_BecomeWarden, "Warden menu");
+	RegConsoleCmd("sm_c", Command_BecomeWarden, "Warden menu");
 	
 	RegServerCmd("jwp_menu_reload", Command_JwpMenuReload, "Reload menu list");
 	
@@ -64,6 +69,7 @@ public void OnPluginStart()
 	g_CvarChooseMode.AddChangeHook(OnCvarChange);
 	g_CvarRandomWait.AddChangeHook(OnCvarChange);
 	g_CvarVoteTime.AddChangeHook(OnCvarChange);
+	g_CvarDisableAntiFlood.AddChangeHook(OnCvarChange);
 	
 	g_aSortedMenu = new ArrayList(66);
 	g_aFlags = new ArrayList(1);
@@ -94,6 +100,7 @@ public void OnCvarChange(ConVar cvar, const char[] oldValue, const char[] newVal
 	if (cvar == g_CvarChooseMode) g_CvarChooseMode.SetInt(StringToInt(newValue));
 	else if (cvar == g_CvarRandomWait) g_CvarRandomWait.SetInt(StringToInt(newValue));
 	else if (cvar == g_CvarVoteTime) g_CvarVoteTime.SetInt(StringToInt(newValue));
+	else if (cvar == g_CvarDisableAntiFlood) g_CvarDisableAntiFlood.SetInt(StringToInt(newValue));
 }
 
 public int Native_IsStarted(Handle plugin, int params)
@@ -118,6 +125,9 @@ public void Event_OnRoundStart(Event event, const char[] name, bool dontBroadcas
 {
 	for (int i = 1; i <= MaxClients; i++)
 		g_bWasWarden[i] = false;
+	Forward_OnWardenResigned(g_iWarden, false);
+	EmptyPanel(g_iWarden);
+	delete g_mMainMenu;
 	g_iWarden = 0;
 	g_iZamWarden = 0;
 	g_bVoteFinished = false;
@@ -132,7 +142,6 @@ public void Event_OnPlayerDeath(Event event, const char[] name, bool dontBroadca
 			CGOPrintToChatAll("%t %t", "Core_Prefix", "warden_death", client);
 		else
 			CPrintToChatAll("%t %t", "Core_Prefix", "warden_death", client);
-		// PrintToChatAll("%s Командир %N сдох.", PREFIX, client);
 		RemoveCmd(false);
 	}
 	else if (IsZamWarden(client)) g_iZamWarden = 0;
@@ -156,10 +165,14 @@ public void Event_OnRoundFreezeEnd(Event event, const char[] name, bool dontBroa
 	}
 	else if (g_CvarChooseMode.IntValue == 2)
 	{
-		if (g_bIsCSGO)
-			CGOPrintToChatAll("%t %t", "Core_Prefix", "use_warden_cmd");
-		else
-			CPrintToChatAll("%t %t", "Core_Prefix", "use_warden_cmd");
+		int client = JWP_GetTeamClient(CS_TEAM_CT, true)
+		if (client)
+		{
+			if (g_bIsCSGO)
+				CGOPrintToChat(client, "%t %t", "Core_Prefix", "use_warden_cmd");
+			else
+				CPrintToChat(client, "%t %t", "Core_Prefix", "use_warden_cmd");
+		}
 	}
 	else if (g_CvarChooseMode.IntValue == 3)
 		JWP_StartVote();
@@ -168,6 +181,9 @@ public void Event_OnRoundFreezeEnd(Event event, const char[] name, bool dontBroa
 public Action Event_OnRoundEnd(Event event, const char[] name, bool dontBroadcast)
 {
 	g_bRoundEnd = true;
+	Forward_OnWardenResigned(g_iWarden, false);
+	EmptyPanel(g_iWarden);
+	delete g_mMainMenu;
 	g_iWarden = 0;
 	g_iZamWarden = 0;
 	
@@ -430,10 +446,14 @@ void JWP_FindNewWarden()
 	}
 	else if (g_CvarChooseMode.IntValue == 2 || g_CvarChooseMode.IntValue == 3)
 	{
-		if (g_bIsCSGO)
-			CGOPrintToChatAll("%t %t", "Core_Prefix", "use_warden_cmd");
-		else
-			CPrintToChatAll("%t %t", "Core_Prefix", "use_warden_cmd");
+		int client = JWP_GetTeamClient(CS_TEAM_CT, true)
+		if (client)
+		{
+			if (g_bIsCSGO)
+				CGOPrintToChat(client, "%t %t", "Core_Prefix", "use_warden_cmd");
+			else
+				CPrintToChat(client, "%t %t", "Core_Prefix", "use_warden_cmd");
+		}
 	}
 }
 
