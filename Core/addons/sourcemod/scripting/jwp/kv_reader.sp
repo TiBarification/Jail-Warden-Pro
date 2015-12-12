@@ -6,7 +6,7 @@ void Load_SortingWardenMenu()
 		if (kv.GotoFirstSubKey(true))
 		{
 			char menuitem[64];
-			int bFlag;
+			int iFlag;
 			do
 			{
 				if (kv.GetSectionName(menuitem, sizeof(menuitem)))
@@ -14,8 +14,8 @@ void Load_SortingWardenMenu()
 					g_aSortedMenu.PushString(menuitem);
 					// Flag finder
 					kv.GetString("flag", menuitem, sizeof(menuitem), "");
-					bFlag = ReadFlagString(menuitem);
-					g_aFlags.Push(bFlag);
+					iFlag = ReadFlagString(menuitem);
+					g_aFlags.Push(iFlag);
 				}
 			} while (kv.GotoNextKey(true));
 		}
