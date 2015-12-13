@@ -82,9 +82,9 @@ public void OnMapStart()
 	if (g_cWardenZamSkin[0] == 'm')
 		PrecacheModel(g_cWardenZamSkin, true);
 	if (g_CvarTRandomSkins.BoolValue)
-		LoadSkinsFromFile("cfg/jwp/t_models.txt", tModels_Array);
+		LoadSkinsFromFile("cfg/jwp/skin/t_models.txt", tModels_Array);
 	if (g_CvarCTRandomSkins.BoolValue)
-		LoadSkinsFromFile("cfg/jwp/ct_models.txt", ctModels_Array);
+		LoadSkinsFromFile("cfg/jwp/skin/ct_models.txt", ctModels_Array);
 }
 
 public int JWP_OnWardenChosen(int client)
@@ -117,7 +117,7 @@ void LoadSkinsFromFile(char[] path, ArrayList myArray)
 		myArray.Clear();
 		myArray = null;
 	}
-	myArray = new ArrayList(PLATFORM_MAX_PATH, 0);
+	myArray = new ArrayList(PLATFORM_MAX_PATH);
 	Handle hFile = OpenFile(path, "r");
 	if (hFile != null)
 	{
@@ -139,7 +139,6 @@ void LoadSkinsFromFile(char[] path, ArrayList myArray)
 	else
 		LogError("[JWP|Skins] Unable to load config file %s", path);
 	delete hFile;
-	return;
 }
 
 bool TiB_SetSkin(int client, int team)
@@ -153,7 +152,7 @@ bool TiB_SetSkin(int client, int team)
 
 bool GetRandomSkin(int client, ArrayList myArray)
 {
-	if (!myArray.Length || myArray == null)
+	if (myArray == null || !myArray.Length)
 		return false;
 	char model[PLATFORM_MAX_PATH];
 	int randomid = GetRandomInt(0, myArray.Length-1);
@@ -167,5 +166,5 @@ bool GetRandomSkin(int client, ArrayList myArray)
 
 bool CheckClient(int client)
 {
-	return (IsClientConnected(client) && IsClientInGame(client) && !IsFakeClient(client));
+	return (client && IsClientConnected(client) && IsClientInGame(client) && !IsFakeClient(client));
 }

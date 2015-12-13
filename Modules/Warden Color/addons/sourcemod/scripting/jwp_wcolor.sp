@@ -72,7 +72,7 @@ public int JWP_OnWardenZamChosen(int client)
 public int JWP_OnWardenResigned(int client, bool self)
 {
 	if (!g_bWardenColor) return;
-	else if (IsClientInGame(client))
+	else if (client && IsClientInGame(client))
 	{
 		SetEntityRenderMode(client, RENDER_TRANSCOLOR);
 		SetEntityRenderColor(client, 255, 255, 255, 255);

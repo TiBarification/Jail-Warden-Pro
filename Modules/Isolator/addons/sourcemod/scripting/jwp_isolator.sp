@@ -178,12 +178,12 @@ public int IsolatorMenu_Callback(Menu menu, MenuAction action, int client, int s
 				{
 					TryKillIsolator(target);
 					JWP_ActionMsgAll("%N освободил зека %N из карцера", client, target);
-					JWP_PrisonerIsolated(client, false);
+					JWP_PrisonerIsolated(target, false);
 				}
 				else if (TryPushPrisonerInIsolator(client, target))
 				{
 					JWP_ActionMsgAll("%N посадил зека %N в карцер", client, target);
-					JWP_PrisonerIsolated(client, true);
+					JWP_PrisonerIsolated(target, true);
 				}
 				else
 					JWP_ActionMsg(client, "Не удалось посадить %N в карцер", target);
@@ -197,7 +197,7 @@ public int IsolatorMenu_Callback(Menu menu, MenuAction action, int client, int s
 
 bool CheckClient(int client)
 {
-	return (IsClientInGame(client) && IsClientConnected(client) && !IsFakeClient(client) && (GetClientTeam(client) == CS_TEAM_T));
+	return (IsClientInGame(client) && IsClientConnected(client) /* && !IsFakeClient(client) */ && (GetClientTeam(client) == CS_TEAM_T));
 }
 
 bool IsValidIsolator(int& ent, char[] name)
@@ -234,7 +234,7 @@ bool TryPushPrisonerInIsolator(int client, int prisoner)
 	TR_GetPlaneNormal(null, angles);
 	GetVectorAngles(angles, angles);
 	angles[0] = 0.0;
-	/* if (angles[1] != 0.0 || angles[2] != 0.0 || angles[0] != 360.0)
+	/*if (angles[1] != 0.0 || angles[2] != 0.0 || angles[0] != 360.0)
 	{
 		PrintCenterText(client, "Нужно ставить на ровную поверхность #ANGLES");
 		return false;
@@ -256,15 +256,20 @@ bool TryPushPrisonerInIsolator(int client, int prisoner)
 	wall_dist -= 150.0;
 	float direction[3];
 	
+	bool builded[3] = {true, ...};
 	int prisoner_id = GetClientUserId(prisoner);
 	char IsoLatorName[28];
 	
+	/* First wall */
 	angles[1] = 0.0;
-	if ((ent = EditWallPositionAndCreateWall(center, angles, direction, wall_dist)) < 1)
+	ent = EditWallPositionAndCreateWall(center, angles, direction, wall_dist);
+	if (!ent)
 	{
-		LogError("wtf.. create isolator error");
+		// LogError("wtf.. create isolator error");
+		PrintHintText(client, "Нельзя создать изолятор, выберите другое место.");
 		return false;
 	}
+	
 	Format(IsoLatorName, sizeof(IsoLatorName), "isltr_%d", prisoner_id);
 	DispatchKeyValue(ent, "targetname", IsoLatorName);
 	
@@ -272,26 +277,41 @@ bool TryPushPrisonerInIsolator(int client, int prisoner)
 	AcceptEntityInput(ent, "SetParent");
 	g_iIsolatorIndex[prisoner] = ent;
 	
+	/* Second wall */
 	angles[1] = 90.0;
-	if ((ent = EditWallPositionAndCreateWall(center, angles, direction, wall_dist)) > 0)
+	ent = EditWallPositionAndCreateWall(center, angles, direction, wall_dist);
+	if (!ent) builded[0] = false;
+	SetVariantString("!activator");
+	AcceptEntityInput(ent, "SetParent", g_iIsolatorIndex[prisoner]);
+	
+	/* Third wall */
+	if (builded[0])
 	{
+		angles[1] = 180.0;
+		ent = EditWallPositionAndCreateWall(center, angles, direction, wall_dist);
+		if (!ent) builded[1] = false;
+		SetVariantString("!activator");
+		AcceptEntityInput(ent, "SetParent", g_iIsolatorIndex[prisoner]);
+	}
+	/* Fourth wall */
+	if (builded[0] && builded[1])
+	{
+		angles[1] = 270.0;
+		ent = EditWallPositionAndCreateWall(center, angles, direction, wall_dist);
+		if (!ent) builded[2] = false;
 		SetVariantString("!activator");
 		AcceptEntityInput(ent, "SetParent", g_iIsolatorIndex[prisoner]);
 	}
 	
-	angles[1] = 180.0;
-	if ((ent = EditWallPositionAndCreateWall(center, angles, direction, wall_dist)) > 0)
+	/* Check if builded isolator */
+	if (!builded[0] || !builded[1] || !builded[2])
 	{
-		SetVariantString("!activator");
-		AcceptEntityInput(ent, "SetParent", g_iIsolatorIndex[prisoner]);
+		PrintHintText(client, "Нельзя создать изолятор, выберите другое место.");
+		// TryKillIsolator(prisoner);
+		return false;
 	}
 	
-	angles[1] = 270.0;
-	if ((ent = EditWallPositionAndCreateWall(center, angles, direction, wall_dist)) > 0)
-	{
-		SetVariantString("!activator");
-		AcceptEntityInput(ent, "SetParent", g_iIsolatorIndex[prisoner]);
-	}
+	/* Roof configuration */
 	angles[2] += g_CvarIsolatorRoof_Dist.FloatValue;
 	if ((ent = CreateProp(g_cIsolatorRoof)) > 0)
 	{
@@ -300,10 +320,13 @@ bool TryPushPrisonerInIsolator(int client, int prisoner)
 		SetVariantString("!activator");
 		AcceptEntityInput(ent, "SetParent", g_iIsolatorIndex[prisoner]);
 	}
+	
 	/* Create Beam */
+	/* Nothing else */
 	/* End of creating beam */
 	
 	/* Create Sound */
+	
 	if (g_cIsolatorSound[0] && (ent = CreateEntityByName("ambient_generic")) > 0)
 	{
 		DispatchKeyValueVector(ent, "origin", center);
@@ -320,8 +343,10 @@ bool TryPushPrisonerInIsolator(int client, int prisoner)
 	}
 	/* End of creating sound */
 	
+	/* Teleport prisoner if isolator succesfully builded */
 	center[2] += 20.0;
 	TeleportEntity(prisoner, center, NULL_VECTOR, NULL_VECTOR);
+	
 	return true;
 }
 
@@ -335,11 +360,27 @@ stock int EditWallPositionAndCreateWall(float wall_pos[3], float angles[3], floa
 		newpos = wall_pos;
 		newpos[0] += direction[0] * dist;
 		newpos[1] += direction[1] * dist;
+		newpos[2] += 6.0;
 		TeleportEntity(ent, newpos, angles, NULL_VECTOR);
 		SetEntityMoveType(ent, MOVETYPE_NONE);
+		if (IsEntStucked(ent)) return 0;
 	}
 	
 	return ent;
+}
+
+bool IsEntStucked(int ent)
+{
+	float vecMins[3], vecMaxs[3], vecOrigin[3];
+	GetEntPropVector(ent, Prop_Send, "m_vecOrigin", vecOrigin);
+	GetEntPropVector(ent, Prop_Send, "m_vecMins", vecMins);
+	GetEntPropVector(ent, Prop_Send, "m_vecMaxs", vecMaxs);
+	
+	TR_TraceHullFilter(vecOrigin, vecOrigin, vecMins, vecMaxs, MASK_SOLID, TREntityStuckFilter, ent);
+	PrintToChatAll("Entity Index: %d", TR_GetEntityIndex());
+	if (TR_GetEntityIndex() > MaxClients) return false;
+	AcceptEntityInput(ent, "Kill");
+	return true;
 }
 
 int CreateProp(char[] model)
@@ -362,11 +403,13 @@ int TiB_GetAimInfo(int client, float end_origin[3])
 	float origin[3];
 	GetClientEyePosition(client, origin);
 	TR_TraceRayFilter(origin, angles, MASK_SHOT, RayType_Infinite, TraceFilter_Callback, client);
+	
 	if (!TR_DidHit())
 		return -1;
+	
 	TR_GetEndPosition(end_origin);
 	
-	return TR_GetEntityIndex(null);
+	return TR_GetEntityIndex();
 }
 
 public bool TraceFilter_Callback(int ent, int mask, any entity)
@@ -392,20 +435,7 @@ bool TryKillIsolator(int client)
 	return kill;
 }
 
-stock int IsPlayerStuck(int client)
+public bool TREntityStuckFilter(int ent, int mask)
 {
-    float vecMin[3], vecMax[3], vecOrigin[3];
-    
-    GetClientMins(client, vecMin);
-    GetClientMaxs(client, vecMax);
-    
-    GetClientAbsOrigin(client, vecOrigin);
-    
-    TR_TraceHullFilter(vecOrigin, vecOrigin, vecMin, vecMax, MASK_PLAYERSOLID, TraceRayDontHitPlayerAndWorld);
-    return TR_GetEntityIndex();
-}
-
-public bool TraceRayDontHitPlayerAndWorld(int entityhit, int mask)
-{
-    return entityhit>MaxClients;
+	return (ent > MaxClients);
 }
