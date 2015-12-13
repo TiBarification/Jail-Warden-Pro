@@ -125,7 +125,7 @@ public int Native_ActionMsg(Handle plugin, int numParams)
 public int Native_GetRandomTeamClient(Handle plugin, int numParams)
 {
 	int team = GetNativeCell(1);
-	bool alive = view_as<bool>GetNativeCell(2);
+	bool alive = view_as<bool>(GetNativeCell(2));
 	return JWP_GetRandomTeamClient(team, alive, true);
 }
 
@@ -145,7 +145,7 @@ public int Native_PrisonerHasFreeday(Handle plugin, int numParams)
 public int Native_PrisonerSetFreeday(Handle plugin, int numParams)
 {
 	int client = GetNativeCell(1);
-	bool state = view_as<bool>GetNativeCell(2);
+	bool state = view_as<bool>(GetNativeCell(2));
 	return PrisonerSetFreeday(client, state);
 }
 
@@ -158,7 +158,7 @@ public int Native_IsPrisonerIsolated(Handle plugin, int numParams)
 public int Native_PrisonerIsolated(Handle plugin, int numParams)
 {
 	int client = GetNativeCell(1);
-	bool state = view_as<bool>GetNativeCell(2);
+	bool state = view_as<bool>(GetNativeCell(2));
 	return PrisonerIsolated(client, state);
 }
 

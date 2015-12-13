@@ -69,7 +69,6 @@ public int g_VoteMenu_Callback(Menu menu, MenuAction action, int client, int slo
 {
 	switch (action)
 	{
-		// case MenuAction_End: menu.Close();
 		case MenuAction_Select:
 		{
 			if (g_VoteTimer != null && GetClientTeam(client) == CS_TEAM_T)

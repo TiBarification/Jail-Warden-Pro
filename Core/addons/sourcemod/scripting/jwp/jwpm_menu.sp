@@ -1,17 +1,13 @@
-#define CMD_RESIGN 0
-
 #define CMDMENU_PLUGIN 0
 #define CMDMENU_DISPLAY 1
 #define CMDMENU_SELECT 2
 
-// ArrayList g_hMainMenuArray;
 StringMap g_sMainMenuMap;
 int g_iLastMenuItemPos;
 Menu g_mMainMenu;
 
 void Cmd_MenuCreateNatives()
 {
-	// g_hMainMenuArray = new ArrayList(3);
 	g_sMainMenuMap = new StringMap();
 	
 	CreateNative("JWP_AddToMainMenu", Cmd_AddToMainMenu);
@@ -182,7 +178,6 @@ public int Cmd_ShowMenu_Handler(Menu menu, MenuAction action, int client, int sl
 				return;
 			}
 		}
-		// case MenuAction_End: menu.Close();
 	}
 }
 
