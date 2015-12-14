@@ -64,4 +64,8 @@
 	{
 		"flag"	"f"
 	}
+	"stoplr"
+	{
+		"flag"	""
+	}
 }
