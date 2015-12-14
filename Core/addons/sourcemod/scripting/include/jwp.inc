@@ -73,10 +73,11 @@ native bool JWP_IsStarted();
  *	@param client			Client index an item is being shown to
  *	@param buffer			Buffer to store display name
  *	@param maxlength		Max length of the buffer
+ *	@param style			Parameter to change style of item. Has 2 values: ITEMDRAW_DEFAULT or ITEMDRAW_DISABLED. By default ITEMDRAW_DEFAULT
  *	-
  *	@noreturn
  */
-typedef CmdItemDisplay = function bool (int client, char[] buffer, int maxlength);
+typedef CmdItemDisplay = function bool (int client, char[] buffer, int maxlength, int style);
 
 /**
  *	Called when an item from cmd menu is being selected
@@ -285,3 +286,14 @@ native void JWP_RehashMenu();
  *	@return item count of menu
  */
 native int JWP_GetMenuItemCount();
+
+/**
+ *	Function to re-style menu item
+ *	-
+ *	@param unique name of module
+ *	@param new display name, leave empty for ignore
+ *	@param style flag of menu item. Can be ITEMDRAW_DEFAULT or ITEMDRAW_DISABLED
+ *	-
+ *	@return true if style changed, false otherwise
+ */
+native bool JWP_RefreshMenuItem(char[] item, char[] newdisp = "", int style = ITEMDRAW_DEFAULT);

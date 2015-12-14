@@ -17,6 +17,7 @@ void Native_Initialization()
 	CreateNative("JWP_PrisonerIsolated", Native_PrisonerIsolated);
 	CreateNative("JWP_RehashMenu", Native_RehashMenu);
 	CreateNative("JWP_GetMenuItemCount", Native_JWPGetMenuItemCount);
+	CreateNative("JWP_RefreshMenuItem", Native_JWPRefreshMenuItem);
 }
 
 public int Native_IsWarden(Handle plugin, int numParams)
@@ -171,4 +172,13 @@ public int Native_RehashMenu(Handle plugin, int numParams)
 public int Native_JWPGetMenuItemCount(Handle plugin, int numParams)
 {
 	return g_aSortedMenu.Length;
+}
+
+public int Native_JWPRefreshMenuItem(Handle plugin, int numParams)
+{
+	char item[16], display[64];
+	GetNativeString(1, item, sizeof(item));
+	GetNativeString(2, display, sizeof(display));
+	int style = GetNativeCell(3);
+	return RefreshMenuItem(item, display, style);
 }

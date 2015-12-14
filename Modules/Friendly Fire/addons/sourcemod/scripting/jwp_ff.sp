@@ -43,7 +43,7 @@ public void OnPluginEnd()
 	JWP_RemoveFromMainMenu(ITEM, OnFuncDisplay, OnFuncSelect);
 }
 
-public bool OnFuncDisplay(int client, char[] buffer, int maxlength)
+public bool OnFuncDisplay(int client, char[] buffer, int maxlength, int style)
 {
 	FormatEx(buffer, maxlength, "[%s]Огонь по своим", (g_bTurnOn) ? '-' : '+');
 	return true;
@@ -54,7 +54,10 @@ public bool OnFuncSelect(int client)
 	g_bTurnOn = !g_bTurnOn;
 	Cvar_FF.SetBool(g_bTurnOn, false, false);
 	JWP_ActionMsgAll("Дружественный огонь: \x02%s", (g_bTurnOn) ? "ВКЛЮЧЕН":"ВЫКЛЮЧЕН");
-	JWP_RehashMenu();
+	if (g_bTurnOn)
+		JWP_RefreshMenuItem(ITEM, "[-]Огонь по своим");
+	else
+		JWP_RefreshMenuItem(ITEM, "[+]Огонь по своим");
 	JWP_ShowMainMenu(client);
 	return true;
 }

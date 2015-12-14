@@ -80,7 +80,7 @@ public void OnPluginEnd()
 	JWP_RemoveFromMainMenu(ITEM, OnFuncDisplay, OnFuncSelect);
 }
 
-public bool OnFuncDisplay(int client, char[] buffer, int maxlength)
+public bool OnFuncDisplay(int client, char[] buffer, int maxlength, int style)
 {
 	FormatEx(buffer, maxlength, "[%s]Направляющий свет", (g_bLightActive) ? '-' : '+');
 	return true;
@@ -91,7 +91,10 @@ public bool OnFuncSelect(int client)
 	g_bLightActive = !g_bLightActive;
 	if (g_bLightActive)
 		CreateGlowLight(client);
-	JWP_RehashMenu();
+	if (g_bLightActive)
+		JWP_RefreshMenuItem(ITEM, "[-]Направляющий свет");
+	else
+		JWP_RefreshMenuItem(ITEM, "[+]Направляющий свет");
 	JWP_ShowMainMenu(client);
 	return true;
 }

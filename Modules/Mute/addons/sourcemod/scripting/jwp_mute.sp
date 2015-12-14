@@ -64,7 +64,7 @@ public void OnPluginEnd()
 	JWP_RemoveFromMainMenu(MTAKE, OnFuncMTakeDisplay, OnFuncMTakeSelect);
 }
 
-public bool OnFuncMGiveDisplay(int client, char[] buffer, int maxlength)
+public bool OnFuncMGiveDisplay(int client, char[] buffer, int maxlength, int style)
 {
 	FormatEx(buffer, maxlength, "Дать мут");
 	return true;
@@ -76,7 +76,7 @@ public bool OnFuncMGiveSelect(int client)
 	return true;
 }
 
-public bool OnFuncMTakeDisplay(int client, char[] buffer, int maxlength)
+public bool OnFuncMTakeDisplay(int client, char[] buffer, int maxlength, int style)
 {
 	FormatEx(buffer, maxlength, "Снять мут");
 	return true;

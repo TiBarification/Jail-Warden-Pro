@@ -32,7 +32,7 @@ public void OnPluginEnd()
 	JWP_RemoveFromMainMenu(ITEM, OnFuncDisplay, OnFuncSelect);
 }
 
-public bool OnFuncDisplay(int client, char[] buffer, int maxlength)
+public bool OnFuncDisplay(int client, char[] buffer, int maxlength, int style)
 {
 	FormatEx(buffer, maxlength, "Убить зека");
 	return true;

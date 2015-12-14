@@ -7,7 +7,7 @@
 // Force new syntax
 #pragma newdecls required
 
-#define PLUGIN_VERSION "0.0.6"
+#define PLUGIN_VERSION "0.0.7"
 
 int g_iWarden, g_iZamWarden;
 bool g_bHasFreeday[MAXPLAYERS+1];
@@ -136,7 +136,7 @@ public void Event_OnRoundStart(Event event, const char[] name, bool dontBroadcas
 public void Event_OnPlayerDeath(Event event, const char[] name, bool dontBroadcast)
 {
 	int client = GetClientOfUserId(event.GetInt("userid"));
-	if (IsWarden(client))
+	if (CheckClient(client) && IsWarden(client))
 	{
 		if (g_bIsCSGO)
 			CGOPrintToChatAll("%t %t", "Core_Prefix", "warden_death", client);

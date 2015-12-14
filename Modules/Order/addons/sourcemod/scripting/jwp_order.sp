@@ -72,7 +72,7 @@ public void OnPluginEnd()
 	JWP_RemoveFromMainMenu(ITEM, OnFuncDisplay, OnFuncSelect);
 }
 
-public bool OnFuncDisplay(int client, char[] buffer, int maxlength)
+public bool OnFuncDisplay(int client, char[] buffer, int maxlength, int style)
 {
 	FormatEx(buffer, maxlength, "Отдать приказ");
 	return true;
@@ -131,10 +131,11 @@ public int PreOrderPanel_Callback(Menu panel, MenuAction action, int client, int
 
 void CreateOrderMsg(int client, const char[] order)
 {
-	char text[250], name[MAX_NAME_LENGTH];
+	char text[250], orderbuf[250], name[MAX_NAME_LENGTH];
 	GetClientName(client, name, sizeof(name));
 	strcopy(text, sizeof(text), order);
 	ReplaceString(text, sizeof(text), "+", "\n", true);
+	strcopy(orderbuf, sizeof(orderbuf), text);
 	
 	/* Работа с чатом */
 	if (GetEngineVersion() == Engine_CSS)
@@ -153,10 +154,10 @@ void CreateOrderMsg(int client, const char[] order)
 	// И покажем террористам приказ в меню если квар позволяет
 	if (g_CvarOrderPanel.BoolValue)
 	{
-		Format(text, sizeof(text), "(КОМАНДИР) %s: %s\n \n", name, text);
+		Format(orderbuf, sizeof(orderbuf), "(КОМАНДИР) %s: %s\n \n", name, orderbuf);
 		
 		Panel p1 = new Panel();
-		p1.DrawText(text);
+		p1.DrawText(orderbuf);
 		p1.CurrentKey = 10;
 		p1.DrawItem("Выход");
 		

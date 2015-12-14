@@ -78,7 +78,7 @@ void MenuItemInitialization(int client) // Run at first time as client become wa
 	else
 	{
 		any tmp[3]; char id[16], display[64];
-		int bitflag;
+		int bitflag, menu_style;
 		display[0] = '\0';
 		for (int i = 0; i < size; i++)
 		{
@@ -106,11 +106,14 @@ void MenuItemInitialization(int client) // Run at first time as client become wa
 					Call_StartFunction(tmp[CMDMENU_PLUGIN], tmp[CMDMENU_DISPLAY]);
 					Call_PushCell(client);
 					Call_PushStringEx(display, sizeof(display), SM_PARAM_STRING_UTF8|SM_PARAM_STRING_COPY, SM_PARAM_COPYBACK);
-					Call_PushCell(sizeof(display))
+					Call_PushCell(sizeof(display));
+					Call_PushCell(menu_style);
 					Call_Finish(result);
 					
 					if (!display[0] || !result) continue;
-					g_mMainMenu.AddItem(id, display);
+					
+					if (menu_style != ITEMDRAW_DEFAULT && menu_style != ITEMDRAW_DISABLED) menu_style = ITEMDRAW_DEFAULT;
+					g_mMainMenu.AddItem(id, display, menu_style);
 				}
 			}
 		}
@@ -291,5 +294,25 @@ bool Flood(int client, int delay)
 		return true;
 	}
 	last_time[client] = curr_time;
+	return false;
+}
+
+bool RefreshMenuItem(char[] item, char[] newdisp = "", int style = ITEMDRAW_DEFAULT)
+{
+	int oldstyle;
+	char id[16], display[64];
+	for (int i = 0; i < g_aSortedMenu.Length; i++)
+	{
+		g_mMainMenu.GetItem(i, id, sizeof(id), oldstyle, display, sizeof(display));
+		if (strcmp(item, id, true) == 0)
+		{
+			if (newdisp[0] != '\0')
+				strcopy(display, sizeof(display), newdisp);
+			if (style != oldstyle)
+				oldstyle = style;
+			if (g_mMainMenu.RemoveItem(i) && g_mMainMenu.InsertItem(i, id, display, oldstyle))
+				return true;
+		}
+	}
 	return false;
 }

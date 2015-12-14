@@ -65,7 +65,7 @@ public void OnPluginEnd()
 	JWP_RemoveFromMainMenu(ITEM, OnFuncDisplay, OnFuncSelect);
 }
 
-public bool OnFuncDisplay(int client, char[] buffer, int maxlength)
+public bool OnFuncDisplay(int client, char[] buffer, int maxlength, int style)
 {
 	FormatEx(buffer, maxlength, "[%s]Ноблок", (g_bNoblock) ? '-' : '+');
 	return true;
@@ -85,7 +85,10 @@ public bool OnFuncSelect(int client)
 		}
 	}
 	JWP_ActionMsgAll("НОБЛОК: \x02%s", (g_bNoblock) ? "ВКЛЮЧЕН":"ВЫКЛЮЧЕН");
-	JWP_RehashMenu();
+	if (g_bNoblock)
+		JWP_RefreshMenuItem(ITEM, "[-]Ноблок");
+	else
+		JWP_RefreshMenuItem(ITEM, "[+]Ноблок");
 	JWP_ShowMainMenu(client);
 	return true;
 }

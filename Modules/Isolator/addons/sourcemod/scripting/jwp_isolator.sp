@@ -126,7 +126,7 @@ public void OnClientDisconnect_Post(int client)
 	TryKillIsolator(client);
 }
 
-public bool OnFuncDisplay(int client, char[] buffer, int maxlength)
+public bool OnFuncDisplay(int client, char[] buffer, int maxlength, int style)
 {
 	FormatEx(buffer, maxlength, "Управление карцером"); // [|||] в карцере
 	return true;
