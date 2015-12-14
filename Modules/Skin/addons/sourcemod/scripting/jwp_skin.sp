@@ -75,7 +75,10 @@ public void OnConfigsExecuted()
 public void OnMapStart()
 {
 	// Standart model for default
-	PrecacheModel("models/player/ct_sas.mdl", true);
+	if (GetEngineVersion() == Engine_CSGO)
+		PrecacheModel("models/player/ctm_sas.mdl", true);
+	else
+		PrecacheModel("models/player/ct_sas.mdl", true);
 	// Other models
 	if (g_cWardenSkin[0] == 'm')
 		PrecacheModel(g_cWardenSkin, true);
@@ -106,7 +109,12 @@ public int JWP_OnWardenResigned(int client, bool himself)
 		int team = GetClientTeam(client);
 		
 		if (!TiB_SetSkin(client, team))
-			SetEntityModel(client, "models/player/ct_sas.mdl");
+		{
+			if (GetEngineVersion() == Engine_CSGO)
+				SetEntityModel(client, "models/player/ctm_sas.mdl");
+			else
+				SetEntityModel(client, "models/player/ct_sas.mdl");
+		}
 	}
 }
 

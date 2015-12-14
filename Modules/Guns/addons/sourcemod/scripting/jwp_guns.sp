@@ -76,6 +76,7 @@ void LoadGunsFile()
 			g_Slot.SetValue(buffer, slot);
 		}
 	} while (kv.GotoNextKey(true));
+	g_WeaponMenu.ExitBackButton = true;
 	
 	delete kv;
 }

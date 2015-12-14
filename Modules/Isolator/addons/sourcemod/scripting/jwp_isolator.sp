@@ -197,7 +197,7 @@ public int IsolatorMenu_Callback(Menu menu, MenuAction action, int client, int s
 
 bool CheckClient(int client)
 {
-	return (IsClientInGame(client) && IsClientConnected(client) /* && !IsFakeClient(client) */ && (GetClientTeam(client) == CS_TEAM_T));
+	return (IsClientInGame(client) && IsClientConnected(client) && !IsFakeClient(client) && (GetClientTeam(client) == CS_TEAM_T));
 }
 
 bool IsValidIsolator(int& ent, char[] name)
@@ -234,11 +234,7 @@ bool TryPushPrisonerInIsolator(int client, int prisoner)
 	TR_GetPlaneNormal(null, angles);
 	GetVectorAngles(angles, angles);
 	angles[0] = 0.0;
-	/*if (angles[1] != 0.0 || angles[2] != 0.0 || angles[0] != 360.0)
-	{
-		PrintCenterText(client, "Нужно ставить на ровную поверхность #ANGLES");
-		return false;
-	} */
+	
 	float pOrigin[3];
 	float wall_dist = g_CvarIsolatorWall_Dist.FloatValue + 150;
 	for (int i = 1; i <= MaxClients; ++i)
@@ -256,16 +252,14 @@ bool TryPushPrisonerInIsolator(int client, int prisoner)
 	wall_dist -= 150.0;
 	float direction[3];
 	
-	bool builded[3] = {true, ...};
 	int prisoner_id = GetClientUserId(prisoner);
 	char IsoLatorName[28];
 	
-	/* First wall */
+	/* First wall & test if we can teleport player not in wall */
 	angles[1] = 0.0;
-	ent = EditWallPositionAndCreateWall(center, angles, direction, wall_dist);
+	ent = EditWallPositionAndCreateWall(center, angles, direction, wall_dist, true);
 	if (!ent)
 	{
-		// LogError("wtf.. create isolator error");
 		PrintHintText(client, "Нельзя создать изолятор, выберите другое место.");
 		return false;
 	}
@@ -280,35 +274,26 @@ bool TryPushPrisonerInIsolator(int client, int prisoner)
 	/* Second wall */
 	angles[1] = 90.0;
 	ent = EditWallPositionAndCreateWall(center, angles, direction, wall_dist);
-	if (!ent) builded[0] = false;
-	SetVariantString("!activator");
-	AcceptEntityInput(ent, "SetParent", g_iIsolatorIndex[prisoner]);
-	
-	/* Third wall */
-	if (builded[0])
+	if (ent)
 	{
-		angles[1] = 180.0;
-		ent = EditWallPositionAndCreateWall(center, angles, direction, wall_dist);
-		if (!ent) builded[1] = false;
+		SetVariantString("!activator");
+		AcceptEntityInput(ent, "SetParent", g_iIsolatorIndex[prisoner]);
+	}
+	/* Third wall */
+	angles[1] = 180.0;
+	ent = EditWallPositionAndCreateWall(center, angles, direction, wall_dist);
+	if (ent)
+	{
 		SetVariantString("!activator");
 		AcceptEntityInput(ent, "SetParent", g_iIsolatorIndex[prisoner]);
 	}
 	/* Fourth wall */
-	if (builded[0] && builded[1])
+	angles[1] = 270.0;
+	ent = EditWallPositionAndCreateWall(center, angles, direction, wall_dist);
+	if (ent)
 	{
-		angles[1] = 270.0;
-		ent = EditWallPositionAndCreateWall(center, angles, direction, wall_dist);
-		if (!ent) builded[2] = false;
 		SetVariantString("!activator");
 		AcceptEntityInput(ent, "SetParent", g_iIsolatorIndex[prisoner]);
-	}
-	
-	/* Check if builded isolator */
-	if (!builded[0] || !builded[1] || !builded[2])
-	{
-		PrintHintText(client, "Нельзя создать изолятор, выберите другое место.");
-		// TryKillIsolator(prisoner);
-		return false;
 	}
 	
 	/* Roof configuration */
@@ -350,11 +335,18 @@ bool TryPushPrisonerInIsolator(int client, int prisoner)
 	return true;
 }
 
-stock int EditWallPositionAndCreateWall(float wall_pos[3], float angles[3], float newpos[3], float dist)
+stock int EditWallPositionAndCreateWall(float wall_pos[3], float angles[3], float newpos[3], float dist, bool firstwall = false)
 {
 	int ent = CreateProp(g_cIsolatorWall);
 	if (IsValidEntity(ent))
 	{
+		if (firstwall)
+		{
+			wall_pos[2] += 20.0;
+			TeleportEntity(ent, wall_pos, angles, NULL_VECTOR);
+			if (IsEntStucked(ent)) return 0;
+			wall_pos[2] -= 20.0;
+		}
 		float direction[3];
 		GetAngleVectors(angles, direction, NULL_VECTOR, NULL_VECTOR);
 		newpos = wall_pos;
@@ -363,7 +355,6 @@ stock int EditWallPositionAndCreateWall(float wall_pos[3], float angles[3], floa
 		newpos[2] += 6.0;
 		TeleportEntity(ent, newpos, angles, NULL_VECTOR);
 		SetEntityMoveType(ent, MOVETYPE_NONE);
-		if (IsEntStucked(ent)) return 0;
 	}
 	
 	return ent;
@@ -377,7 +368,6 @@ bool IsEntStucked(int ent)
 	GetEntPropVector(ent, Prop_Send, "m_vecMaxs", vecMaxs);
 	
 	TR_TraceHullFilter(vecOrigin, vecOrigin, vecMins, vecMaxs, MASK_SOLID, TREntityStuckFilter, ent);
-	PrintToChatAll("Entity Index: %d", TR_GetEntityIndex());
 	if (TR_GetEntityIndex() > MaxClients) return false;
 	AcceptEntityInput(ent, "Kill");
 	return true;

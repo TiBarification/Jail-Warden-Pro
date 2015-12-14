@@ -158,7 +158,9 @@ public void Event_OnPlayerTeam(Event event, const char[] name, bool dontBroadcas
 public void Event_OnRoundFreezeEnd(Event event, const char[] name, bool dontBroadcast)
 {
 	g_bRoundEnd = false;
-	if (g_CvarChooseMode.IntValue == 1)
+	if (!Forward_OnWardenChoosing())
+		return;
+	else if (g_CvarChooseMode.IntValue == 1)
 	{
 		int client = JWP_GetRandomTeamClient(CS_TEAM_CT, true, false);
 		if (client) BecomeCmd(client);
@@ -230,7 +232,9 @@ public Action Command_BecomeWarden(int client, int args)
 		}
 		else
 		{
-			if (g_CvarChooseMode.IntValue == 1)
+			if (!Forward_OnWardenChoosing())
+				return Plugin_Handled;
+			else if (g_CvarChooseMode.IntValue == 1)
 			{
 				if (g_bIsCSGO)
 					CGOPrintToChat(client, "%t %t", "Core_Prefix", "warden_choose_random");
@@ -315,7 +319,9 @@ bool CheckClient(int client)
 
 bool BecomeCmd(int client)
 {
-	if (g_bWasWarden[client])
+	if (!Forward_OnWardenChoosing())
+		return false;
+	else if (g_bWasWarden[client])
 	{
 		if (g_bIsCSGO)
 			CGOPrintToChat(client, "%t %t", "Core_Prefix", "already_was_warden");

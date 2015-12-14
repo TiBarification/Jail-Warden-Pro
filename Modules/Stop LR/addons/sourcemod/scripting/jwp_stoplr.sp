@@ -25,6 +25,7 @@ public void OnPluginStart()
 	
 	HookEvent("round_start", Event_OnRoundStart, EventHookMode_PostNoCopy);
 	if (JWP_IsStarted()) JWC_Started();
+	AutoExecConfig(true, "stoplr", "jwp");
 }
 
 public void OnCvarChange(ConVar cvar, const char[] oldValue, const char[] newValue)

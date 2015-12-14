@@ -18,17 +18,44 @@
 */
 forward int JWC_Started();
 
-// Alive ct became warden.
+/** Called to prevent choosing a warden
+ *	-
+ *	@noparams
+ *	-
+ *	@return true to enable warden, false to disable warden searching. By default return true;
+*/
+forward int JWP_OnWardenChoosing();
+
+/** Called when alive client became warden
+ *	-
+ *	@param client			Client index
+ *	-
+ *	@noreturn
+*/
 forward int JWP_OnWardenChosen(int client);
 
-// Alive ct became zam of warden.
+/** Called when alive client became zam of warden
+ *	-
+ *	@param client			Client index
+ *	-
+ *	@noreturn
+ */
 forward int JWP_OnWardenZamChosen(int client);
 
 /**
- * Warden Resigned
- * If bool:himself true, then resigned by himself.
- * Else if he changed own team or disconnected.
-**/
+ *	Called when client is going to resign
+ *	-
+ *	@param client			Client index
+ *	-
+ *	@return true to allow resign, false to restrict. By default return true;
+ */
+forward int JWP_OnWardenResign(int client);
+
+/**
+ *	Warden Resigned
+ *	If bool:himself true, then resigned by himself.
+ *	Else if he changed own team or disconnected.
+ */
 forward int JWP_OnWardenResigned(int client, bool himself);
 
 /**
@@ -37,7 +64,7 @@ forward int JWP_OnWardenResigned(int client, bool himself);
  *	@noparams
  *	-
  *	@return	True if the shop is already started, false otherwise
-*/
+ */
 native bool JWP_IsStarted();
 
 /**
@@ -48,7 +75,7 @@ native bool JWP_IsStarted();
  *	@param maxlength		Max length of the buffer
  *	-
  *	@noreturn
-*/
+ */
 typedef CmdItemDisplay = function bool (int client, char[] buffer, int maxlength);
 
 /**
@@ -57,7 +84,7 @@ typedef CmdItemDisplay = function bool (int client, char[] buffer, int maxlength
  *	@param client			Client index performing selection
  *	-
  *	@return true to allow performing and false to block
-*/
+ */
 typedef CmdItemSelect = function bool (int client);
 
 /**
@@ -68,7 +95,7 @@ typedef CmdItemSelect = function bool (int client);
  *	@param callback_select			Callback when the item is being selected
  *	-
  *	@noreturn
-*/
+ */
 native void JWP_AddToMainMenu(const char[] name, CmdItemDisplay callback_display, CmdItemSelect callback_select);
 
 /**
@@ -79,7 +106,7 @@ native void JWP_AddToMainMenu(const char[] name, CmdItemDisplay callback_display
  *	@param callback_select			Callback to remove
  *	-
  *	@return true on success, false otherwise
-*/
+ */
 native bool JWP_RemoveFromMainMenu(const char[] name, CmdItemDisplay callback_display, CmdItemSelect callback_select);
 
 /**
@@ -88,7 +115,7 @@ native bool JWP_RemoveFromMainMenu(const char[] name, CmdItemDisplay callback_di
  *	@param client			Client index to show to
  *	-
  *	@noreturn
-*/
+ */
 native void JWP_ShowMainMenu(int client);
 
 /**
@@ -97,7 +124,7 @@ native void JWP_ShowMainMenu(int client);
  *	@param client			Client index
  *	-
  *	@return true if warden, false otherwise
-*/
+ */
 native bool JWP_IsWarden(int client);
 
 /**
@@ -106,14 +133,14 @@ native bool JWP_IsWarden(int client);
  *	@param client			Client index
  *	-
  *	@return true if warden zam, false otherwise
-*/
+ */
 native bool JWP_IsZamWarden(int client);
 
 /**
  *	Index of warden, if 0 then no warden
  *	-
  *	@return index of warden
-*/
+ */
 native int JWP_GetWarden();
 
 /**
@@ -122,14 +149,14 @@ native int JWP_GetWarden();
  *	@param client			Client index
  *	-
  *	@return true if success, otherwise false
-*/
+ */
 native bool JWP_SetWarden(int client);
 
 /**
  *	Index of warden zam, if 0 then no zam
  *	-
  *	@return client index of warden zam and 0 if no zam
-*/
+ */
 native int JWP_GetZamWarden();
 
 /**
@@ -138,7 +165,7 @@ native int JWP_GetZamWarden();
  *	@param client			Client index
  *	-
  *	@return true if success, otherwise false
-*/
+ */
 native bool JWP_SetZamWarden(int client);
 
 /**
@@ -148,7 +175,7 @@ native bool JWP_SetZamWarden(int client);
  *	@param array			Array of converted items 
  *	-
  *	@return true if success, otherwise false
-*/
+ */
 native bool JWP_ConvertToColor(char[] str, int[] array);
 
 /**
@@ -158,7 +185,7 @@ native bool JWP_ConvertToColor(char[] str, int[] array);
  *	@param ...				Message arguments
  *	-
  *	@noreturn
-*/
+ */
 native void JWP_ActionMsgAll(const char[] msg, any ...);
 
 /**
@@ -169,7 +196,7 @@ native void JWP_ActionMsgAll(const char[] msg, any ...);
  *	@param ...				Message arguments
  *	-
  *	@noreturn
-*/
+ */
 native void JWP_ActionMsg(int client, const char[] msg, any ...);
 
 /**
@@ -179,7 +206,7 @@ native void JWP_ActionMsg(int client, const char[] msg, any ...);
  *	@param alive			Changing it to true can exclude dead players (with specs) from random system
  *	-
  *	@return random client index
-*/
+ */
 native int JWP_GetRandomTeamClient(int team, bool alive = false);
 
 /**
@@ -189,8 +216,11 @@ native int JWP_GetRandomTeamClient(int team, bool alive = false);
  *	@param delay			Delay for flood protect in seconds. Recommended 1 or 2.
  *	-
  *	@return true if flooding, false otherwise
-*/
+ */
 native bool JWP_IsFlood(int client, int delay = 1);
+
+/********************* INTEGRATION WITH FREEDAY MODULE ***********************/
+/*****************************************************************************/
 
 /**
  *	Function to check if player has freeday
@@ -198,7 +228,7 @@ native bool JWP_IsFlood(int client, int delay = 1);
  *	@param client			Client index
  *	-
  *	@return true if player has freeday, false otherwise
-*/
+ */
 native bool JWP_PrisonerHasFreeday(int client);
 
 /**
@@ -208,8 +238,13 @@ native bool JWP_PrisonerHasFreeday(int client);
  *	@param state			True to set freeday, or false to take it
  *	-
  *	@return true if player state has been successfully changed, false otherwise
-*/
+ */
 native bool JWP_PrisonerSetFreeday(int client, bool state = true);
+/***************** END OF INTEGRATION WITH FREEDAY MODULE ********************/
+/*****************************************************************************/
+
+/********************* INTEGRATION WITH ISOLATOR MODULE ***********************/
+/******************************************************************************/
 
 /**
  *	Function to check if player in isolator
@@ -217,7 +252,7 @@ native bool JWP_PrisonerSetFreeday(int client, bool state = true);
  *	@param client			Client index
  *	-
  *	@return true if player in isolator, false otherwise
-*/
+ */
 native bool JWP_IsPrisonerIsolated(int client);
 
 /**
@@ -227,23 +262,26 @@ native bool JWP_IsPrisonerIsolated(int client);
  *	@param state			True to push into isolator, or false to bring him back
  *	-
  *	@return true if player state has been successfully changed, false otherwise
-*/
+ */
 native bool JWP_PrisonerIsolated(int client, bool state = true);
 
+/********************* END OF INTEGRATION WITH ISOLATOR MODULE ****************/
+/******************************************************************************/
+
 /**
- * Function to rehash menu (simple update menu items)
- * -
- * @noparams
- * -
- * @noreturn
-*/
+ *	Function to rehash menu (simple update menu items)
+ *	-
+ *	@noparams
+ *	-
+ *	@noreturn
+ */
 native void JWP_RehashMenu();
 
 /**
- * Function to get menu item count
- * -
- * @noparams
- * -
- * @return item count of menu
-*/
+ *	Function to get menu item count
+ *	-
+ *	@noparams
+ *	-
+ *	@return item count of menu
+ */
 native int JWP_GetMenuItemCount();

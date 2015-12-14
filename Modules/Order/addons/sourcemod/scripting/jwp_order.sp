@@ -13,6 +13,7 @@
 ConVar	g_CvarOrderSound,
 		g_CvarOrderAlways,
 		g_CvarOrderMsg,
+		g_CvarOrderPanel,
 		g_CvarPanelTime;
 char g_cOrderSound[PLATFORM_MAX_PATH], g_cOrderMsg[250];
 
@@ -32,11 +33,13 @@ public void OnPluginStart()
 	g_CvarOrderSound = CreateConVar("jwp_order_sound", "buttons/blip2.wav", "Звук, когда командир приказывает", FCVAR_PLUGIN);
 	g_CvarOrderAlways = CreateConVar("jwp_order_always", "1", "Если 1, то каждое сообщение командира в чате будет приказом", FCVAR_PLUGIN);
 	g_CvarOrderMsg = CreateConVar("jwp_order_msg", "{default}({green}КОМАНДИР{default}) {red}{nick}: {default}{text}", "Цвет сообщений приказа.", FCVAR_PLUGIN);
+	g_CvarOrderPanel = CreateConVar("jwp_order_panel", "1", "Включить отображение приказа в панели", FCVAR_PLUGIN, true, 0.0, true, 1.0);
 	g_CvarPanelTime = CreateConVar("jwp_order_panel_time", "20", "Сколько секунд показывать меню приказа.", FCVAR_PLUGIN, true, 1.0, true, 40.0);
 	
 	g_CvarOrderSound.AddChangeHook(OnCvarChange);
 	g_CvarOrderAlways.AddChangeHook(OnCvarChange);
 	g_CvarOrderMsg.AddChangeHook(OnCvarChange);
+	g_CvarOrderPanel.AddChangeHook(OnCvarChange);
 	g_CvarPanelTime.AddChangeHook(OnCvarChange);
 	if (JWP_IsStarted()) JWC_Started();
 	AutoExecConfig(true, ITEM, "jwp");
@@ -60,6 +63,7 @@ public void OnCvarChange(ConVar cvar, const char[] oldValue, const char[] newVal
 		strcopy(g_cOrderMsg, sizeof(g_cOrderMsg), newValue);
 		g_CvarOrderMsg.SetString(newValue);
 	}
+	else if (cvar == g_CvarOrderPanel) g_CvarOrderPanel.SetInt(StringToInt(newValue));
 	else if (cvar == g_CvarPanelTime) g_CvarPanelTime.SetInt(StringToInt(newValue));
 }
 
@@ -133,10 +137,7 @@ void CreateOrderMsg(int client, const char[] order)
 	ReplaceString(text, sizeof(text), "+", "\n", true);
 	
 	/* Работа с чатом */
-	// PrintToChatAll("\x01(\x03КОМАНДИР\x01) \x03%N\x01: %s", client, text);
-	
 	if (GetEngineVersion() == Engine_CSS)
-		// ReplaceString(g_cOrderMsg, sizeof(g_cOrderMsg), "#", "\x07", true);
 		CReplaceColorCodes(g_cOrderMsg, client, false, sizeof(g_CvarOrderMsg));
 	else
 		CGOReplaceColorSay(g_cOrderMsg, sizeof(g_cOrderMsg));
@@ -149,18 +150,21 @@ void CreateOrderMsg(int client, const char[] order)
 	
 	/* Конец работы с чатом */
 	
-	// И покажем террористам приказ в меню
-	Format(text, sizeof(text), "(КОМАНДИР) %s: %s\n \n", name, text);
-	
-	Panel p1 = new Panel();
-	p1.DrawText(text);
-	p1.CurrentKey = 10;
-	p1.DrawItem("Выход");
-	
-	for (int i = 1; i <= MaxClients; ++i)
+	// И покажем террористам приказ в меню если квар позволяет
+	if (g_CvarOrderPanel.BoolValue)
 	{
-		if (IsClientInGame(i) && GetClientTeam(i) == CS_TEAM_T)
-			p1.Send(i, OrderMsg_Callback, g_CvarPanelTime.IntValue);
+		Format(text, sizeof(text), "(КОМАНДИР) %s: %s\n \n", name, text);
+		
+		Panel p1 = new Panel();
+		p1.DrawText(text);
+		p1.CurrentKey = 10;
+		p1.DrawItem("Выход");
+		
+		for (int i = 1; i <= MaxClients; ++i)
+		{
+			if (IsClientInGame(i) && GetClientTeam(i) == CS_TEAM_T)
+				p1.Send(i, OrderMsg_Callback, g_CvarPanelTime.IntValue);
+		}
 	}
 }
 

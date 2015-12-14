@@ -228,7 +228,12 @@ public int ConfirmMenu_Callback(Menu menu, MenuAction action, int client, int sl
 		{
 			if (IsWarden(client))
 			{
-				if (!slot) RemoveCmd(true);
+				if (!slot)
+				{
+					if (Forward_OnWardenResign(client))
+						RemoveCmd(true);
+					else return;
+				}
 				else Cmd_ShowMenu(client);
 			}
 		}
