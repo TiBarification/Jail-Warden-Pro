@@ -8,8 +8,8 @@
 	"warden_death"
 	{
 		"#format"	"{1:N}"
-		"en"		"Warden %N is dead."
-		"ru"		"Командир %N сдох."
+		"en"		"Warden {1} is dead."
+		"ru"		"Командир {1} сдох."
 	}
 	"use_warden_cmd"
 	{
