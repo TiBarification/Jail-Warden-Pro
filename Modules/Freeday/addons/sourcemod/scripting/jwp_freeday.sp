@@ -91,7 +91,7 @@ public void OnClientDisconnect_Post(int client)
 	if (JWP_PrisonerHasFreeday(client)) JWP_PrisonerSetFreeday(client, false);
 }
 
-public bool OnFuncFDGiveDisplay(int client, char[] buffer, int maxlength)
+public bool OnFuncFDGiveDisplay(int client, char[] buffer, int maxlength, int style)
 {
 	FormatEx(buffer, maxlength, "Дать фридей");
 	return true;
@@ -103,7 +103,7 @@ public bool OnFuncFDGiveSelect(int client)
 	return true;
 }
 
-public bool OnFuncFDTakeDisplay(int client, char[] buffer, int maxlength)
+public bool OnFuncFDTakeDisplay(int client, char[] buffer, int maxlength, int style)
 {
 	FormatEx(buffer, maxlength, "Забрать фридей");
 	return true;

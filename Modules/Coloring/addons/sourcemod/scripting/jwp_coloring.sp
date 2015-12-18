@@ -46,7 +46,7 @@ public void OnPluginEnd()
 	JWP_RemoveFromMainMenu(ITEM, OnFuncDisplay, OnFuncSelect);
 }
 
-public bool OnFuncDisplay(int client, char[] buffer, int maxlength)
+public bool OnFuncDisplay(int client, char[] buffer, int maxlength, int style)
 {
 	FormatEx(buffer, maxlength, "[%s]Разделить по цветам", (g_bColoring) ? '-' : '+');
 	return true;
@@ -90,8 +90,12 @@ public bool OnFuncSelect(int client)
 			}
 		}
 	}
+	if (g_bColoring)
+		JWP_RefreshMenuItem(ITEM, "[-]Разделить по цветам");
+	else
+		JWP_RefreshMenuItem(ITEM, "[+]Разделить по цветам");
 	JWP_ActionMsg(client, "\x03Разделение по цветам \x02%s", (g_bColoring) ? "включено" : "отключено");
-	JWP_RehashMenu();
+	// JWP_RehashMenu();
 	JWP_ShowMainMenu(client);
 	return true;
 }

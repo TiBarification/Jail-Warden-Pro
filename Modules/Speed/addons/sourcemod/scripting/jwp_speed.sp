@@ -44,7 +44,7 @@ public void OnPluginEnd()
 	JWP_RemoveFromMainMenu(ITEM, OnFuncDisplay, OnFuncSelect);
 }
 
-public bool OnFuncDisplay(int client, char[] buffer, int maxlength)
+public bool OnFuncDisplay(int client, char[] buffer, int maxlength, int style)
 {
 	FormatEx(buffer, maxlength, "[%s]Скорость", (g_bSpeed) ? '-' : '+');
 	return true;
@@ -54,7 +54,11 @@ public bool OnFuncSelect(int client)
 {
 	g_bSpeed = !g_bSpeed;
 	SetEntPropFloat(client, Prop_Send, "m_flLaggedMovementValue", (g_bSpeed) ? Cvar_SpeedValue.FloatValue : 1.0);
-	JWP_RehashMenu();
+	// JWP_RehashMenu();
+	if (g_bSpeed)
+		JWP_RefreshMenuItem(ITEM, "[-]Скорость");
+	else
+		JWP_RefreshMenuItem(ITEM, "[+]Скорость");
 	JWP_ShowMainMenu(client);
 	return true;
 }

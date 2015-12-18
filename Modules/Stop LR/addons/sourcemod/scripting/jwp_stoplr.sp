@@ -48,7 +48,7 @@ public void OnPluginEnd()
 	JWP_RemoveFromMainMenu(ITEM, OnFuncDisplay, OnFuncSelect);
 }
 
-public bool OnFuncDisplay(int client, char[] buffer, int maxlength)
+public bool OnFuncDisplay(int client, char[] buffer, int maxlength, int style)
 {
 	if (!g_CvarMaxStops.IntValue)
 		FormatEx(buffer, maxlength, "Остановить LR");
@@ -64,7 +64,11 @@ public bool OnFuncSelect(int client)
 		JWP_ActionMsgAll("%N остановил \x02LR\x01.", client);
 		ServerCommand("sm_stoplr"); // Останавливает лр от имени сервера.
 		g_iStops++;
-		JWP_RehashMenu();
+		int result = g_CvarMaxStops.IntValue - g_iStops;
+		char buffer[64];
+		FormatEx(buffer, sizeof(buffer), "Остановить LR (ост: %d)", result);
+		JWP_RefreshMenuItem(ITEM, buffer, (!result) ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
+		// JWP_RehashMenu();
 	}
 	else
 		JWP_ActionMsg(client, "Вы использовали максимальное количество отмен LR.");
