@@ -119,12 +119,22 @@ public void OnClientDisconnect_Post(int client)
 		RemoveCmd(false);
 	else if (g_bIsDeveloper[client]) g_bIsDeveloper[client] = false;
 	g_iVoteResult[client] = 0;
+	
+	// Modules client reset
+	g_bHasFreeday[client] = false;
+	g_bIsolated[client] = false;
 }
 
 public void Event_OnRoundStart(Event event, const char[] name, bool dontBroadcast)
 {
 	for (int i = 1; i <= MaxClients; i++)
+	{
 		g_bWasWarden[i] = false;
+		
+		// Modules client reset
+		g_bHasFreeday[i] = false;
+		g_bIsolated[i] = false;
+	}
 	Forward_OnWardenResigned(g_iWarden, false);
 	EmptyPanel(g_iWarden);
 	delete g_mMainMenu;
@@ -136,15 +146,22 @@ public void Event_OnRoundStart(Event event, const char[] name, bool dontBroadcas
 public void Event_OnPlayerDeath(Event event, const char[] name, bool dontBroadcast)
 {
 	int client = GetClientOfUserId(event.GetInt("userid"));
-	if (CheckClient(client) && IsWarden(client))
+	if (CheckClient(client))
 	{
-		if (g_bIsCSGO)
-			CGOPrintToChatAll("%t %t", "Core_Prefix", "warden_death", client);
-		else
-			CPrintToChatAll("%t %t", "Core_Prefix", "warden_death", client);
-		RemoveCmd(false);
+		if (IsWarden(client))
+		{
+			if (g_bIsCSGO)
+				CGOPrintToChatAll("%t %t", "Core_Prefix", "warden_death", client);
+			else
+				CPrintToChatAll("%t %t", "Core_Prefix", "warden_death", client);
+			RemoveCmd(false);
+		}
+		else if (IsZamWarden(client)) g_iZamWarden = 0;
+		
+		// Module client reset
+		g_bHasFreeday[client] = false;
+		g_bIsolated[client] = false;
 	}
-	else if (IsZamWarden(client)) g_iZamWarden = 0;
 }
 
 public void Event_OnPlayerTeam(Event event, const char[] name, bool dontBroadcast)
@@ -153,6 +170,10 @@ public void Event_OnPlayerTeam(Event event, const char[] name, bool dontBroadcas
 	if (IsWarden(client))
 		RemoveCmd(false);
 	else if (IsZamWarden(client)) g_iZamWarden = 0;
+	
+	// Module client reset
+	g_bHasFreeday[client] = false;
+	g_bIsolated[client] = false;
 }
 
 public void Event_OnRoundFreezeEnd(Event event, const char[] name, bool dontBroadcast)

@@ -310,8 +310,12 @@ bool RefreshMenuItem(char[] item, char[] newdisp = "", int style = ITEMDRAW_DEFA
 				strcopy(display, sizeof(display), newdisp);
 			if (style != oldstyle)
 				oldstyle = style;
-			if (g_mMainMenu.RemoveItem(i) && g_mMainMenu.InsertItem(i, id, display, oldstyle))
+			if (g_mMainMenu.RemoveItem(i))
+			{
+				if (!g_mMainMenu.InsertItem(i, id, display, oldstyle))
+					g_mMainMenu.AddItem(id, display, oldstyle);
 				return true;
+			}
 		}
 	}
 	return false;

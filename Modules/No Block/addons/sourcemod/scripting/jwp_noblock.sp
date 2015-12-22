@@ -43,6 +43,11 @@ public void Event_OnRoundStart(Event event, const char[] name, bool dontBroadcas
 {
 	if (engine == Engine_CSGO)
 		Cvar_Noblock.RestoreDefault(false, false);
+	else
+	{
+		for (int i = 1; i <= MaxClients; ++i)
+			NoblockEntity(i, false);
+	}
 	g_bNoblock = false;
 }
 
@@ -51,7 +56,7 @@ public void Event_OnPlayerSpawn(Event event, const char[] name, bool dontBroadca
 	if (engine == Engine_CSS)
 	{
 		int client = GetClientOfUserId(event.GetInt("userid"));
-		NoblockEntity(client);
+		NoblockEntity(client, g_bNoblock);
 	}
 }
 
@@ -75,7 +80,7 @@ public bool OnFuncSelect(int client)
 {
 	g_bNoblock = !g_bNoblock;
 	if (engine == Engine_CSGO)
-		Cvar_Noblock.SetBool(g_bNoblock, false, false);
+		Cvar_Noblock.SetBool(!g_bNoblock, false, false);
 	else
 	{
 		for (int i = 1; i <= MaxClients; ++i)
@@ -84,11 +89,11 @@ public bool OnFuncSelect(int client)
 				NoblockEntity(i, g_bNoblock);
 		}
 	}
-	JWP_ActionMsgAll("НОБЛОК: \x02%s", (g_bNoblock) ? "ВКЛЮЧЕН":"ВЫКЛЮЧЕН");
 	if (g_bNoblock)
 		JWP_RefreshMenuItem(ITEM, "[-]Ноблок");
 	else
 		JWP_RefreshMenuItem(ITEM, "[+]Ноблок");
+	JWP_ActionMsgAll("НОБЛОК: \x02%s", (g_bNoblock) ? "ВКЛЮЧЕН":"ВЫКЛЮЧЕН");
 	JWP_ShowMainMenu(client);
 	return true;
 }
