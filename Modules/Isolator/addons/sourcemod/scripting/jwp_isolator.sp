@@ -40,7 +40,6 @@ public void OnPluginStart()
 	g_CvarIsolatorRoof_Dist.AddChangeHook(OnCvarChange);
 	g_CvarIsolator_Sound.AddChangeHook(OnCvarChange);
 	
-	HookEvent("round_start", Event_OnRoundStart, EventHookMode_PostNoCopy);
 	HookEvent("player_death", Event_OnPlayerDeath);
 	HookEvent("player_team", Event_OnPlayerTeam);
 	
@@ -100,29 +99,20 @@ public void OnCvarChange(ConVar cvar, const char[] oldValue, const char[] newVal
 	}
 }
 
-public void Event_OnRoundStart(Event event, const char[] name, bool dontBroadcast)
-{
-	for (int i = 1; i <= MaxClients; ++i)
-		JWP_PrisonerIsolated(i, false);
-}
-
 public void Event_OnPlayerDeath(Event event, const char[] name, bool dontBroadcast)
 {
 	int client = GetClientOfUserId(event.GetInt("userid"));
-	JWP_PrisonerIsolated(client, false);
 	TryKillIsolator(client);
 }
 
 public void Event_OnPlayerTeam(Event event, const char[] name, bool dontBroadcast)
 {
 	int client = GetClientOfUserId(event.GetInt("userid"));
-	JWP_PrisonerIsolated(client, false);
 	TryKillIsolator(client);
 }
 
 public void OnClientDisconnect_Post(int client)
 {
-	JWP_PrisonerIsolated(client, false);
 	TryKillIsolator(client);
 }
 

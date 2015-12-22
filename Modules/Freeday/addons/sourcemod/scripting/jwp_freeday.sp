@@ -29,31 +29,7 @@ public void OnPluginStart()
 	g_CvarRGBA.AddChangeHook(OnCvarChange);
 	if (JWP_IsStarted()) JWC_Started();
 	
-	HookEvent("round_start", Event_OnRoundStart, EventHookMode_PostNoCopy);
-	HookEvent("player_death", Event_OnPlayerDeath);
-	HookEvent("player_team", Event_OnPlayerTeam);
-	
 	AutoExecConfig(true, "freeday", "jwp");
-}
-
-public void Event_OnRoundStart(Event event, const char[] name, bool dontBroadcast)
-{
-	for (int i = 1; i <= MaxClients; ++i)
-		JWP_PrisonerSetFreeday(i, false);
-}
-
-public void Event_OnPlayerDeath(Event event, const char[] name, bool dontBroadcast)
-{
-	int client = GetClientOfUserId(event.GetInt("userid"));
-	if (JWP_PrisonerHasFreeday(client))
-		JWP_PrisonerSetFreeday(client, false);
-}
-
-public void Event_OnPlayerTeam(Event event, const char[] name, bool dontBroadcast)
-{
-	int client = GetClientOfUserId(event.GetInt("userid"));
-	if (JWP_PrisonerHasFreeday(client))
-		JWP_PrisonerSetFreeday(client, false);
 }
 
 public int JWC_Started()
@@ -85,12 +61,6 @@ public void OnPluginEnd()
 	JWP_RemoveFromMainMenu(FDGIVE, OnFuncFDGiveDisplay, OnFuncFDGiveSelect);
 	JWP_RemoveFromMainMenu(FDTAKE, OnFuncFDTakeDisplay, OnFuncFDTakeSelect);
 }
-
-public void OnClientDisconnect_Post(int client)
-{
-	if (JWP_PrisonerHasFreeday(client)) JWP_PrisonerSetFreeday(client, false);
-}
-
 public bool OnFuncFDGiveDisplay(int client, char[] buffer, int maxlength, int style)
 {
 	FormatEx(buffer, maxlength, "Дать фридей");
