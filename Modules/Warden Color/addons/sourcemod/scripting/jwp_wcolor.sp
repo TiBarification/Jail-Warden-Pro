@@ -9,6 +9,7 @@ ConVar	g_CvarWardenColor,
 		g_CvarWardenZamColor;
 int g_iWardenColor[4], g_iWardenZamColor[4];
 bool g_bWardenColor, g_bWardenZamColor;
+
 public Plugin myinfo = 
 {
 	name = "[JWP] Warden color",

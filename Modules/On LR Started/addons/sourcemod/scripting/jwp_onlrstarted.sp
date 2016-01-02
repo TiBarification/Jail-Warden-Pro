@@ -1,0 +1,43 @@
+#include <sourcemod>
+#include <lastrequest>
+#include <jwp>
+
+#pragma newdecls required
+
+#define PLUGIN_VERSION "1.0"
+
+bool g_bEnabled = true;
+
+public Plugin myinfo = 
+{
+	name = "[JWP] On LR Started",
+	description = "Remove cmd & zam if LR started",
+	author = "White Wolf (HLModders LLC)",
+	version = PLUGIN_VERSION,
+	url = "http://hlmod.ru"
+};
+
+public void OnPluginStart()
+{
+	HookEvent("round_end", Event_OnRoundEnd, EventHookMode_PostNoCopy);
+}
+
+public void Event_OnRoundEnd(Event event, const char[] name, bool dontBroadcast)
+{
+	g_bEnabled = true;
+}
+
+public int OnAvailableLR(int announce)
+{
+	// announce just notify that LR is available and can be disabled
+	// At first we remove zam and after warden
+	JWP_SetZamWarden(0);
+	JWP_SetWarden(0);
+	g_bEnabled = false;
+}
+
+public int JWP_OnWardenChoosing()
+{
+	if (g_bEnabled) return true;
+	return false;
+}
