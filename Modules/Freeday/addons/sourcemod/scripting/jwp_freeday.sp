@@ -98,7 +98,6 @@ void ShowFreedayMenu(int client, bool fd_players)
 		if (CheckClient(i))
 		{
 			GetClientName(i, name, sizeof(name))
-			// Format(name, sizeof(name), "%N", i);
 			if (fd_players && JWP_PrisonerHasFreeday(i))
 			{
 				IntToString(i, id, sizeof(id));

@@ -95,7 +95,6 @@ public bool OnFuncSelect(int client)
 	else
 		JWP_RefreshMenuItem(ITEM, "[+]Разделить по цветам");
 	JWP_ActionMsg(client, "\x03Разделение по цветам \x02%s", (g_bColoring) ? "включено" : "отключено");
-	// JWP_RehashMenu();
 	JWP_ShowMainMenu(client);
 	return true;
 }

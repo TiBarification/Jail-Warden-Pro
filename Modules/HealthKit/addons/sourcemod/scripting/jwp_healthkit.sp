@@ -45,6 +45,8 @@ public void OnPluginStart()
 	
 	HookEvent("round_start", Event_OnRoundStart, EventHookMode_PostNoCopy);
 	if (JWP_IsStarted()) JWC_Started();
+	
+	AutoExecConfig(true, ITEM, "jwp");
 }
 
 public void OnMapStart()
@@ -101,21 +103,20 @@ public bool OnFuncDisplay(int client, char[] buffer, int maxlength, int style)
 
 public bool OnFuncSelect(int client)
 {
-	char buffer[64];
-	Format(buffer, sizeof(buffer), "Создать аптечку (%d/%d)", g_iHKits[client]+1, g_CvarHK_Limit.IntValue);
-	if (TrySpawnHealthKit(client)) JWP_RefreshMenuItem(ITEM, buffer);
+	if (g_CvarHK_Limit.IntValue && g_iHKits[client] == g_CvarHK_Limit.IntValue)
+		JWP_RefreshMenuItem(ITEM, _, ITEMDRAW_DISABLED);
+	else if (TrySpawnHealthKit(client) && g_CvarHK_Limit.IntValue)
+	{
+		char buffer[64];
+		Format(buffer, sizeof(buffer), "Создать аптечку (%d/%d)", g_iHKits[client], g_CvarHK_Limit.IntValue);
+		JWP_RefreshMenuItem(ITEM, buffer);
+	}
 	JWP_ShowMainMenu(client);
 	return true;
 }
 
 bool TrySpawnHealthKit(int client)
 {
-	if (g_CvarHK_Limit.IntValue && g_iHKits[client] >= g_CvarHK_Limit.IntValue)
-	{
-		JWP_RefreshMenuItem(ITEM, _, ITEMDRAW_DISABLED);
-		return false;
-	}
-	
 	if (JWP_IsFlood(client))
 	{
 		JWP_ActionMsg(client, "Не флудите аптечкой.");

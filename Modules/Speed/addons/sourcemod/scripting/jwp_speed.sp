@@ -1,4 +1,3 @@
-// SetEntPropFloat(i, Prop_Send, "m_flLaggedMovementValue", velocidad)
 #include <sourcemod>
 #include <sdktools>
 #include <cstrike>
@@ -29,6 +28,11 @@ public void OnPluginStart()
 	AutoExecConfig(true, ITEM, "jwp");
 }
 
+public int JWP_OnWardenChosen(int client)
+{
+	g_bSpeed = false;
+}
+
 public void OnCvarChange(ConVar cvar, const char[] oldValue, const char[] newValue)
 {
 	if (cvar == Cvar_SpeedValue) Cvar_SpeedValue.SetFloat(StringToFloat(newValue));
@@ -54,7 +58,6 @@ public bool OnFuncSelect(int client)
 {
 	g_bSpeed = !g_bSpeed;
 	SetEntPropFloat(client, Prop_Send, "m_flLaggedMovementValue", (g_bSpeed) ? Cvar_SpeedValue.FloatValue : 1.0);
-	// JWP_RehashMenu();
 	if (g_bSpeed)
 		JWP_RefreshMenuItem(ITEM, "[-]Скорость");
 	else
