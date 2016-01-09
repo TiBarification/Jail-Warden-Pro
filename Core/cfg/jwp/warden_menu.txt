@@ -32,6 +32,14 @@
 	{
 		"flag"	""
 	}
+	"door_aim_open"
+	{
+		"flag"	""
+	}
+	"door_aim_close"
+	{
+		"flag"	""
+	}
 	"freeday_give"
 	{
 		"flag"	""

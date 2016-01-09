@@ -118,7 +118,7 @@ public int JWP_OnWardenResigned(int client, bool himself)
 	}
 }
 
-void LoadSkinsFromFile(char[] path, ArrayList myArray)
+void LoadSkinsFromFile(char[] path, ArrayList& myArray)
 {
 	if (myArray != null)
 	{
@@ -132,7 +132,7 @@ void LoadSkinsFromFile(char[] path, ArrayList myArray)
 		char model[PLATFORM_MAX_PATH];
 		while (!IsEndOfFile(hFile) && ReadFileLine(hFile, model, sizeof(model)))
 		{
-			if (TrimString(model) > 7 && StrContains(model, "models", true) && StrContains(model, ".mdl", true))
+			if (TrimString(model) > 7 && (StrContains(model, "models", false) > -1) && (StrContains(model, ".mdl", false) > -1))
 			{
 				if (FileExists(model, false))
 				{
@@ -158,7 +158,7 @@ bool TiB_SetSkin(int client, int team)
 	return false;
 }
 
-bool GetRandomSkin(int client, ArrayList myArray)
+bool GetRandomSkin(int client, ArrayList& myArray)
 {
 	if (myArray == null || !myArray.Length)
 		return false;

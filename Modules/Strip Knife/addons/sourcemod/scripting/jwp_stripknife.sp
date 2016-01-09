@@ -22,6 +22,13 @@ public Plugin myinfo =
 public void OnPluginStart()
 {
 	if (JWP_IsStarted()) JWC_Started();
+	HookEvent("round_start", Event_OnRoundStart, EventHookMode_PostNoCopy);
+}
+
+public void Event_OnRoundStart(Event event, const char[] name, bool dontBroadcast)
+{
+	for (int i = 1; i <= MaxClients; ++i)
+		g_bHaveKnife[i] = true;
 }
 
 public int JWC_Started()
