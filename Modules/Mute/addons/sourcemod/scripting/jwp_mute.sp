@@ -1,6 +1,7 @@
 #include <sourcemod>
 #include <cstrike>
 #include <basecomm>
+#include <sdktools>
 #include <jwp>
 
 #pragma newdecls required
@@ -159,6 +160,7 @@ public int PList_Callback(Menu menu, MenuAction action, int client, int slot)
 							{
 								g_bMuted[i] = !g_bMuted[i];
 								BaseComm_SetClientMute(i, g_bMuted[i]);
+								SetClientListeningFlags(i, VOICE_NORMAL);
 							}
 							else
 								JWP_ActionMsg(client, "Не удалось включить микрофон игроку %N.\nВозможно мут поставлен администратором.", i);
@@ -167,6 +169,7 @@ public int PList_Callback(Menu menu, MenuAction action, int client, int slot)
 						{
 							g_bMuted[i] = !g_bMuted[i];
 							BaseComm_SetClientMute(i, g_bMuted[i]);
+							SetClientListeningFlags(i, VOICE_MUTED);
 						}
 					}
 				}
@@ -197,6 +200,7 @@ public int PList_Callback(Menu menu, MenuAction action, int client, int slot)
 						{
 							g_bMuted[target] = !g_bMuted[target];
 							BaseComm_SetClientMute(target, g_bMuted[target]);
+							SetClientListeningFlags(target, VOICE_NORMAL);
 						}
 						else
 						{
@@ -208,6 +212,7 @@ public int PList_Callback(Menu menu, MenuAction action, int client, int slot)
 					{
 						g_bMuted[target] = !g_bMuted[target];
 						BaseComm_SetClientMute(target, g_bMuted[target]);
+						SetClientListeningFlags(target, VOICE_MUTED);
 					}
 					
 					JWP_ActionMsgAll("%N %s мут для %N.", client, (g_bMuted[target]) ? "\x03дал\x01" : "\x02снял\x01", target);
@@ -228,6 +233,7 @@ public Action TempMute_Timer_Callback(Handle timer)
 			{
 				g_bMuted[i] = false;
 				BaseComm_SetClientMute(i, false);
+				SetClientListeningFlags(i, VOICE_NORMAL);
 			}
 		}
 		JWP_ActionMsgAll("Микрофон снова доступен террористам.");

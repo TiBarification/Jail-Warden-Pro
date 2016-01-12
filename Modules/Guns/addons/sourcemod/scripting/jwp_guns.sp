@@ -61,6 +61,7 @@ void LoadGunsFile()
 	if (!kv.GotoFirstSubKey(true)) return;
 	
 	char buffer[32], text[48];
+	int options[2];
 	g_WeaponMenu = new Menu(g_WeaponMenu_Callback);
 	g_WeaponMenu.SetTitle("Оружие:");
 	do
@@ -72,8 +73,9 @@ void LoadGunsFile()
 			g_WeaponMenu.AddItem(buffer, text);
 			
 			// Get slot for item
-			int slot = kv.GetNum("slot", 0);
-			g_Slot.SetValue(buffer, slot);
+			options[0] = kv.GetNum("slot", 0);
+			options[1] = kv.GetNum("drop", 0);
+			g_Slot.SetArray(buffer, options, sizeof(options), false);
 		}
 	} while (kv.GotoNextKey(true));
 	g_WeaponMenu.ExitBackButton = true;
@@ -92,14 +94,17 @@ public int g_WeaponMenu_Callback(Menu menu, MenuAction action, int client, int s
 		}
 		case MenuAction_Select:
 		{
-			if (JWP_IsFlood(client, 2)) return;
-			int islot; char info[32];
+			int options[2]; char info[32];
 			menu.GetItem(slot, info, sizeof(info));
-			g_Slot.GetValue(info, islot);
+			g_Slot.GetArray(info, options, sizeof(options));
 			
-			int weapon = GetPlayerWeaponSlot(client, islot);
-			if (IsValidEdict(weapon))
-				AcceptEntityInput(weapon, "Kill");
+			if (!options[1])
+			{
+				if (JWP_IsFlood(client, 2)) return;
+				int weapon = GetPlayerWeaponSlot(client, options[0]);
+				if (IsValidEdict(weapon))
+					AcceptEntityInput(weapon, "Kill");
+			}
 			
 			GivePlayerItem(client, info);
 			
