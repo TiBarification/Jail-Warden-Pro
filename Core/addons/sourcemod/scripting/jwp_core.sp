@@ -29,11 +29,11 @@ ConVar	g_CvarChooseMode,
 Handle g_hChooseTimer;
 
 #include "jwp/kv_reader.sp"
+#include "jwp/dev.sp"
 #include "jwp/jwpm_menu.sp"
 #include "jwp/forwards.sp"
 #include "jwp/natives.sp"
 #include "jwp/voting.sp"
-#include "jwp/dev.sp"
 
 public Plugin myinfo = 
 {
@@ -80,6 +80,7 @@ public void OnPluginStart()
 	g_bIsCSGO = (GetEngineVersion() == Engine_CSGO) ? true : false;
 	
 	LoadTranslations("jwp.phrases");
+	SetGlobalTransTarget(LANG_SERVER);
 }
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
@@ -340,6 +341,7 @@ bool CheckClient(int client)
 
 bool BecomeCmd(int client)
 {
+	SetClientLanguage(client, LANG_SERVER);
 	if (!Forward_OnWardenChoosing())
 		return false;
 	else if (g_bWasWarden[client])
@@ -418,24 +420,36 @@ bool IsZamWarden(int client)
 
 bool PrisonerHasFreeday(int client)
 {
-	return g_bHasFreeday[client];
+	if (client && IsClientInGame(client) && client <= MaxClients)
+		return g_bHasFreeday[client];
+	return false;
 }
 
 bool PrisonerSetFreeday(int client, bool state = true)
 {
-	g_bHasFreeday[client] = state;
-	return true;
+	if (client && IsClientInGame(client) && client <= MaxClients)
+	{
+		g_bHasFreeday[client] = state;
+		return true;
+	}
+	return false;
 }
 
 bool IsPrisonerIsolated(int client)
 {
-	return g_bIsolated[client];
+	if (client && IsClientInGame(client) && client <= MaxClients)
+		return g_bIsolated[client];
+	return false;
 }
 
 bool PrisonerIsolated(int client, bool state = true)
 {
-	g_bIsolated[client] = state;
-	return true;
+	if (client && IsClientInGame(client) && client <= MaxClients)
+	{
+		g_bIsolated[client] = state;
+		return true;
+	}
+	return false;
 }
 
 bool IsStarted()

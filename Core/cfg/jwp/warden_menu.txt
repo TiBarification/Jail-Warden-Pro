@@ -28,7 +28,11 @@
 	{
 		"flag"	""
 	}
-	"order"
+	"door_open"
+	{
+		"flag"	""
+	}
+	"door_close"
 	{
 		"flag"	""
 	}
@@ -37,6 +41,10 @@
 		"flag"	""
 	}
 	"door_aim_close"
+	{
+		"flag"	""
+	}
+	"order"
 	{
 		"flag"	""
 	}
@@ -66,7 +74,7 @@
 	}
 	"isolator"
 	{
-		"flag"	""
+		"flag"	"f"
 	}
 	"mute_give"
 	{
@@ -77,6 +85,10 @@
 		"flag"	"f"
 	}
 	"stoplr"
+	{
+		"flag"	""
+	}
+	"otkaz"
 	{
 		"flag"	""
 	}

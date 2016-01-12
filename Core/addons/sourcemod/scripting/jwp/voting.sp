@@ -10,8 +10,7 @@ void JWP_StartVote()
 	int tt_count, ct_count;
 	int[] tt_list = new int[MaxClients];
 	int[] ct_list = new int[MaxClients];
-	int i = 1;
-	while (i <= MaxClients)
+	for (int i = 1; i <= MaxClients; i++)
 	{
 		g_iVoteResult[i] = 0;
 		if (IsClientInGame(i) && IsPlayerAlive(i))
@@ -27,7 +26,6 @@ void JWP_StartVote()
 				ct_count++;
 			}
 		}
-		i++;
 	}
 	
 	if (!tt_count || !ct_count) return;
@@ -46,16 +44,13 @@ void JWP_StartVote()
 	g_VoteMenu = new Menu(g_VoteMenu_Callback);
 	g_VoteMenu.SetTitle("Кто будет командиром?\n \n");
 	char id[4], nick[MAX_NAME_LENGTH];
-	i = 0;
-	while (i < ct_count)
+	for (int i = 0; i < ct_count; i++)
 	{
 		IntToString(ct_list[i], id, sizeof(id));
 		GetClientName(ct_list[i], nick, sizeof(nick));
-		if (g_VoteMenu.AddItem(id, nick))
-			i++;
+		g_VoteMenu.AddItem(id, nick)
 	}
-	i = 0;
-	while (i < tt_count)
+	for (int i = 0; i < tt_count; i++)
 	{
 		g_VoteMenu.Display(tt_list[i], MENU_TIME_FOREVER);
 		i++;
@@ -76,7 +71,7 @@ public int g_VoteMenu_Callback(Menu menu, MenuAction action, int client, int slo
 				char id[4];
 				menu.GetItem(slot, id, sizeof(id));
 				int target = StringToInt(id);
-				if (!target || GetClientTeam(target) == CS_TEAM_CT || !IsPlayerAlive(target))
+				if (!target || GetClientTeam(target) != CS_TEAM_CT || !IsPlayerAlive(target))
 				{
 					if (menu.RemoveItem(slot) && menu.ItemCount > 0)
 					{
@@ -168,29 +163,29 @@ bool JWP_LastBest3Ct(char Info[152])
 
 int JWP_GetBestCt(int p1, int p2)
 {
-	int best_ct, vots, i = 1;
-	while (i <= MaxClients)
+	int best_ct, vots;
+	for (int i = 1; i <= MaxClients; ++i)
 	{
 		if (g_iVoteResult[i] > vots && p1 != i && p2 != i && IsClientInGame(i) && GetClientTeam(i) == CS_TEAM_CT && IsPlayerAlive(i))
 		{
 			vots = g_iVoteResult[i];
 			best_ct = i;
 		}
+		i++;
 	}
 	return best_ct;
 }
 
 void CheckVoteWinner()
 {
-	int ct, vots, i = 1;
-	while (i <= MaxClients)
+	int ct, vots;
+	for (int i = 1; i <= MaxClients; i++)
 	{
 		if (g_iVoteResult[i] > vots && IsClientInGame(i) && GetClientTeam(i) == CS_TEAM_CT && IsPlayerAlive(i))
 		{
 			vots = g_iVoteResult[i];
 			ct = i;
 		}
-		i++;
 	}
 	
 	if (ct > 0) BecomeCmd(ct);

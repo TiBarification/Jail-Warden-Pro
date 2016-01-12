@@ -86,8 +86,8 @@ public int ToJailMenu_Callback(Menu menu, MenuAction action, int client, int slo
 			char info[4];
 			menu.GetItem(slot, info, sizeof(info));
 			
-			int target = StringToInt(info, sizeof(info));
-			if (CheckClient(target) && GetClientTeam(target) == CS_TEAM_T)
+			int target = StringToInt(info);
+			if (target && CheckClient(target) && GetClientTeam(target) == CS_TEAM_T)
 			{
 				if (CoordsExists(target))
 				{

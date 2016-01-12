@@ -191,7 +191,7 @@ public int PList_Callback(Menu menu, MenuAction action, int client, int slot)
 			{
 				char info[4];
 				menu.GetItem(slot, info, sizeof(info));
-				int target = StringToInt(info, sizeof(info));
+				int target = StringToInt(info);
 				if (target && CheckClient(target))
 				{
 					if (BaseComm_IsClientMuted(target))
