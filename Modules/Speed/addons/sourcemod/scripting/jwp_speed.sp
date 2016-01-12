@@ -33,6 +33,12 @@ public int JWP_OnWardenChosen(int client)
 	g_bSpeed = false;
 }
 
+public int JWP_OnWardenResigned(int client)
+{
+	SetEntPropFloat(client, Prop_Send, "m_flLaggedMovementValue", 1.0);
+	g_bSpeed = false;
+}
+
 public void OnCvarChange(ConVar cvar, const char[] oldValue, const char[] newValue)
 {
 	if (cvar == Cvar_SpeedValue) Cvar_SpeedValue.SetFloat(StringToFloat(newValue));

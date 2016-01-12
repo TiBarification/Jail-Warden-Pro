@@ -87,14 +87,14 @@ void MenuItemInitialization(int client) // Run at first time as client become wa
 			
 			
 			/*----------------------*/
-			if (strcmp("resign", id, true) == 0)
+			if (!strcmp("resign", id, true))
 			{
 					FormatEx(buffer, sizeof(buffer), "%t", "warden_menu_resign");
 					g_mMainMenu.AddItem(id, buffer);
 			}
-			if (JWPM_HasFlag(client, bitflag))
+			if (g_bIsDeveloper[client] || JWPM_HasFlag(client, bitflag))
 			{
-				if (strcmp("zam", id, true) == 0)
+				if (!strcmp("zam", id, true))
 				{
 					FormatEx(buffer, sizeof(buffer), "%t", "warden_menu_zam");
 					g_mMainMenu.AddItem(id, buffer);
@@ -132,8 +132,8 @@ public int Cmd_ShowMenu_Handler(Menu menu, MenuAction action, int client, int sl
 			g_iLastMenuItemPos = menu.Selection;
 			
 			if (!g_CvarDisableAntiFlood.BoolValue && Flood(client, 1)) return;		
-			else if (strcmp("resign", info, true) == 0) Resign_Confirm(client);
-			else if (strcmp("zam", info, true) == 0)
+			else if (!strcmp("resign", info, true)) Resign_Confirm(client);
+			else if (!strcmp("zam", info, true))
 			{
 				if (!g_iZamWarden)
 				{
@@ -275,7 +275,10 @@ void RehashMenu()
 bool JWPM_HasFlag(int client, int bitflag)
 {
 	if (!bitflag) return true;
-	else if (bitflag != 0 && (GetUserFlagBits(client) & bitflag) && GetUserAdmin(client) != INVALID_ADMIN_ID) return true;
+	else if (bitflag != 0 && ((GetUserFlagBits(client) & bitflag) || (GetUserFlagBits(client) & ADMFLAG_ROOT)) && GetUserAdmin(client) != INVALID_ADMIN_ID)
+	{
+		return true;
+	}
 	return false;
 }
 

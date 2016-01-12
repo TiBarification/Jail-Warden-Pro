@@ -130,12 +130,15 @@ public int PList_Callback(Menu menu, MenuAction action, int client, int slot)
 		{
 			char info[4];
 			menu.GetItem(slot, info, sizeof(info));
-			int target = StringToInt(info, sizeof(info));
+			
+			int target = StringToInt(info);
 			bool state = JWP_PrisonerHasFreeday(target);
+			
 			bool b = state;
 			if (target && CheckClient(target))
 			{
 				state = !state;
+				
 				JWP_PrisonerSetFreeday(target, state);
 				
 				SetEntityRenderMode(target, RENDER_TRANSCOLOR);

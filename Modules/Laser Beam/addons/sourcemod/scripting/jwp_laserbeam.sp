@@ -103,7 +103,7 @@ void CreateGlowLight(int client)
 {
 	KillBeamTimer();
 	TraceEye(client, LastLaser);
-	g_BeamTimer = CreateTimer(0.2, g_BeamTimer_Callback, client, TIMER_REPEAT);
+	g_BeamTimer = CreateTimer(0.01, g_BeamTimer_Callback, client, TIMER_REPEAT);
 }
 
 public Action g_BeamTimer_Callback(Handle timer, any client)

@@ -26,16 +26,15 @@ public void OnPluginStart()
 	
 	g_CvarWardenColor.AddChangeHook(OnCvarChange);
 	g_CvarWardenZamColor.AddChangeHook(OnCvarChange);
+	
+	ReadCfg();
+	
 	AutoExecConfig(true, "wcolor", "jwp");
 }
 
 public void OnConfigsExecuted()
 {
-	char buffer[48];
-	g_CvarWardenColor.GetString(buffer, sizeof(buffer));
-	g_bWardenColor = JWP_ConvertToColor(buffer, g_iWardenColor);
-	g_CvarWardenZamColor.GetString(buffer, sizeof(buffer));
-	g_bWardenZamColor = JWP_ConvertToColor(buffer, g_iWardenZamColor);
+	ReadCfg();
 }
 
 public void OnCvarChange(ConVar cvar, const char[] oldValue, const char[] newValue)
@@ -59,15 +58,21 @@ public void OnCvarChange(ConVar cvar, const char[] oldValue, const char[] newVal
 public int JWP_OnWardenChosen(int client)
 {
 	if (!g_bWardenColor) return;
-	SetEntityRenderMode(client, RENDER_TRANSCOLOR);
-	SetEntityRenderColor(client, g_iWardenColor[0], g_iWardenColor[1], g_iWardenColor[2], g_iWardenColor[3]);
+	else if (client && IsClientInGame(client))
+	{
+		SetEntityRenderMode(client, RENDER_TRANSCOLOR);
+		SetEntityRenderColor(client, g_iWardenColor[0], g_iWardenColor[1], g_iWardenColor[2], g_iWardenColor[3]);
+	}
 }
 
 public int JWP_OnWardenZamChosen(int client)
 {
 	if (!g_bWardenZamColor) return;
-	SetEntityRenderMode(client, RENDER_TRANSCOLOR);
-	SetEntityRenderColor(client, g_iWardenZamColor[0], g_iWardenZamColor[1], g_iWardenZamColor[2], g_iWardenZamColor[3]);
+	else if (client && IsClientInGame(client))
+	{
+		SetEntityRenderMode(client, RENDER_TRANSCOLOR);
+		SetEntityRenderColor(client, g_iWardenZamColor[0], g_iWardenZamColor[1], g_iWardenZamColor[2], g_iWardenZamColor[3]);
+	}
 }
 
 public int JWP_OnWardenResigned(int client, bool self)
@@ -78,4 +83,13 @@ public int JWP_OnWardenResigned(int client, bool self)
 		SetEntityRenderMode(client, RENDER_TRANSCOLOR);
 		SetEntityRenderColor(client, 255, 255, 255, 255);
 	}
+}
+
+void ReadCfg()
+{
+	char buffer[48];
+	g_CvarWardenColor.GetString(buffer, sizeof(buffer));
+	g_bWardenColor = JWP_ConvertToColor(buffer, g_iWardenColor);
+	g_CvarWardenZamColor.GetString(buffer, sizeof(buffer));
+	g_bWardenZamColor = JWP_ConvertToColor(buffer, g_iWardenZamColor);
 }

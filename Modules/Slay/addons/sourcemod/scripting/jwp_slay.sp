@@ -73,8 +73,7 @@ public int SlayMenu_Callback(Menu menu, MenuAction action, int client, int slot)
 		{
 			char info[4];
 			menu.GetItem(slot, info, sizeof(info));
-			
-			int target = StringToInt(info, sizeof(info));
+			int target = StringToInt(info);
 			if (CheckClient(target))
 			{
 				ForcePlayerSuicide(target);

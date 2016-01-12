@@ -76,15 +76,18 @@ public int StripMenu_Callback(Menu menu, MenuAction action, int client, int slot
 		case MenuAction_Cancel:
 		{
 			if (slot == MenuCancel_ExitBack)
-				JWP_ShowMainMenu(client);
+			{
+				if (client && IsClientInGame(client) && JWP_IsWarden(client))
+					JWP_ShowMainMenu(client);
+			}
 		}
 		case MenuAction_Select:
 		{
 			char info[4];
 			menu.GetItem(slot, info, sizeof(info));
 			
-			int target = StringToInt(info, sizeof(info));
-			if (CheckClient(target))
+			int target = StringToInt(info);
+			if (target && CheckClient(target))
 			{
 				if (g_bHaveKnife[target])
 				{
@@ -99,7 +102,9 @@ public int StripMenu_Callback(Menu menu, MenuAction action, int client, int slot
 			}
 			else
 				JWP_ActionMsg(client, "Не удалось выполнить действие");
-			OnFuncSelect(client);
+			
+			if (client && IsClientInGame(client) && JWP_IsWarden(client))
+				OnFuncSelect(client);
 		}
 	}
 }

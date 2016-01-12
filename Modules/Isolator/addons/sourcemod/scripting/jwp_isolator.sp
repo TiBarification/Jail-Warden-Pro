@@ -161,8 +161,8 @@ public int IsolatorMenu_Callback(Menu menu, MenuAction action, int client, int s
 			char info[4];
 			menu.GetItem(slot, info, sizeof(info));
 			
-			int target = StringToInt(info, sizeof(info));
-			if (target && IsClientInGame(target))
+			int target = StringToInt(info);
+			if (target && IsClientInGame(target) && GetClientTeam(target) == CS_TEAM_T)
 			{
 				if (JWP_IsPrisonerIsolated(target))
 				{
