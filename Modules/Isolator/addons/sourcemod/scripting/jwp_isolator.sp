@@ -200,7 +200,7 @@ bool IsValidIsolator(int& ent, char[] name)
 	
 	char cName[16];
 	cName[0] = '\0';
-	GetEntPropString(ent, Prop_Send, "m_iName", cName, sizeof(cName));
+	GetEntPropString(ent, Prop_Data, "m_iName", cName, sizeof(cName));
 	if (StrContains(cName, name, true))
 	{
 		ent = 0;

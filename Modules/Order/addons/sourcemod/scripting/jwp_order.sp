@@ -89,7 +89,7 @@ public bool OnFuncSelect(int client)
 
 public Action OnClientSayCommand(int client, const char[] command, const char[] sArgs)
 {
-	if (JWP_IsWarden(client) && (g_CvarOrderAlways.BoolValue || g_bChatListen))
+	if (client && IsClientInGame(client) && JWP_IsWarden(client) && (g_CvarOrderAlways.BoolValue || g_bChatListen))
 	{
 		if (sArgs[0] != '!' && sArgs[0] != '/' && sArgs[0] != '@')
 		{
