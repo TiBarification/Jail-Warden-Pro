@@ -42,6 +42,11 @@
 		"en"		"{RED}The command is currently unavailable"
 		"ru"		"{RED}Команда сейчас недоступна"
 	}
+	"warden_zam_choose"
+	{
+		"en"		"Choose deputy:"
+		"ru"		"Выберите ЗАМа:"
+	}
 	"warden_choose_vote"
 	{
 		"en"		"{LIGHTGREEN}Warden chosing only by voting"
@@ -82,6 +87,11 @@
 	{
 		"en"		"You must be alive"
 		"ru"		"Вы должны быть живы"
+	}
+	"warden_resign_confirm"
+	{
+		"en"		"Are you sure to resign?"
+		"ru"		"Вы действительно хотите покинуть пост командира?"
 	}
 	"warden_resign"
 	{
@@ -136,5 +146,15 @@
 	{
 		"en"		"Player not found. Choose another."
 		"ru"		"Игрок не найден. Выберите другого."
+	}
+	"warden_yes"
+	{
+		"en"		"YES"
+		"ru"		"ДА"
+	}
+	"warden_no"
+	{
+		"en"		"NO"
+		"ru"		"НЕТ"
 	}
 }

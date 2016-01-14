@@ -41,9 +41,10 @@ void JWP_StartVote()
 		g_VoteMenu.Close();
 		g_VoteMenu = null;
 	}
-	g_VoteMenu = new Menu(g_VoteMenu_Callback);
-	g_VoteMenu.SetTitle("Кто будет командиром?\n \n");
 	char id[4], nick[MAX_NAME_LENGTH];
+	g_VoteMenu = new Menu(g_VoteMenu_Callback);
+	Format(nick, sizeof(nick), "%T\n", "vote_who_will_be_warden", LANG_SERVER);
+	g_VoteMenu.SetTitle(nick);
 	for (int i = 0; i < ct_count; i++)
 	{
 		IntToString(ct_list[i], id, sizeof(id));
@@ -51,13 +52,10 @@ void JWP_StartVote()
 		g_VoteMenu.AddItem(id, nick)
 	}
 	for (int i = 0; i < tt_count; i++)
-	{
 		g_VoteMenu.Display(tt_list[i], MENU_TIME_FOREVER);
-		i++;
-	}
 	g_iVoteSec = g_CvarVoteTime.IntValue;
 	g_VoteTimer = CreateTimer(1.0, g_VoteTimer_Callback, _, TIMER_REPEAT);
-	PrintHintTextToAll("Кто будет командиром?\n%d", g_iVoteSec);
+	PrintHintTextToAll("%T\n%d", "vote_who_will_be_warden", LANG_SERVER, g_iVoteSec);
 }
 
 public int g_VoteMenu_Callback(Menu menu, MenuAction action, int client, int slot)
@@ -75,11 +73,11 @@ public int g_VoteMenu_Callback(Menu menu, MenuAction action, int client, int slo
 				{
 					if (menu.RemoveItem(slot) && menu.ItemCount > 0)
 					{
-						PrintCenterText(client, "%t", "vote_player_not_found");
+						PrintCenterText(client, "%t", "Unable to target");
 						g_VoteMenu.Display(client, MENU_TIME_FOREVER);
 					}
 					else
-						PrintHintText(client, "Игрок не найден");
+						PrintHintText(client, "%t", "Player no longer available");
 				}
 				else
 				{
@@ -123,15 +121,15 @@ public Action g_VoteTimer_Callback(Handle timer)
 		{
 			char best3ct[152];
 			if (JWP_LastBest3Ct(best3ct))
-				PrintHintTextToAll("Кто будет командиром?\n%d\n \n%s", g_iVoteSec, best3ct);
+				PrintHintTextToAll("%t\n%d\n \n%s", "vote_who_will_be_warden", g_iVoteSec, best3ct);
 			else
 			{
 				g_iVots = 0;
-				PrintHintTextToAll("Кто будет командиром?\n%d", g_iVoteSec);
+				PrintHintTextToAll("%t\n%d", "vote_who_will_be_warden", g_iVoteSec);
 			}
 		}
 		else
-			PrintHintTextToAll("Кто будет командиром?\n%d", g_iVoteSec);
+			PrintHintTextToAll("%t\n%d", "vote_who_will_be_warden", g_iVoteSec);
 		return Plugin_Continue;
 	}
 	CheckVoteWinner();
@@ -171,7 +169,6 @@ int JWP_GetBestCt(int p1, int p2)
 			vots = g_iVoteResult[i];
 			best_ct = i;
 		}
-		i++;
 	}
 	return best_ct;
 }

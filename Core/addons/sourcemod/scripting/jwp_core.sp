@@ -80,7 +80,7 @@ public void OnPluginStart()
 	g_bIsCSGO = (GetEngineVersion() == Engine_CSGO) ? true : false;
 	
 	LoadTranslations("jwp.phrases");
-	SetGlobalTransTarget(LANG_SERVER);
+	LoadTranslations("common.phrases");
 }
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
@@ -152,9 +152,9 @@ public void Event_OnPlayerDeath(Event event, const char[] name, bool dontBroadca
 		if (IsWarden(client))
 		{
 			if (g_bIsCSGO)
-				CGOPrintToChatAll("%t %t", "Core_Prefix", "warden_death", client);
+				CGOPrintToChatAll("%T %T", "Core_Prefix", LANG_SERVER, "warden_death", LANG_SERVER, client);
 			else
-				CPrintToChatAll("%t %t", "Core_Prefix", "warden_death", client);
+				CPrintToChatAll("%T %T", "Core_Prefix", LANG_SERVER, "warden_death", LANG_SERVER, client);
 			RemoveCmd(false);
 		}
 		else if (IsZamWarden(client)) g_iZamWarden = 0;
@@ -193,9 +193,9 @@ public void Event_OnRoundFreezeEnd(Event event, const char[] name, bool dontBroa
 		if (client)
 		{
 			if (g_bIsCSGO)
-				CGOPrintToChat(client, "%t %t", "Core_Prefix", "use_warden_cmd");
+				CGOPrintToChat(client, "%T %T", "Core_Prefix", LANG_SERVER, "use_warden_cmd", LANG_SERVER);
 			else
-				CPrintToChat(client, "%t %t", "Core_Prefix", "use_warden_cmd");
+				CPrintToChat(client, "%T %T", "Core_Prefix", LANG_SERVER, "use_warden_cmd", LANG_SERVER);
 		}
 	}
 	else if (g_CvarChooseMode.IntValue == 3)
@@ -228,7 +228,7 @@ public Action Event_OnRoundEnd(Event event, const char[] name, bool dontBroadcas
 public Action Command_JwpMenuReload(int args)
 {
 	RehashMenu();
-	PrintToServer("%t", "menu_success_reloaded");
+	PrintToServer("[JWP] %T", "menu_success_reloaded", LANG_SERVER);
 	return Plugin_Handled;
 }
 
@@ -239,18 +239,18 @@ public Action Command_BecomeWarden(int client, int args)
 		if (g_bRoundEnd)
 		{
 			if (g_bIsCSGO)
-				CGOPrintToChat(client, "%t %t", "Core_Prefix", "wait_for_new_round");
+				CGOPrintToChat(client, "%T %T", "Core_Prefix", LANG_SERVER, "wait_for_new_round", LANG_SERVER);
 			else
-				CPrintToChat(client, "%t %t", "Core_Prefix", "wait_for_new_round");
+				CPrintToChat(client, "%T %T", "Core_Prefix", LANG_SERVER, "wait_for_new_round", LANG_SERVER);
 		}
 		else if (g_iWarden > 0)
 		{
 			if (IsWarden(client))
 				Cmd_ShowMenu(client);
 			else if (g_bIsCSGO)
-				CGOPrintToChat(client, "%t %t", "Core_Prefix", "warden_exists", g_iWarden);
+				CGOPrintToChat(client, "%T %T", "Core_Prefix", LANG_SERVER, "warden_exists", LANG_SERVER, g_iWarden);
 			else
-				CPrintToChat(client, "%t %t", "Core_Prefix", "warden_exists", g_iWarden);
+				CPrintToChat(client, "%T %T", "Core_Prefix", LANG_SERVER, "warden_exists", LANG_SERVER, g_iWarden);
 		}
 		else
 		{
@@ -259,25 +259,25 @@ public Action Command_BecomeWarden(int client, int args)
 			else if (g_CvarChooseMode.IntValue == 1)
 			{
 				if (g_bIsCSGO)
-					CGOPrintToChat(client, "%t %t", "Core_Prefix", "warden_choose_random");
+					CGOPrintToChat(client, "%T %T", "Core_Prefix", LANG_SERVER, "warden_choose_random", LANG_SERVER);
 				else
-					CPrintToChat(client, "%t %t", "Core_Prefix", "warden_choose_random");
+					CPrintToChat(client, "%T %T", "Core_Prefix", LANG_SERVER, "warden_choose_random", LANG_SERVER);
 			}
 			else if (g_CvarChooseMode.IntValue == 3)
 			{
 				if (!g_bVoteFinished)
 				{
 					if (g_bIsCSGO)
-						CGOPrintToChat(client, "%t %t", "Core_Prefix", "cmd_not_available");
+						CGOPrintToChat(client, "%T %T", "Core_Prefix", LANG_SERVER, "cmd_not_available", LANG_SERVER);
 					else
-						CPrintToChat(client, "%t %t", "Core_Prefix", "cmd_not_available");
+						CPrintToChat(client, "%T %T", "Core_Prefix", LANG_SERVER, "cmd_not_available", LANG_SERVER);
 				}
 				else
 				{
 					if (g_bIsCSGO)
-						CGOPrintToChat(client, "%t %t", "Core_Prefix", "warden_choose_vote");
+						CGOPrintToChat(client, "%T %T", "Core_Prefix", LANG_SERVER, "warden_choose_vote", LANG_SERVER);
 					else
-						CPrintToChat(client, "%t %t", "Core_Prefix", "warden_choose_vote");
+						CPrintToChat(client, "%T %T", "Core_Prefix", LANG_SERVER, "warden_choose_vote", LANG_SERVER);
 				}
 			}
 			else if (g_CvarChooseMode.IntValue == 2 && GetClientTeam(client) == CS_TEAM_CT)
@@ -287,9 +287,9 @@ public Action Command_BecomeWarden(int client, int args)
 			else
 			{
 				if (g_bIsCSGO)
-					CGOPrintToChat(client, "%t %t", "Core_Prefix", "warden_only_ct");
+					CGOPrintToChat(client, "%T %T", "Core_Prefix", LANG_SERVER, "warden_only_ct", LANG_SERVER);
 				else
-					CPrintToChat(client, "%t %t", "Core_Prefix", "warden_only_ct");
+					CPrintToChat(client, "%T %T", "Core_Prefix", LANG_SERVER, "warden_only_ct", LANG_SERVER);
 			}
 		}
 	}
@@ -341,15 +341,14 @@ bool CheckClient(int client)
 
 bool BecomeCmd(int client)
 {
-	SetClientLanguage(client, LANG_SERVER);
 	if (!Forward_OnWardenChoosing())
 		return false;
 	else if (g_bWasWarden[client])
 	{
 		if (g_bIsCSGO)
-			CGOPrintToChat(client, "%t %t", "Core_Prefix", "already_was_warden");
+			CGOPrintToChat(client, "%T %T", "Core_Prefix", LANG_SERVER, "already_was_warden", LANG_SERVER);
 		else
-			CPrintToChat(client, "%t %t", "Core_Prefix", "already_was_warden");
+			CPrintToChat(client, "%T %T", "Core_Prefix", LANG_SERVER, "already_was_warden", LANG_SERVER);
 		return false;
 	}
 	else if (IsPlayerAlive(client))
@@ -358,17 +357,17 @@ bool BecomeCmd(int client)
 		Forward_OnWardenChosen(client);
 		g_bWasWarden[client] = true;
 		if (g_bIsCSGO)
-			CGOPrintToChatAll("%t %t", "Core_Prefix", "warden_become", g_iWarden);
+			CGOPrintToChatAll("%T %T", "Core_Prefix", LANG_SERVER, "warden_become", LANG_SERVER, g_iWarden);
 		else
-			CPrintToChatAll("%t %t", "Core_Prefix", "warden_become", g_iWarden);
+			CPrintToChatAll("%T %T", "Core_Prefix", LANG_SERVER, "warden_become", LANG_SERVER, g_iWarden);
 		return true;
 	}
 	else
 	{
 		if (g_bIsCSGO)
-			CGOPrintToChat(client, "%t %t", "Core_Prefix", "warden_must_be_alive");
+			CGOPrintToChat(client, "%T %T", "Core_Prefix", LANG_SERVER, "warden_must_be_alive", LANG_SERVER);
 		else
-			CPrintToChat(client, "%t %t", "Core_Prefix", "warden_must_be_alive");
+			CPrintToChat(client, "%T %T", "Core_Prefix", LANG_SERVER, "warden_must_be_alive", LANG_SERVER);
 	}
 	return false;
 }
@@ -379,9 +378,9 @@ void RemoveCmd(bool themself = true)
 	if (themself)
 	{
 		if (g_bIsCSGO)
-			CGOPrintToChatAll("%t %t", "Core_Prefix", "warden_resign", g_iWarden);
+			CGOPrintToChatAll("%T %T", "Core_Prefix", LANG_SERVER, "warden_resign", LANG_SERVER, g_iWarden);
 		else
-			CPrintToChatAll("%t %t", "Core_Prefix", "warden_resign", g_iWarden);
+			CPrintToChatAll("%T %T", "Core_Prefix", LANG_SERVER, "warden_resign", LANG_SERVER, g_iWarden);
 	}
 	EmptyPanel(g_iWarden);
 	if (g_iWarden) g_iWarden = 0;
@@ -487,13 +486,18 @@ void JWP_FindNewWarden()
 	}
 	else if (g_CvarChooseMode.IntValue == 2 || g_CvarChooseMode.IntValue == 3)
 	{
-		int client = JWP_GetTeamClient(CS_TEAM_CT, true)
+		int client = JWP_GetTeamClient(CS_TEAM_CT, true);
 		if (client)
 		{
-			if (g_bIsCSGO)
-				CGOPrintToChat(client, "%t %t", "Core_Prefix", "use_warden_cmd");
+			if (g_CvarChooseMode.IntValue == 3)
+				BecomeCmd(client);
 			else
-				CPrintToChat(client, "%t %t", "Core_Prefix", "use_warden_cmd");
+			{
+				if (g_bIsCSGO)
+					CGOPrintToChat(client, "%T %T", "Core_Prefix", LANG_SERVER, "use_warden_cmd", LANG_SERVER);
+				else
+					CPrintToChat(client, "%T %T", "Core_Prefix", LANG_SERVER, "use_warden_cmd", LANG_SERVER);
+			}
 		}
 	}
 }

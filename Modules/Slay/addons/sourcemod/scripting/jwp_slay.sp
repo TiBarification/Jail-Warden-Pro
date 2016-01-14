@@ -74,7 +74,7 @@ public int SlayMenu_Callback(Menu menu, MenuAction action, int client, int slot)
 			char info[4];
 			menu.GetItem(slot, info, sizeof(info));
 			int target = StringToInt(info);
-			if (CheckClient(target))
+			if (target && CheckClient(target))
 			{
 				ForcePlayerSuicide(target);
 				JWP_ActionMsgAll("%N: убил зека %N", client, target);
