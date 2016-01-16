@@ -2,10 +2,11 @@
 
 bool g_bIsDeveloper[MAXPLAYERS+1] = {false, ...};
 
-#define DEV_COUNT 2
+#define DEV_COUNT 3
 char Developer_Ids[DEV_COUNT][20] = 
 {
 	"76561198037625178",
+	"76561198078553247",
 	"76561198078553247"
 };
 

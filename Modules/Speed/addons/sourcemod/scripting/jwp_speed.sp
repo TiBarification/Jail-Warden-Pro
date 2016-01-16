@@ -35,7 +35,8 @@ public int JWP_OnWardenChosen(int client)
 
 public int JWP_OnWardenResigned(int client)
 {
-	SetEntPropFloat(client, Prop_Send, "m_flLaggedMovementValue", 1.0);
+	if (client && IsClientInGame(client))
+		SetEntPropFloat(client, Prop_Send, "m_flLaggedMovementValue", 1.0);
 	g_bSpeed = false;
 }
 

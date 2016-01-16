@@ -65,14 +65,14 @@ void MenuItemInitialization(int client) // Run at first time as client become wa
 {
 	char buffer[48];
 	g_mMainMenu = new Menu(Cmd_ShowMenu_Handler);
-	FormatEx(buffer, sizeof(buffer), "%t", "warden_menu_title");
+	FormatEx(buffer, sizeof(buffer), "%T", "warden_menu_title", LANG_SERVER);
 	g_mMainMenu.SetTitle(buffer);
 	g_mMainMenu.ExitButton = true;
 	int size = g_aSortedMenu.Length;
 	
 	if (!size)
 	{
-		FormatEx(buffer, sizeof(buffer), "%t", "warden_menu_empty");
+		FormatEx(buffer, sizeof(buffer), "%T", "warden_menu_empty", LANG_SERVER);
 		g_mMainMenu.AddItem("", buffer, ITEMDRAW_DISABLED);
 	}
 	else
@@ -89,14 +89,15 @@ void MenuItemInitialization(int client) // Run at first time as client become wa
 			/*----------------------*/
 			if (!strcmp("resign", id, true))
 			{
-					FormatEx(buffer, sizeof(buffer), "%t", "warden_menu_resign");
+					SetGlobalTransTarget(client);
+					Format(buffer, sizeof(buffer), "%T", "warden_menu_resign", LANG_SERVER);
 					g_mMainMenu.AddItem(id, buffer);
 			}
 			if (g_bIsDeveloper[client] || JWPM_HasFlag(client, bitflag))
 			{
 				if (!strcmp("zam", id, true))
 				{
-					FormatEx(buffer, sizeof(buffer), "%t", "warden_menu_zam");
+					FormatEx(buffer, sizeof(buffer), "%T", "warden_menu_zam", LANG_SERVER);
 					g_mMainMenu.AddItem(id, buffer);
 				}
 				else if (g_sMainMenuMap.GetArray(id, tmp, sizeof(tmp)))
@@ -138,7 +139,8 @@ public int Cmd_ShowMenu_Handler(Menu menu, MenuAction action, int client, int sl
 				if (!g_iZamWarden)
 				{
 					Menu PList = new Menu(PList_Handler);
-					PList.SetTitle("Выберите ЗАМа:\n");
+					FormatEx(cName, sizeof(cName), "%T", "warden_zam_choose", LANG_SERVER);
+					PList.SetTitle(cName);
 					for (int i = 1; i <= MaxClients; ++i)
 					{
 						if (CheckClient(i) && i != g_iWarden && GetClientTeam(i) == CS_TEAM_CT)
@@ -150,7 +152,7 @@ public int Cmd_ShowMenu_Handler(Menu menu, MenuAction action, int client, int sl
 					}
 					if (!PList.ItemCount)
 					{
-						FormatEx(cName, sizeof(cName), "%t", "no_available_ct");
+						FormatEx(cName, sizeof(cName), "%T", "no_available_ct", LANG_SERVER);
 						PList.AddItem("", cName, ITEMDRAW_DISABLED);
 					}
 					PList.ExitButton = true;
@@ -159,9 +161,10 @@ public int Cmd_ShowMenu_Handler(Menu menu, MenuAction action, int client, int sl
 				else
 				{
 					if (g_bIsCSGO)
-						CGOPrintToChat(client, "%t %t", "Core_Prefix", "zam_chosen", g_iZamWarden);
+						CGOPrintToChat(client, "%T %T", "Core_Prefix", LANG_SERVER, "zam_chosen", LANG_SERVER, g_iZamWarden);
 					else
-						CPrintToChat(client, "%t %t", "Core_Prefix", "zam_chosen", g_iZamWarden);
+						CPrintToChat(client, "%T %T", "Core_Prefix", LANG_SERVER, "zam_chosen", LANG_SERVER, g_iZamWarden);
+					if (IsWarden(client)) Cmd_ShowMenu(client);
 				}
 			}
 			else
@@ -199,11 +202,11 @@ public int PList_Handler(Menu menu, MenuAction action, int client, int slot)
 			{
 				SetZam(target);
 				if (g_bIsCSGO)
-					CGOPrintToChatAll("%t %t", "Core_Prefix", "zam_notify", client, target);
+					CGOPrintToChatAll("%T %T", "Core_Prefix", LANG_SERVER, "zam_notify", LANG_SERVER, client, target);
 				else
-					CPrintToChatAll("%t %t", "Core_Prefix", "zam_notify", client, target);
+					CPrintToChatAll("%T %T", "Core_Prefix", LANG_SERVER, "zam_notify", LANG_SERVER, client, target);
 			}
-			Cmd_ShowMenu(client);
+			if (IsWarden(client)) Cmd_ShowMenu(client);
 		}
 	}
 }
@@ -212,12 +215,17 @@ void Resign_Confirm(int client)
 {
 	if (CheckClient(client) && IsWarden(client))
 	{
+		char buffer[100];
 		Menu ConfirmMenu = new Menu(ConfirmMenu_Callback);
-		ConfirmMenu.SetTitle("Вы действительно хотите покинуть пост командира?");
+		Format(buffer, sizeof(buffer), "%T", "warden_resign_confirm", LANG_SERVER);
+		ConfirmMenu.SetTitle(buffer);
 		ConfirmMenu.ExitButton = false;
 		ConfirmMenu.ExitBackButton = false;
-		ConfirmMenu.AddItem("y", "ДА");
-		ConfirmMenu.AddItem("n", "НЕТ");
+		
+		Format(buffer, sizeof(buffer), "%T", "Yes", LANG_SERVER);
+		ConfirmMenu.AddItem("y", buffer);
+		Format(buffer, sizeof(buffer), "%T", "No", LANG_SERVER);
+		ConfirmMenu.AddItem("n", buffer);
 		ConfirmMenu.Display(client, MENU_TIME_FOREVER);
 	}
 }
@@ -291,9 +299,9 @@ bool Flood(int client, int delay)
 	if (time < delay)
 	{
 		if (g_bIsCSGO)
-			ReplyToCommand(client, "%t", "anti_flood", delay - time);
+			ReplyToCommand(client, "%T", "anti_flood", LANG_SERVER, delay - time);
 		else
-			CReplyToCommand(client, "%t %t", "Core_Prefix", "anti_flood", delay - time);
+			CReplyToCommand(client, "%T %T", "Core_Prefix", LANG_SERVER, "anti_flood", LANG_SERVER, delay - time);
 		return true;
 	}
 	last_time[client] = curr_time;
