@@ -7,7 +7,7 @@
 // Force new syntax
 #pragma newdecls required
 
-#define PLUGIN_VERSION "0.0.7"
+#define PLUGIN_VERSION "0.0.8"
 
 int g_iWarden, g_iZamWarden;
 bool g_bHasFreeday[MAXPLAYERS+1];

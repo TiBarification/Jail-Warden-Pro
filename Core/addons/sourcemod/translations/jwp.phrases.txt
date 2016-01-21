@@ -67,6 +67,11 @@
 		"en"		"Voting STOPPED!"
 		"ru"		"ГОЛОСОВАНИЕ ОСТАНОВЛЕНО"
 	}
+	"vote_who_will_be_warden"
+	{
+		"en"		"Who will be warden?"
+		"ru"		"Кто будет командиром?"
+	}
 	"warden_only_ct"
 	{
 		"en"		"{RED}Warden can be only ct"

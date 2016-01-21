@@ -33,7 +33,7 @@ public void OnPluginStart()
 	g_CvarOrderSound = CreateConVar("jwp_order_sound", "buttons/blip2.wav", "Звук, когда командир приказывает", FCVAR_PLUGIN);
 	g_CvarOrderAlways = CreateConVar("jwp_order_always", "1", "Если 1, то каждое сообщение командира в чате будет приказом", FCVAR_PLUGIN);
 	g_CvarOrderMsg = CreateConVar("jwp_order_msg", "{default}({green}WARDEN{default}) {red}{nick}: {default}{text}", "Цвет сообщений приказа.", FCVAR_PLUGIN);
-	g_CvarOrderPanel = CreateConVar("jwp_order_panel", "1", "Включить отображение приказа в панели", FCVAR_PLUGIN, true, 0.0, true, 1.0);
+	g_CvarOrderPanel = CreateConVar("jwp_order_panel", "0", "Включить отображение приказа в панели", FCVAR_PLUGIN, true, 0.0, true, 1.0);
 	g_CvarPanelTime = CreateConVar("jwp_order_panel_time", "20", "Сколько секунд показывать меню приказа.", FCVAR_PLUGIN, true, 1.0, true, 40.0);
 	
 	g_CvarOrderSound.AddChangeHook(OnCvarChange);

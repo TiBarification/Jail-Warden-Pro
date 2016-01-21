@@ -42,13 +42,16 @@ public void OnPluginStart()
 public void Event_OnRoundStart(Event event, const char[] name, bool dontBroadcast)
 {
 	if (engine == Engine_CSGO)
+	{
 		Cvar_Noblock.RestoreDefault(false, false);
+		g_bNoblock = Cvar_Noblock.BoolValue;
+	}
 	else
 	{
 		for (int i = 1; i <= MaxClients; ++i)
 			NoblockEntity(i, false);
+		g_bNoblock = false;
 	}
-	g_bNoblock = false;
 }
 
 public void Event_OnPlayerSpawn(Event event, const char[] name, bool dontBroadcast)
@@ -84,10 +87,7 @@ public bool OnFuncSelect(int client)
 	else
 	{
 		for (int i = 1; i <= MaxClients; ++i)
-		{
-			if (IsClientInGame(i) && IsPlayerAlive(i) && GetClientTeam(i) == CS_TEAM_T)
-				NoblockEntity(i, g_bNoblock);
-		}
+			NoblockEntity(i, g_bNoblock);
 	}
 	if (g_bNoblock)
 		JWP_RefreshMenuItem(ITEM, "[-]Ноблок");
@@ -100,5 +100,6 @@ public bool OnFuncSelect(int client)
 
 void NoblockEntity(int client, bool state = true)
 {
-	SetEntData(client, g_CollisionGroupOffset, (state) ? 2 : 5, 4, true);
+	if (client && IsClientInGame(client) && IsPlayerAlive(client) && GetClientTeam(client) == CS_TEAM_T)
+		SetEntData(client, g_CollisionGroupOffset, (state) ? 2 : 5, 4, true);
 }

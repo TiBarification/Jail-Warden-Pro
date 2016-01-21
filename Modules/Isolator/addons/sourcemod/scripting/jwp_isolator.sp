@@ -125,15 +125,15 @@ public bool OnFuncDisplay(int client, char[] buffer, int maxlength, int style)
 public bool OnFuncSelect(int client)
 {
 	Menu IsolatorMenu = new Menu(IsolatorMenu_Callback);
-	IsolatorMenu.SetTitle("Управление карцером:\n[|||] - в карцере");
+	IsolatorMenu.SetTitle("Управление карцером:\n[#] - в карцере");
 	char id[4], name[MAX_NAME_LENGTH];
 	for (int i = 1; i <= MaxClients; ++i)
 	{
-		if (CheckClient(i)) // Change to CheckClient
+		if (CheckClient(i))
 		{
 			IntToString(i, id, sizeof(id));
 			if (JWP_IsPrisonerIsolated(i))
-				Format(name, sizeof(name), "[|||]%N", i);
+				Format(name, sizeof(name), "[#]%N", i);
 			else
 				Format(name, sizeof(name), "%N", i);
 			IsolatorMenu.AddItem(id, name);
@@ -187,7 +187,7 @@ public int IsolatorMenu_Callback(Menu menu, MenuAction action, int client, int s
 
 bool CheckClient(int client)
 {
-	return (IsClientInGame(client) && IsClientConnected(client) && !IsFakeClient(client) && (GetClientTeam(client) == CS_TEAM_T));
+	return (IsClientInGame(client) && IsClientConnected(client) && !IsFakeClient(client) && (GetClientTeam(client) == CS_TEAM_T) && IsPlayerAlive(client));
 }
 
 bool IsValidIsolator(int& ent, char[] name)

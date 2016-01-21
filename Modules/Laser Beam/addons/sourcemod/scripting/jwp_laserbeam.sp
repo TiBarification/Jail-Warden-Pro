@@ -80,6 +80,11 @@ public void OnPluginEnd()
 	JWP_RemoveFromMainMenu(ITEM, OnFuncDisplay, OnFuncSelect);
 }
 
+public int JWP_OnWardenChosen(int client)
+{
+	g_bLightActive = false;
+}
+
 public bool OnFuncDisplay(int client, char[] buffer, int maxlength, int style)
 {
 	FormatEx(buffer, maxlength, "[%s]Направляющий свет", (g_bLightActive) ? '-' : '+');
@@ -111,6 +116,7 @@ public Action g_BeamTimer_Callback(Handle timer, any client)
 	if (!JWP_IsWarden(client) || !IsClientInGame(client) || !g_bLightActive)
 	{
 		g_BeamTimer = null;
+		g_bLightActive = false;
 		return Plugin_Stop;
 	}
 	
@@ -154,6 +160,7 @@ void KillBeamTimer()
 	if (g_BeamTimer != null)
 	{
 		KillTimer(g_BeamTimer);
+		g_bLightActive = false;
 		g_BeamTimer = null;
 	}
 }
