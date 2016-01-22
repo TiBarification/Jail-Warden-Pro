@@ -24,6 +24,8 @@ public void OnPluginStart()
 	HookEvent("round_start", Event_OnRoundStart, EventHookMode_PostNoCopy);
 	HookEvent("round_end", Event_OnRoundEnd, EventHookMode_PostNoCopy);
 	if (JWP_IsStarted()) JWC_Started();
+	
+	LoadTranslations("jwp_modules.phrases");
 }
 
 public void Event_OnRoundStart(Event event, const char[] name, bool dontBroadcast)
@@ -48,7 +50,7 @@ public void OnPluginEnd()
 
 public bool OnFuncDisplay(int client, char[] buffer, int maxlength, int style)
 {
-	FormatEx(buffer, maxlength, "[%s]Разделить по цветам", (g_bColoring) ? '-' : '+');
+	FormatEx(buffer, maxlength, "[%s]%T", (g_bColoring) ? '-' : '+', "Coloring_Menu", LANG_SERVER);
 	return true;
 }
 
@@ -68,12 +70,12 @@ public bool OnFuncSelect(int client)
 				if (red)
 				{
 					SetEntityRenderColor(i, 255, 0, 0, 255);
-					PrintToChat(i, "\x01\x04Ваш цвет: КРАСНЫЙ");
+					PrintToChat(i, "\x01\x04%T %T", "Coloring_Your_Color", LANG_SERVER, "Coloring_Red_Color", LANG_SERVER);
 				}
 				else
 				{
 					SetEntityRenderColor(i, 0, 0, 255, 255);
-					PrintToChat(i, "\x01\x04Ваш цвет: СИНИЙ");
+					PrintToChat(i, "\x01\x04%T %T", "Coloring_Your_Color", LANG_SERVER, "Coloring_Blue_Color", LANG_SERVER);
 				}
 			}
 		}
@@ -86,15 +88,23 @@ public bool OnFuncSelect(int client)
 			{
 				SetEntityRenderMode(i, RENDER_TRANSCOLOR);
 				SetEntityRenderColor(i, 255, 255, 255, 255);
-				PrintToChat(i, "\x01\x04Ваш цвет: СТАНДАРТНЫЙ");
+				PrintToChat(i, "\x01\x04%T %T", "Coloring_Your_Color", LANG_SERVER, "Coloring_Standart_Color", LANG_SERVER);
 			}
 		}
 	}
+	
+	char menuitem[48];
 	if (g_bColoring)
-		JWP_RefreshMenuItem(ITEM, "[-]Разделить по цветам");
+	{
+		FormatEx(menuitem, sizeof(menuitem), "[-]%T", "Coloring_Menu", LANG_SERVER);
+		JWP_RefreshMenuItem(ITEM, menuitem);
+	}
 	else
-		JWP_RefreshMenuItem(ITEM, "[+]Разделить по цветам");
-	JWP_ActionMsg(client, "\x03Разделение по цветам \x02%s", (g_bColoring) ? "включено" : "отключено");
+	{
+		FormatEx(menuitem, sizeof(menuitem), "[+]%T", "Coloring_Menu", LANG_SERVER);
+		JWP_RefreshMenuItem(ITEM, menuitem);
+	}
+	JWP_ActionMsg(client, "\x03%T \x02%T", "Coloring_ActionMessage", LANG_SERVER, (g_bColoring) ? "Coloring_State_On" : "Coloring_State_Off", LANG_SERVER);
 	JWP_ShowMainMenu(client);
 	return true;
 }

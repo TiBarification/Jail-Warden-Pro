@@ -288,7 +288,7 @@ native void JWP_RehashMenu();
 native int JWP_GetMenuItemCount();
 
 /**
- *	Function to re-style menu item
+ *	Function to re-style menu item or reload them
  *	-
  *	@param unique name of module
  *	@param new display name, leave empty for ignore

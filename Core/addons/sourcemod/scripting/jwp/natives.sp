@@ -104,7 +104,7 @@ public int Native_ActionMsgAll(Handle plugin, int numParams)
 	char buffer[192], prefix[52];
 	
 	FormatNativeString(0, 1, 2, sizeof(buffer), _, buffer);
-	FormatEx(prefix, sizeof(prefix), "%t", "Core_Prefix");
+	FormatEx(prefix, sizeof(prefix), "%T", "Core_Prefix", LANG_SERVER);
 	if (g_bIsCSGO)
 		CGOPrintToChatAll("%s %s", prefix, buffer);
 	else
@@ -116,7 +116,7 @@ public int Native_ActionMsg(Handle plugin, int numParams)
 	char buffer[192], prefix[52];
 	int client = GetNativeCell(1);
 	FormatNativeString(0, 2, 3, sizeof(buffer), _, buffer);
-	FormatEx(prefix, sizeof(prefix), "%t", "Core_Prefix");
+	FormatEx(prefix, sizeof(prefix), "%T", "Core_Prefix", LANG_SERVER);
 	if (g_bIsCSGO)
 		CGOPrintToChat(client, "%s %s", prefix, buffer);
 	else

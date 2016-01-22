@@ -349,13 +349,14 @@ bool BecomeCmd(int client)
 			CGOPrintToChat(client, "%T %T", "Core_Prefix", LANG_SERVER, "already_was_warden", LANG_SERVER);
 		else
 			CPrintToChat(client, "%T %T", "Core_Prefix", LANG_SERVER, "already_was_warden", LANG_SERVER);
-		return false;
 	}
 	else if (IsPlayerAlive(client))
 	{
 		g_iWarden = client;
 		Forward_OnWardenChosen(client);
 		g_bWasWarden[client] = true;
+		// Show our warden menu
+		Cmd_ShowMenu(client);
 		if (g_bIsCSGO)
 			CGOPrintToChatAll("%T %T", "Core_Prefix", LANG_SERVER, "warden_become", LANG_SERVER, g_iWarden);
 		else

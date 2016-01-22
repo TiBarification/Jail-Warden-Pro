@@ -20,6 +20,7 @@ public Plugin myinfo =
 public void OnPluginStart()
 {
 	if (JWP_IsStarted()) JWC_Started();
+	LoadTranslations("jwp_modules.phrases");
 }
 
 public int JWC_Started()
@@ -36,7 +37,7 @@ public void OnPluginEnd()
 
 public bool OnFuncDrOpenDisplay(int client, char[] buffer, int maxlength, int style)
 {
-	strcopy(buffer, maxlength, "Открыть камеру (прицел)");
+	Format(buffer, maxlength, "%T", "DoorAimControl_Menu_Open", LANG_SERVER);
 	return true;
 }
 
@@ -50,7 +51,7 @@ public bool OnFuncDrOpenSelect(int client)
 
 public bool OnFuncDrCloseDisplay(int client, char[] buffer, int maxlength, int style)
 {
-	strcopy(buffer, maxlength, "Закрыть камеру (прицел)");
+	Format(buffer, maxlength, "%T", "DoorAimControl_Menu_Close", LANG_SERVER);
 	return true;
 }
 
@@ -72,16 +73,16 @@ void DoorManip(int client, bool open)
 		if (open)
 		{
 			AcceptEntityInput(ent, "Open");
-			JWP_ActionMsg(client, "\x03Вы успешно открыли дверь");
+			JWP_ActionMsg(client, "\x03%T", "DoorAimControl_ActionMessage_Open", LANG_SERVER);
 		}
 		else
 		{
 			AcceptEntityInput(ent, "Close");
-			JWP_ActionMsg(client, "\x02Вы успешно закрыли дверь");
+			JWP_ActionMsg(client, "\x02%T", "DoorAimControl_ActionMessage_Close", LANG_SERVER);
 		}
 	}
 	else
-		PrintCenterText(client, "Наведите прицел на дверь");
+		PrintCenterText(client, "%T", "DoorAimControl_Take_Aim", LANG_SERVER);
 }
 
 int TiB_GetAimInfo(int client)

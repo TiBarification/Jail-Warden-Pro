@@ -31,7 +31,7 @@ public void OnPluginStart()
 {
 	g_CvarColor = CreateConVar("jwp_laser_beam_color", "255 0 0 255", "Цвет луча (rgba)", FCVAR_PLUGIN);
 	g_CvarLife = CreateConVar("jwp_laser_beam_life", "25.0", "Время жизни луча", FCVAR_PLUGIN, true, 1.0, true, 30.0);
-	g_CvarSize = CreateConVar("jwp_laser_beam_size", "1.2", "Ширина луча", FCVAR_PLUGIN, true, 0.1, true, 5.0);
+	g_CvarSize = CreateConVar("jwp_laser_beam_size", "5.0", "Ширина луча", FCVAR_PLUGIN, true, 0.1, true, 25.0);
 	g_CvarMaxDist = CreateConVar("jwp_laser_beam_maxdist", "120.0", "Максимальное расстояние от командира до луча", FCVAR_PLUGIN, true, 10.0);
 	
 	g_CvarColor.AddChangeHook(OnCvarChange);
@@ -41,6 +41,8 @@ public void OnPluginStart()
 	
 	if (JWP_IsStarted()) JWC_Started();
 	AutoExecConfig(true, ITEM, "jwp");
+	
+	LoadTranslations("jwp_modules.phrases");
 }
 
 public void OnMapStart()
@@ -87,21 +89,51 @@ public int JWP_OnWardenChosen(int client)
 
 public bool OnFuncDisplay(int client, char[] buffer, int maxlength, int style)
 {
-	FormatEx(buffer, maxlength, "[%s]Направляющий свет", (g_bLightActive) ? '-' : '+');
+	FormatEx(buffer, maxlength, "[%s]%T", (g_bLightActive) ? '-' : '+', "LaserBeam_Menu", LANG_SERVER);
 	return true;
 }
 
 public bool OnFuncSelect(int client)
 {
 	g_bLightActive = !g_bLightActive;
+	/* if (g_bLightActive)
+		CreateGlowLight(client); */
+	
+	char menuitem[48];
 	if (g_bLightActive)
-		CreateGlowLight(client);
-	if (g_bLightActive)
-		JWP_RefreshMenuItem(ITEM, "[-]Направляющий свет");
+	{
+		FormatEx(menuitem, sizeof(menuitem), "[-]%T", "LaserBeam_Menu", LANG_SERVER);
+		JWP_RefreshMenuItem(ITEM, menuitem);
+	}
 	else
-		JWP_RefreshMenuItem(ITEM, "[+]Направляющий свет");
+	{
+		FormatEx(menuitem, sizeof(menuitem), "[+]%T", "LaserBeam_Menu", LANG_SERVER);
+		JWP_RefreshMenuItem(ITEM, menuitem);
+	}
 	JWP_ShowMainMenu(client);
 	return true;
+}
+
+public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon, int &subtype, int &cmdnum, int &tickcount, int &seed, int mouse[2])
+{
+	if (client && IsClientInGame(client) && IsPlayerAlive(client) && JWP_IsWarden(client) && g_bLightActive && buttons & IN_USE)
+	{
+		// CreateGlowLight(client);
+		TraceEye(client, LastLaser);
+		
+		float pos[3];
+		TraceEye(client, pos);
+		pos[2] += 5.0;
+		float distance = GetVectorDistance(pos, LastLaser);
+		if (6.0 < distance <= g_CvarMaxDist.FloatValue)
+		{
+			Laser(LastLaser, pos);
+			LastLaser[0] = pos[0];
+			LastLaser[1] = pos[1];
+			LastLaser[2] = pos[2];
+		}
+	}
+	return Plugin_Continue;
 }
 
 void CreateGlowLight(int client)

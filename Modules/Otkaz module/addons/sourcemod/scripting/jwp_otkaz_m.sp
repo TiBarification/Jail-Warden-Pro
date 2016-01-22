@@ -19,6 +19,7 @@ public Plugin myinfo =
 public void OnPluginStart()
 {
 	if (JWP_IsStarted()) JWC_Started();
+	LoadTranslations("jwp_modules.phrases");
 }
 
 public int JWC_Started()
@@ -33,7 +34,7 @@ public void OnPluginEnd()
 
 public bool OnFuncDisplay(int client, char[] buffer, int maxlength, int style)
 {
-	FormatEx(buffer, maxlength, "Рассмотреть отказы");
+	FormatEx(buffer, maxlength, "%T", "Otkaz_Menu", LANG_SERVER);
 	return true;
 }
 

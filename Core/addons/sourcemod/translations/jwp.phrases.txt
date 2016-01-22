@@ -9,7 +9,7 @@
 	{
 		"#format"	"{1:N}"
 		"en"		"Warden {1} is dead."
-		"ru"		"Командир {1} сдох."
+		"ru"		"Командир {1} умер."
 	}
 	"use_warden_cmd"
 	{

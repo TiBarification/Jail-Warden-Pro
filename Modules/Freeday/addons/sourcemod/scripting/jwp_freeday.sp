@@ -30,6 +30,8 @@ public void OnPluginStart()
 	if (JWP_IsStarted()) JWC_Started();
 	
 	AutoExecConfig(true, "freeday", "jwp");
+	
+	LoadTranslations("jwp_modules.phrases");
 }
 
 public int JWC_Started()
@@ -63,7 +65,7 @@ public void OnPluginEnd()
 }
 public bool OnFuncFDGiveDisplay(int client, char[] buffer, int maxlength, int style)
 {
-	FormatEx(buffer, maxlength, "Дать фридей");
+	FormatEx(buffer, maxlength, "%T", "Freeday_Menu_Give", LANG_SERVER);
 	return true;
 }
 
@@ -75,7 +77,7 @@ public bool OnFuncFDGiveSelect(int client)
 
 public bool OnFuncFDTakeDisplay(int client, char[] buffer, int maxlength, int style)
 {
-	FormatEx(buffer, maxlength, "Забрать фридей");
+	FormatEx(buffer, maxlength, "%T", "Freeday_Menu_Take", LANG_SERVER);
 	return true;
 }
 
@@ -87,12 +89,18 @@ public bool OnFuncFDTakeSelect(int client)
 
 void ShowFreedayMenu(int client, bool fd_players)
 {
-	char id[4], name[MAX_NAME_LENGTH];
+	char id[4], name[MAX_NAME_LENGTH], langphrases[48];
 	Menu PList = new Menu(PList_Callback);
 	if (fd_players)
-		PList.SetTitle("У кого забрать фридей: \n");
+	{
+		Format(langphrases, sizeof(langphrases), "%T \n", "Freeday_Players_TakeFD_Title", LANG_SERVER);
+		PList.SetTitle(langphrases);
+	}
 	else
-		PList.SetTitle("Кому дать фридей: \n");
+	{
+		Format(langphrases, sizeof(langphrases), "%T \n", "Freeday_Players_GiveFD_Title", LANG_SERVER);
+		PList.SetTitle(langphrases);
+	}
 	for (int i = 1; i <= MaxClients; ++i)
 	{
 		if (CheckClient(i))
@@ -111,7 +119,10 @@ void ShowFreedayMenu(int client, bool fd_players)
 		}
 	}
 	if (!PList.ItemCount)
-		PList.AddItem("", "Нет доступных игроков", ITEMDRAW_DISABLED);
+	{
+		Format(langphrases, sizeof(langphrases), "%T", "General_No_Prisoners", LANG_SERVER);
+		PList.AddItem("", langphrases, ITEMDRAW_DISABLED);
+	}
 	PList.ExitBackButton = true;
 	PList.Display(client, MENU_TIME_FOREVER);
 }
@@ -146,7 +157,7 @@ public int PList_Callback(Menu menu, MenuAction action, int client, int slot)
 											(state) ? g_iColor[1] : 255,
 											(state) ? g_iColor[2] : 255,
 											(state) ? g_iColor[3] : 255);
-				JWP_ActionMsgAll("%N %s фридей %N.", client, (state) ? "\x03дал\x01" : "\x02забрал\x01", target);
+				JWP_ActionMsgAll("%T", (state) ? "Freeday_ActionMessage_Gived" : "Freeday_ActionMessage_Taken", LANG_SERVER, client, target);
 			}
 			menu.RemoveItem(slot);
 			

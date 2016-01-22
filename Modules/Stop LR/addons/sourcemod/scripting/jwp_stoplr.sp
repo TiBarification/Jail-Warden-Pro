@@ -26,6 +26,8 @@ public void OnPluginStart()
 	HookEvent("round_start", Event_OnRoundStart, EventHookMode_PostNoCopy);
 	if (JWP_IsStarted()) JWC_Started();
 	AutoExecConfig(true, "stoplr", "jwp");
+	
+	LoadTranslations("jwp_modules.phrases");
 }
 
 public void OnCvarChange(ConVar cvar, const char[] oldValue, const char[] newValue)
@@ -51,27 +53,31 @@ public void OnPluginEnd()
 public bool OnFuncDisplay(int client, char[] buffer, int maxlength, int style)
 {
 	if (!g_CvarMaxStops.IntValue)
-		FormatEx(buffer, maxlength, "Остановить LR");
+		FormatEx(buffer, maxlength, "%T", "StopLR_Menu", LANG_SERVER);
 	else
-		FormatEx(buffer, maxlength, "Остановить LR (ост: %d)", g_CvarMaxStops.IntValue - g_iStops);
+		FormatEx(buffer, maxlength, "%T %T", "StopLR_Menu", LANG_SERVER, "StopLR_StopLeft", LANG_SERVER, g_CvarMaxStops.IntValue - g_iStops);
 	return true;
 }
 
 public bool OnFuncSelect(int client)
 {
-	if (g_CvarMaxStops.IntValue && g_iStops < g_CvarMaxStops.IntValue)
+	char langbuffer[48];
+	if (!g_CvarMaxStops.IntValue)
 	{
-		JWP_ActionMsgAll("%N остановил \x02LR\x01.", client);
+		JWP_ActionMsgAll("%T", "StopLR_ActionMessage_Stopped", LANG_SERVER, client);
+		ServerCommand("sm_stoplr"); // Останавливает лр от имени сервера.
+	}
+	else if (g_CvarMaxStops.IntValue && g_iStops < g_CvarMaxStops.IntValue)
+	{
+		JWP_ActionMsgAll("%T", "StopLR_ActionMessage_Stopped", LANG_SERVER, client);
 		ServerCommand("sm_stoplr"); // Останавливает лр от имени сервера.
 		g_iStops++;
 		int result = g_CvarMaxStops.IntValue - g_iStops;
-		char buffer[64];
-		FormatEx(buffer, sizeof(buffer), "Остановить LR (ост: %d)", result);
-		JWP_RefreshMenuItem(ITEM, buffer, (!result) ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
-		// JWP_RehashMenu();
+		FormatEx(langbuffer, sizeof(langbuffer), "%T %T", "StopLR_Menu", LANG_SERVER, "StopLR_StopLeft", LANG_SERVER, result);
+		JWP_RefreshMenuItem(ITEM, langbuffer, (!result) ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
 	}
 	else
-		JWP_ActionMsg(client, "Вы использовали максимальное количество отмен LR.");
+		JWP_ActionMsg(client, "%T", "StopLR_ActionMessage_ReachedMaximum", LANG_SERVER);
 	
 	JWP_ShowMainMenu(client);
 		

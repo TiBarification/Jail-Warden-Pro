@@ -258,7 +258,7 @@ void EmptyPanel(int client)
 		/* close menu if exists with empty panel */
 		Panel panel = new Panel();
 		panel.SetTitle(" ");
-		panel.Send(client, EmptyPanel_Callback, 2);
+		panel.Send(client, EmptyPanel_Callback, 1);
 	}
 }
 
