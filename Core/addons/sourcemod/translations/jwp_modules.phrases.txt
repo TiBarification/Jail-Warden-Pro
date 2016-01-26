@@ -444,4 +444,20 @@
 		"en"		"Failed to teleport {1} back to jail"
 		"ru"		"Не удалось телепортировать игрока {1}"
 	}
+	
+	"JWP_Pris_Counter_Menu"
+	{
+		"en"		"Count prisoners"
+		"ru"		"Посчитать зеков"
+	}
+	"JWP_Pris_Counter_ActionMessage_Near"
+	{
+		"en"		"prisoners near you"
+		"ru"		"зеков рядом с вами"
+	}
+	"JWP_Pris_Counter_ActionMessage_Freeday"
+	{
+		"en"		"Prisoners with Freeday:"
+		"ru"		"Игроков с Freeday:"
+	}
 }

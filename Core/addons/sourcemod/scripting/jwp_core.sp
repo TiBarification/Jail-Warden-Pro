@@ -3,11 +3,14 @@
 #undef REQUIRE_PLUGIN
 #tryinclude <csgo_colors>
 #tryinclude <morecolors>
+#include <updater>
 
 // Force new syntax
 #pragma newdecls required
 
 #define PLUGIN_VERSION "0.0.8"
+
+#define UPDATE_URL "http://updater.tibari.ru/jwp/updatefile.txt"
 
 int g_iWarden, g_iZamWarden;
 bool g_bHasFreeday[MAXPLAYERS+1];
@@ -16,6 +19,7 @@ bool g_bIsolated[MAXPLAYERS+1];
 bool is_started;
 bool g_bRoundEnd;
 bool g_bIsCSGO;
+bool g_bUpdater;
 
 bool g_bWasWarden[MAXPLAYERS+1];
 ArrayList g_aSortedMenu;
@@ -24,7 +28,8 @@ ArrayList g_aFlags;
 ConVar	g_CvarChooseMode,
 		g_CvarRandomWait,
 		g_CvarVoteTime,
-		g_CvarDisableAntiFlood;
+		g_CvarDisableAntiFlood,
+		g_CvarAutoUpdate;
 
 Handle g_hChooseTimer;
 
@@ -51,6 +56,7 @@ public void OnPluginStart()
 	g_CvarRandomWait = CreateConVar("jwp_random_wait", "5", "Time before warden randomly picked if choose mode = 1", FCVAR_PLUGIN, true, 1.0, true, 30.0);
 	g_CvarVoteTime = CreateConVar("jwp_vote_time", "30", "Time for voting if choose mode = 3", FCVAR_PLUGIN, true, 10.0, true, 60.0);
 	g_CvarDisableAntiFlood = CreateConVar("jwp_disable_antiflood", "1", "Protect menu from random selecting", FCVAR_PLUGIN, true, 0.0, true, 1.0);
+	g_CvarAutoUpdate = CreateConVar("jwp_autoupdate", "1", "Enable (1) or disable (0) auto update. Need Updater!", FCVAR_PLUGIN, true, 0.0, true, 1.0);
 	
 	RegConsoleCmd("sm_com", Command_BecomeWarden, "Warden menu");
 	RegConsoleCmd("sm_w", Command_BecomeWarden, "Warden menu");
@@ -70,6 +76,7 @@ public void OnPluginStart()
 	g_CvarRandomWait.AddChangeHook(OnCvarChange);
 	g_CvarVoteTime.AddChangeHook(OnCvarChange);
 	g_CvarDisableAntiFlood.AddChangeHook(OnCvarChange);
+	g_CvarAutoUpdate.AddChangeHook(OnCvarChange);
 	
 	g_aSortedMenu = new ArrayList(66);
 	g_aFlags = new ArrayList(1);
@@ -78,9 +85,13 @@ public void OnPluginStart()
 	AutoExecConfig(true, "jwp", "jwp");
 	
 	g_bIsCSGO = (GetEngineVersion() == Engine_CSGO) ? true : false;
+	g_bUpdater = g_CvarAutoUpdate.BoolValue;
 	
 	LoadTranslations("jwp.phrases");
 	LoadTranslations("common.phrases");
+	
+	if (LibraryExists("updater") && g_bUpdater)
+		Updater_AddPlugin(UPDATE_URL);
 }
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
@@ -96,12 +107,35 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	return APLRes_Success;
 }
 
+public void OnAllPluginsLoaded()
+{
+	if (LibraryExists("updater") && g_bUpdater)
+		Updater_AddPlugin(UPDATE_URL);
+}
+
+public void OnLibraryAdded(const char[] name)
+{
+	if (!strcmp(name, "updater") && g_bUpdater)
+		Updater_AddPlugin(UPDATE_URL);
+}
+
+public int Updater_OnPluginUpdated()
+{
+	LogMessage("Plugin updated. Old version was %s. Now reloading.", PLUGIN_VERSION);
+	ReloadPlugin();
+}
+
 public void OnCvarChange(ConVar cvar, const char[] oldValue, const char[] newValue)
 {
 	if (cvar == g_CvarChooseMode) g_CvarChooseMode.SetInt(StringToInt(newValue));
 	else if (cvar == g_CvarRandomWait) g_CvarRandomWait.SetInt(StringToInt(newValue));
 	else if (cvar == g_CvarVoteTime) g_CvarVoteTime.SetInt(StringToInt(newValue));
 	else if (cvar == g_CvarDisableAntiFlood) g_CvarDisableAntiFlood.SetInt(StringToInt(newValue));
+	else if (cvar == g_CvarAutoUpdate)
+	{
+		g_bUpdater = view_as<bool>(StringToInt(newValue));
+		g_CvarAutoUpdate.SetBool(g_bUpdater);
+	}
 }
 
 public int Native_IsStarted(Handle plugin, int params)

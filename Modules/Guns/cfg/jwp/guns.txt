@@ -19,4 +19,34 @@
 		"slot"	"0"
 		"drop"	"0"
 	}
+	"awp"
+	{
+		"text"	"AWP"
+		"slot"	"0"
+		"drop"	"0"
+	}
+	"xm1014"
+	{
+		"text"	"Дробовик"
+		"slot"	"0"
+		"drop"	"0"
+	}
+	"deagle"
+	{
+		"text"	"Deagle"
+		"slot"	"1"
+		"drop"	"0"
+	}
+	"aug"
+	{
+		"text"	"AUG"
+		"slot"	"0"
+		"drop"	"0"
+	}
+	"taser"
+	{
+		"text"	"Taser"
+		"slot"	"2"
+		"drop"	"0"
+	}
 }
