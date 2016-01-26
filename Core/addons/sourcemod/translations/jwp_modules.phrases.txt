@@ -198,6 +198,11 @@
 		"en"		"Remove aim from player"
 		"ru"		"Не флудите аптечкой"
 	}
+	"HealthKit_FailedToMedkit"
+	{
+		"en"		"Failed to create healthkit"
+		"ru"		"Не удалось создать аптечку"
+	}
 	
 	"Isolator_Menu"
 	{
@@ -459,5 +464,17 @@
 	{
 		"en"		"Prisoners with Freeday:"
 		"ru"		"Игроков с Freeday:"
+	}
+	
+	"RE_Menu"
+	{
+		"en"		"Extend round"
+		"ru"		"Продлить раунд"
+	}
+	"RE_ActionMessage_Extend"
+	{
+		"#format"	"{1:N},{2:d}"
+		"en"		"{1} extended this round on {2} minutes"
+		"ru"		"{1} продлил раунд на {2} минут(ы)"
 	}
 }

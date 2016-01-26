@@ -61,7 +61,7 @@ public bool OnFuncSelect(int client)
 {
 	g_bTurnOn = !g_bTurnOn;
 	Cvar_FF.SetBool(g_bTurnOn, false, false);
-	JWP_ActionMsgAll("%T\x02%T", "FF_ActionMessage_FriendlyFire", LANG_SERVER, (g_bTurnOn) ? "FF_State_On":"FF_State_Off");
+	JWP_ActionMsgAll("%T\x02%T", "FF_ActionMessage_FriendlyFire", LANG_SERVER, (g_bTurnOn) ? "FF_State_On":"FF_State_Off", LANG_SERVER);
 	char menuitem[48];
 	if (g_bTurnOn)
 	{

@@ -24,8 +24,8 @@ public Plugin myinfo =
 public void OnPluginStart()
 {
 	g_Slot = new StringMap();
-	if (JWP_IsStarted()) JWC_Started();
 	LoadTranslations("jwp_modules.phrases");
+	if (JWP_IsStarted()) JWC_Started();
 }
 
 public int JWC_Started()
