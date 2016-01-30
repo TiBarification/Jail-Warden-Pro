@@ -26,6 +26,8 @@ public void OnPluginStart()
 	Cvar_SpeedValue.AddChangeHook(OnCvarChange);
 	if (JWP_IsStarted()) JWC_Started();
 	AutoExecConfig(true, ITEM, "jwp");
+	
+	LoadTranslations("jwp_modules.phrases");
 }
 
 public int JWP_OnWardenChosen(int client)
@@ -57,18 +59,25 @@ public void OnPluginEnd()
 
 public bool OnFuncDisplay(int client, char[] buffer, int maxlength, int style)
 {
-	FormatEx(buffer, maxlength, "[%s]Скорость", (g_bSpeed) ? '-' : '+');
+	FormatEx(buffer, maxlength, "[%s]%T", (g_bSpeed) ? '-' : '+', "Speed_Menu", LANG_SERVER);
 	return true;
 }
 
 public bool OnFuncSelect(int client)
 {
+	char langbuffer[24];
 	g_bSpeed = !g_bSpeed;
 	SetEntPropFloat(client, Prop_Send, "m_flLaggedMovementValue", (g_bSpeed) ? Cvar_SpeedValue.FloatValue : 1.0);
 	if (g_bSpeed)
-		JWP_RefreshMenuItem(ITEM, "[-]Скорость");
+	{
+		Format(langbuffer, sizeof(langbuffer), "[-]%T", "Speed_Menu", LANG_SERVER);
+		JWP_RefreshMenuItem(ITEM, langbuffer);
+	}
 	else
-		JWP_RefreshMenuItem(ITEM, "[+]Скорость");
+	{
+		Format(langbuffer, sizeof(langbuffer), "[+]%T", "Speed_Menu", LANG_SERVER);
+		JWP_RefreshMenuItem(ITEM, langbuffer);
+	}
 	JWP_ShowMainMenu(client);
 	return true;
 }

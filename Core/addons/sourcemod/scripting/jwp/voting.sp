@@ -73,11 +73,11 @@ public int g_VoteMenu_Callback(Menu menu, MenuAction action, int client, int slo
 				{
 					if (menu.RemoveItem(slot) && menu.ItemCount > 0)
 					{
-						PrintCenterText(client, "%t", "Unable to target");
+						PrintCenterText(client, "%T", "Unable to target", LANG_SERVER);
 						g_VoteMenu.Display(client, MENU_TIME_FOREVER);
 					}
 					else
-						PrintHintText(client, "%t", "Player no longer available");
+						PrintHintText(client, "%T", "Player no longer available", LANG_SERVER);
 				}
 				else
 				{
@@ -104,13 +104,13 @@ public Action g_VoteTimer_Callback(Handle timer)
 	{
 		if (g_bIsCSGO)
 		{
-			CGOPrintToChatAll("%t", "warden_vote_chat_stopped");
-			CGOPrintHintTextToAll("%t", "warden_vote_hint_stopped");
+			CGOPrintToChatAll("%T", "warden_vote_chat_stopped", LANG_SERVER);
+			CGOPrintHintTextToAll("%T", "warden_vote_hint_stopped", LANG_SERVER);
 		}
 		else
 		{
-			CPrintToChatAll("%t", "warden_vote_chat_stopped");
-			PrintHintTextToAll("%t", "warden_vote_hint_stopped");
+			CPrintToChatAll("%T", "warden_vote_chat_stopped", LANG_SERVER);
+			PrintHintTextToAll("%T", "warden_vote_hint_stopped", LANG_SERVER);
 		}
 		g_VoteTimer = null;
 		return Plugin_Stop;
@@ -121,15 +121,15 @@ public Action g_VoteTimer_Callback(Handle timer)
 		{
 			char best3ct[152];
 			if (JWP_LastBest3Ct(best3ct))
-				PrintHintTextToAll("%t\n%d\n \n%s", "vote_who_will_be_warden", g_iVoteSec, best3ct);
+				PrintHintTextToAll("%T\n%d\n \n%s", "vote_who_will_be_warden", LANG_SERVER, g_iVoteSec, best3ct);
 			else
 			{
 				g_iVots = 0;
-				PrintHintTextToAll("%t\n%d", "vote_who_will_be_warden", g_iVoteSec);
+				PrintHintTextToAll("%T\n%d", "vote_who_will_be_warden", LANG_SERVER, g_iVoteSec);
 			}
 		}
 		else
-			PrintHintTextToAll("%t\n%d", "vote_who_will_be_warden", g_iVoteSec);
+			PrintHintTextToAll("%T\n%d", "vote_who_will_be_warden", LANG_SERVER, g_iVoteSec);
 		return Plugin_Continue;
 	}
 	CheckVoteWinner();
@@ -189,9 +189,9 @@ void CheckVoteWinner()
 	else
 	{
 		if (g_bIsCSGO)
-			CGOPrintHintTextToAll("%t", "warden_vote_no_warden");
+			CGOPrintHintTextToAll("%T", "warden_vote_no_warden", LANG_SERVER);
 		else
-			PrintHintTextToAll("%t", "warden_vote_no_warden");
+			PrintHintTextToAll("%T", "warden_vote_no_warden", LANG_SERVER);
 	}
 	g_bVoteFinished = true;
 }

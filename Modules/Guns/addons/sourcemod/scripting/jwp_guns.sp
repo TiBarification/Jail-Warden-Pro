@@ -24,6 +24,7 @@ public Plugin myinfo =
 public void OnPluginStart()
 {
 	g_Slot = new StringMap();
+	LoadTranslations("jwp_modules.phrases");
 	if (JWP_IsStarted()) JWC_Started();
 }
 
@@ -40,7 +41,7 @@ public void OnPluginEnd()
 
 public bool OnFuncDisplay(int client, char[] buffer, int maxlength, int style)
 {
-	FormatEx(buffer, maxlength, "Оружие");
+	FormatEx(buffer, maxlength, "%T", "Guns_Menu", LANG_SERVER);
 	return true;
 }
 
@@ -55,7 +56,7 @@ void LoadGunsFile()
 	KeyValues kv = new KeyValues("guns", "", "");
 	if (!kv.ImportFromFile(cPath))
 	{
-		LogError("Не удалось открыть %s", cPath);
+		LogError("Failed to open %s", cPath);
 		return;
 	}
 	if (!kv.GotoFirstSubKey(true)) return;
@@ -63,7 +64,10 @@ void LoadGunsFile()
 	char buffer[32], text[48];
 	int options[2];
 	g_WeaponMenu = new Menu(g_WeaponMenu_Callback);
-	g_WeaponMenu.SetTitle("Оружие:");
+	
+	Format(text, sizeof(text), "%T:", "Guns_Menu", LANG_SERVER);
+	
+	g_WeaponMenu.SetTitle(text);
 	do
 	{
 		if (kv.GetSectionName(buffer, sizeof(buffer)))

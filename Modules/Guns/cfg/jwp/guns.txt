@@ -13,10 +13,46 @@
 		"slot"	"3"
 		"drop"	"1"
 	}
-	"m4a1"
+	"ak47"
 	{
-		"text"	"M-16"
+		"text"	"AK-47"
 		"slot"	"0"
 		"drop"	"0"
+	}
+	"m4a1"
+	{
+		"text"	"M4"
+		"slot"	"0"
+		"drop"	"0"
+	}
+	"awp"
+	{
+		"text"	"AWP"
+		"slot"	"0"
+		"drop"	"0"
+	}
+	"xm1014"
+	{
+		"text"	"Дробовик"
+		"slot"	"0"
+		"drop"	"0"
+	}
+	"deagle"
+	{
+		"text"	"Deagle"
+		"slot"	"1"
+		"drop"	"0"
+	}
+	"aug"
+	{
+		"text"	"AUG"
+		"slot"	"0"
+		"drop"	"0"
+	}
+	"taser"
+	{
+		"text"	"Taser"
+		"slot"	"2"
+		"drop"	"1"
 	}
 }

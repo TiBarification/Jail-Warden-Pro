@@ -1,0 +1,480 @@
+"Phrases"
+{
+	"General_No_Prisoners"
+	{
+		"en"	"No prisoners"
+		"ru"	"Нет доступных зеков"
+	}
+	"General_No_Alive_Prisoners"
+	{
+		"en"	"No alive prisoners"
+		"ru"	"Нет живых зеков"
+	}
+	
+	
+	"Order_Menu"
+	{
+		"en"	"Make an order"
+		"ru"	"Отдать приказ"
+	}
+	"Order_Menu_Info"
+	{
+		"en"	"Make an order in the chat.\nSymbol '+' to newline."
+		"ru"	"Введите в чат ваш приказ.\nСимвол '+' это переход\nна новую строку."
+	}
+	"Order_Warden_Prefix"
+	{
+		"en"	"WARDEN"
+		"ru"	"КОМАНДИР"
+	}
+	
+	"Coloring_Menu"
+	{
+		"en"	"Divide by colors"
+		"ru"	"Разделить по цветам"
+	}
+	"Coloring_Your_Color"
+	{
+		"en"	"Your color is"
+		"ru"	"Ваш цвет:"
+	}
+	"Coloring_Red_Color"
+	{
+		"en"	"Red"
+		"ru"	"КРАСНЫЙ"
+	}
+	"Coloring_Blue_Color"
+	{
+		"en"	"Blue"
+		"ru"	"СИНИЙ"
+	}
+	"Coloring_Standart_Color"
+	{
+		"en"	"Standart"
+		"ru"	"СТАНДАРТНЫЙ"
+	}
+	"Coloring_ActionMessage"
+	{
+		"en"	"Color divide"
+		"ru"	"Разделение по цветам"
+	}
+	"Coloring_State_On"
+	{
+		"en"	"turned on"
+		"ru"	"включено"
+	}
+	"Coloring_State_Off"
+	{
+		"en"	"turned off"
+		"ru"	"отключено"
+	}
+	
+	"DoorAimControl_Menu_Open"
+	{
+		"en"	"Open cell (aim)"
+		"ru"	"Открыть камеру (прицел)"
+	}
+	"DoorAimControl_Menu_Close"
+	{
+		"en"	"Close cell (aim)"
+		"ru"	"Закрыть камеру (прицел)"
+	}
+	"DoorAimControl_ActionMessage_Open"
+	{
+		"en"	"You've successfully opened cell"
+		"ru"	"Вы успешно открыли дверь"
+	}
+	"DoorAimControl_ActionMessage_Close"
+	{
+		"en"	"You've successfully closed cell"
+		"ru"	"Вы успешно закрыли дверь"
+	}
+	"DoorAimControl_Take_Aim"
+	{
+		"en"	"Place your sight on the door"
+		"ru"	"Наведите прицел на дверь"
+	}
+	
+	"DoorControl_Menu_Open"
+	{
+		"en"	"Open all cells"
+		"ru"	"Открыть клетки джайлов"
+	}
+	"DoorControl_Menu_Close"
+	{
+		"en"	"Close all cells"
+		"ru"	"Закрыть клетки джайлов"
+	}
+	"DoorControl_ActionMessage_Opened"
+	{
+		"#format"	"{1:N}"
+		"en"	"{1} opened cells"
+		"ru"	"{1} открыл клетки джайлов"
+	}
+	"DoorControl_ActionMessage_Closed"
+	{
+		"#format"	"{1:N}"
+		"en"	"{1} closed cells"
+		"ru"	"{1} закрыл клетки джайлов"
+	}
+	"DoorControl_NoDoors"
+	{
+		"en"	"No doors on this map"
+		"ru"	"Не найдено дверей на карте"
+	}
+	
+	"Freeday_Menu_Give"
+	{
+		"en"	"Give freeday"
+		"ru"	"Дать фридей"
+	}
+	"Freeday_Menu_Take"
+	{
+		"en"	"Take freeday"
+		"ru"	"Забрать фридей"
+	}
+	"Freeday_Players_TakeFD_Title"
+	{
+		"en"	"Take freeday from:"
+		"ru"	"У кого забрать фридей:"
+	}
+	"Freeday_Players_GiveFD_Title"
+	{
+		"en"	"Give freeday to:"
+		"ru"	"Кому дать фридей:"
+	}
+	"Freeday_ActionMessage_Gived"
+	{
+		"#format"	"{1:N},{2:N}"
+		"en"	"{1} gived freeday {2}"
+		"ru"	"{1} дал фридей {2}"
+	}
+	"Freeday_ActionMessage_Taken"
+	{
+		"#format"	"{1:N},{2:N}"
+		"en"	"{1} taken freeday from {2}"
+		"ru"	"{1} забрал фридей у {2}"
+	}
+	
+	"FF_Menu"
+	{
+		"en"		"Friendly Fire"
+		"ru"		"Огонь по своим"
+	}
+	"FF_ActionMessage_FriendlyFire"
+	{
+		"en"		"Friendly Fire"
+		"ru"		"Дружественный огонь:"
+	}
+	"FF_State_On"
+	{
+		"en"		"turned on"
+		"ru"		"ВКЛЮЧЕН"
+	}
+	"FF_State_Off"
+	{
+		"en"		"turned off"
+		"ru"		"ВЫКЛЮЧЕН"
+	}
+	
+	"Guns_Menu"
+	{
+		"en"		"Weapons"
+		"ru"		"Оружие"
+	}
+	
+	"HealthKit_Menu"
+	{
+		"en"		"Create Healthkit"
+		"ru"		"Создать аптечку"
+	}
+	"HealthKit_StopFlood"
+	{
+		"en"		"Stop flood with healthkit"
+		"ru"		"Не флудите аптечкой"
+	}
+	"HealthKit_RemoveAim"
+	{
+		"en"		"Remove aim from player"
+		"ru"		"Не флудите аптечкой"
+	}
+	"HealthKit_FailedToMedkit"
+	{
+		"en"		"Failed to create healthkit"
+		"ru"		"Не удалось создать аптечку"
+	}
+	
+	"Isolator_Menu"
+	{
+		"en"		"Isolator"
+		"ru"		"Управление карцером"
+	}
+	"Isolator_Menu_Info"
+	{
+		"en"		"[#] - isolated"
+		"ru"		"[#] - в карцере"
+	}
+	"Isolator_NoMore_Prisoners"
+	{
+		"en"		"No more alive prisoners"
+		"ru"		"Нет живых зеков"
+	}
+	"Isolator_Action_Isolated"
+	{
+		"#format"	"{1:N},{2:N}"
+		"en"		"{1} isolated player {2}"
+		"ru"		"{1} посадил зека {2} в карцер"
+	}
+	"Isolator_Action_Released"
+	{
+		"#format"	"{1:N},{2:N}"
+		"en"		"{1} released {2} from custody"
+		"ru"		"{1} освободил зека {2} из карцера"
+	}
+	"Isolator_FailedToIsolate"
+	{
+		"#format"	"{1:N}"
+		"en"		"Failed to isolate player {1}"
+		"ru"		"Не удалось посадить {1} в карцер"
+	}
+	"Isolator_FailedToIsolate_Leave"
+	{
+		"en"		"Failed to isolate this player. Maybe he's leaved?"
+		"ru"		"Не удалось посадить игрока. Возможно он ливнул?"
+	}
+	"Isolator_NearPlayer"
+	{
+		"en"		"Maybe near is a player, can't do this"
+		"ru"		"Рядом игрок, нельзя установить карцер"
+	}
+	"Isolator_CantCreate"
+	{
+		"en"		"Can't create here isolator"
+		"ru"		"Невозможно здесь установить карцер"
+	}
+	"Isolator_FindAnotherLocation"
+	{
+		"en"		"Find another location for isolator"
+		"ru"		"Нельзя создать изолятор, выберите другое место"
+	}
+	
+	"LaserBeam_Menu"
+	{
+		"en"		"Laser Beam"
+		"ru"		"Направляющий свет"
+	}
+	
+	"Mute_Menu_GiveMute"
+	{
+		"en"		"Give mute"
+		"ru"		"Дать мут"
+	}
+	"Mute_Menu_TakeMute"
+	{
+		"en"		"Take mute"
+		"ru"		"Снять мут"
+	}
+	"Mute_UnMuteAll"
+	{
+		"en"		"Unmute All players"
+		"ru"		"Снять общий мут"
+	}
+	"Mute_MuteAll"
+	{
+		"#format"	"{1:.f}"
+		"en"		"Mute all prisoners ({1} s)"
+		"ru"		"Мут всем ({1} с)"
+	}
+	"Mute_Dont_Have_Permission"
+	{
+		"#format"	"{1:N}"
+		"en"		"Can't unmute {1}. Maybe mute by admin."
+		"ru"		"Не удалось включить микрофон игроку {1}. Возможно мут поставлен администратором."
+	}
+	"Mute_ActionMessage_UnMuted_All"
+	{
+		"#format"	"{1:N}"
+		"en"		"{1} unmuted all prisoners"
+		"ru"		"{1} включил всем террористам микрофон."
+	}
+	"Mute_ActionMessage_Muted_All"
+	{
+		"#format"	"{1:N},{2:.f}"
+		"en"		"{1} muted all prisoners for {2} s"
+		"ru"		"{1} отключил всем террористам микрофон на {2} секунд"
+	}
+	"Mute_ActionMessage_Muted"
+	{
+		"#format"	"{1:N},{2:N}"
+		"en"		"{1} muted {2}"
+		"ru"		"{1} дал мут {2}"
+	}
+	"Mute_ActionMessage_UnMuted"
+	{
+		"#format"	"{1:N},{2:N}"
+		"en"		"{1} un-muted {2}"
+		"ru"		"{1} снял мут с {2}"
+	}
+	"Mute_ActionMessage_MicroAvailable"
+	{
+		"en"		"You can talk again"
+		"ru"		"Микрофон снова доступен террористам"
+	}
+	
+	"Noblock_Menu"
+	{
+		"en"		"Noblock"
+		"ru"		"Noblock"
+	}
+	"Noblock_ActionMessage_Title"
+	{
+		"en"		"NOBLOCK"
+		"ru"		"НОБЛОК:"
+	}
+	"Noblock_ActionMessage_On"
+	{
+		"en"		"turned on"
+		"ru"		"ВКЛЮЧЕН"
+	}
+	"Noblock_ActionMessage_Off"
+	{
+		"en"		"turned off"
+		"ru"		"ВЫКЛЮЧЕН"
+	}
+	
+	"Otkaz_Menu"
+	{
+		"en"		"Watch otkaz"
+		"ru"		"Рассмотреть отказы"
+	}
+	
+	"Slay_Menu"
+	{
+		"en"		"Slay player"
+		"ru"		"Убить игрока"
+	}
+	"Slay_NoAlive"
+	{
+		"en"		"No alive players"
+		"ru"		"Нет живых игроков"
+	}
+	"Slay_ActionMessage_Slayed"
+	{
+		"#format"	"{1:N},{2:N}"
+		"en"		"{1}: slayed {2}"
+		"ru"		"{1}: убил {2}"
+	}
+	"Slay_UnableToSlay"
+	{
+		"en"		"Unable to slay target. Maybe he leaved?"
+		"ru"		"Не удалось убить игрока. Возможно он ливнул/админ?"
+	}
+	
+	"Speed_Menu"
+	{
+		"en"		"Speed"
+		"ru"		"Скорость"
+	}
+	
+	"StopLR_Menu"
+	{
+		"en"		"Stop LR"
+		"ru"		"Остановить LR"
+	}
+	"StopLR_StopLeft"
+	{
+		"#format"	"{1:d}"
+		"en"		"(left: {1})"
+		"ru"		"(ост: {1})"
+	}
+	"StopLR_ActionMessage_Stopped"
+	{
+		"#format"	"{1:N}"
+		"en"		"{1}: stopped LR"
+		"ru"		"{1}: остановил LR"
+	}
+	"StopLR_ActionMessage_ReachedMaximum"
+	{
+		"en"		"You've been used limit of stop LR."
+		"ru"		"Вы использовали максимальное количество отмен LR."
+	}
+	
+	"StripKnife_Menu"
+	{
+		"en"		"Give/Take knife"
+		"ru"		"Дать/Забрать заточку"
+	}
+	"StripKnife_Title"
+	{
+		"en"		"+/- Knife"
+		"ru"		"+/- Заточка"
+	}
+	"StripKnife_ActionMessage_Given"
+	{
+		"#format"	"{1:N},{2:N}"
+		"en"		"{1}: gived knife to {2}"
+		"ru"		"{1}: дал заточку {2}"
+	}
+	"StripKnife_ActionMessage_Taken"
+	{
+		"#format"	"{1:N},{2:N}"
+		"en"		"{1}: took knife from {2}"
+		"ru"		"{1}: забрал заточку игрока {2}"
+	}
+	"StripKnife_ActionMessage_Unable"
+	{
+		"en"		"Unable to do this."
+		"ru"		"Не удалось выполнить действие."
+	}
+	
+	"ToJail_Menu"
+	{
+		"en"		"To Jail"
+		"ru"		"Вернуть в камеру"
+	}
+	"ToJail_ActionMessage_Teleported"
+	{
+		"#format"	"{1:N},{2:N}"
+		"en"		"{1}: teleported {2} back to jail"
+		"ru"		"{1}: телепортировал зека {2} обратно в джайл"
+	}
+	"ToJail_UnableToTP"
+	{
+		"en"		"Unable to teleport prisoner"
+		"ru"		"Не удалось телепортировать в камеру"
+	}
+	"ToJail_FailedCoords"
+	{
+		"#format"	"{1:N}"
+		"en"		"Failed to teleport {1} back to jail"
+		"ru"		"Не удалось телепортировать игрока {1}"
+	}
+	
+	"JWP_Pris_Counter_Menu"
+	{
+		"en"		"Count prisoners"
+		"ru"		"Посчитать зеков"
+	}
+	"JWP_Pris_Counter_ActionMessage_Near"
+	{
+		"en"		"prisoners near you"
+		"ru"		"зеков рядом с вами"
+	}
+	"JWP_Pris_Counter_ActionMessage_Freeday"
+	{
+		"en"		"Prisoners with Freeday:"
+		"ru"		"Игроков с Freeday:"
+	}
+	
+	"RE_Menu"
+	{
+		"en"		"Extend round"
+		"ru"		"Продлить раунд"
+	}
+	"RE_ActionMessage_Extend"
+	{
+		"#format"	"{1:N},{2:d}"
+		"en"		"{1} extended this round on {2} minutes"
+		"ru"		"{1} продлил раунд на {2} минут(ы)"
+	}
+}

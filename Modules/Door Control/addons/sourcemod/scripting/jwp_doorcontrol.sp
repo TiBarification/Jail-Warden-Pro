@@ -26,6 +26,7 @@ public Plugin myinfo =
 public void OnPluginStart()
 {
 	if (JWP_IsStarted()) JWC_Started();
+	LoadTranslations("jwp_modules.phrases");
 }
 
 public void OnMapStart()
@@ -62,14 +63,14 @@ public void OnPluginEnd()
 
 public bool OnFuncDoorOpen_Display(int client, char[] buffer, int maxlength, int style)
 {
-	strcopy(buffer, maxlength, "Открыть клетки джайлов");
+	Format(buffer, maxlength, "%T", "DoorControl_Menu_Open", LANG_SERVER);
 	return true;
 }
 
 public bool OnFuncDoorOpen_Select(int client)
 {
 	if (JWP_IsFlood(client)) return false;
-	JWP_ActionMsgAll("%N открыл клетки джайлов", client);
+	JWP_ActionMsgAll("%T", "DoorControl_ActionMessage_Opened", LANG_SERVER, client);
 	if (g_bSmartDoors)
 		SJD_OpenDoors();
 	else
@@ -80,14 +81,14 @@ public bool OnFuncDoorOpen_Select(int client)
 
 public bool OnFuncDoorClose_Display(int client, char[] buffer, int maxlength, int style)
 {
-	strcopy(buffer, maxlength, "Закрыть клетки джайлов");
+	Format(buffer, maxlength, "%T", "DoorControl_Menu_Close", LANG_SERVER);
 	return true;
 }
 
 public bool OnFuncDoorClose_Select(int client)
 {
 	if (JWP_IsFlood(client)) return false;
-	JWP_ActionMsgAll("%N закрыл клетки джайлов", client);
+	JWP_ActionMsgAll("%T", "DoorControl_ActionMessage_Closed", LANG_SERVER, client);
 	if (g_bSmartDoors)
 		SJD_CloseDoors();
 	else
@@ -117,7 +118,7 @@ void ClassicDoorsManip(int client, bool open)
 {
 	if (!g_aDoors.Length)
 	{
-		PrintCenterText(client, "Не найдено дверей на карте");
+		PrintCenterText(client, "%T", "DoorControl_NoDoors", LANG_SERVER);
 		JWP_ShowMainMenu(client);
 	}
 	

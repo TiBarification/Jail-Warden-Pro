@@ -9,7 +9,7 @@
 	{
 		"#format"	"{1:N}"
 		"en"		"Warden {1} is dead."
-		"ru"		"Командир {1} сдох."
+		"ru"		"Командир {1} умер."
 	}
 	"use_warden_cmd"
 	{
@@ -66,6 +66,11 @@
 	{
 		"en"		"Voting STOPPED!"
 		"ru"		"ГОЛОСОВАНИЕ ОСТАНОВЛЕНО"
+	}
+	"vote_who_will_be_warden"
+	{
+		"en"		"Who will be warden?"
+		"ru"		"Кто будет командиром?"
 	}
 	"warden_only_ct"
 	{

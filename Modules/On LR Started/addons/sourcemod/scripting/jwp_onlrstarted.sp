@@ -33,6 +33,12 @@ public int OnAvailableLR(int announce)
 	// At first we remove zam and after warden
 	JWP_SetZamWarden(0);
 	JWP_SetWarden(0);
+	// Then we remove all freeday players
+	for (int i = 1; i <= MaxClients; ++i)
+	{
+		if (IsClientInGame(i) && JWP_PrisonerHasFreeday(i))
+			JWP_PrisonerSetFreeday(i, false);
+	}
 	g_bEnabled = false;
 }
 

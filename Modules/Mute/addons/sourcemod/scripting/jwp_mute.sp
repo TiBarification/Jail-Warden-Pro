@@ -34,6 +34,8 @@ public void OnPluginStart()
 	
 	HookEvent("round_end", Event_OnRoundEnd, EventHookMode_Post);
 	AutoExecConfig(true, "mute", "jwp");
+	
+	LoadTranslations("jwp_modules.phrases");
 }
 
 public void OnCvarChange(ConVar cvar, const char[] oldValue, const char[] newValue)
@@ -67,7 +69,7 @@ public void OnPluginEnd()
 
 public bool OnFuncMGiveDisplay(int client, char[] buffer, int maxlength, int style)
 {
-	FormatEx(buffer, maxlength, "Дать мут");
+	FormatEx(buffer, maxlength, "%T", "Mute_Menu_GiveMute", LANG_SERVER);
 	return true;
 }
 
@@ -79,7 +81,7 @@ public bool OnFuncMGiveSelect(int client)
 
 public bool OnFuncMTakeDisplay(int client, char[] buffer, int maxlength, int style)
 {
-	FormatEx(buffer, maxlength, "Снять мут");
+	FormatEx(buffer, maxlength, "%T", "Mute_Menu_TakeMute", LANG_SERVER);
 	return true;
 }
 
@@ -91,22 +93,31 @@ public bool OnFuncMTakeSelect(int client)
 
 void ShowPlayerListMenu(int client, bool muted_pl)
 {
-	char id[4], name[MAX_NAME_LENGTH];
+	char id[4], name[MAX_NAME_LENGTH], langbuffer[48];
 	Menu PList = new Menu(PList_Callback);
 	if (muted_pl)
-		PList.SetTitle("Снять мут:");
+	{
+		Format(langbuffer, sizeof(langbuffer), "%T:", "Mute_Menu_TakeMute", LANG_SERVER);
+		PList.SetTitle(langbuffer);
+	}
 	else
-		PList.SetTitle("Дать мут:");
+	{
+		Format(langbuffer, sizeof(langbuffer), "%T:", "Mute_Menu_GiveMute", LANG_SERVER);
+		PList.SetTitle(langbuffer);
+	}
 	
 	// Mute on time
 	if (g_CvarMuteOnTime.FloatValue)
 	{
 		if (muted_pl)
-			PList.AddItem("unmuteall", "Снять общий мут", (TempMute_Timer == null) ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
+		{
+			Format(langbuffer, sizeof(langbuffer), "%T", "Mute_UnMuteAll", LANG_SERVER);
+			PList.AddItem("unmuteall", langbuffer, (TempMute_Timer == null) ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
+		}
 		else
 		{
-			FormatEx(name, sizeof(name), "Мут всем (%.f с)", g_CvarMuteOnTime.FloatValue);
-			PList.AddItem("muteall", name, (TempMute_Timer != null) ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
+			Format(langbuffer, sizeof(langbuffer), "%T", "Mute_MuteAll", LANG_SERVER, g_CvarMuteOnTime.FloatValue);
+			PList.AddItem("muteall", langbuffer, (TempMute_Timer != null) ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
 		}
 	}
 	
@@ -131,7 +142,10 @@ void ShowPlayerListMenu(int client, bool muted_pl)
 		}
 	}
 	if (!PList.ItemCount)
-		PList.AddItem("", "Нет доступных игроков", ITEMDRAW_DISABLED);
+	{
+		Format(langbuffer, sizeof(langbuffer), "%T", "General_No_Prisoners", LANG_SERVER);
+		PList.AddItem("", langbuffer, ITEMDRAW_DISABLED);
+	}
 	PList.ExitBackButton = true;
 	PList.Display(client, MENU_TIME_FOREVER);
 }
@@ -163,7 +177,7 @@ public int PList_Callback(Menu menu, MenuAction action, int client, int slot)
 								SetClientListeningFlags(i, VOICE_NORMAL);
 							}
 							else
-								JWP_ActionMsg(client, "Не удалось включить микрофон игроку %N.\nВозможно мут поставлен администратором.", i);
+								JWP_ActionMsg(client, "%T", "Mute_Dont_Have_Permission", LANG_SERVER, i);
 						}
 						else if (!g_bMuted[i]) // Если мута нет, тогда ставим
 						{
@@ -177,13 +191,13 @@ public int PList_Callback(Menu menu, MenuAction action, int client, int slot)
 				if (TempMute_Timer != null)
 				{
 					KillTimer(TempMute_Timer);
-					JWP_ActionMsgAll("%N включил всем террористам микрофон.", client);
+					JWP_ActionMsgAll("%T", "Mute_ActionMessage_UnMuted_All", LANG_SERVER, client);
 					TempMute_Timer = null;
 				}
 				else
 				{
 					TempMute_Timer = CreateTimer(g_CvarMuteOnTime.FloatValue, TempMute_Timer_Callback);
-					JWP_ActionMsgAll("%N отключил всем террористам микрофон на %.f секунд.", client, g_CvarMuteOnTime.FloatValue);
+					JWP_ActionMsgAll("%T", "Mute_ActionMessage_Muted_All", LANG_SERVER, client, g_CvarMuteOnTime.FloatValue);
 				}
 				ShowPlayerListMenu(client, (TempMute_Timer == null) ? true : false);
 			}
@@ -204,7 +218,7 @@ public int PList_Callback(Menu menu, MenuAction action, int client, int slot)
 						}
 						else
 						{
-							JWP_ActionMsg(client, "Не удалось включить микрофон игроку %N.\nВозможно мут поставлен администратором.", target);
+							JWP_ActionMsg(client, "%T", "Mute_Dont_Have_Permission", LANG_SERVER, target);
 							return;
 						}
 					}
@@ -215,7 +229,7 @@ public int PList_Callback(Menu menu, MenuAction action, int client, int slot)
 						SetClientListeningFlags(target, VOICE_MUTED);
 					}
 					
-					JWP_ActionMsgAll("%N %s мут для %N.", client, (g_bMuted[target]) ? "\x03дал\x01" : "\x02снял\x01", target);
+					JWP_ActionMsgAll("%T", (g_bMuted[target]) ? "Mute_ActionMessage_Muted" : "Mute_ActionMessage_UnMuted", LANG_SERVER, client, target);
 					ShowPlayerListMenu(client, !g_bMuted[target]);
 				}
 			}
@@ -236,7 +250,7 @@ public Action TempMute_Timer_Callback(Handle timer)
 				SetClientListeningFlags(i, VOICE_NORMAL);
 			}
 		}
-		JWP_ActionMsgAll("Микрофон снова доступен террористам.");
+		JWP_ActionMsgAll("%T", "Mute_ActionMessage_MicroAvailable", LANG_SERVER);
 	}
 	TempMute_Timer = null;
 }

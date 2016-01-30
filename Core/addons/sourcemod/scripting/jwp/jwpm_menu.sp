@@ -143,7 +143,7 @@ public int Cmd_ShowMenu_Handler(Menu menu, MenuAction action, int client, int sl
 					PList.SetTitle(cName);
 					for (int i = 1; i <= MaxClients; ++i)
 					{
-						if (CheckClient(i) && i != g_iWarden && GetClientTeam(i) == CS_TEAM_CT)
+						if (CheckClient(i) && i != g_iWarden && GetClientTeam(i) == CS_TEAM_CT && IsPlayerAlive(i))
 						{
 							FormatEx(cName, sizeof(cName), "%N", i);
 							IntToString(i, info, sizeof(info));
@@ -258,7 +258,7 @@ void EmptyPanel(int client)
 		/* close menu if exists with empty panel */
 		Panel panel = new Panel();
 		panel.SetTitle(" ");
-		panel.Send(client, EmptyPanel_Callback, 2);
+		panel.Send(client, EmptyPanel_Callback, 1);
 	}
 }
 

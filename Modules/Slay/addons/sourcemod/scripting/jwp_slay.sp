@@ -11,7 +11,7 @@
 public Plugin myinfo = 
 {
 	name = "[JWP] Slay",
-	description = "Warden can slay terrorists",
+	description = "Warden can slay players",
 	author = "White Wolf (HLModders LLC)",
 	version = PLUGIN_VERSION,
 	url = "http://hlmod.ru"
@@ -20,6 +20,7 @@ public Plugin myinfo =
 public void OnPluginStart()
 {
 	if (JWP_IsStarted()) JWC_Started();
+	LoadTranslations("jwp_modules.phrases");
 }
 
 public int JWC_Started()
@@ -34,14 +35,16 @@ public void OnPluginEnd()
 
 public bool OnFuncDisplay(int client, char[] buffer, int maxlength, int style)
 {
-	FormatEx(buffer, maxlength, "Убить зека");
+	FormatEx(buffer, maxlength, "%T", "Slay_Menu", LANG_SERVER);
 	return true;
 }
 
 public bool OnFuncSelect(int client)
 {
+	char langbuffer[48];
 	Menu SlayMenu = new Menu(SlayMenu_Callback);
-	SlayMenu.SetTitle("Убить зека:");
+	Format(langbuffer, sizeof(langbuffer), "%T:", "Slay_Menu", LANG_SERVER);
+	SlayMenu.SetTitle(langbuffer);
 	char id[4], name[MAX_NAME_LENGTH];
 	for (int i = 1; i <= MaxClients; ++i)
 	{
@@ -53,7 +56,10 @@ public bool OnFuncSelect(int client)
 		}
 	}
 	if (!SlayMenu.ItemCount)
-		SlayMenu.AddItem("", "Нет живых зеков", ITEMDRAW_DISABLED);
+	{
+		Format(langbuffer, sizeof(langbuffer), "%T", "Slay_NoAlive", LANG_SERVER);
+		SlayMenu.AddItem("", langbuffer, ITEMDRAW_DISABLED);
+	}
 	SlayMenu.ExitBackButton = true;
 	SlayMenu.Display(client, MENU_TIME_FOREVER);
 	return true;
@@ -77,10 +83,10 @@ public int SlayMenu_Callback(Menu menu, MenuAction action, int client, int slot)
 			if (target && CheckClient(target))
 			{
 				ForcePlayerSuicide(target);
-				JWP_ActionMsgAll("%N: убил зека %N", client, target);
+				JWP_ActionMsgAll("%T", "Slay_ActionMessage_Slayed", LANG_SERVER, client, target);
 			}
 			else
-				JWP_ActionMsg(client, "Не удалось убить игрока. Возможно он ливнул?");
+				JWP_ActionMsg(client, "%T", "Slay_UnableToSlay", LANG_SERVER);
 			JWP_ShowMainMenu(client);
 		}
 	}
@@ -88,5 +94,5 @@ public int SlayMenu_Callback(Menu menu, MenuAction action, int client, int slot)
 
 bool CheckClient(int client)
 {
-	return (IsClientInGame(client) && IsClientConnected(client) && !IsFakeClient(client) && (GetClientTeam(client) == CS_TEAM_T) && IsPlayerAlive(client));
+	return (IsClientInGame(client) && IsClientConnected(client) && !IsFakeClient(client) /* && (GetClientTeam(client) == CS_TEAM_T) */ && IsPlayerAlive(client));
 }

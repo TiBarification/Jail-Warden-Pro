@@ -25,12 +25,20 @@ public void OnPluginStart()
 	
 	HookEvent("round_start", Event_OnRoundStart, EventHookMode_PostNoCopy);
 	if (JWP_IsStarted()) JWC_Started();
+	
+	LoadTranslations("jwp_modules.phrases");
 }
 
 public void Event_OnRoundStart(Event event, const char[] name, bool dontBroadcast)
 {
 	Cvar_FF.RestoreDefault(false, false);
-	g_bTurnOn = false;
+	g_bTurnOn = Cvar_FF.BoolValue;
+}
+
+public int JWP_OnWardenResigned(int client, bool himself)
+{
+	Cvar_FF.RestoreDefault(false, false);
+	g_bTurnOn = Cvar_FF.BoolValue;
 }
 
 public int JWC_Started()
@@ -45,7 +53,7 @@ public void OnPluginEnd()
 
 public bool OnFuncDisplay(int client, char[] buffer, int maxlength, int style)
 {
-	FormatEx(buffer, maxlength, "[%s]Огонь по своим", (g_bTurnOn) ? '-' : '+');
+	FormatEx(buffer, maxlength, "[%s]%T", (g_bTurnOn) ? '-' : '+', "FF_Menu", LANG_SERVER);
 	return true;
 }
 
@@ -53,11 +61,18 @@ public bool OnFuncSelect(int client)
 {
 	g_bTurnOn = !g_bTurnOn;
 	Cvar_FF.SetBool(g_bTurnOn, false, false);
-	JWP_ActionMsgAll("Дружественный огонь: \x02%s", (g_bTurnOn) ? "ВКЛЮЧЕН":"ВЫКЛЮЧЕН");
+	JWP_ActionMsgAll("%T\x02%T", "FF_ActionMessage_FriendlyFire", LANG_SERVER, (g_bTurnOn) ? "FF_State_On":"FF_State_Off", LANG_SERVER);
+	char menuitem[48];
 	if (g_bTurnOn)
-		JWP_RefreshMenuItem(ITEM, "[-]Огонь по своим");
+	{
+		FormatEx(menuitem, sizeof(menuitem), "[-]%T", "FF_Menu", LANG_SERVER);
+		JWP_RefreshMenuItem(ITEM, menuitem);
+	}
 	else
-		JWP_RefreshMenuItem(ITEM, "[+]Огонь по своим");
+	{
+		FormatEx(menuitem, sizeof(menuitem), "[+]%T", "FF_Menu", LANG_SERVER);
+		JWP_RefreshMenuItem(ITEM, menuitem);
+	}
 	JWP_ShowMainMenu(client);
 	return true;
 }

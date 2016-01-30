@@ -5,6 +5,7 @@
 #include <jwp>
 #include <emitsoundany>
 
+// Force 1.7 syntax
 #pragma newdecls required
 
 #define PLUGIN_VERSION "1.0"
@@ -47,6 +48,8 @@ public void OnPluginStart()
 	if (JWP_IsStarted()) JWC_Started();
 	
 	AutoExecConfig(true, ITEM, "jwp");
+	
+	LoadTranslations("jwp_modules.phrases");
 }
 
 public void OnMapStart()
@@ -92,25 +95,28 @@ public bool OnFuncDisplay(int client, char[] buffer, int maxlength, int style)
 {
 	if (g_CvarHK_Limit.IntValue)
 	{
-		if (g_iHKits[client] >= 3) style = ITEMDRAW_DISABLED;
-		else style = ITEMDRAW_DEFAULT;
-		Format(buffer, maxlength, "Создать аптечку (%d/%d)", g_iHKits[client], g_CvarHK_Limit.IntValue);	
+		Format(buffer, maxlength, "%T (%d/%d)", "HealthKit_Menu", LANG_SERVER, g_iHKits[client], g_CvarHK_Limit.IntValue);	
+		if (g_iHKits[client] < g_CvarHK_Limit.IntValue) style = ITEMDRAW_DEFAULT;
+		else style = ITEMDRAW_DISABLED;
 	}
 	else
-		strcopy(buffer, maxlength, "Создать аптечку");
+		Format(buffer, maxlength, "%T", "HealthKit_Menu", LANG_SERVER);
 	return true;
 }
 
 public bool OnFuncSelect(int client)
 {
-	if (g_CvarHK_Limit.IntValue && g_iHKits[client] == g_CvarHK_Limit.IntValue)
-		JWP_RefreshMenuItem(ITEM, _, ITEMDRAW_DISABLED);
-	else if (TrySpawnHealthKit(client) && g_CvarHK_Limit.IntValue)
+	if (TrySpawnHealthKit(client))
 	{
-		char buffer[64];
-		Format(buffer, sizeof(buffer), "Создать аптечку (%d/%d)", g_iHKits[client], g_CvarHK_Limit.IntValue);
-		JWP_RefreshMenuItem(ITEM, buffer);
+		if (g_CvarHK_Limit.IntValue)
+		{
+			char buffer[64];
+			Format(buffer, sizeof(buffer), "%T (%d/%d)", "HealthKit_Menu", LANG_SERVER, g_iHKits[client], g_CvarHK_Limit.IntValue);
+			JWP_RefreshMenuItem(ITEM, buffer, (g_iHKits[client] < g_CvarHK_Limit.IntValue) ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED);
+		}
 	}
+	else
+		JWP_ActionMsg(client, "%T", "HealthKit_FailedToMedkit", LANG_SERVER);
 	JWP_ShowMainMenu(client);
 	return true;
 }
@@ -119,7 +125,7 @@ bool TrySpawnHealthKit(int client)
 {
 	if (JWP_IsFlood(client))
 	{
-		JWP_ActionMsg(client, "Не флудите аптечкой.");
+		JWP_ActionMsg(client, "%T", "HealthKit_StopFlood", LANG_SERVER);
 		return false;
 	}
 	
@@ -127,7 +133,7 @@ bool TrySpawnHealthKit(int client)
 	int entity = GetAimInfo(client, origin);
 	if (!IsValidEntity(entity) || (0 < entity <= MaxClients))
 	{
-		PrintCenterText(client, "Уберите прицел с игрока");
+		PrintCenterText(client, "%T", "HealthKit_RemoveAim", LANG_SERVER);
 		return false;
 	}
 	

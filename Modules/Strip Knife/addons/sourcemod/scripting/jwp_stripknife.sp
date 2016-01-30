@@ -23,6 +23,8 @@ public void OnPluginStart()
 {
 	if (JWP_IsStarted()) JWC_Started();
 	HookEvent("round_start", Event_OnRoundStart, EventHookMode_PostNoCopy);
+	
+	LoadTranslations("jwp_modules.phrases");
 }
 
 public void Event_OnRoundStart(Event event, const char[] name, bool dontBroadcast)
@@ -43,14 +45,16 @@ public void OnPluginEnd()
 
 public bool OnFuncDisplay(int client, char[] buffer, int maxlength, int style)
 {
-	FormatEx(buffer, maxlength, "Дать/Забрать заточку");
+	FormatEx(buffer, maxlength, "%T", "StripKnife_Menu", LANG_SERVER);
 	return true;
 }
 
 public bool OnFuncSelect(int client)
 {
+	char langbuffer[32];
 	Menu StripMenu = new Menu(StripMenu_Callback);
-	StripMenu.SetTitle("+/- Заточка:");
+	Format(langbuffer, sizeof(langbuffer), "%T", "StripKnife_Title", LANG_SERVER);
+	StripMenu.SetTitle(langbuffer);
 	char id[4], name[MAX_NAME_LENGTH];
 	for (int i = 1; i <= MaxClients; ++i)
 	{
@@ -62,7 +66,10 @@ public bool OnFuncSelect(int client)
 		}
 	}
 	if (!StripMenu.ItemCount)
-		StripMenu.AddItem("", "Нет живых зеков", ITEMDRAW_DISABLED);
+	{
+		Format(langbuffer, sizeof(langbuffer), "%T", "General_No_Alive_Prisoners", LANG_SERVER);
+		StripMenu.AddItem("", langbuffer, ITEMDRAW_DISABLED);
+	}
 	StripMenu.ExitBackButton = true;
 	StripMenu.Display(client, MENU_TIME_FOREVER);
 	return true;
@@ -94,14 +101,18 @@ public int StripMenu_Callback(Menu menu, MenuAction action, int client, int slot
 					int weapon = GetPlayerWeaponSlot(target, 2);
 					if (IsValidEdict(weapon))
 						AcceptEntityInput(weapon, "Kill");
+					JWP_ActionMsgAll("%T", "StripKnife_ActionMessage_Taken", LANG_SERVER, client, target);
+					g_bHaveKnife[target] = false;
 				}
 				else
+				{
 					GivePlayerItem(target, "weapon_knife");
-				g_bHaveKnife[target] = !g_bHaveKnife[target];
-				JWP_ActionMsgAll("%N: %s заточку %N", client, (g_bHaveKnife[target]) ? "дал" : "забрал", target);
+					JWP_ActionMsgAll("%T", "StripKnife_ActionMessage_Given", LANG_SERVER, client, target);
+					g_bHaveKnife[target] = true;
+				}
 			}
 			else
-				JWP_ActionMsg(client, "Не удалось выполнить действие");
+				JWP_ActionMsg(client, "%T", "StripKnife_ActionMessage_Unable", LANG_SERVER);
 			
 			if (client && IsClientInGame(client) && JWP_IsWarden(client))
 				OnFuncSelect(client);

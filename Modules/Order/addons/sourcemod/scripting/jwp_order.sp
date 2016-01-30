@@ -32,8 +32,8 @@ public void OnPluginStart()
 {
 	g_CvarOrderSound = CreateConVar("jwp_order_sound", "buttons/blip2.wav", "Звук, когда командир приказывает", FCVAR_PLUGIN);
 	g_CvarOrderAlways = CreateConVar("jwp_order_always", "1", "Если 1, то каждое сообщение командира в чате будет приказом", FCVAR_PLUGIN);
-	g_CvarOrderMsg = CreateConVar("jwp_order_msg", "{default}({green}WARDEN{default}) {red}{nick}: {default}{text}", "Цвет сообщений приказа.", FCVAR_PLUGIN);
-	g_CvarOrderPanel = CreateConVar("jwp_order_panel", "1", "Включить отображение приказа в панели", FCVAR_PLUGIN, true, 0.0, true, 1.0);
+	g_CvarOrderMsg = CreateConVar("jwp_order_msg", "{default}({green}{prefix}{default}) {red}{nick}{default}: {text}", "Цвет сообщений приказа.", FCVAR_PLUGIN);
+	g_CvarOrderPanel = CreateConVar("jwp_order_panel", "0", "Включить отображение приказа в панели", FCVAR_PLUGIN, true, 0.0, true, 1.0);
 	g_CvarPanelTime = CreateConVar("jwp_order_panel_time", "20", "Сколько секунд показывать меню приказа.", FCVAR_PLUGIN, true, 1.0, true, 40.0);
 	
 	g_CvarOrderSound.AddChangeHook(OnCvarChange);
@@ -46,6 +46,9 @@ public void OnPluginStart()
 	
 	if (JWP_IsStarted()) JWC_Started();
 	AutoExecConfig(true, ITEM, "jwp");
+	
+	LoadTranslations("jwp_modules.phrases");
+	LoadTranslations("core.phrases");
 }
 
 public int JWC_Started()
@@ -77,7 +80,7 @@ public void OnPluginEnd()
 
 public bool OnFuncDisplay(int client, char[] buffer, int maxlength, int style)
 {
-	FormatEx(buffer, maxlength, "Отдать приказ");
+	FormatEx(buffer, maxlength, "%T", "Order_Menu", LANG_SERVER);
 	return true;
 }
 
@@ -112,7 +115,8 @@ void PreOrderPanel(int client)
 	g_bChatListen = true;
 	Panel panel = new Panel();
 	char text[140];
-	Format(text, sizeof(text), "Введите в чат ваш приказ.\nСимвол '+' это переход\nна новую строку.");
+	Format(text, sizeof(text), "%T", "Order_Menu_Info", LANG_SERVER);
+	ReplaceString(text, sizeof(text), "\\n", "\n");
 	panel.DrawText(text);
 	panel.CurrentKey = 8;
 	panel.DrawItem("Отмена");
@@ -134,7 +138,7 @@ public int PreOrderPanel_Callback(Menu panel, MenuAction action, int client, int
 
 void CreateOrderMsg(int client, const char[] order)
 {
-	char text[250], orderbuf[250], name[MAX_NAME_LENGTH];
+	char text[250], orderbuf[250], name[MAX_NAME_LENGTH], langbuffer[24];
 	GetClientName(client, name, sizeof(name));
 	strcopy(text, sizeof(text), order);
 	if (text[0] != '+')
@@ -151,6 +155,8 @@ void CreateOrderMsg(int client, const char[] order)
 	
 	Format(text, sizeof(text), "%s%s", g_cOrderMsg, text);
 	ReplaceString(text, sizeof(text), "{nick}", name, true);
+	Format(langbuffer, sizeof(langbuffer), "%T", "Order_Warden_Prefix", LANG_SERVER);
+	ReplaceString(text, sizeof(text), "{prefix}", langbuffer, true);
 	PrintToChatAll("\x01%s", text);
 	
 	/* Конец работы с чатом */
@@ -158,16 +164,17 @@ void CreateOrderMsg(int client, const char[] order)
 	// И покажем террористам приказ в меню если квар позволяет
 	if (g_CvarOrderPanel.BoolValue)
 	{
-		Format(orderbuf, sizeof(orderbuf), "(КОМАНДИР) %s: %s\n \n", name, orderbuf);
+		Format(orderbuf, sizeof(orderbuf), "(%T) %s: %s\n \n", "Order_Warden_Prefix", LANG_SERVER, name, orderbuf);
 		
 		Panel p1 = new Panel();
 		p1.DrawText(orderbuf);
-		p1.CurrentKey = 10;
-		p1.DrawItem("Выход");
+		p1.CurrentKey = 1;
+		Format(langbuffer, sizeof(langbuffer), "%T", "Exit", LANG_SERVER);
+		p1.DrawItem(langbuffer);
 		
 		for (int i = 1; i <= MaxClients; ++i)
 		{
-			if (IsClientInGame(i) && GetClientTeam(i) == CS_TEAM_T)
+			if (IsClientInGame(i) && GetClientTeam(i) == CS_TEAM_T && !(GetUserFlagBits(i) & ADMFLAG_GENERIC || GetUserFlagBits(i) & ADMFLAG_ROOT))
 				p1.Send(i, OrderMsg_Callback, g_CvarPanelTime.IntValue);
 		}
 	}

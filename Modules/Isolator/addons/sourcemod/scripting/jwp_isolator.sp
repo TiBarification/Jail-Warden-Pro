@@ -45,6 +45,8 @@ public void OnPluginStart()
 	
 	if (JWP_IsStarted()) JWC_Started();
 	AutoExecConfig(true, ITEM, "jwp");
+	
+	LoadTranslations("jwp_modules.phrases");
 }
 
 public void OnMapStart()
@@ -99,6 +101,18 @@ public void OnCvarChange(ConVar cvar, const char[] oldValue, const char[] newVal
 	}
 }
 
+public int JWP_OnWardenResigned(int client, bool himself)
+{
+	for (int i = 1; i <= MaxClients; ++i)
+	{
+		if (IsClientInGame(i) && JWP_IsPrisonerIsolated(i))
+		{
+			TryKillIsolator(i);
+			JWP_PrisonerIsolated(i, false);
+		}
+	}
+}
+
 public void Event_OnPlayerDeath(Event event, const char[] name, bool dontBroadcast)
 {
 	int client = GetClientOfUserId(event.GetInt("userid"));
@@ -118,29 +132,36 @@ public void OnClientDisconnect_Post(int client)
 
 public bool OnFuncDisplay(int client, char[] buffer, int maxlength, int style)
 {
-	FormatEx(buffer, maxlength, "Управление карцером"); // [|||] в карцере
+	FormatEx(buffer, maxlength, "%T", "Isolator_Menu", LANG_SERVER); // [#] in isolator
 	return true;
 }
 
 public bool OnFuncSelect(int client)
 {
+	char langbuffer[40];
 	Menu IsolatorMenu = new Menu(IsolatorMenu_Callback);
-	IsolatorMenu.SetTitle("Управление карцером:\n[|||] - в карцере");
+	
+	Format(langbuffer, sizeof(langbuffer), "%T:\n%T", "Isolator_Menu", LANG_SERVER, "Isolator_Menu_Info", LANG_SERVER);
+	
+	IsolatorMenu.SetTitle(langbuffer);
 	char id[4], name[MAX_NAME_LENGTH];
 	for (int i = 1; i <= MaxClients; ++i)
 	{
-		if (CheckClient(i)) // Change to CheckClient
+		if (CheckClient(i))
 		{
 			IntToString(i, id, sizeof(id));
 			if (JWP_IsPrisonerIsolated(i))
-				Format(name, sizeof(name), "[|||]%N", i);
+				Format(name, sizeof(name), "[#]%N", i);
 			else
 				Format(name, sizeof(name), "%N", i);
 			IsolatorMenu.AddItem(id, name);
 		}
 	}
 	if (!IsolatorMenu.ItemCount)
-		IsolatorMenu.AddItem("", "Нет живых зеков", ITEMDRAW_DISABLED);
+	{
+		Format(langbuffer, sizeof(langbuffer), "%T", "Isolator_NoMore_Prisoners", LANG_SERVER);
+		IsolatorMenu.AddItem("", langbuffer, ITEMDRAW_DISABLED);
+	}
 	IsolatorMenu.ExitBackButton = true;
 	IsolatorMenu.Display(client, MENU_TIME_FOREVER);
 	return true;
@@ -167,19 +188,19 @@ public int IsolatorMenu_Callback(Menu menu, MenuAction action, int client, int s
 				if (JWP_IsPrisonerIsolated(target))
 				{
 					TryKillIsolator(target);
-					JWP_ActionMsgAll("%N освободил зека %N из карцера", client, target);
+					JWP_ActionMsgAll("%T", "Isolator_Action_Released", LANG_SERVER, client, target);
 					JWP_PrisonerIsolated(target, false);
 				}
 				else if (TryPushPrisonerInIsolator(client, target))
 				{
-					JWP_ActionMsgAll("%N посадил зека %N в карцер", client, target);
+					JWP_ActionMsgAll("%T", "Isolator_Action_Isolated", LANG_SERVER, client, target);
 					JWP_PrisonerIsolated(target, true);
 				}
 				else
-					JWP_ActionMsg(client, "Не удалось посадить %N в карцер", target);
+					JWP_ActionMsg(client, "%T", "Isolator_FailedToIsolate", LANG_SERVER, target);
 			}
 			else
-				JWP_ActionMsg(client, "Не удалось посадить игрока. Возможно он ливнул?");
+				JWP_ActionMsg(client, "%T", "Isolator_FailedToIsolate_Leave", LANG_SERVER);
 			OnFuncSelect(client);
 		}
 	}
@@ -187,7 +208,7 @@ public int IsolatorMenu_Callback(Menu menu, MenuAction action, int client, int s
 
 bool CheckClient(int client)
 {
-	return (IsClientInGame(client) && IsClientConnected(client) && !IsFakeClient(client) && (GetClientTeam(client) == CS_TEAM_T));
+	return (IsClientInGame(client) && IsClientConnected(client) && !IsFakeClient(client) && (GetClientTeam(client) == CS_TEAM_T) && IsPlayerAlive(client));
 }
 
 bool IsValidIsolator(int& ent, char[] name)
@@ -217,7 +238,7 @@ bool TryPushPrisonerInIsolator(int client, int prisoner)
 	int ent = TiB_GetAimInfo(client, center);
 	if (ent > 0 && ent <= MaxClients)
 	{
-		PrintCenterText(client, "Рядом игрок, нельзя установить карцер");
+		PrintCenterText(client, "%T", "Isolator_NearPlayer", LANG_SERVER);
 		return false;
 	}
 	float angles[3];
@@ -234,7 +255,7 @@ bool TryPushPrisonerInIsolator(int client, int prisoner)
 			GetClientAbsOrigin(i, pOrigin);
 			if (GetVectorDistance(pOrigin, center, false) <= wall_dist)
 			{
-				PrintCenterText(client, "Невозможно здесь установить карцер");
+				PrintCenterText(client, "%T", "Isolator_CantCreate", LANG_SERVER);
 				return false;
 			}
 		}
@@ -250,7 +271,7 @@ bool TryPushPrisonerInIsolator(int client, int prisoner)
 	ent = EditWallPositionAndCreateWall(center, angles, direction, wall_dist, true);
 	if (!ent)
 	{
-		PrintHintText(client, "Нельзя создать изолятор, выберите другое место.");
+		PrintHintText(client, "%T", "Isolator_FindAnotherLocation", LANG_SERVER);
 		return false;
 	}
 	
@@ -412,6 +433,7 @@ bool TryKillIsolator(int client)
 	}
 	g_iIsolatorIndex[client] = 0;
 	g_iIsolatorBeamIndex[client] = 0;
+	JWP_PrisonerIsolated(client, false);
 	return kill;
 }
 
