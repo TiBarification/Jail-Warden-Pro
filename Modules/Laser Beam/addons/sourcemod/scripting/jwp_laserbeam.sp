@@ -28,7 +28,7 @@ public Plugin myinfo =
 public void OnPluginStart()
 {
 	g_CvarColor = CreateConVar("jwp_laser_beam_color", "255 0 0 255", "Цвет луча (rgba)", FCVAR_PLUGIN);
-	g_CvarLife = CreateConVar("jwp_laser_beam_life", "25.0", "Время жизни луча", FCVAR_PLUGIN, true, 1.0, true, 30.0);
+	g_CvarLife = CreateConVar("jwp_laser_beam_life", "25.0", "Время жизни луча", FCVAR_PLUGIN, true, 1.0, true, 120.0);
 	g_CvarSize = CreateConVar("jwp_laser_beam_size", "2.0", "Ширина луча", FCVAR_PLUGIN, true, 0.1, true, 25.0);
 	
 	g_CvarColor.AddChangeHook(OnCvarChange);

@@ -10,6 +10,11 @@
 		"en"	"No alive prisoners"
 		"ru"	"Нет живых зеков"
 	}
+	"General_No_Dead_Prisoners"
+	{
+		"en"	"No dead prisoners"
+		"ru"	"Нет мертвых зеков"
+	}
 	
 	
 	"Order_Menu"
@@ -476,5 +481,22 @@
 		"#format"	"{1:N},{2:d}"
 		"en"		"{1} extended this round on {2} minutes"
 		"ru"		"{1} продлил раунд на {2} минут(ы)"
+	}
+	
+	"Respawn_Menu"
+	{
+		"en"		"Respawn a player"
+		"ru"		"Возродить игрока"
+	}
+	"Respawn_ActionMessage_Respawned"
+	{
+		"#format"	"{1:N},{2:N}"
+		"en"		"{1}: respawned {2}"
+		"ru"		"{1}: возродил {2}"
+	}
+	"Respawn_UnableToRespawn"
+	{
+		"en"		"Unable to respawn target. Maybe he leaved?"
+		"ru"		"Не удалось возродить игрока. Возможно он ливнул/админ?"
 	}
 }

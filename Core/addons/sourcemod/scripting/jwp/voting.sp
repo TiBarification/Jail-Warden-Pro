@@ -69,7 +69,7 @@ public int g_VoteMenu_Callback(Menu menu, MenuAction action, int client, int slo
 				char id[4];
 				menu.GetItem(slot, id, sizeof(id));
 				int target = StringToInt(id);
-				if (!target || GetClientTeam(target) != CS_TEAM_CT || !IsPlayerAlive(target))
+				if (!target || !IsClientInGame(target) || GetClientTeam(target) != CS_TEAM_CT || !IsPlayerAlive(target))
 				{
 					if (menu.RemoveItem(slot) && menu.ItemCount > 0)
 					{
