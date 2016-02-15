@@ -8,7 +8,7 @@
 // Force new syntax
 #pragma newdecls required
 
-#define PLUGIN_VERSION "0.0.8"
+#define PLUGIN_VERSION "0.0.9"
 
 #define UPDATE_URL "http://updater.tibari.ru/jwp/updatefile.txt"
 
@@ -373,11 +373,11 @@ bool CheckClient(int client)
 	return false;
 }
 
-bool BecomeCmd(int client)
+bool BecomeCmd(int client, bool waswarden = true)
 {
 	if (!Forward_OnWardenChoosing())
 		return false;
-	else if (g_bWasWarden[client])
+	else if (g_bWasWarden[client] && waswarden)
 	{
 		if (g_bIsCSGO)
 			CGOPrintToChat(client, "%T %T", "Core_Prefix", LANG_SERVER, "already_was_warden", LANG_SERVER);

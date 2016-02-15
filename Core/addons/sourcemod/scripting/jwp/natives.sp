@@ -48,7 +48,7 @@ public int Native_SetWarden(Handle plugin, int numParams)
 	else if (CheckClient(client) && GetClientTeam(client) == CS_TEAM_CT)
 	{
 		RemoveCmd(false);
-		BecomeCmd(client);
+		BecomeCmd(client, false);
 		return true;
 	}
 	return false;

@@ -4,7 +4,7 @@
 
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.0"
+#define PLUGIN_VERSION "1.1"
 #define DROPEN "door_aim_open"
 #define DRCLOSE "door_aim_close"
 
@@ -102,5 +102,5 @@ public bool TraceFilter_Callback(int ent, int mask, int client)
 
 bool TiB_IsDoor(const char[] classname)
 {
-	return (StrContains(classname, "movelinear", false) || StrContains(classname, "door", false));
+	return (StrContains(classname, "movelinear", false) || StrContains(classname, "door", false) || StrContains(classname, "plat", false) || StrContains(classname, "rotating", false) || StrContains(classname, "tracktrain", false));
 }
