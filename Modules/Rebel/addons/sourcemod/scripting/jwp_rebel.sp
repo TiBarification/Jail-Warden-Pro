@@ -7,7 +7,7 @@
 // Force 1.7 syntax
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.1"
+#define PLUGIN_VERSION "1.2"
 
 bool g_bIsRebel[MAXPLAYERS+1];
 bool g_bColor;
@@ -79,8 +79,8 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		(attacker <= MaxClients) &&
 		attacker != victim &&
 		IsClientInGame(attacker) &&
+		IsClientInGame(victim) &&
 		GetClientTeam(attacker) == CS_TEAM_T &&
-		!JWP_PrisonerHasFreeday(attacker) &&
 		GetClientTeam(victim) == CS_TEAM_CT)
 	{
 		if (!g_bIsRebel[attacker] && (damage >= g_CvarRebelDamage.IntValue))
