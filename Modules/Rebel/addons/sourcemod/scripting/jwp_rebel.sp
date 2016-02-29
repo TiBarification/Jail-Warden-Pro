@@ -101,7 +101,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 
 public Action g_TimerColor_Callback(Handle timer, any client)
 {
-	if (g_bColor && client && IsClientInGame(client) && !JWP_PrisonerHasFreeday(client))
+	if (g_bColor && client && IsClientInGame(client))
 	{
 		SetEntityRenderMode(client, RENDER_TRANSCOLOR);
 		SetEntityRenderColor(client, 255, 255, 255, 255);
