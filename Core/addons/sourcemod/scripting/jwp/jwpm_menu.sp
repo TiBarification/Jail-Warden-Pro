@@ -39,7 +39,7 @@ public int Cmd_RemoveFromMainMenu(Handle plugin, int numParams)
 			return 1;
 		}
 	}
-	
+	LogError("Failed to unload module %s", key);
 	return 0;
 }
 
@@ -284,9 +284,7 @@ bool JWPM_HasFlag(int client, int bitflag)
 {
 	if (!bitflag) return true;
 	else if (bitflag != 0 && ((GetUserFlagBits(client) & bitflag) || (GetUserFlagBits(client) & ADMFLAG_ROOT)) && GetUserAdmin(client) != INVALID_ADMIN_ID)
-	{
 		return true;
-	}
 	return false;
 }
 
@@ -315,7 +313,7 @@ bool RefreshMenuItem(char[] item, char[] newdisp = "", int style = ITEMDRAW_DEFA
 	for (int i = 0; i < g_aSortedMenu.Length; i++)
 	{
 		g_mMainMenu.GetItem(i, id, sizeof(id), oldstyle, display, sizeof(display));
-		if (strcmp(item, id, true) == 0)
+		if (!strcmp(item, id, true))
 		{
 			if (newdisp[0] != '\0')
 				strcopy(display, sizeof(display), newdisp);

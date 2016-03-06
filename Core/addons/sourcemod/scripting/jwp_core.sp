@@ -373,9 +373,9 @@ bool CheckClient(int client)
 	return false;
 }
 
-bool BecomeCmd(int client, bool waswarden = true)
+bool BecomeCmd(int client, bool waswarden = true, bool ignore_native = false)
 {
-	if (!Forward_OnWardenChoosing())
+	if (!Forward_OnWardenChoosing() && !ignore_native)
 		return false;
 	else if (g_bWasWarden[client] && waswarden)
 	{
