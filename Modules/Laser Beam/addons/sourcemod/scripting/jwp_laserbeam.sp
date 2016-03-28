@@ -20,7 +20,7 @@ public Plugin myinfo =
 {
 	name = "[JWP] Laser Beam",
 	description = "Following beam",
-	author = "White Wolf (HLModders LLC)",
+	author = "White Wolf",
 	version = PLUGIN_VERSION,
 	url = "http://hlmod.ru"
 };

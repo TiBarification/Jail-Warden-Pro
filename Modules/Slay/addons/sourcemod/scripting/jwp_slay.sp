@@ -12,7 +12,7 @@ public Plugin myinfo =
 {
 	name = "[JWP] Slay",
 	description = "Warden can slay players",
-	author = "White Wolf (HLModders LLC)",
+	author = "White Wolf",
 	version = PLUGIN_VERSION,
 	url = "http://hlmod.ru"
 };

@@ -15,7 +15,7 @@ public Plugin myinfo =
 {
 	name = "[JWP] Respawn",
 	description = "Warden can respawn players",
-	author = "White Wolf (HLModders LLC)",
+	author = "White Wolf",
 	version = PLUGIN_VERSION,
 	url = "http://hlmod.ru"
 };

@@ -12,7 +12,7 @@ public Plugin myinfo =
 {
 	name = "[JWP] On LR Started",
 	description = "Remove cmd & zam if LR started",
-	author = "White Wolf (HLModders LLC)",
+	author = "White Wolf",
 	version = PLUGIN_VERSION,
 	url = "http://hlmod.ru"
 };

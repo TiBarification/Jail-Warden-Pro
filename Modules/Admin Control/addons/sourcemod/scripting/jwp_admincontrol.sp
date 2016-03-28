@@ -15,7 +15,7 @@ public Plugin myinfo =
 {
 	name = "[JWP] Admin Control",
 	description = "Admin can set or remove warden",
-	author = "White Wolf (HLModders LLC)",
+	author = "White Wolf",
 	version = PLUGIN_VERSION,
 	url = "http://hlmod.ru"
 };

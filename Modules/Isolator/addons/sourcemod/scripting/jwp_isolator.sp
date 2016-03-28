@@ -21,7 +21,7 @@ public Plugin myinfo =
 {
 	name = "[JWP] Isolator",
 	description = "Warden can push terrorists to isolator",
-	author = "White Wolf (HLModders LLC)",
+	author = "White Wolf",
 	version = PLUGIN_VERSION,
 	url = "http://hlmod.ru"
 };

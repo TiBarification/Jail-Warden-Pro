@@ -14,7 +14,7 @@ public Plugin myinfo =
 {
 	name = "[JWP] Strip Knife",
 	description = "Warden can strip knife from terrorist",
-	author = "White Wolf (HLModders LLC)",
+	author = "White Wolf",
 	version = PLUGIN_VERSION,
 	url = "http://hlmod.ru"
 };

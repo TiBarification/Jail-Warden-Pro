@@ -20,7 +20,7 @@ public Plugin myinfo =
 {
 	name = "[JWP] Health Kit",
 	description = "Warden can drop health kit",
-	author = "White Wolf (HLModders LLC)",
+	author = "White Wolf",
 	version = PLUGIN_VERSION,
 	url = "http://hlmod.ru"
 };

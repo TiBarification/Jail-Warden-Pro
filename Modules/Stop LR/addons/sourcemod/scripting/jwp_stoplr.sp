@@ -13,7 +13,7 @@ public Plugin myinfo =
 {
 	name = "[JWP] Stop LR",
 	description = "Warden has access to stop lr",
-	author = "White Wolf (HLModders LLC)",
+	author = "White Wolf",
 	version = PLUGIN_VERSION,
 	url = "http://hlmod.ru"
 };

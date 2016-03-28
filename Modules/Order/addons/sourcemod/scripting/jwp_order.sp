@@ -23,7 +23,7 @@ public Plugin myinfo =
 {
 	name = "[JWP] Order",
 	description = "Ability to order",
-	author = "White Wolf (HLModders LLC)",
+	author = "White Wolf",
 	version = PLUGIN_VERSION,
 	url = "http://hlmod.ru"
 };

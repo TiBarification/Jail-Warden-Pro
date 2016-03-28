@@ -5,8 +5,8 @@
 // Force 1.7 syntax
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.0"
-#define ITEM "round_extender"
+#define PLUGIN_VERSION "1.1"
+#define ITEM "rextend"
 
 ConVar g_CvarRE_Limit, g_CvarRE_Extend;
 
@@ -16,7 +16,7 @@ public Plugin myinfo =
 {
 	name = "[JWP] Round Extender",
 	description = "Warden can extend round",
-	author = "White Wolf (HLModders LLC)",
+	author = "White Wolf",
 	version = PLUGIN_VERSION,
 	url = "http://hlmod.ru"
 };
@@ -29,13 +29,11 @@ public void OnPluginStart()
 	g_CvarRE_Limit.AddChangeHook(OnCvarChange);
 	g_CvarRE_Extend.AddChangeHook(OnCvarChange);
 	
-	if (JWP_IsStarted()) JWP_Started();
-	
 	HookEvent("round_start", Event_OnRoundStart, EventHookMode_PostNoCopy);
 	
-	LoadTranslations("jwp_modules.phrases");
-	
+	if (JWP_IsStarted()) JWP_Started();
 	AutoExecConfig(true, "round_extender", "jwp");
+	LoadTranslations("jwp_modules.phrases");
 }
 
 

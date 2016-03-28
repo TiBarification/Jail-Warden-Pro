@@ -18,7 +18,7 @@ public Plugin myinfo =
 {
 	name = "[JWP] Door Control",
 	description = "Open doors if they closed",
-	author = "White Wolf (HLModders LLC) & Kailo97 (dev of doors plugin)",
+	author = "White Wolf & Kailo97 (dev of doors plugin)",
 	version = PLUGIN_VERSION,
 	url = "http://hlmod.ru"
 };

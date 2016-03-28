@@ -14,7 +14,7 @@ public Plugin myinfo =
 {
 	name = "[JWP] Warden color",
 	description = "Color for warden and him zam",
-	author = "White Wolf (HLModders LLC)",
+	author = "White Wolf",
 	version = PLUGIN_VERSION,
 	url = "http://hlmod.ru"
 };

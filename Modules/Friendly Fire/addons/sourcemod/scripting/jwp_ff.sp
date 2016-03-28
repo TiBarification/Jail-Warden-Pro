@@ -13,7 +13,7 @@ public Plugin myinfo =
 {
 	name = "[JWP] Friendly Fire",
 	description = "Turn on/off friendly fire",
-	author = "White Wolf (HLModders LLC)",
+	author = "White Wolf",
 	version = PLUGIN_VERSION,
 	url = "http://hlmod.ru"
 };

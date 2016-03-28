@@ -14,7 +14,7 @@ public Plugin myinfo =
 {
 	name = "[JWP] To Jail",
 	description = "Warden can teleport terrorist to jail",
-	author = "White Wolf (HLModders LLC)",
+	author = "White Wolf",
 	version = PLUGIN_VERSION,
 	url = "http://hlmod.ru"
 };

@@ -11,7 +11,7 @@ public Plugin myinfo =
 {
 	name = "[JWP] Otkaz Module",
 	description = "JWP otkaz module for using from warden menu",
-	author = "White Wolf (HLModders LLC)",
+	author = "White Wolf",
 	version = PLUGIN_VERSION,
 	url = "http://hlmod.ru"
 };

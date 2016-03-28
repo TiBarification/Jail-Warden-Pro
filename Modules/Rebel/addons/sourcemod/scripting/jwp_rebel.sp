@@ -21,7 +21,7 @@ public Plugin myinfo =
 {
 	name = "[JWP] Rebel",
 	description = "Prisoners that perform damage notified as rebels",
-	author = "White Wolf (HLModders LLC)",
+	author = "White Wolf",
 	version = PLUGIN_VERSION,
 	url = "http://hlmod.ru"
 };

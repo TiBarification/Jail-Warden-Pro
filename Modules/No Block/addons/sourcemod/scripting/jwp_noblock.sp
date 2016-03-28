@@ -17,7 +17,7 @@ public Plugin myinfo =
 {
 	name = "[JWP] Noblock",
 	description = "Warden can toggle noblock",
-	author = "White Wolf (HLModders LLC)",
+	author = "White Wolf",
 	version = PLUGIN_VERSION,
 	url = "http://hlmod.ru"
 };

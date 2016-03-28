@@ -14,7 +14,7 @@ public Plugin myinfo =
 {
 	name = "[JWP] Coloring",
 	description = "Warden can divide players of terrorist team",
-	author = "White Wolf (HLModders LLC)",
+	author = "White Wolf",
 	version = PLUGIN_VERSION,
 	url = "http://hlmod.ru"
 };

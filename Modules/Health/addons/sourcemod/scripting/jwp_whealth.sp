@@ -13,7 +13,7 @@ public Plugin myinfo =
 {
 	name = "[JWP] Warden health",
 	description = "Health for warden and him zam",
-	author = "White Wolf (HLModders LLC)",
+	author = "White Wolf",
 	version = PLUGIN_VERSION,
 	url = "http://hlmod.ru"
 };

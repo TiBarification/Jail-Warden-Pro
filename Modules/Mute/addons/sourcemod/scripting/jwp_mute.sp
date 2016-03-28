@@ -19,7 +19,7 @@ public Plugin myinfo =
 {
 	name = "[JWP] Mute",
 	description = "Give/Take mute",
-	author = "White Wolf (HLModders LLC)",
+	author = "White Wolf",
 	version = PLUGIN_VERSION,
 	url = "http://hlmod.ru"
 };

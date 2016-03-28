@@ -16,7 +16,7 @@ public Plugin myinfo =
 {
 	name = "[JWP] Skin",
 	description = "Sets skin for warden and zam",
-	author = "White Wolf (HLModders LLC)",
+	author = "White Wolf",
 	version = PLUGIN_VERSION,
 	url = "http://hlmod.ru"
 };

@@ -16,7 +16,7 @@ public Plugin myinfo =
 {
 	name = "[JWP] Guns",
 	description = "Warden can use guns from menu",
-	author = "White Wolf (HLModders LLC)",
+	author = "White Wolf",
 	version = PLUGIN_VERSION,
 	url = "http://hlmod.ru"
 };

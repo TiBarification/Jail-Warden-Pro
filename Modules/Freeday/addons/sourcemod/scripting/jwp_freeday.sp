@@ -17,7 +17,7 @@ public Plugin myinfo =
 {
 	name = "[JWP] Freeday",
 	description = "Give/Take freeday",
-	author = "White Wolf (HLModders LLC)",
+	author = "White Wolf",
 	version = PLUGIN_VERSION,
 	url = "http://hlmod.ru"
 };

@@ -12,7 +12,7 @@ public Plugin myinfo =
 {
 	name = "[JWP] Door Aim Control",
 	description = "Give warden access to open certain doors",
-	author = "White Wolf (HLModders LLC)",
+	author = "White Wolf",
 	version = PLUGIN_VERSION,
 	url = "http://hlmod.ru"
 };
