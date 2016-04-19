@@ -19,7 +19,6 @@ bool g_bIsolated[MAXPLAYERS+1];
 bool is_started;
 bool g_bRoundEnd;
 bool g_bIsCSGO;
-bool g_bUpdater;
 
 bool g_bWasWarden[MAXPLAYERS+1];
 ArrayList g_aSortedMenu;
@@ -56,7 +55,7 @@ public void OnPluginStart()
 	g_CvarRandomWait = CreateConVar("jwp_random_wait", "5", "Time before warden randomly picked if choose mode = 1", FCVAR_PLUGIN, true, 1.0, true, 30.0);
 	g_CvarVoteTime = CreateConVar("jwp_vote_time", "30", "Time for voting if choose mode = 3", FCVAR_PLUGIN, true, 10.0, true, 60.0);
 	g_CvarDisableAntiFlood = CreateConVar("jwp_disable_antiflood", "1", "Protect menu from random selecting", FCVAR_PLUGIN, true, 0.0, true, 1.0);
-	g_CvarAutoUpdate = CreateConVar("jwp_autoupdate", "1", "Enable (1) or disable (0) auto update. Need Updater!", FCVAR_PLUGIN, true, 0.0, true, 1.0);
+	g_CvarAutoUpdate = CreateConVar("jwp_autoupdate", "0", "Enable (1) or disable (0) auto update. Need Updater!", FCVAR_PLUGIN, true, 0.0, true, 1.0);
 	
 	RegConsoleCmd("sm_com", Command_BecomeWarden, "Warden menu");
 	RegConsoleCmd("sm_w", Command_BecomeWarden, "Warden menu");
@@ -72,12 +71,6 @@ public void OnPluginStart()
 	HookEvent("player_death", Event_OnPlayerDeath);
 	HookEvent("player_team", Event_OnPlayerTeam);
 	
-	g_CvarChooseMode.AddChangeHook(OnCvarChange);
-	g_CvarRandomWait.AddChangeHook(OnCvarChange);
-	g_CvarVoteTime.AddChangeHook(OnCvarChange);
-	g_CvarDisableAntiFlood.AddChangeHook(OnCvarChange);
-	g_CvarAutoUpdate.AddChangeHook(OnCvarChange);
-	
 	g_aSortedMenu = new ArrayList(66);
 	g_aFlags = new ArrayList(1);
 	Load_SortingWardenMenu();
@@ -85,13 +78,9 @@ public void OnPluginStart()
 	AutoExecConfig(true, "jwp", "jwp");
 	
 	g_bIsCSGO = (GetEngineVersion() == Engine_CSGO) ? true : false;
-	g_bUpdater = g_CvarAutoUpdate.BoolValue;
 	
 	LoadTranslations("jwp.phrases");
 	LoadTranslations("common.phrases");
-	
-	if (LibraryExists("updater") && g_bUpdater)
-		Updater_AddPlugin(UPDATE_URL);
 }
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
@@ -109,33 +98,26 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 public void OnAllPluginsLoaded()
 {
-	if (LibraryExists("updater") && g_bUpdater)
+	if (g_CvarAutoUpdate.BoolValue && LibraryExists("updater"))
 		Updater_AddPlugin(UPDATE_URL);
 }
 
 public void OnLibraryAdded(const char[] name)
 {
-	if (!strcmp(name, "updater") && g_bUpdater)
+	if (g_CvarAutoUpdate.BoolValue && strcmp(name, "updater", true) == 0)
 		Updater_AddPlugin(UPDATE_URL);
+}
+
+public Action Updater_OnPluginChecking()
+{
+	if (g_CvarAutoUpdate.BoolValue) return Plugin_Continue;
+	return Plugin_Handled;
 }
 
 public int Updater_OnPluginUpdated()
 {
 	LogMessage("Plugin updated. Old version was %s. Now reloading.", PLUGIN_VERSION);
 	ReloadPlugin();
-}
-
-public void OnCvarChange(ConVar cvar, const char[] oldValue, const char[] newValue)
-{
-	if (cvar == g_CvarChooseMode) g_CvarChooseMode.SetInt(StringToInt(newValue));
-	else if (cvar == g_CvarRandomWait) g_CvarRandomWait.SetInt(StringToInt(newValue));
-	else if (cvar == g_CvarVoteTime) g_CvarVoteTime.SetInt(StringToInt(newValue));
-	else if (cvar == g_CvarDisableAntiFlood) g_CvarDisableAntiFlood.SetInt(StringToInt(newValue));
-	else if (cvar == g_CvarAutoUpdate)
-	{
-		g_bUpdater = view_as<bool>(StringToInt(newValue));
-		g_CvarAutoUpdate.SetBool(g_bUpdater);
-	}
 }
 
 public int Native_IsStarted(Handle plugin, int params)
@@ -164,8 +146,6 @@ public void Event_OnRoundStart(Event event, const char[] name, bool dontBroadcas
 {
 	for (int i = 1; i <= MaxClients; i++)
 	{
-		g_bWasWarden[i] = false;
-		
 		// Modules client reset
 		g_bHasFreeday[i] = false;
 		g_bIsolated[i] = false;
@@ -213,6 +193,8 @@ public void Event_OnPlayerTeam(Event event, const char[] name, bool dontBroadcas
 
 public void Event_OnRoundFreezeEnd(Event event, const char[] name, bool dontBroadcast)
 {
+	for (int i = 1; i <= MaxClients; ++i)
+		g_bWasWarden[i] = false;
 	g_bRoundEnd = false;
 	if (!Forward_OnWardenChoosing())
 		return;
@@ -223,13 +205,15 @@ public void Event_OnRoundFreezeEnd(Event event, const char[] name, bool dontBroa
 	}
 	else if (g_CvarChooseMode.IntValue == 2)
 	{
-		int client = JWP_GetTeamClient(CS_TEAM_CT, true)
-		if (client)
+		for (int i = 1; i <= MaxClients; ++i)
 		{
-			if (g_bIsCSGO)
-				CGOPrintToChat(client, "%T %T", "Core_Prefix", LANG_SERVER, "use_warden_cmd", LANG_SERVER);
-			else
-				CPrintToChat(client, "%T %T", "Core_Prefix", LANG_SERVER, "use_warden_cmd", LANG_SERVER);
+			if (CheckClient(i))
+			{
+				if (g_bIsCSGO)
+					CGOPrintToChat(i, "%T %T", "Core_Prefix", LANG_SERVER, "use_warden_cmd", LANG_SERVER);
+				else
+					CPrintToChat(i, "%T %T", "Core_Prefix", LANG_SERVER, "use_warden_cmd", LANG_SERVER);
+			}
 		}
 	}
 	else if (g_CvarChooseMode.IntValue == 3)
@@ -493,12 +477,19 @@ bool IsStarted()
 
 int JWP_GetTeamClient(int team, bool alive)
 {
+	int counter;
 	for (int i = 1; i <= MaxClients; ++i)
 	{
-		if (IsClientInGame(i) && GetClientTeam(i) == team && (alive && IsPlayerAlive(i)))
-			return i;
+		if (CheckClient(i) && GetClientTeam(i) == team)
+		{
+			if (alive)
+			{
+				if (IsPlayerAlive(i)) counter++;
+			}
+			else counter++;
+		}
 	}
-	return 0;
+	return counter;
 }
 
 void JWP_FindNewWarden()
@@ -519,21 +510,23 @@ void JWP_FindNewWarden()
 		}
 		g_hChooseTimer = CreateTimer(g_CvarRandomWait.FloatValue, g_ChooseTimer_Callback);
 	}
-	else if (g_CvarChooseMode.IntValue == 2 || g_CvarChooseMode.IntValue == 3)
+	else if (g_CvarChooseMode.IntValue == 2)
 	{
-		int client = JWP_GetTeamClient(CS_TEAM_CT, true);
-		if (client)
+		for (int i = 1; i <= MaxClients; ++i)
 		{
-			if (g_CvarChooseMode.IntValue == 3)
-				BecomeCmd(client);
-			else
+			if (CheckClient(i))
 			{
 				if (g_bIsCSGO)
-					CGOPrintToChat(client, "%T %T", "Core_Prefix", LANG_SERVER, "use_warden_cmd", LANG_SERVER);
+					CGOPrintToChat(i, "%T %T", "Core_Prefix", LANG_SERVER, "use_warden_cmd", LANG_SERVER);
 				else
-					CPrintToChat(client, "%T %T", "Core_Prefix", LANG_SERVER, "use_warden_cmd", LANG_SERVER);
+					CPrintToChat(i, "%T %T", "Core_Prefix", LANG_SERVER, "use_warden_cmd", LANG_SERVER);
 			}
 		}
+	}
+	else if (g_CvarChooseMode.IntValue == 3)
+	{
+		int client = JWP_GetRandomTeamClient(CS_TEAM_CT, true, false);
+		BecomeCmd(client);
 	}
 }
 
@@ -548,22 +541,19 @@ public Action g_ChooseTimer_Callback(Handle timer)
 			BecomeCmd(client);
 	}
 	g_hChooseTimer = null;
-	return Plugin_Stop;
 }
 
-public int JWP_GetRandomTeamClient(int team, bool alive, bool ignore_resign)
+stock int JWP_GetRandomTeamClient(int team, bool alive, bool ignore_resign)
 {
 	int[] Players = new int[MaxClients];
 	int count;
-	int i = 1;
-	while (i <= MaxClients)
+	for (int i = 1; i <= MaxClients; i++)
 	{
 		if (IsClientInGame(i) && GetClientTeam(i) == team && (alive && IsPlayerAlive(i)))
 		{
 			if (!(ignore_resign && g_bWasWarden[i]))
 				Players[count++] = i;
 		}
-		i++;
 	}
-	return (!count) ? 0 : Players[GetRandomInt(0, count)];
+	return (!count) ? -1 : Players[GetRandomInt(0, count-1)];
 }

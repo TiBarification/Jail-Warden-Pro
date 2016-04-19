@@ -13,7 +13,7 @@ void JWP_StartVote()
 	for (int i = 1; i <= MaxClients; i++)
 	{
 		g_iVoteResult[i] = 0;
-		if (IsClientInGame(i) && IsPlayerAlive(i))
+		if (CheckClient(i) && IsPlayerAlive(i))
 		{
 			if (GetClientTeam(i) == CS_TEAM_T)
 			{
@@ -51,8 +51,10 @@ void JWP_StartVote()
 		GetClientName(ct_list[i], nick, sizeof(nick));
 		g_VoteMenu.AddItem(id, nick)
 	}
+	
 	for (int i = 0; i < tt_count; i++)
 		g_VoteMenu.Display(tt_list[i], MENU_TIME_FOREVER);
+	
 	g_iVoteSec = g_CvarVoteTime.IntValue;
 	g_VoteTimer = CreateTimer(1.0, g_VoteTimer_Callback, _, TIMER_REPEAT);
 	PrintHintTextToAll("%T\n%d", "vote_who_will_be_warden", LANG_SERVER, g_iVoteSec);
