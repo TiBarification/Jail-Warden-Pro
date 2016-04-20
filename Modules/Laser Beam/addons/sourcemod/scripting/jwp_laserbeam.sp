@@ -4,15 +4,17 @@
 
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.0"
+#define PLUGIN_VERSION "1.1"
 #define ITEM "laserbeam"
 
 bool g_bLightActive;
-int g_iGlowEnt;
-int g_iColor[4] = {255, 0, 0, 255};
+int g_iGlowEnt, g_iColor[4] = {255, 0, 0, 255};
 float LastPos[3], LastLaser[3] = {0.0, 0.0, 0.0};
 
-ConVar	g_CvarColor,
+ConVar	g_CvarColor_r,
+		g_CvarColor_g,
+		g_CvarColor_b,
+		g_CvarColor_a,
 		g_CvarLife,
 		g_CvarSize;
 
@@ -27,13 +29,17 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
-	g_CvarColor = CreateConVar("jwp_laser_beam_color", "255 0 0 255", "Цвет луча (rgba)", FCVAR_PLUGIN);
+	g_CvarColor_r = CreateConVar("jwp_laser_beam_color_r", "255", "Красный оттенок луча (rgba)", FCVAR_PLUGIN, true, 0.0, true, 255.0);
+	g_CvarColor_g = CreateConVar("jwp_laser_beam_color_g", "0", "Зеленый оттенок луча (rgba)", FCVAR_PLUGIN, true, 0.0, true, 255.0);
+	g_CvarColor_b = CreateConVar("jwp_laser_beam_color_b", "0", "Синий оттенок луча (rgba)", FCVAR_PLUGIN, true, 0.0, true, 255.0);
+	g_CvarColor_a = CreateConVar("jwp_laser_beam_color_a", "255", "Прозрачность луча (rgba)", FCVAR_PLUGIN, true, 0.0, true, 255.0);
 	g_CvarLife = CreateConVar("jwp_laser_beam_life", "25.0", "Время жизни луча", FCVAR_PLUGIN, true, 1.0, true, 120.0);
 	g_CvarSize = CreateConVar("jwp_laser_beam_size", "2.0", "Ширина луча", FCVAR_PLUGIN, true, 0.1, true, 25.0);
 	
-	g_CvarColor.AddChangeHook(OnCvarChange);
-	g_CvarLife.AddChangeHook(OnCvarChange);
-	g_CvarSize.AddChangeHook(OnCvarChange);
+	g_CvarColor_r.AddChangeHook(OnCvarChange);
+	g_CvarColor_g.AddChangeHook(OnCvarChange);
+	g_CvarColor_b.AddChangeHook(OnCvarChange);
+	g_CvarColor_a.AddChangeHook(OnCvarChange);
 	
 	if (JWP_IsStarted()) JWC_Started();
 	AutoExecConfig(true, ITEM, "jwp");
@@ -48,22 +54,22 @@ public void OnMapStart()
 
 public void OnConfigsExecuted()
 {
-	char buffer[48];
-	g_CvarColor.GetString(buffer, sizeof(buffer));
-	JWP_ConvertToColor(buffer, g_iColor);
+	g_iColor[0] = g_CvarColor_r.IntValue;
+	g_iColor[1] = g_CvarColor_g.IntValue;
+	g_iColor[2] = g_CvarColor_b.IntValue;
+	g_iColor[3] = g_CvarColor_a.IntValue;
 }
 
 public void OnCvarChange(ConVar cvar, const char[] oldValue, const char[] newValue)
 {
-	if (cvar == g_CvarColor)
-	{
-		char buffer[48];
-		g_CvarColor.SetString(newValue);
-		strcopy(buffer, sizeof(buffer), newValue);
-		JWP_ConvertToColor(buffer, g_iColor);
-	}
-	else if (cvar == g_CvarLife) g_CvarLife.SetFloat(StringToFloat(newValue));
-	else if (cvar == g_CvarSize) g_CvarSize.SetFloat(StringToFloat(newValue));
+	if (cvar == g_CvarColor_r)
+		g_iColor[0] = StringToInt(newValue);
+	else if (cvar == g_CvarColor_g)
+		g_iColor[1] = StringToInt(newValue);
+	else if (cvar == g_CvarColor_b)
+		g_iColor[2] = StringToInt(newValue);
+	else if (cvar == g_CvarColor_a)
+		g_iColor[3] = StringToInt(newValue);
 }
 
 public int JWC_Started()
@@ -133,6 +139,7 @@ void TraceEye(int client, float pos[3])
 
 void Laser(float start[3], float end[3])
 {
+	
 	TE_SetupBeamPoints(start, end, g_iGlowEnt, 0, 0, 0, g_CvarLife.FloatValue, g_CvarSize.FloatValue, g_CvarSize.FloatValue, 10, 0.0, g_iColor, 0);
 	TE_SendToAll();
 }

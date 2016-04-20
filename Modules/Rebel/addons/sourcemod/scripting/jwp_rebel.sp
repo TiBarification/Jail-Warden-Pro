@@ -7,13 +7,16 @@
 // Force 1.7 syntax
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.2"
+#define PLUGIN_VERSION "1.3"
 
 bool g_bIsRebel[MAXPLAYERS+1];
-bool g_bColor;
 
-ConVar g_CvarRebelColor, g_CvarRebelTime, g_CvarRebelDamage;
-int g_iRebelColor[4];
+ConVar	g_CvarRebelColor_r,
+		g_CvarRebelColor_g,
+		g_CvarRebelColor_b,
+		g_CvarRebelColor_a,
+		g_CvarRebelTime,
+		g_CvarRebelDamage;
 
 Handle g_TimerColor[MAXPLAYERS+1];
 
@@ -28,34 +31,14 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
-	g_CvarRebelColor = CreateConVar("jwp_rebel_color", "120 0 0 255", "Цвет бунтовщика в RGBA", FCVAR_PLUGIN);
-	g_CvarRebelTime = CreateConVar("jwp_rebel_sec", "5", "Если T ранил CT, сколько секунд T будет бунтующим? (0 = бунт откл)", FCVAR_PLUGIN, true, 0.0);
+	g_CvarRebelColor_r = CreateConVar("jwp_rebel_color_r", "120", "Красный оттенок бунтовщика в RGBA", FCVAR_PLUGIN, true, 0.0, true, 255.0);
+	g_CvarRebelColor_g = CreateConVar("jwp_rebel_color_g", "0", "Зеленый оттенок бунтовщика в RGBA", FCVAR_PLUGIN, true, 0.0, true, 255.0);
+	g_CvarRebelColor_b = CreateConVar("jwp_rebel_color_b", "0", "Синий оттенок бунтовщика в RGBA", FCVAR_PLUGIN, true, 0.0, true, 255.0);
+	g_CvarRebelColor_a = CreateConVar("jwp_rebel_color_a", "255", "Прозрачность бунтовщика в RGBA", FCVAR_PLUGIN, true, 0.0, true, 255.0);
+	g_CvarRebelTime = CreateConVar("jwp_rebel_sec", "5", "Если T ранил CT, сколько секунд T будет бунтующим? (0 = бунт откл)", FCVAR_PLUGIN, true, 0.0, true, 240.0);
 	g_CvarRebelDamage = CreateConVar("jwp_rebel_damage", "35", "Необходимое количество урона, чтобы посчитать за бунт", FCVAR_PLUGIN, true, 1.0);
 	
-	g_CvarRebelColor.AddChangeHook(OnCvarChange);
-	g_CvarRebelTime.AddChangeHook(OnCvarChange);
-	g_CvarRebelDamage.AddChangeHook(OnCvarChange);
-	
-	ReadCfg();
 	AutoExecConfig(true, "rebel", "jwp");
-}
-
-public void OnConfigsExecuted()
-{
-	ReadCfg();
-}
-
-public void OnCvarChange(ConVar cvar, const char[] oldValue, const char[] newValue)
-{
-	if (cvar == g_CvarRebelColor)
-	{
-		char buffer[48];
-		g_CvarRebelColor.SetString(newValue);
-		strcopy(buffer, sizeof(buffer), newValue);
-		g_bColor = JWP_ConvertToColor(buffer, g_iRebelColor);
-	}
-	else if (cvar == g_CvarRebelTime) g_CvarRebelTime.SetInt(StringToInt(newValue));
-	else if (cvar == g_CvarRebelDamage) g_CvarRebelDamage.SetInt(StringToInt(newValue));
 }
 
 public void OnClientPutInServer(int client)
@@ -85,10 +68,10 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	{
 		if (!g_bIsRebel[attacker] && (damage >= g_CvarRebelDamage.IntValue))
 		{
-			if (g_bColor)
+			if (g_CvarRebelColor_r.IntValue != 255 && g_CvarRebelColor_g.IntValue != 255 && g_CvarRebelColor_b.IntValue != 255 && g_CvarRebelColor_a.IntValue != 255)
 			{
 				SetEntityRenderMode(attacker, RENDER_TRANSCOLOR);
-				SetEntityRenderColor(attacker, 120, 0, 0, 255);
+				SetEntityRenderColor(attacker, g_CvarRebelColor_r.IntValue, g_CvarRebelColor_g.IntValue, g_CvarRebelColor_b.IntValue, g_CvarRebelColor_a.IntValue);
 			}
 			PrintToChatAll("\x01\x06Заключенный %N \x02бунтует", attacker);
 			if (g_CvarRebelTime.IntValue)
@@ -101,7 +84,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 
 public Action g_TimerColor_Callback(Handle timer, any client)
 {
-	if (g_bColor && client && IsClientInGame(client))
+	if (client && IsClientInGame(client))
 	{
 		SetEntityRenderMode(client, RENDER_TRANSCOLOR);
 		SetEntityRenderColor(client, 255, 255, 255, 255);
@@ -109,11 +92,4 @@ public Action g_TimerColor_Callback(Handle timer, any client)
 	
 	g_bIsRebel[client] = false;
 	g_TimerColor[client] = null;
-}
-
-void ReadCfg()
-{
-	char buffer[48];
-	g_CvarRebelColor.GetString(buffer, sizeof(buffer));
-	g_bColor = JWP_ConvertToColor(buffer, g_iRebelColor);
 }

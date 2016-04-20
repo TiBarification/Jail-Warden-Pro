@@ -8,7 +8,7 @@
 // Force new syntax
 #pragma newdecls required
 
-#define PLUGIN_VERSION "0.0.9"
+#define PLUGIN_VERSION "0.1.0"
 
 #define UPDATE_URL "http://updater.tibari.ru/jwp/updatefile.txt"
 
@@ -200,8 +200,9 @@ public void Event_OnRoundFreezeEnd(Event event, const char[] name, bool dontBroa
 		return;
 	else if (g_CvarChooseMode.IntValue == 1)
 	{
-		int client = JWP_GetRandomTeamClient(CS_TEAM_CT, true, false);
-		if (client) BecomeCmd(client);
+		int client = JWP_GetRandomTeamClient(CS_TEAM_CT, true, true);
+		if (client != -1)
+			BecomeCmd(client);
 	}
 	else if (g_CvarChooseMode.IntValue == 2)
 	{
@@ -537,7 +538,7 @@ public Action g_ChooseTimer_Callback(Handle timer)
 		int client = g_iZamWarden;
 		if (!client)
 			client = JWP_GetRandomTeamClient(CS_TEAM_CT, true, true);
-		if (client > 0)
+		if (client != -1)
 			BecomeCmd(client);
 	}
 	g_hChooseTimer = null;
@@ -551,7 +552,9 @@ stock int JWP_GetRandomTeamClient(int team, bool alive, bool ignore_resign)
 	{
 		if (IsClientInGame(i) && GetClientTeam(i) == team && (alive && IsPlayerAlive(i)))
 		{
-			if (!(ignore_resign && g_bWasWarden[i]))
+			if (ignore_resign)
+				Players[count++] = i;
+			else if (g_bWasWarden[i])
 				Players[count++] = i;
 		}
 	}
