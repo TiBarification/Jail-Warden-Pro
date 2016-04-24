@@ -5,7 +5,7 @@
 
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.0"
+#define PLUGIN_VERSION "1.1"
 #define ITEM "speed"
 
 ConVar Cvar_SpeedValue;
@@ -23,31 +23,25 @@ public Plugin myinfo =
 public void OnPluginStart()
 {
 	Cvar_SpeedValue = CreateConVar("jwp_warden_speed", "1.5", "Скорость командира", FCVAR_PLUGIN, true, 1.0, true, 3.0);
-	Cvar_SpeedValue.AddChangeHook(OnCvarChange);
-	if (JWP_IsStarted()) JWC_Started();
+	if (JWP_IsStarted()) JWP_Started();
 	AutoExecConfig(true, ITEM, "jwp");
 	
 	LoadTranslations("jwp_modules.phrases");
 }
 
-public int JWP_OnWardenChosen(int client)
+public void JWP_OnWardenChosen(int client)
 {
 	g_bSpeed = false;
 }
 
-public int JWP_OnWardenResigned(int client)
+public void JWP_OnWardenResigned(int client)
 {
 	if (client && IsClientInGame(client))
 		SetEntPropFloat(client, Prop_Send, "m_flLaggedMovementValue", 1.0);
 	g_bSpeed = false;
 }
 
-public void OnCvarChange(ConVar cvar, const char[] oldValue, const char[] newValue)
-{
-	if (cvar == Cvar_SpeedValue) Cvar_SpeedValue.SetFloat(StringToFloat(newValue));
-}
-
-public int JWC_Started()
+public void JWP_Started()
 {
 	JWP_AddToMainMenu(ITEM, OnFuncDisplay, OnFuncSelect);
 }

@@ -6,7 +6,7 @@
 // Force 1.7 syntax
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.0"
+#define PLUGIN_VERSION "1.1"
 #define ITEM "pris_counter"
 
 ConVar g_CvarRadius, g_CvarIncludeFD;
@@ -28,14 +28,14 @@ public void OnPluginStart()
 	g_CvarRadius.AddChangeHook(OnCvarChange);
 	g_CvarIncludeFD.AddChangeHook(OnCvarChange);
 	
-	if (JWP_IsStarted()) JWC_Started();
+	if (JWP_IsStarted()) JWP_Started();
 	
 	AutoExecConfig(true, "pris_counter", "jwp");
 	
 	LoadTranslations("jwp_modules.phrases");
 }
 
-public int JWC_Started()
+public void JWP_Started()
 {
 	JWP_AddToMainMenu(ITEM, OnFuncDisplay, OnFuncSelect);
 }
@@ -72,6 +72,7 @@ public bool OnFuncSelect(int client)
 	float distance;
 	
 	GetClientAbsOrigin(client, warden_origin);
+	ArrayList Rebels = new ArrayList(1);
 	for (int i = 1; i <= MaxClients; ++i)
 	{
 		if (IsClientInGame(i) && IsPlayerAlive(i) && GetClientTeam(i) == CS_TEAM_T)
@@ -84,6 +85,8 @@ public bool OnFuncSelect(int client)
 				// Count distance
 				if (distance <= g_CvarRadius.FloatValue)
 					count[0]++;
+				else
+					Rebels.Push(i);
 			}
 			else if (g_CvarIncludeFD.BoolValue)
 				count[1]++; // Increment freeday players
@@ -94,6 +97,15 @@ public bool OnFuncSelect(int client)
 	JWP_ActionMsg(client, "\x04%d\x03/\x04%d \x03%T", count[0], count[2], "JWP_Pris_Counter_ActionMessage_Near", LANG_SERVER);
 	if (g_CvarIncludeFD.BoolValue)
 		JWP_ActionMsg(client, "\x05%T \x02%d", "JWP_Pris_Counter_ActionMessage_Freeday", LANG_SERVER, count[1]);
+	JWP_ActionMsg(client, "\x06Ники сбежавших зеков: ");
+	int user;
+	for (int i = 0; i < Rebels.Length; ++i)
+	{
+		user = Rebels.Get(i);
+		if (user && IsClientInGame(user))
+			JWP_ActionMsg(client, "%N", user);
+	}
+	delete Rebels;
 	
 	JWP_ShowMainMenu(client);
 	return true;

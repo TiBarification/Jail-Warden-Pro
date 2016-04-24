@@ -3,7 +3,7 @@
 
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.0"
+#define PLUGIN_VERSION "1.1"
 #define ITEM "ff"
 
 bool g_bTurnOn = false;
@@ -24,7 +24,7 @@ public void OnPluginStart()
 	g_bTurnOn = Cvar_FF.BoolValue;
 	
 	HookEvent("round_start", Event_OnRoundStart, EventHookMode_PostNoCopy);
-	if (JWP_IsStarted()) JWC_Started();
+	if (JWP_IsStarted()) JWP_Started();
 	
 	LoadTranslations("jwp_modules.phrases");
 }
@@ -35,13 +35,13 @@ public void Event_OnRoundStart(Event event, const char[] name, bool dontBroadcas
 	g_bTurnOn = Cvar_FF.BoolValue;
 }
 
-public int JWP_OnWardenResigned(int client, bool himself)
+public void JWP_OnWardenResigned(int client, bool himself)
 {
 	Cvar_FF.RestoreDefault(false, false);
 	g_bTurnOn = Cvar_FF.BoolValue;
 }
 
-public int JWC_Started()
+public void JWP_Started()
 {
 	JWP_AddToMainMenu(ITEM, OnFuncDisplay, OnFuncSelect);
 }

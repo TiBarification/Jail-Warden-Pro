@@ -3,7 +3,7 @@
 
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.1"
+#define PLUGIN_VERSION "1.2"
 
 ConVar	g_CvarWardenColor_r,
 		g_CvarWardenColor_g,
@@ -37,7 +37,7 @@ public void OnPluginStart()
 	AutoExecConfig(true, "wcolor", "jwp");
 }
 
-public int JWP_OnWardenChosen(int client)
+public void JWP_OnWardenChosen(int client)
 {
 	if (g_CvarWardenColor_r.IntValue == 255 && g_CvarWardenColor_g.IntValue == 255 && g_CvarWardenColor_b.IntValue == 255 && g_CvarWardenColor_a.IntValue == 255) return;
 	else if (client && IsClientInGame(client))
@@ -47,7 +47,7 @@ public int JWP_OnWardenChosen(int client)
 	}
 }
 
-public int JWP_OnWardenZamChosen(int client)
+public void JWP_OnWardenZamChosen(int client)
 {
 	if (g_CvarWardenZamColor_r.IntValue == 255 && g_CvarWardenZamColor_g.IntValue == 255 && g_CvarWardenZamColor_b.IntValue == 255 && g_CvarWardenZamColor_a.IntValue == 255) return;
 	else if (client && IsClientInGame(client))
@@ -57,7 +57,7 @@ public int JWP_OnWardenZamChosen(int client)
 	}
 }
 
-public int JWP_OnWardenResigned(int client, bool self)
+public void JWP_OnWardenResigned(int client, bool self)
 {
 	if (g_CvarWardenColor_r.IntValue == 255 && g_CvarWardenColor_g.IntValue == 255 && g_CvarWardenColor_b.IntValue == 255 && g_CvarWardenColor_a.IntValue == 255) return;
 	else if (client && IsClientInGame(client))

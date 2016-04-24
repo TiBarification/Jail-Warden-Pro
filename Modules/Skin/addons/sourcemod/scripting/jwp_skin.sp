@@ -5,7 +5,7 @@
 
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.0"
+#define PLUGIN_VERSION "1.1"
 
 ConVar g_CvarWardenSkin, g_CvarWardenZamSkin, g_CvarTRandomSkins, g_CvarCTRandomSkins;
 char g_cWardenSkin[PLATFORM_MAX_PATH], g_cWardenZamSkin[PLATFORM_MAX_PATH];
@@ -28,11 +28,6 @@ public void OnPluginStart()
 	g_CvarTRandomSkins = CreateConVar("jwp_random_t_skins", "1", "Включить автоматическую установку скинов для Т. Требуется файл t_models.txt", FCVAR_PLUGIN, true, 0.0, true, 1.0);
 	g_CvarCTRandomSkins = CreateConVar("jwp_random_ct_skins", "1", "Включить автоматическую установку скинов для CТ. Требуется файл ct_models.txt", FCVAR_PLUGIN, true, 0.0, true, 1.0);
 	
-	g_CvarWardenSkin.AddChangeHook(OnCvarChange);
-	g_CvarWardenZamSkin.AddChangeHook(OnCvarChange);
-	g_CvarTRandomSkins.AddChangeHook(OnCvarChange);
-	g_CvarCTRandomSkins.AddChangeHook(OnCvarChange);
-	
 	HookEvent("player_spawn", Event_OnPlayerSpawn);
 	AutoExecConfig(true, "skin", "jwp");
 }
@@ -48,22 +43,6 @@ public Action Event_OnPlayerSpawn(Event event, const char[] name, bool dontBroad
 	}
 	
 	return Plugin_Continue;
-}
-
-public void OnCvarChange(ConVar cvar, const char[] oldValue, const char[] newValue)
-{
-	if (cvar == g_CvarWardenSkin)
-	{
-		g_CvarWardenSkin.SetString(newValue);
-		strcopy(g_cWardenSkin, sizeof(g_cWardenSkin), newValue);
-	}
-	else if (cvar == g_CvarWardenZamSkin)
-	{
-		g_CvarWardenZamSkin.SetString(newValue);
-		strcopy(g_cWardenZamSkin, sizeof(g_cWardenZamSkin), newValue);
-	}
-	else if (cvar == g_CvarTRandomSkins) g_CvarTRandomSkins.SetInt(StringToInt(newValue));
-	else if (cvar == g_CvarCTRandomSkins) g_CvarCTRandomSkins.SetInt(StringToInt(newValue));
 }
 
 public void OnConfigsExecuted()
@@ -90,19 +69,19 @@ public void OnMapStart()
 		LoadSkinsFromFile("cfg/jwp/skin/ct_models.txt", ctModels_Array);
 }
 
-public int JWP_OnWardenChosen(int client)
+public void JWP_OnWardenChosen(int client)
 {
 	if (g_cWardenSkin[0] == 'm')
 		SetEntityModel(client, g_cWardenSkin);
 }
 
-public int JWP_OnWardenZamChosen(int client)
+public void JWP_OnWardenZamChosen(int client)
 {
 	if (g_cWardenZamSkin[0] == 'm')
 		SetEntityModel(client, g_cWardenZamSkin);
 }
 
-public int JWP_OnWardenResigned(int client, bool himself)
+public void JWP_OnWardenResigned(int client, bool himself)
 {
 	if (CheckClient(client))
 	{

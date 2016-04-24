@@ -10,6 +10,7 @@ public Plugin:myinfo = {
 	name = "[JWP] Be quiet",
 	author = "Fastmancz & White Wolf",
 	description = "Be quiet, please!",
+	version = "1.1",
 	url = "http://tibari.ru http://hlmod.ru"
 };
 

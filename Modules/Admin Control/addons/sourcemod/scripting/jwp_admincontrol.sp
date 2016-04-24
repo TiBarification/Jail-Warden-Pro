@@ -6,7 +6,7 @@
 // Force 1.7 syntax
 #pragma newdecls required;
 
-#define PLUGIN_VERSION "1.0"
+#define PLUGIN_VERSION "1.1"
 
 Handle hAdminMenu = null;
 Menu g_mAdminControlMain;
@@ -25,7 +25,7 @@ public void OnPluginStart()
 	if (JWP_IsStarted()) JWP_Started();
 }
 
-public int JWP_Started()
+public void JWP_Started()
 {
 	TopMenu topmenu;
 	if (LibraryExists("adminmenu") && ((topmenu = GetAdminTopMenu()) != null))

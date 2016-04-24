@@ -5,7 +5,7 @@
 
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.1"
+#define PLUGIN_VERSION "1.2"
 #define FDGIVE "freeday_give"
 #define FDTAKE "freeday_take"
 
@@ -30,14 +30,14 @@ public void OnPluginStart()
 	g_Cvar_b = CreateConVar("jwp_freeday_b", "0", "Синий оттенок заключенного, который получил freeday (rgba)", FCVAR_PLUGIN, true, 0.0, true, 255.0);
 	g_Cvar_a = CreateConVar("jwp_freeday_a", "255", "Прозрачность заключенного, который получил freeday (rgba)", FCVAR_PLUGIN, true, 0.0, true, 255.0);
 	
-	if (JWP_IsStarted()) JWC_Started();
+	if (JWP_IsStarted()) JWP_Started();
 	
 	AutoExecConfig(true, "freeday", "jwp");
 	
 	LoadTranslations("jwp_modules.phrases");
 }
 
-public int JWC_Started()
+public void JWP_Started()
 {
 	JWP_AddToMainMenu(FDGIVE, OnFuncFDGiveDisplay, OnFuncFDGiveSelect);
 	JWP_AddToMainMenu(FDTAKE, OnFuncFDTakeDisplay, OnFuncFDTakeSelect);

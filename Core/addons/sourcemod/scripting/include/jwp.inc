@@ -2,6 +2,8 @@
 	Library of the [JWP]
 	Author: White Wolf
 	www.hlmod.ru
+	
+	|Version by Core: 1.0.1 /) 
 */
 
 #if defined _jwp_included
@@ -16,7 +18,7 @@
  *	-
  *	@noreturn
 */
-forward int JWC_Started();
+forward void JWP_Started();
 
 /** Called to prevent choosing a warden
  *	-
@@ -24,7 +26,7 @@ forward int JWC_Started();
  *	-
  *	@return true to enable warden, false to disable warden searching. By default return true;
 */
-forward int JWP_OnWardenChoosing();
+forward bool JWP_OnWardenChoosing();
 
 /** Called when alive client became warden
  *	-
@@ -32,7 +34,7 @@ forward int JWP_OnWardenChoosing();
  *	-
  *	@noreturn
 */
-forward int JWP_OnWardenChosen(int client);
+forward void JWP_OnWardenChosen(int client);
 
 /** Called when alive client became zam of warden
  *	-
@@ -40,7 +42,7 @@ forward int JWP_OnWardenChosen(int client);
  *	-
  *	@noreturn
  */
-forward int JWP_OnWardenZamChosen(int client);
+forward void JWP_OnWardenZamChosen(int client);
 
 /**
  *	Called when client is going to resign
@@ -49,14 +51,16 @@ forward int JWP_OnWardenZamChosen(int client);
  *	-
  *	@return true to allow resign, false to restrict. By default return true;
  */
-forward int JWP_OnWardenResign(int client);
+forward bool JWP_OnWardenResign(int client);
 
 /**
  *	Warden Resigned
  *	If bool:himself true, then resigned by himself.
  *	Else if he changed own team or disconnected.
+ *	-
+ *	@noreturn
  */
-forward int JWP_OnWardenResigned(int client, bool himself);
+forward void JWP_OnWardenResigned(int client, bool himself);
 
 /**
  *	Checks whether the jail warden pro has been started
@@ -168,16 +172,6 @@ native int JWP_GetZamWarden();
  *	@return true if success, otherwise false
  */
 native bool JWP_SetZamWarden(int client);
-
-/**
- *	Convert (r g b a) string to int array
- *	-
- *	@param str				String which convert
- *	@param array			Array of converted items 
- *	-
- *	@return true if success, otherwise false
- */
-native bool JWP_ConvertToColor(char[] str, int[] array);
 
 /**
  *	Print action as warden to all

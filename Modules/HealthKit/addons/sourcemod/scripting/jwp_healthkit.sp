@@ -8,7 +8,7 @@
 // Force 1.7 syntax
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.0"
+#define PLUGIN_VERSION "1.1"
 #define ITEM "healthkit"
 
 ConVar g_CvarHK_Limit, g_CvarHK_Wait, g_CvarHK_Life, g_CvarHK_Team, g_CvarHK_Hp, g_CvarHK_LimitHp, g_CvarHK_Model;
@@ -28,24 +28,16 @@ public Plugin myinfo =
 public void OnPluginStart()
 {
 	g_CvarHK_Limit = CreateConVar("jwp_healthkit_limit", "3", "Сколько аптечек может создать командир. 0 - без ограничений", FCVAR_PLUGIN, true, 0.0);
-	g_CvarHK_Wait = CreateConVar("jwp_healthkit_wait", "3", "Аптечку можно создавать 1 раз в 'x' сек", FCVAR_PLUGIN, true, 1.0);
+	g_CvarHK_Wait = CreateConVar("jwp_healthkit_wait", "3", "Аптечку можно создавать 1 раз в 'x' сек", FCVAR_PLUGIN, true, 0.0);
 	g_CvarHK_Life = CreateConVar("jwp_healthkit_life", "9", "Если аптечку не подняли, удалить ее через 'x' сек (0 = не удалять)", FCVAR_PLUGIN, true, 0.0);
 	g_CvarHK_Team = CreateConVar("jwp_healthkit_team", "1", "Кому аптечка добавляет HP: 1 = Всем; 2 = T; 3 = CT", FCVAR_PLUGIN, true, 1.0, true, 3.0);
 	g_CvarHK_LimitHp = CreateConVar("jwp_healthkit_limit_hp", "100", "Лимит HP (аптечка). 0 = без лимита.", FCVAR_PLUGIN, true, 0.0);
 	g_CvarHK_Hp = CreateConVar("jwp_healthkit_hp", "50", "Сколько HP добавляет аптечка", FCVAR_PLUGIN, true, 1.0);
 	g_CvarHK_Model = CreateConVar("jwp_healthkit_model", "models/gibs/hgibs.mdl", "Модель аптечки", FCVAR_PLUGIN);
 	
-	g_CvarHK_Limit.AddChangeHook(OnCvarChange);
-	g_CvarHK_Wait.AddChangeHook(OnCvarChange);
-	g_CvarHK_Life.AddChangeHook(OnCvarChange);
-	g_CvarHK_Team.AddChangeHook(OnCvarChange);
-	g_CvarHK_LimitHp.AddChangeHook(OnCvarChange);
-	g_CvarHK_Hp.AddChangeHook(OnCvarChange);
-	g_CvarHK_Model.AddChangeHook(OnCvarChange);
-	
 	
 	HookEvent("round_start", Event_OnRoundStart, EventHookMode_PostNoCopy);
-	if (JWP_IsStarted()) JWC_Started();
+	if (JWP_IsStarted()) JWP_Started();
 	
 	AutoExecConfig(true, ITEM, "jwp");
 	
@@ -59,29 +51,13 @@ public void OnMapStart()
 	PrecacheSoundAny("sound/ambient/machines/zap2.wav");
 }
 
-public void OnCvarChange(ConVar cvar, const char[] oldValue, const char[] newValue)
-{
-	if (cvar == g_CvarHK_Limit) g_CvarHK_Limit.SetInt(StringToInt(newValue));
-	else if (cvar == g_CvarHK_Wait) g_CvarHK_Wait.SetInt(StringToInt(newValue));
-	else if (cvar == g_CvarHK_Life) g_CvarHK_Life.SetInt(StringToInt(newValue));
-	else if (cvar == g_CvarHK_Team) g_CvarHK_Team.SetInt(StringToInt(newValue));
-	else if (cvar == g_CvarHK_LimitHp) g_CvarHK_LimitHp.SetInt(StringToInt(newValue));
-	else if (cvar == g_CvarHK_Hp) g_CvarHK_Hp.SetInt(StringToInt(newValue));
-	else if (cvar == g_CvarHK_Model)
-	{
-		strcopy(g_cHKModel, sizeof(g_cHKModel), newValue);
-		g_CvarHK_Model.SetString(newValue);
-		PrecacheModel(g_cHKModel, true);
-	}
-}
-
 public void Event_OnRoundStart(Event event, const char[] name, bool dontBroadcast)
 {
 	for (int i = 1; i <= MaxClients; ++i)
 		g_iHKits[i] = 0;
 }
 
-public int JWC_Started()
+public void JWP_Started()
 {
 	JWP_AddToMainMenu(ITEM, OnFuncDisplay, OnFuncSelect);
 }
@@ -123,7 +99,7 @@ public bool OnFuncSelect(int client)
 
 bool TrySpawnHealthKit(int client)
 {
-	if (JWP_IsFlood(client))
+	if (g_CvarHK_Wait.IntValue > 0 && JWP_IsFlood(client, g_CvarHK_Wait.IntValue))
 	{
 		JWP_ActionMsg(client, "%T", "HealthKit_StopFlood", LANG_SERVER);
 		return false;

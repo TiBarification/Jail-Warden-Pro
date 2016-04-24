@@ -5,7 +5,7 @@
 
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.0"
+#define PLUGIN_VERSION "1.1"
 #define ITEM "respawn"
 
 ConVar g_CvarMaxUses, g_CvarMethod;
@@ -25,10 +25,7 @@ public void OnPluginStart()
 	g_CvarMaxUses = CreateConVar("jwp_respawn_max", "2", "Количество возрождений для командира", FCVAR_PLUGIN, true, 0.0);
 	g_CvarMethod = CreateConVar("jwp_respawn_method", "1", "Режим возрождения: 0 - на точке спавна, 1 - на точке прицела", FCVAR_PLUGIN, true, 0.0, true, 1.0);
 	
-	g_CvarMaxUses.AddChangeHook(OnCvarChange);
-	g_CvarMethod.AddChangeHook(OnCvarChange);
-	
-	if (JWP_IsStarted()) JWC_Started();
+	if (JWP_IsStarted()) JWP_Started();
 	
 	HookEvent("round_start", Event_OnRoundStart, EventHookMode_PostNoCopy);
 	
@@ -42,13 +39,8 @@ public void Event_OnRoundStart(Event event, const char[] name, bool dontBroadcas
 	g_iUses = 0;
 }
 
-public void OnCvarChange(ConVar cvar, const char[] oldValue, const char[] newValue)
-{
-	if (cvar == g_CvarMaxUses) cvar.SetInt(StringToInt(newValue));
-	else if (cvar == g_CvarMethod) cvar.SetInt(StringToInt(newValue));
-}
 
-public int JWC_Started()
+public void JWP_Started()
 {
 	JWP_AddToMainMenu(ITEM, OnFuncDisplay, OnFuncSelect);
 }

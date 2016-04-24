@@ -4,7 +4,7 @@
 
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.1"
+#define PLUGIN_VERSION "1.2"
 #define ITEM "laserbeam"
 
 bool g_bLightActive;
@@ -41,7 +41,7 @@ public void OnPluginStart()
 	g_CvarColor_b.AddChangeHook(OnCvarChange);
 	g_CvarColor_a.AddChangeHook(OnCvarChange);
 	
-	if (JWP_IsStarted()) JWC_Started();
+	if (JWP_IsStarted()) JWP_Started();
 	AutoExecConfig(true, ITEM, "jwp");
 	
 	LoadTranslations("jwp_modules.phrases");
@@ -72,7 +72,7 @@ public void OnCvarChange(ConVar cvar, const char[] oldValue, const char[] newVal
 		g_iColor[3] = StringToInt(newValue);
 }
 
-public int JWC_Started()
+public void JWP_Started()
 {
 	JWP_AddToMainMenu(ITEM, OnFuncDisplay, OnFuncSelect);
 }
@@ -82,7 +82,7 @@ public void OnPluginEnd()
 	JWP_RemoveFromMainMenu(ITEM, OnFuncDisplay, OnFuncSelect);
 }
 
-public int JWP_OnWardenChosen(int client)
+public void JWP_OnWardenChosen(int client)
 {
 	g_bLightActive = false;
 }

@@ -3,7 +3,7 @@
 
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.0"
+#define PLUGIN_VERSION "1.1"
 #define ITEM "stoplr"
 
 ConVar g_CvarMaxStops;
@@ -21,18 +21,12 @@ public Plugin myinfo =
 public void OnPluginStart()
 {
 	g_CvarMaxStops = CreateConVar("jwp_stoplr_max", "2", "Сколько раз командир может останавливать lr за раунд");
-	g_CvarMaxStops.AddChangeHook(OnCvarChange);
 	
 	HookEvent("round_start", Event_OnRoundStart, EventHookMode_PostNoCopy);
-	if (JWP_IsStarted()) JWC_Started();
+	if (JWP_IsStarted()) JWP_Started();
 	AutoExecConfig(true, "stoplr", "jwp");
 	
 	LoadTranslations("jwp_modules.phrases");
-}
-
-public void OnCvarChange(ConVar cvar, const char[] oldValue, const char[] newValue)
-{
-	if (cvar == g_CvarMaxStops) g_CvarMaxStops.SetInt(StringToInt(newValue));
 }
 
 public void Event_OnRoundStart(Event event, const char[] name, bool dontBroadcast)
@@ -40,7 +34,7 @@ public void Event_OnRoundStart(Event event, const char[] name, bool dontBroadcas
 	g_iStops = 0;
 }
 
-public int JWC_Started()
+public void JWP_Started()
 {
 	JWP_AddToMainMenu(ITEM, OnFuncDisplay, OnFuncSelect);
 }

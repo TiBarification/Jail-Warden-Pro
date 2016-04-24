@@ -7,7 +7,7 @@
 // Force 1.7 syntax
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.3"
+#define PLUGIN_VERSION "1.4"
 
 bool g_bIsRebel[MAXPLAYERS+1];
 
@@ -39,6 +39,10 @@ public void OnPluginStart()
 	g_CvarRebelDamage = CreateConVar("jwp_rebel_damage", "35", "Необходимое количество урона, чтобы посчитать за бунт", FCVAR_PLUGIN, true, 1.0);
 	
 	AutoExecConfig(true, "rebel", "jwp");
+	for (int i = 1; i <= MaxClients; ++i)
+	{
+		OnClientPutInServer(i);
+	}
 }
 
 public void OnClientPutInServer(int client)
@@ -68,7 +72,9 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	{
 		if (!g_bIsRebel[attacker] && (damage >= g_CvarRebelDamage.IntValue))
 		{
-			if (g_CvarRebelColor_r.IntValue != 255 && g_CvarRebelColor_g.IntValue != 255 && g_CvarRebelColor_b.IntValue != 255 && g_CvarRebelColor_a.IntValue != 255)
+			if (g_CvarRebelColor_r.IntValue == 255 && g_CvarRebelColor_g.IntValue == 255 && g_CvarRebelColor_b.IntValue == 255 && g_CvarRebelColor_a.IntValue == 255)
+				return Plugin_Continue;
+			else
 			{
 				SetEntityRenderMode(attacker, RENDER_TRANSCOLOR);
 				SetEntityRenderColor(attacker, g_CvarRebelColor_r.IntValue, g_CvarRebelColor_g.IntValue, g_CvarRebelColor_b.IntValue, g_CvarRebelColor_a.IntValue);

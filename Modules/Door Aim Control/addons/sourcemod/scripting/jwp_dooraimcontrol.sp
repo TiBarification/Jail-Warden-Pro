@@ -4,7 +4,7 @@
 
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.1"
+#define PLUGIN_VERSION "1.2"
 #define DROPEN "door_aim_open"
 #define DRCLOSE "door_aim_close"
 
@@ -19,11 +19,11 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
-	if (JWP_IsStarted()) JWC_Started();
+	if (JWP_IsStarted()) JWP_Started();
 	LoadTranslations("jwp_modules.phrases");
 }
 
-public int JWC_Started()
+public void JWP_Started()
 {
 	JWP_AddToMainMenu(DROPEN, OnFuncDrOpenDisplay, OnFuncDrOpenSelect);
 	JWP_AddToMainMenu(DRCLOSE, OnFuncDrCloseDisplay, OnFuncDrCloseSelect);

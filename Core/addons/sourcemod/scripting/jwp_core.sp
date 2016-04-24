@@ -8,7 +8,7 @@
 // Force new syntax
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.0.0"
+#define PLUGIN_VERSION "1.0.1"
 
 #define UPDATE_URL "http://updater.tibari.ru/jwp/updatefile.txt"
 
@@ -330,7 +330,7 @@ void Forward_NotifyJWPLoaded()
 		if (plugin == myhandle || GetPluginStatus(plugin) != Plugin_Running)
 			continue;
 		
-		Function func = GetFunctionByName(plugin, "JWC_Started");
+		Function func = GetFunctionByName(plugin, "JWP_Started");
 		
 		if (func != INVALID_FUNCTION)
 		{

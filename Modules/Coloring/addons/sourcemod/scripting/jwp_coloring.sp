@@ -5,7 +5,7 @@
 
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.0"
+#define PLUGIN_VERSION "1.1"
 #define ITEM "coloring"
 
 bool g_bColoring;
@@ -23,7 +23,7 @@ public void OnPluginStart()
 {
 	HookEvent("round_start", Event_OnRoundStart, EventHookMode_PostNoCopy);
 	HookEvent("round_end", Event_OnRoundEnd, EventHookMode_PostNoCopy);
-	if (JWP_IsStarted()) JWC_Started();
+	if (JWP_IsStarted()) JWP_Started();
 	
 	LoadTranslations("jwp_modules.phrases");
 }
@@ -38,7 +38,7 @@ public void Event_OnRoundEnd(Event event, const char[] name, bool dontBroadcast)
 	g_bColoring = false;
 }
 
-public int JWC_Started()
+public void JWP_Started()
 {
 	JWP_AddToMainMenu(ITEM, OnFuncDisplay, OnFuncSelect);
 }

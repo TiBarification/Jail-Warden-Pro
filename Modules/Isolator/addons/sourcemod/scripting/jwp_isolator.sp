@@ -6,7 +6,7 @@
 
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.0"
+#define PLUGIN_VERSION "1.1"
 #define ITEM "isolator"
 
 int g_iIsolatorIndex[MAXPLAYERS+1], g_iIsolatorBeamIndex[MAXPLAYERS+1];
@@ -43,7 +43,7 @@ public void OnPluginStart()
 	HookEvent("player_death", Event_OnPlayerDeath);
 	HookEvent("player_team", Event_OnPlayerTeam);
 	
-	if (JWP_IsStarted()) JWC_Started();
+	if (JWP_IsStarted()) JWP_Started();
 	AutoExecConfig(true, ITEM, "jwp");
 	
 	LoadTranslations("jwp_modules.phrases");
@@ -63,7 +63,7 @@ public void OnMapStart()
 		PrecacheSoundAny(buffer);
 }
 
-public int JWC_Started()
+public void JWP_Started()
 {
 	JWP_AddToMainMenu(ITEM, OnFuncDisplay, OnFuncSelect);
 }
@@ -83,25 +83,14 @@ public void OnConfigsExecuted()
 public void OnCvarChange(ConVar cvar, const char[] oldValue, const char[] newValue)
 {
 	if (cvar == g_CvarIsolatorWall)
-	{
-		g_CvarIsolatorWall.SetString(newValue);
 		strcopy(g_cIsolatorWall, sizeof(g_cIsolatorWall), newValue);
-	}
-	else if (cvar == g_CvarIsolatorWall_Dist) g_CvarIsolatorWall_Dist.SetInt(StringToInt(newValue));
 	else if (cvar == g_CvarIsolatorRoof)
-	{
-		g_CvarIsolatorRoof.SetString(newValue);
 		strcopy(g_cIsolatorRoof, sizeof(g_cIsolatorRoof), newValue);
-	}
-	else if (cvar == g_CvarIsolatorRoof_Dist) g_CvarIsolatorRoof_Dist.SetInt(StringToInt(newValue));
 	else if (cvar == g_CvarIsolator_Sound)
-	{
-		g_CvarIsolator_Sound.SetString(newValue);
 		strcopy(g_cIsolatorSound, sizeof(g_cIsolatorSound), newValue);
-	}
 }
 
-public int JWP_OnWardenResigned(int client, bool himself)
+public void JWP_OnWardenResigned(int client, bool himself)
 {
 	for (int i = 1; i <= MaxClients; ++i)
 	{

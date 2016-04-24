@@ -5,7 +5,7 @@
 
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.0"
+#define PLUGIN_VERSION "1.1"
 #define ITEM "stripknife"
 
 bool g_bHaveKnife[MAXPLAYERS+1] = {true, ...};
@@ -21,7 +21,7 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
-	if (JWP_IsStarted()) JWC_Started();
+	if (JWP_IsStarted()) JWP_Started();
 	HookEvent("round_start", Event_OnRoundStart, EventHookMode_PostNoCopy);
 	
 	LoadTranslations("jwp_modules.phrases");
@@ -33,7 +33,7 @@ public void Event_OnRoundStart(Event event, const char[] name, bool dontBroadcas
 		g_bHaveKnife[i] = true;
 }
 
-public int JWC_Started()
+public void JWP_Started()
 {
 	JWP_AddToMainMenu(ITEM, OnFuncDisplay, OnFuncSelect);
 }

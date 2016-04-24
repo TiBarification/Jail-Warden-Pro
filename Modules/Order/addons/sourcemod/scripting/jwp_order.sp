@@ -7,7 +7,7 @@
 
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.0"
+#define PLUGIN_VERSION "1.1"
 #define ITEM "order"
 
 ConVar	g_CvarOrderSound,
@@ -36,41 +36,22 @@ public void OnPluginStart()
 	g_CvarOrderPanel = CreateConVar("jwp_order_panel", "0", "Включить отображение приказа в панели", FCVAR_PLUGIN, true, 0.0, true, 1.0);
 	g_CvarPanelTime = CreateConVar("jwp_order_panel_time", "20", "Сколько секунд показывать меню приказа.", FCVAR_PLUGIN, true, 1.0, true, 40.0);
 	
-	g_CvarOrderSound.AddChangeHook(OnCvarChange);
-	g_CvarOrderAlways.AddChangeHook(OnCvarChange);
-	g_CvarOrderMsg.AddChangeHook(OnCvarChange);
-	g_CvarOrderPanel.AddChangeHook(OnCvarChange);
-	g_CvarPanelTime.AddChangeHook(OnCvarChange);
-	
-	g_CvarOrderMsg.GetString(g_cOrderMsg, sizeof(g_cOrderMsg));
-	
-	if (JWP_IsStarted()) JWC_Started();
+	if (JWP_IsStarted()) JWP_Started();
 	AutoExecConfig(true, ITEM, "jwp");
 	
 	LoadTranslations("jwp_modules.phrases");
 	LoadTranslations("core.phrases");
 }
 
-public int JWC_Started()
+public void OnConfigsExecuted()
 {
-	JWP_AddToMainMenu(ITEM, OnFuncDisplay, OnFuncSelect);
+	g_CvarOrderSound.GetString(g_cOrderSound, sizeof(g_cOrderSound));
+	g_CvarOrderMsg.GetString(g_cOrderMsg, sizeof(g_cOrderMsg));
 }
 
-public void OnCvarChange(ConVar cvar, const char[] oldValue, const char[] newValue)
+public void JWP_Started()
 {
-	if (cvar == g_CvarOrderSound)
-	{
-		g_CvarOrderSound.SetString(newValue);
-		strcopy(g_cOrderSound, sizeof(g_cOrderSound), newValue);
-	}
-	else if (cvar == g_CvarOrderAlways) g_CvarOrderAlways.SetInt(StringToInt(newValue));
-	else if (cvar == g_CvarOrderMsg)
-	{
-		strcopy(g_cOrderMsg, sizeof(g_cOrderMsg), newValue);
-		g_CvarOrderMsg.SetString(newValue);
-	}
-	else if (cvar == g_CvarOrderPanel) g_CvarOrderPanel.SetInt(StringToInt(newValue));
-	else if (cvar == g_CvarPanelTime) g_CvarPanelTime.SetInt(StringToInt(newValue));
+	JWP_AddToMainMenu(ITEM, OnFuncDisplay, OnFuncSelect);
 }
 
 public void OnPluginEnd()
