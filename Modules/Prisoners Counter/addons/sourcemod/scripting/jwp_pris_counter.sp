@@ -6,7 +6,7 @@
 // Force 1.7 syntax
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.1"
+#define PLUGIN_VERSION "1.2"
 #define ITEM "pris_counter"
 
 ConVar g_CvarRadius, g_CvarIncludeFD;
@@ -97,13 +97,17 @@ public bool OnFuncSelect(int client)
 	JWP_ActionMsg(client, "\x04%d\x03/\x04%d \x03%T", count[0], count[2], "JWP_Pris_Counter_ActionMessage_Near", LANG_SERVER);
 	if (g_CvarIncludeFD.BoolValue)
 		JWP_ActionMsg(client, "\x05%T \x02%d", "JWP_Pris_Counter_ActionMessage_Freeday", LANG_SERVER, count[1]);
-	JWP_ActionMsg(client, "\x06Ники сбежавших зеков: ");
-	int user;
-	for (int i = 0; i < Rebels.Length; ++i)
+	
+	if (Rebels.Length > 0)
 	{
-		user = Rebels.Get(i);
-		if (user && IsClientInGame(user))
-			JWP_ActionMsg(client, "%N", user);
+		int user;
+		JWP_ActionMsg(client, "\x06Ники сбежавших зеков: ");
+		for (int i = 0; i < Rebels.Length; ++i)
+		{
+			user = Rebels.Get(i);
+			if (user && IsClientInGame(user))
+				JWP_ActionMsg(client, "%N", user);
+		}
 	}
 	delete Rebels;
 	

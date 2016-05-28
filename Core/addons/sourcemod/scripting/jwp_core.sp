@@ -8,7 +8,7 @@
 // Force new syntax
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.0.1"
+#define PLUGIN_VERSION "1.0.2"
 
 #define UPDATE_URL "http://updater.tibari.ru/jwp/updatefile.txt"
 
@@ -495,7 +495,7 @@ int JWP_GetTeamClient(int team, bool alive)
 
 void JWP_FindNewWarden()
 {
-	if (!JWP_GetTeamClient(CS_TEAM_T, true) || !JWP_GetTeamClient(CS_TEAM_CT, true))
+	if (!Forward_OnWardenChoosing() || !JWP_GetTeamClient(CS_TEAM_T, true) || !JWP_GetTeamClient(CS_TEAM_CT, true))
 		return;
 	else if (g_iZamWarden)
 	{
@@ -527,7 +527,8 @@ void JWP_FindNewWarden()
 	else if (g_CvarChooseMode.IntValue == 3)
 	{
 		int client = JWP_GetRandomTeamClient(CS_TEAM_CT, true, false);
-		BecomeCmd(client);
+		if (client != -1)
+			BecomeCmd(client);
 	}
 }
 
