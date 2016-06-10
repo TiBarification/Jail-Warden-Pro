@@ -37,7 +37,7 @@ before_deploy:
     - tar -czf jwp_core.tar.gz jwp_core
 deploy:
     provider: releases
-    api_key: 6cf0654fa65c47ac549ae6d2049c0689c831b9c6
+    api_key: 33673942e0d7a4c1634ff1fb8751cfaa977954b2
     file:
         - jwp_core.zip
         - jwp_core.tar.gz

@@ -8,7 +8,7 @@
 // Force new syntax
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.0.2"
+#define PLUGIN_VERSION "1.0.3"
 
 #define UPDATE_URL "http://updater.tibari.ru/jwp/updatefile.txt"
 
@@ -50,12 +50,12 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
-	CreateConVar("jwp_version", PLUGIN_VERSION, _, FCVAR_PLUGIN|FCVAR_REPLICATED|FCVAR_SPONLY|FCVAR_NOTIFY|FCVAR_DONTRECORD);
-	g_CvarChooseMode = CreateConVar("jwp_choose_mode", "2", "How to choose warden 1:random 2:command 3:voting", FCVAR_PLUGIN, true, 1.0, true, 3.0);
-	g_CvarRandomWait = CreateConVar("jwp_random_wait", "5", "Time before warden randomly picked if choose mode = 1", FCVAR_PLUGIN, true, 1.0, true, 30.0);
-	g_CvarVoteTime = CreateConVar("jwp_vote_time", "30", "Time for voting if choose mode = 3", FCVAR_PLUGIN, true, 10.0, true, 60.0);
-	g_CvarDisableAntiFlood = CreateConVar("jwp_disable_antiflood", "1", "Protect menu from random selecting", FCVAR_PLUGIN, true, 0.0, true, 1.0);
-	g_CvarAutoUpdate = CreateConVar("jwp_autoupdate", "0", "Enable (1) or disable (0) auto update. Need Updater!", FCVAR_PLUGIN, true, 0.0, true, 1.0);
+	CreateConVar("jwp_version", PLUGIN_VERSION, _, FCVAR_REPLICATED|FCVAR_SPONLY|FCVAR_NOTIFY|FCVAR_DONTRECORD);
+	g_CvarChooseMode = CreateConVar("jwp_choose_mode", "2", "How to choose warden 1:random 2:command 3:voting", FCVAR_SPONLY, true, 1.0, true, 3.0);
+	g_CvarRandomWait = CreateConVar("jwp_random_wait", "5", "Time before warden randomly picked if choose mode = 1", FCVAR_SPONLY, true, 1.0, true, 30.0);
+	g_CvarVoteTime = CreateConVar("jwp_vote_time", "30", "Time for voting if choose mode = 3", FCVAR_SPONLY, true, 10.0, true, 60.0);
+	g_CvarDisableAntiFlood = CreateConVar("jwp_disable_antiflood", "1", "Protect menu from random selecting", FCVAR_SPONLY, true, 0.0, true, 1.0);
+	g_CvarAutoUpdate = CreateConVar("jwp_autoupdate", "0", "Enable (1) or disable (0) auto update. Need Updater!", FCVAR_SPONLY, true, 0.0, true, 1.0);
 	
 	RegConsoleCmd("sm_com", Command_BecomeWarden, "Warden menu");
 	RegConsoleCmd("sm_w", Command_BecomeWarden, "Warden menu");
