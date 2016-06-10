@@ -17,7 +17,7 @@ install:
     - tar -xzf $(cat sourcemod-latest-linux)
 before_script:
 # TODO Import other modules to compilation
-    - cd Core/addons/sourcemod/scripting/
+    - cd addons/sourcemod/scripting/
     - wget "http://www.doctormckay.com/download/scripting/include/morecolors.inc" -O include/morecolors.inc
     - wget "https://bitbucket.org/GoD_Tony/updater/raw/default/include/updater.inc" -O include/updater.inc
     #- wget "https://updater.tibari.ru/other/include/csgo_colors.inc" -O include/csgo_colors.inc
