@@ -1,0 +1,53 @@
+#Use the new container-based infrastructure
+sudo: false
+
+#Install some apt packages needed for spcomp
+addons:
+    apt_packages:
+        - lib32stdc++6
+
+#Set the build environment
+env:
+    - SMVERSION=1.7
+    - SMVERSION=1.8
+
+#And compile!
+install:
+    - wget --input-file=http://sourcemod.net/smdrop/$SMVERSION/sourcemod-latest-linux
+    - tar -xzf $(cat sourcemod-latest-linux)
+before_script:
+# TODO Import other modules to compilation
+    - cd Core/addons/sourcemod/scripting/
+    - wget "http://www.doctormckay.com/download/scripting/include/morecolors.inc" -O include/morecolors.inc
+    - wget "https://bitbucket.org/GoD_Tony/updater/raw/default/include/updater.inc" -O include/updater.inc
+    #- wget "https://updater.tibari.ru/other/include/csgo_colors.inc" -O include/csgo_colors.inc
+    - chmod +x spcomp
+    - mkdir compiled
+script: ./compile.sh jwp_core.sp
+
+#Releases
+before_deploy:
+    - cd ..
+    - mkdir jwp_core jwp_core/addons jwp_core/addons/sourcemod jwp_core/addons/sourcemod/scripting jwp_core/addons/sourcemod/scripting/include jwp_core/addons/sourcemod/translations
+    - mv scripting/jwp_core.sp jwp_core/addons/sourcemod/scripting/
+    - mv scripting/compiled jwp_core/addons/sourcemod/plugins
+    - mv scripting/include/jwp* jwp_core/addons/sourcemod/scripting/include/
+    - mv translations/jwp* jwp_core/addons/sourcemod/translations/
+    - zip -rq jwp_core jwp_core
+    - tar -czf jwp_core.tar.gz jwp_core
+deploy:
+    provider: releases
+    api_key: 1e0083080b3dfc8cc4ffec4e14149df7c42b06f5
+    file:
+        - jwp_core.zip
+        - jwp_core.tar.gz
+        - jwp_core/addons/sourcemod/plugins/jwp_core.smx
+        - jwp_core/addons/sourcemod/scripting/jwp_core.sp
+    skip_cleanup: true
+    on:
+        repo: TiBarification/Jail-Warden-Pro
+        tags: true
+
+#Notifications
+notifications:
+    email: false
