@@ -37,7 +37,7 @@ before_deploy:
     - tar -czf jwp_core.tar.gz jwp_core
 deploy:
     provider: releases
-    api_key: aa7582a01cc252210d33d1e69b532c0138a1bf1d
+    api_key: 6cf0654fa65c47ac549ae6d2049c0689c831b9c6
     file:
         - jwp_core.zip
         - jwp_core.tar.gz
@@ -45,7 +45,6 @@ deploy:
         - jwp_core/addons/sourcemod/scripting/jwp_core.sp
     skip_cleanup: true
     on:
-        repo: TiBarification/Jail-Warden-Pro
         tags: true
 
 #Notifications
