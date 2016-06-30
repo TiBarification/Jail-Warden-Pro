@@ -36,7 +36,7 @@ stock void CGOPrintToChatAll(const char[] message, any ...)
 	int a = strlen(message)+190, l;
 	char[] b = new char[a];
 	l = ReplaceString(b, VFormat(b, a, message, 2), "\n", "", false);
-	for(int i; i < ZCOLOR; i++) ReplaceString(b, a, color_t[i], color_c[i]);
+	for(int i = 0; i < ZCOLOR; i++) ReplaceString(b, a, color_t[i], color_c[i]);
 	if(l)
 	{
 		l++;

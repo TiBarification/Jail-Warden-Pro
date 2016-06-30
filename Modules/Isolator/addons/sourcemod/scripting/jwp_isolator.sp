@@ -6,7 +6,7 @@
 
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.1"
+#define PLUGIN_VERSION "1.2"
 #define ITEM "isolator"
 
 int g_iIsolatorIndex[MAXPLAYERS+1], g_iIsolatorBeamIndex[MAXPLAYERS+1];
@@ -28,11 +28,11 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
-	g_CvarIsolatorWall = CreateConVar("jwp_isolator_wall", "models/props/de_train/chainlinkgate.mdl", "Модель стен карцера", FCVAR_PLUGIN);
-	g_CvarIsolatorWall_Dist = CreateConVar("jwp_isolator_wall_dist", "80", "Расстояние от центра карцера до его боковых стен", FCVAR_PLUGIN, true, 15.0, true, 200.0);
-	g_CvarIsolatorRoof = CreateConVar("jwp_isolator_roof", "", "Модель крыши карцера", FCVAR_PLUGIN);
-	g_CvarIsolatorRoof_Dist = CreateConVar("jwp_isolator_roof_dist", "125", "Расстояние от пола карцера до его крыши", FCVAR_PLUGIN, true, 50.0, true, 500.0);
-	g_CvarIsolator_Sound = CreateConVar("jwp_isolator_sound", "ambient/machines/power_transformer_loop_1.wav", "Звук в карцере. Оставьте пустым, чтобы отключить.", FCVAR_PLUGIN);
+	g_CvarIsolatorWall = CreateConVar("jwp_isolator_wall", "models/props/de_train/chainlinkgate.mdl", "Модель стен карцера", _);
+	g_CvarIsolatorWall_Dist = CreateConVar("jwp_isolator_wall_dist", "80", "Расстояние от центра карцера до его боковых стен", _, true, 15.0, true, 200.0);
+	g_CvarIsolatorRoof = CreateConVar("jwp_isolator_roof", "", "Модель крыши карцера", _);
+	g_CvarIsolatorRoof_Dist = CreateConVar("jwp_isolator_roof_dist", "125", "Расстояние от пола карцера до его крыши", _, true, 50.0, true, 500.0);
+	g_CvarIsolator_Sound = CreateConVar("jwp_isolator_sound", "ambient/machines/power_transformer_loop_1.wav", "Звук в карцере. Оставьте пустым, чтобы отключить.", _);
 	
 	g_CvarIsolatorWall.AddChangeHook(OnCvarChange);
 	g_CvarIsolatorWall_Dist.AddChangeHook(OnCvarChange);
@@ -70,7 +70,7 @@ public void JWP_Started()
 
 public void OnPluginEnd()
 {
-	JWP_RemoveFromMainMenu(ITEM, OnFuncDisplay, OnFuncSelect);
+	JWP_RemoveFromMainMenu();
 }
 
 public void OnConfigsExecuted()

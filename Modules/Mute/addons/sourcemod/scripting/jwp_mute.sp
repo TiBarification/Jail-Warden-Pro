@@ -6,7 +6,7 @@
 
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.1"
+#define PLUGIN_VERSION "1.2"
 #define MGIVE "mute_give"
 #define MTAKE "mute_take"
 
@@ -26,7 +26,7 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
-	g_CvarMuteOnTime = CreateConVar("jwp_mute_on_time", "0", "Мут всех террористов на время. 0 - чтобы отключить", FCVAR_PLUGIN, true, 0.0, true, 600.0);
+	g_CvarMuteOnTime = CreateConVar("jwp_mute_on_time", "0", "Мут всех террористов на время. 0 - чтобы отключить", _, true, 0.0, true, 600.0);
 	
 	if (JWP_IsStarted()) JWP_Started();
 	
@@ -56,8 +56,7 @@ public void JWP_Started()
 
 public void OnPluginEnd()
 {
-	JWP_RemoveFromMainMenu(MGIVE, OnFuncMGiveDisplay, OnFuncMGiveSelect);
-	JWP_RemoveFromMainMenu(MTAKE, OnFuncMTakeDisplay, OnFuncMTakeSelect);
+	JWP_RemoveFromMainMenu();
 }
 
 public bool OnFuncMGiveDisplay(int client, char[] buffer, int maxlength, int style)

@@ -8,7 +8,7 @@
 // Force new syntax
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.0.3"
+#define PLUGIN_VERSION "1.0.4"
 
 #define UPDATE_URL "http://updater.tibari.ru/jwp/updatefile.txt"
 
@@ -83,6 +83,31 @@ public void OnPluginStart()
 	LoadTranslations("common.phrases");
 }
 
+// Maybe used to unload all modules if unloaded/reloaded Jail Warden Pro Core
+/* public void OnPluginEnd()
+{
+	if (g_sMainMenuMap != null)
+	{
+		any tmp[3];
+		char key[16], filename[48];
+		StringMapSnapshot snap = g_sMainMenuMap.Snapshot();
+		int len = snap.Length;
+		
+		for (int i = 0; i < len; i++)
+		{
+			snap.GetKey(i, key, sizeof(key));
+			if (g_sMainMenuMap.GetArray(key, tmp, sizeof(tmp)))
+			{
+				GetPluginFilename(tmp[CMDMENU_PLUGIN], filename, sizeof(filename));
+				ServerCommand("sm plugins unload \"%s\"", filename);
+				g_sMainMenuMap.Remove(key);
+			}
+		}
+		
+		delete snap;
+	}
+} */
+
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
 	// Forwards
@@ -134,7 +159,10 @@ public void OnClientDisconnect_Post(int client)
 {
 	if (IsWarden(client))
 		RemoveCmd(false);
+	else if (IsZamWarden(client))
+		RemoveZam();
 	else if (g_bIsDeveloper[client]) g_bIsDeveloper[client] = false;
+	if (g_bAccess[client]) g_bAccess[client] = false;
 	g_iVoteResult[client] = 0;
 	
 	// Modules client reset
@@ -171,7 +199,7 @@ public void Event_OnPlayerDeath(Event event, const char[] name, bool dontBroadca
 				CPrintToChatAll("%T %T", "Core_Prefix", LANG_SERVER, "warden_death", LANG_SERVER, client);
 			RemoveCmd(false);
 		}
-		else if (IsZamWarden(client)) g_iZamWarden = 0;
+		else if (IsZamWarden(client)) RemoveZam();
 		
 		// Module client reset
 		g_bHasFreeday[client] = false;
@@ -184,7 +212,7 @@ public void Event_OnPlayerTeam(Event event, const char[] name, bool dontBroadcas
 	int client = GetClientOfUserId(event.GetInt("userid"));
 	if (IsWarden(client))
 		RemoveCmd(false);
-	else if (IsZamWarden(client)) g_iZamWarden = 0;
+	else if (IsZamWarden(client)) RemoveZam();
 	
 	// Module client reset
 	g_bHasFreeday[client] = false;
@@ -228,7 +256,7 @@ public Action Event_OnRoundEnd(Event event, const char[] name, bool dontBroadcas
 	EmptyPanel(g_iWarden);
 	delete g_mMainMenu;
 	g_iWarden = 0;
-	g_iZamWarden = 0;
+	RemoveZam();
 	
 	if (g_hChooseTimer != null)
 	{
@@ -274,7 +302,13 @@ public Action Command_BecomeWarden(int client, int args)
 		else
 		{
 			if (!Forward_OnWardenChoosing())
+			{
+				if (g_bIsCSGO)
+					CGOPrintToChat(client, "%T %T", "Core_Prefix", LANG_SERVER, "warden_blocked", LANG_SERVER);
+				else
+					CPrintToChat(client, "%T %T", "Core_Prefix", LANG_SERVER, "warden_blocked", LANG_SERVER);
 				return Plugin_Handled;
+			}
 			else if (g_CvarChooseMode.IntValue == 1)
 			{
 				if (g_bIsCSGO)
@@ -374,6 +408,9 @@ bool BecomeCmd(int client, bool waswarden = true, bool ignore_native = false)
 		g_iWarden = client;
 		Forward_OnWardenChosen(client);
 		g_bWasWarden[client] = true;
+		// Remove if new warden is previous zam of warden
+		if (g_iZamWarden == g_iWarden)
+			RemoveZam();
 		// Show our warden menu
 		Cmd_ShowMenu(client);
 		if (g_bIsCSGO)
@@ -500,7 +537,7 @@ void JWP_FindNewWarden()
 	else if (g_iZamWarden)
 	{
 		BecomeCmd(g_iZamWarden);
-		g_iZamWarden = 0;
+		RemoveZam();
 	}
 	else if (g_CvarChooseMode.IntValue == 1 || g_iZamWarden > 0)
 	{

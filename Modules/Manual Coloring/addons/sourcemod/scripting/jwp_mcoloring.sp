@@ -22,6 +22,7 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
+	LoadTranslations("jwp_modules.phrases");
 	if (JWP_IsStarted()) JWP_Started();
 }
 
@@ -34,12 +35,12 @@ public void JWP_Started()
 
 public void OnPluginEnd()
 {
-	JWP_RemoveFromMainMenu(ITEM, OnFuncDisplay, OnFuncSelect);
+	JWP_RemoveFromMainMenu();
 }
 
 public bool OnFuncDisplay(int client, char[] buffer, int maxlength, int style)
 {
-	FormatEx(buffer, maxlength, "Покрасить зека");
+	FormatEx(buffer, maxlength, "%T", "Manual_Coloring_Menu", LANG_SERVER);
 	
 	return true;
 }
@@ -69,7 +70,7 @@ public int plList_Callback(Menu menu, MenuAction action, int param1, int param2)
 			if (g_iTarget && IsClientInGame(g_iTarget) && GetClientTeam(g_iTarget) == CS_TEAM_T && IsPlayerAlive(g_iTarget))
 				g_ColorsMenu.Display(param1, MENU_TIME_FOREVER);
 			else
-				JWP_ActionMsg(param1, "Игрок не найден, возможно отключился/сдох?");
+				JWP_ActionMsg(param1, "%T", "Manual_Coloring_UnableToColor", LANG_SERVER);
 		}
 	}
 }
@@ -109,7 +110,9 @@ void PlayerListMenu(int client)
 {
 	char idx[4], name[PLATFORM_MAX_PATH];
 	Menu plList = new Menu(plList_Callback);
-	plList.SetTitle("Выберите зека:");
+	char lang[48];
+	FormatEx(lang, sizeof(lang), "%T", "Manual_Coloring_Choose", LANG_SERVER);
+	plList.SetTitle(lang);
 	plList.ExitButton = true;
 	plList.ExitBackButton = true;
 	
@@ -129,7 +132,9 @@ void LoadColors()
 {
 	g_Kv = new KeyValues("Colors");
 	g_ColorsMenu = new Menu(ColorsMenu_Callback);
-	g_ColorsMenu.SetTitle("Выберите цвет:");
+	char lang[48];
+	FormatEx(lang, sizeof(lang), "%T", "Manual_Coloring_ChooseColor", LANG_SERVER);
+	g_ColorsMenu.SetTitle(lang);
 	if (!g_Kv.ImportFromFile("cfg/jwp/colors/mcolors.txt"))
 	{
 		SetFailState("Unable to open file mcolors.txt");

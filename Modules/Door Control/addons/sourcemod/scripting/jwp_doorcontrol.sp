@@ -6,7 +6,7 @@
 
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.1"
+#define PLUGIN_VERSION "1.2"
 #define ITEM_DOOR_OPEN "door_open"
 #define ITEM_DOOR_CLOSE "door_close"
 
@@ -57,8 +57,7 @@ public void JWP_Started()
 
 public void OnPluginEnd()
 {
-	JWP_RemoveFromMainMenu(ITEM_DOOR_OPEN, OnFuncDoorOpen_Display, OnFuncDoorOpen_Select);
-	JWP_RemoveFromMainMenu(ITEM_DOOR_CLOSE, OnFuncDoorClose_Display, OnFuncDoorClose_Select);
+	JWP_RemoveFromMainMenu();
 }
 
 public bool OnFuncDoorOpen_Display(int client, char[] buffer, int maxlength, int style)

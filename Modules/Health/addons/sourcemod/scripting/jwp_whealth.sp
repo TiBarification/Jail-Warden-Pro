@@ -4,7 +4,7 @@
 // Force 1.7 syntax
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.2"
+#define PLUGIN_VERSION "1.3"
 
 ConVar	g_CvarWardenHealth,
 		g_CvarWardenZamHealth;
@@ -20,8 +20,8 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
-	g_CvarWardenHealth = CreateConVar("jwp_warden_hp", "150", "Здоровье командира", FCVAR_PLUGIN, true, 100.0);
-	g_CvarWardenZamHealth = CreateConVar("jwp_warden_zam_hp", "140", "Здоровье ЗАМа командира", FCVAR_PLUGIN, true, 100.0);
+	g_CvarWardenHealth = CreateConVar("jwp_warden_hp", "150", "Здоровье командира", _, true, 100.0);
+	g_CvarWardenZamHealth = CreateConVar("jwp_warden_zam_hp", "140", "Здоровье ЗАМа командира", _, true, 100.0);
 	
 	AutoExecConfig(true, "whealth", "jwp");
 }
