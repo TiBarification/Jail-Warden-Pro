@@ -6,7 +6,7 @@
 // Force 1.7 syntax
 #pragma newdecls required;
 
-#define PLUGIN_VERSION "1.1"
+#define PLUGIN_VERSION "1.2"
 
 Handle hAdminMenu = null;
 Menu g_mAdminControlMain;
@@ -22,6 +22,7 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
+	LoadTranslations("jwp_modules.phrases");
 	if (JWP_IsStarted()) JWP_Started();
 }
 
@@ -44,16 +45,20 @@ public void OnAdminMenuReady(Handle topmenu)
 	
 	/* Create custom menu */
 	g_mAdminControlMain = new Menu(AdminControlMain_Callback);
-	g_mAdminControlMain.SetTitle("Управление командиром:\n\n");
-	g_mAdminControlMain.AddItem("", "Сменить командира");
-	g_mAdminControlMain.AddItem("", "Удалить командира");
+	char lang[48];
+	FormatEx(lang, sizeof(lang), "%T", "Admin_Control_Title", LANG_SERVER);
+	g_mAdminControlMain.SetTitle(lang);
+	FormatEx(lang, sizeof(lang), "%T", "Admin_Control_Change", LANG_SERVER);
+	g_mAdminControlMain.AddItem("", lang);
+	FormatEx(lang, sizeof(lang), "%T", "Admin_Control_Remove", LANG_SERVER);
+	g_mAdminControlMain.AddItem("", lang);
 	g_mAdminControlMain.ExitBackButton = true;
 }
 
 public void AdminMenu_AdminControl(Handle topmenu, TopMenuAction action, TopMenuObject object_id, int param, char[] buffer, int maxlength)
 {
 	if (action == TopMenuAction_DisplayOption)
-		strcopy(buffer, maxlength, "Командование");
+		FormatEx(buffer, maxlength, "%T", "Admin_Control_Main", LANG_SERVER);
 	else if (action == TopMenuAction_SelectOption)
 		g_mAdminControlMain.Display(param, MENU_TIME_FOREVER);
 }
@@ -68,7 +73,9 @@ public int AdminControlMain_Callback(Menu menu, MenuAction action, int param1, i
 			{
 				char id[4], name[MAX_NAME_LENGTH];
 				Menu mPlayerMenu = new Menu(mPlayerMenu_Callback);
-				mPlayerMenu.SetTitle("Выберите нового командира:\n");
+				char lang[48];
+				FormatEx(lang, sizeof(lang), "%T", "Admin_Control_Choose", LANG_SERVER);
+				mPlayerMenu.SetTitle(lang);
 				for (int i = 1; i <= MaxClients; ++i)
 				{
 					if (IsClientInGame(i) && (GetClientTeam(i) == CS_TEAM_CT) && !JWP_IsWarden(i) && IsPlayerAlive(i))
@@ -86,11 +93,11 @@ public int AdminControlMain_Callback(Menu menu, MenuAction action, int param1, i
 				int warden = JWP_GetWarden();
 				if (warden)
 				{
-					ShowActivity2(param1, "[SM] ", "снял %N с поста командира", warden);
+					ShowActivity2(param1, "[SM] ", "%T", "Admin_Control_FiredActivity", LANG_SERVER, warden);
 					JWP_SetWarden(0);
 				}
 				else
-					ReplyToCommand(param1, "[SM] Не удалось снять командира с поста");
+					ReplyToCommand(param1, "[SM] %T", "Admin_Control_Failed", LANG_SERVER);
 			}
 		}
 	}
@@ -112,9 +119,9 @@ public int mPlayerMenu_Callback(Menu menu, MenuAction action, int param1, int pa
 			menu.GetItem(param2, id, sizeof(id));
 			int target = StringToInt(id);
 			if (JWP_SetWarden(target))
-				ShowActivity2(param1, "[SM] ", "сменил командира на %N", target);
+				ShowActivity2(param1, "[SM] ", "Admin_Control_ChangeActivity", LANG_SERVER, target);
 			else
-				ReplyToCommand(param1, "[SM] Не удалось сменить командира");
+				ReplyToCommand(param1, "[SM] %T", "Admin_Control_ChangeFailed", LANG_SERVER);
 			g_mAdminControlMain.Display(param1, MENU_TIME_FOREVER);
 		}
 	}

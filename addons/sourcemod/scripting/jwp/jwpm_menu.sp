@@ -24,13 +24,14 @@ public int Cmd_AddToMainMenu(Handle plugin, int numParams)
 	tmp[CMDMENU_DISPLAY] = GetNativeCell(2);
 	tmp[CMDMENU_SELECT] = GetNativeCell(3);
 	
-	g_sMainMenuMap.SetArray(key, tmp, sizeof(tmp));
+	if (!g_sMainMenuMap.SetArray(key, tmp, sizeof(tmp), false))
+		LogError("Failed to add module %s, already registered?", key);
 }
 
 public int Cmd_RemoveFromMainMenu(Handle plugin, int numParams)
 {
 	any tmp[3]; char key[16];
-	GetNativeString(1, key, sizeof(key));
+	/* GetNativeString(1, key, sizeof(key));
 	if (g_sMainMenuMap.GetArray(key, tmp, sizeof(tmp)))
 	{
 		if (tmp[CMDMENU_DISPLAY] == GetNativeCell(2) && tmp[CMDMENU_SELECT] == GetNativeCell(3))
@@ -38,9 +39,36 @@ public int Cmd_RemoveFromMainMenu(Handle plugin, int numParams)
 			g_sMainMenuMap.Remove(key);
 			return 1;
 		}
+	} */
+	
+	StringMapSnapshot snap = g_sMainMenuMap.Snapshot();
+	int len = snap.Length;
+	bool found = false;
+	
+	for (int i = 0; i < len; i++)
+	{
+		snap.GetKey(i, key, sizeof(key));
+		if (g_sMainMenuMap.GetArray(key, tmp, sizeof(tmp)))
+		{
+			if (tmp[CMDMENU_PLUGIN] == plugin)
+			{
+				g_sMainMenuMap.Remove(key);
+				RehashMenu();
+				found = true;
+			}
+		}
 	}
-	LogError("Failed to unload module %s", key);
-	return 0;
+	
+	delete snap;
+	
+	if (found) return 1;
+	else
+	{
+		char info[24];
+		GetPluginInfo(plugin, PlInfo_Name, info, sizeof(info));
+		LogError("Failed to unload module %s", info);
+		return 0;
+	}
 }
 
 public int Cmd_ShowMainMenu(Handle plugin, int numParams)
@@ -93,7 +121,7 @@ void MenuItemInitialization(int client) // Run at first time as client become wa
 					Format(buffer, sizeof(buffer), "%T", "warden_menu_resign", LANG_SERVER);
 					g_mMainMenu.AddItem(id, buffer);
 			}
-			if (g_bIsDeveloper[client] || JWPM_HasFlag(client, bitflag))
+			if (g_bIsDeveloper[client] || g_bAccess[client] || JWPM_HasFlag(client, bitflag))
 			{
 				if (!strcmp("zam", id, true))
 				{

@@ -3,7 +3,7 @@
 	Author: White Wolf
 	www.hlmod.ru
 	
-	|Version by Core: 1.0.1 /) 
+	|Version by Core: 1.0.4+ /) 
 */
 
 #if defined _jwp_included
@@ -112,7 +112,7 @@ native void JWP_AddToMainMenu(const char[] name, CmdItemDisplay callback_display
  *	-
  *	@return true on success, false otherwise
  */
-native bool JWP_RemoveFromMainMenu(const char[] name, CmdItemDisplay callback_display, CmdItemSelect callback_select);
+native bool JWP_RemoveFromMainMenu();
 
 /**
  *	Shows cmd menu to a player

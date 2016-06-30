@@ -32,6 +32,11 @@
 		"en"		"Warden is {1}"
 		"ru"		"Командиром является {1}"
 	}
+	"warden_blocked"
+	{
+		"en"		"{RED}Warden disabled"
+		"ru"		"{RED}Командир недоступен"
+	}
 	"warden_choose_random"
 	{
 		"en"		"{LIGHTGREEN}Warden is chosing random"

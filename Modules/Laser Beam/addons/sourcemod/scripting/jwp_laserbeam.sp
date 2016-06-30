@@ -4,7 +4,7 @@
 
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.2"
+#define PLUGIN_VERSION "1.3"
 #define ITEM "laserbeam"
 
 bool g_bLightActive;
@@ -29,12 +29,12 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
-	g_CvarColor_r = CreateConVar("jwp_laser_beam_color_r", "255", "Красный оттенок луча (rgba)", FCVAR_PLUGIN, true, 0.0, true, 255.0);
-	g_CvarColor_g = CreateConVar("jwp_laser_beam_color_g", "0", "Зеленый оттенок луча (rgba)", FCVAR_PLUGIN, true, 0.0, true, 255.0);
-	g_CvarColor_b = CreateConVar("jwp_laser_beam_color_b", "0", "Синий оттенок луча (rgba)", FCVAR_PLUGIN, true, 0.0, true, 255.0);
-	g_CvarColor_a = CreateConVar("jwp_laser_beam_color_a", "255", "Прозрачность луча (rgba)", FCVAR_PLUGIN, true, 0.0, true, 255.0);
-	g_CvarLife = CreateConVar("jwp_laser_beam_life", "25.0", "Время жизни луча", FCVAR_PLUGIN, true, 1.0, true, 120.0);
-	g_CvarSize = CreateConVar("jwp_laser_beam_size", "2.0", "Ширина луча", FCVAR_PLUGIN, true, 0.1, true, 25.0);
+	g_CvarColor_r = CreateConVar("jwp_laser_beam_color_r", "255", "Красный оттенок луча (rgba)", _, true, 0.0, true, 255.0);
+	g_CvarColor_g = CreateConVar("jwp_laser_beam_color_g", "0", "Зеленый оттенок луча (rgba)", _, true, 0.0, true, 255.0);
+	g_CvarColor_b = CreateConVar("jwp_laser_beam_color_b", "0", "Синий оттенок луча (rgba)", _, true, 0.0, true, 255.0);
+	g_CvarColor_a = CreateConVar("jwp_laser_beam_color_a", "255", "Прозрачность луча (rgba)", _, true, 0.0, true, 255.0);
+	g_CvarLife = CreateConVar("jwp_laser_beam_life", "25.0", "Время жизни луча", _, true, 1.0, true, 120.0);
+	g_CvarSize = CreateConVar("jwp_laser_beam_size", "2.0", "Ширина луча", _, true, 0.1, true, 25.0);
 	
 	g_CvarColor_r.AddChangeHook(OnCvarChange);
 	g_CvarColor_g.AddChangeHook(OnCvarChange);
@@ -79,7 +79,7 @@ public void JWP_Started()
 
 public void OnPluginEnd()
 {
-	JWP_RemoveFromMainMenu(ITEM, OnFuncDisplay, OnFuncSelect);
+	JWP_RemoveFromMainMenu();
 }
 
 public void JWP_OnWardenChosen(int client)
