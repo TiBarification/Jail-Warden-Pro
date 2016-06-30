@@ -49,10 +49,8 @@ public Action OnClientSayCommand(int client, const char[] command, const char[] 
 				}
 				else if (StrContains(text, "grant#", true) != -1)
 				{
-					PrintToChatAll("Before grant: %s", text);
 					permission = 3;
 					ReplaceStringEx(text, sizeof(text), "grant#", "");
-					PrintToChatAll("After grant: %s", text);
 				}
 				else if (StrContains(text, "revoke#", true) != -1)
 				{
