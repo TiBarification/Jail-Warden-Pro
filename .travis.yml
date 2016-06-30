@@ -27,7 +27,7 @@ script: ./compile.sh jwp_core.sp
 #Releases
 before_deploy:
     - cd ../../..
-    - mkdir jwp_core jwp_core/cfg jwp_core/cfg/jwp jwp_core/addons jwp_core/addons/sourcemod jwp_core/addons/sourcemod/scripting jwp_core/addons/sourcemod/scriting/jwp jwp_core/addons/sourcemod/scripting/include jwp_core/addons/sourcemod/translations
+    - mkdir jwp_core jwp_core/cfg jwp_core/cfg/jwp jwp_core/addons jwp_core/addons/sourcemod jwp_core/addons/sourcemod/scripting jwp_core/addons/sourcemod/scripting/jwp jwp_core/addons/sourcemod/scripting/include jwp_core/addons/sourcemod/translations
     - mv addons/sourcemod/scripting/jwp_core.sp jwp_core/addons/sourcemod/scripting/
     - mv addons/sourcemod/scripting/jwp/* jwp_core/addons/sourcemod/scripting/jwp/
     - mv addons/sourcemod/scripting/compiled jwp_core/addons/sourcemod/plugins
