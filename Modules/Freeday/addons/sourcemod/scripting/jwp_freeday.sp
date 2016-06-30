@@ -5,7 +5,7 @@
 
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.2"
+#define PLUGIN_VERSION "1.3"
 #define FDGIVE "freeday_give"
 #define FDTAKE "freeday_take"
 
@@ -25,10 +25,10 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
-	g_Cvar_r = CreateConVar("jwp_freeday_r", "0", "Красный оттенок заключенного, который получил freeday (rgba)", FCVAR_PLUGIN, true, 0.0, true, 255.0);
-	g_Cvar_g = CreateConVar("jwp_freeday_g", "255", "Зеленый оттенок заключенного, который получил freeday (rgba)", FCVAR_PLUGIN, true, 0.0, true, 255.0);
-	g_Cvar_b = CreateConVar("jwp_freeday_b", "0", "Синий оттенок заключенного, который получил freeday (rgba)", FCVAR_PLUGIN, true, 0.0, true, 255.0);
-	g_Cvar_a = CreateConVar("jwp_freeday_a", "255", "Прозрачность заключенного, который получил freeday (rgba)", FCVAR_PLUGIN, true, 0.0, true, 255.0);
+	g_Cvar_r = CreateConVar("jwp_freeday_r", "0", "Красный оттенок заключенного, который получил freeday (rgba)", _, true, 0.0, true, 255.0);
+	g_Cvar_g = CreateConVar("jwp_freeday_g", "255", "Зеленый оттенок заключенного, который получил freeday (rgba)", _, true, 0.0, true, 255.0);
+	g_Cvar_b = CreateConVar("jwp_freeday_b", "0", "Синий оттенок заключенного, который получил freeday (rgba)", _, true, 0.0, true, 255.0);
+	g_Cvar_a = CreateConVar("jwp_freeday_a", "255", "Прозрачность заключенного, который получил freeday (rgba)", _, true, 0.0, true, 255.0);
 	
 	if (JWP_IsStarted()) JWP_Started();
 	
@@ -45,8 +45,7 @@ public void JWP_Started()
 
 public void OnPluginEnd()
 {
-	JWP_RemoveFromMainMenu(FDGIVE, OnFuncFDGiveDisplay, OnFuncFDGiveSelect);
-	JWP_RemoveFromMainMenu(FDTAKE, OnFuncFDTakeDisplay, OnFuncFDTakeSelect);
+	JWP_RemoveFromMainMenu();
 }
 public bool OnFuncFDGiveDisplay(int client, char[] buffer, int maxlength, int style)
 {

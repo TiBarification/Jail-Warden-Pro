@@ -5,7 +5,7 @@
 
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.1"
+#define PLUGIN_VERSION "1.2"
 #define ITEM "respawn"
 
 ConVar g_CvarMaxUses, g_CvarMethod;
@@ -22,8 +22,8 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
-	g_CvarMaxUses = CreateConVar("jwp_respawn_max", "2", "Количество возрождений для командира", FCVAR_PLUGIN, true, 0.0);
-	g_CvarMethod = CreateConVar("jwp_respawn_method", "1", "Режим возрождения: 0 - на точке спавна, 1 - на точке прицела", FCVAR_PLUGIN, true, 0.0, true, 1.0);
+	g_CvarMaxUses = CreateConVar("jwp_respawn_max", "2", "How many respawns for warden", _, true, 0.0);
+	g_CvarMethod = CreateConVar("jwp_respawn_method", "1", "Respawn mode: 0 - on spawn, 1 - on aim position", _, true, 0.0, true, 1.0);
 	
 	if (JWP_IsStarted()) JWP_Started();
 	
@@ -47,7 +47,7 @@ public void JWP_Started()
 
 public void OnPluginEnd()
 {
-	JWP_RemoveFromMainMenu(ITEM, OnFuncDisplay, OnFuncSelect);
+	JWP_RemoveFromMainMenu();
 }
 
 public bool OnFuncDisplay(int client, char[] buffer, int maxlength, int style)

@@ -2,12 +2,13 @@
 #include <sdktools>
 #include <cstrike>
 #include <jwp>
+#undef REQUIRE_PLUGIN
 #tryinclude <csgo_colors>
 #tryinclude <morecolors>
 
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.1"
+#define PLUGIN_VERSION "1.2"
 #define ITEM "order"
 
 ConVar	g_CvarOrderSound,
@@ -30,11 +31,11 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
-	g_CvarOrderSound = CreateConVar("jwp_order_sound", "buttons/blip2.wav", "Звук, когда командир приказывает", FCVAR_PLUGIN);
-	g_CvarOrderAlways = CreateConVar("jwp_order_always", "1", "Если 1, то каждое сообщение командира в чате будет приказом", FCVAR_PLUGIN);
-	g_CvarOrderMsg = CreateConVar("jwp_order_msg", "{default}({green}{prefix}{default}) {red}{nick}{default}: {text}", "Цвет сообщений приказа.", FCVAR_PLUGIN);
-	g_CvarOrderPanel = CreateConVar("jwp_order_panel", "0", "Включить отображение приказа в панели", FCVAR_PLUGIN, true, 0.0, true, 1.0);
-	g_CvarPanelTime = CreateConVar("jwp_order_panel_time", "20", "Сколько секунд показывать меню приказа.", FCVAR_PLUGIN, true, 1.0, true, 40.0);
+	g_CvarOrderSound = CreateConVar("jwp_order_sound", "buttons/blip2.wav", "Звук, когда командир приказывает");
+	g_CvarOrderAlways = CreateConVar("jwp_order_always", "1", "Если 1, то каждое сообщение командира в чате будет приказом", _, true, 0.0, true, 1.0);
+	g_CvarOrderMsg = CreateConVar("jwp_order_msg", "{default}({green}{prefix}{default}) {red}{nick}{default}: {text}", "Цвет сообщений приказа.");
+	g_CvarOrderPanel = CreateConVar("jwp_order_panel", "0", "Включить отображение приказа в панели", _, true, 0.0, true, 1.0);
+	g_CvarPanelTime = CreateConVar("jwp_order_panel_time", "20", "Сколько секунд показывать меню приказа.", _, true, 1.0, true, 40.0);
 	
 	if (JWP_IsStarted()) JWP_Started();
 	AutoExecConfig(true, ITEM, "jwp");
@@ -56,7 +57,7 @@ public void JWP_Started()
 
 public void OnPluginEnd()
 {
-	JWP_RemoveFromMainMenu(ITEM, OnFuncDisplay, OnFuncSelect);
+	JWP_RemoveFromMainMenu();
 }
 
 public bool OnFuncDisplay(int client, char[] buffer, int maxlength, int style)
@@ -100,7 +101,8 @@ void PreOrderPanel(int client)
 	ReplaceString(text, sizeof(text), "\\n", "\n");
 	panel.DrawText(text);
 	panel.CurrentKey = 8;
-	panel.DrawItem("Отмена");
+	Format(text, sizeof(text), "%T", "Back", LANG_SERVER);
+	panel.DrawItem(text);
 	panel.Send(client, PreOrderPanel_Callback, MENU_TIME_FOREVER);
 }
 

@@ -5,7 +5,7 @@
 
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.1"
+#define PLUGIN_VERSION "1.2"
 
 ConVar g_CvarWardenSkin, g_CvarWardenZamSkin, g_CvarTRandomSkins, g_CvarCTRandomSkins;
 char g_cWardenSkin[PLATFORM_MAX_PATH], g_cWardenZamSkin[PLATFORM_MAX_PATH];
@@ -23,10 +23,10 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
-	g_CvarWardenSkin = CreateConVar("jwp_warden_skin", "", "Устанавливает скин командиру, оставьте пустым чтобы не использовать", FCVAR_PLUGIN);
-	g_CvarWardenZamSkin = CreateConVar("jwp_warden_zam_skin", "", "Устанавливает скин заместителю командира, оставьте пустым чтобы не использовать", FCVAR_PLUGIN);
-	g_CvarTRandomSkins = CreateConVar("jwp_random_t_skins", "1", "Включить автоматическую установку скинов для Т. Требуется файл t_models.txt", FCVAR_PLUGIN, true, 0.0, true, 1.0);
-	g_CvarCTRandomSkins = CreateConVar("jwp_random_ct_skins", "1", "Включить автоматическую установку скинов для CТ. Требуется файл ct_models.txt", FCVAR_PLUGIN, true, 0.0, true, 1.0);
+	g_CvarWardenSkin = CreateConVar("jwp_warden_skin", "", "Устанавливает скин командиру, оставьте пустым чтобы не использовать");
+	g_CvarWardenZamSkin = CreateConVar("jwp_warden_zam_skin", "", "Устанавливает скин заместителю командира, оставьте пустым чтобы не использовать");
+	g_CvarTRandomSkins = CreateConVar("jwp_random_t_skins", "1", "Включить автоматическую установку скинов для Т. Требуется файл t_models.txt", _, true, 0.0, true, 1.0);
+	g_CvarCTRandomSkins = CreateConVar("jwp_random_ct_skins", "1", "Включить автоматическую установку скинов для CТ. Требуется файл ct_models.txt", _, true, 0.0, true, 1.0);
 	
 	HookEvent("player_spawn", Event_OnPlayerSpawn);
 	AutoExecConfig(true, "skin", "jwp");

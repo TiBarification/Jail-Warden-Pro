@@ -3,7 +3,7 @@
 
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.1"
+#define PLUGIN_VERSION "1.2"
 #define ITEM "stoplr"
 
 ConVar g_CvarMaxStops;
@@ -41,7 +41,7 @@ public void JWP_Started()
 
 public void OnPluginEnd()
 {
-	JWP_RemoveFromMainMenu(ITEM, OnFuncDisplay, OnFuncSelect);
+	JWP_RemoveFromMainMenu();
 }
 
 public bool OnFuncDisplay(int client, char[] buffer, int maxlength, int style)
@@ -59,12 +59,12 @@ public bool OnFuncSelect(int client)
 	if (!g_CvarMaxStops.IntValue)
 	{
 		JWP_ActionMsgAll("%T", "StopLR_ActionMessage_Stopped", LANG_SERVER, client);
-		ServerCommand("sm_stoplr"); // Останавливает лр от имени сервера.
+		ServerCommand("sm_stoplr"); // Stop lr by server.
 	}
 	else if (g_CvarMaxStops.IntValue && g_iStops < g_CvarMaxStops.IntValue)
 	{
 		JWP_ActionMsgAll("%T", "StopLR_ActionMessage_Stopped", LANG_SERVER, client);
-		ServerCommand("sm_stoplr"); // Останавливает лр от имени сервера.
+		ServerCommand("sm_stoplr"); // Stop lr by server.
 		g_iStops++;
 		int result = g_CvarMaxStops.IntValue - g_iStops;
 		FormatEx(langbuffer, sizeof(langbuffer), "%T %T", "StopLR_Menu", LANG_SERVER, "StopLR_StopLeft", LANG_SERVER, result);

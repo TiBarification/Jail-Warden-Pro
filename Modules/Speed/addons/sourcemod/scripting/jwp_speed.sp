@@ -5,7 +5,7 @@
 
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.1"
+#define PLUGIN_VERSION "1.2"
 #define ITEM "speed"
 
 ConVar Cvar_SpeedValue;
@@ -22,7 +22,7 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
-	Cvar_SpeedValue = CreateConVar("jwp_warden_speed", "1.5", "Скорость командира", FCVAR_PLUGIN, true, 1.0, true, 3.0);
+	Cvar_SpeedValue = CreateConVar("jwp_warden_speed", "1.5", "Скорость командира", _, true, 1.0, true, 3.0);
 	if (JWP_IsStarted()) JWP_Started();
 	AutoExecConfig(true, ITEM, "jwp");
 	
@@ -48,7 +48,7 @@ public void JWP_Started()
 
 public void OnPluginEnd()
 {
-	JWP_RemoveFromMainMenu(ITEM, OnFuncDisplay, OnFuncSelect);
+	JWP_RemoveFromMainMenu();
 }
 
 public bool OnFuncDisplay(int client, char[] buffer, int maxlength, int style)

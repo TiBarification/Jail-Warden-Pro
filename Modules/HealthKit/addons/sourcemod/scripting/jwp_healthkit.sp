@@ -8,7 +8,7 @@
 // Force 1.7 syntax
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.1"
+#define PLUGIN_VERSION "1.2"
 #define ITEM "healthkit"
 
 ConVar g_CvarHK_Limit, g_CvarHK_Wait, g_CvarHK_Life, g_CvarHK_Team, g_CvarHK_Hp, g_CvarHK_LimitHp, g_CvarHK_Model;
@@ -27,13 +27,13 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
-	g_CvarHK_Limit = CreateConVar("jwp_healthkit_limit", "3", "Сколько аптечек может создать командир. 0 - без ограничений", FCVAR_PLUGIN, true, 0.0);
-	g_CvarHK_Wait = CreateConVar("jwp_healthkit_wait", "3", "Аптечку можно создавать 1 раз в 'x' сек", FCVAR_PLUGIN, true, 0.0);
-	g_CvarHK_Life = CreateConVar("jwp_healthkit_life", "9", "Если аптечку не подняли, удалить ее через 'x' сек (0 = не удалять)", FCVAR_PLUGIN, true, 0.0);
-	g_CvarHK_Team = CreateConVar("jwp_healthkit_team", "1", "Кому аптечка добавляет HP: 1 = Всем; 2 = T; 3 = CT", FCVAR_PLUGIN, true, 1.0, true, 3.0);
-	g_CvarHK_LimitHp = CreateConVar("jwp_healthkit_limit_hp", "100", "Лимит HP (аптечка). 0 = без лимита.", FCVAR_PLUGIN, true, 0.0);
-	g_CvarHK_Hp = CreateConVar("jwp_healthkit_hp", "50", "Сколько HP добавляет аптечка", FCVAR_PLUGIN, true, 1.0);
-	g_CvarHK_Model = CreateConVar("jwp_healthkit_model", "models/gibs/hgibs.mdl", "Модель аптечки", FCVAR_PLUGIN);
+	g_CvarHK_Limit = CreateConVar("jwp_healthkit_limit", "3", "Сколько аптечек может создать командир. 0 - без ограничений", _, true, 0.0);
+	g_CvarHK_Wait = CreateConVar("jwp_healthkit_wait", "3", "Аптечку можно создавать 1 раз в 'x' сек", _, true, 0.0);
+	g_CvarHK_Life = CreateConVar("jwp_healthkit_life", "9", "Если аптечку не подняли, удалить ее через 'x' сек (0 = не удалять)", _, true, 0.0);
+	g_CvarHK_Team = CreateConVar("jwp_healthkit_team", "1", "Кому аптечка добавляет HP: 1 = Всем; 2 = T; 3 = CT", _, true, 1.0, true, 3.0);
+	g_CvarHK_LimitHp = CreateConVar("jwp_healthkit_limit_hp", "100", "Лимит HP (аптечка). 0 = без лимита.", _, true, 0.0);
+	g_CvarHK_Hp = CreateConVar("jwp_healthkit_hp", "50", "Сколько HP добавляет аптечка", _, true, 1.0);
+	g_CvarHK_Model = CreateConVar("jwp_healthkit_model", "models/gibs/hgibs.mdl", "Модель аптечки", _);
 	
 	
 	HookEvent("round_start", Event_OnRoundStart, EventHookMode_PostNoCopy);
@@ -64,7 +64,7 @@ public void JWP_Started()
 
 public void OnPluginEnd()
 {
-	JWP_RemoveFromMainMenu(ITEM, OnFuncDisplay, OnFuncSelect);
+	JWP_RemoveFromMainMenu();
 }
 
 public bool OnFuncDisplay(int client, char[] buffer, int maxlength, int style)

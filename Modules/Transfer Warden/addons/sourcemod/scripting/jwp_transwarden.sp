@@ -11,13 +11,14 @@ public Plugin myinfo =
 	name = "[JWP] Transfer warden",
 	description = "Transfer warden rights to another player",
 	author = "White Wolf",
-	version = "1.0",
+	version = "1.1",
 	url = "https://tibari.ru"
 };
 
 public void OnPluginStart()
 {
 	if (JWP_IsStarted()) JWP_Started();
+	LoadTranslations("jwp_modules.phrases");
 }
 
 public void JWP_Started()
@@ -27,19 +28,21 @@ public void JWP_Started()
 
 public void OnPluginEnd()
 {
-	JWP_RemoveFromMainMenu(ITEM, OnFuncDisplay, OnFuncSelect);
+	JWP_RemoveFromMainMenu();
 }
 
 public bool OnFuncDisplay(int client, char[] buffer, int maxlength, int style)
 {
-	FormatEx(buffer, maxlength, "Передать КМД");
+	FormatEx(buffer, maxlength, "%T", "TransWarden_Menu", LANG_SERVER);
 	return true;
 }
 
 public bool OnFuncSelect(int client)
 {
 	Menu ctList = new Menu(ctList_Callback);
-	ctList.SetTitle("Передать КМД:");
+	char lang[48];
+	FormatEx(lang, sizeof(lang), "%T", "TransWarden_Title", LANG_SERVER);
+	ctList.SetTitle(lang);
 	char userid[4], name[MAX_NAME_LENGTH];
 	for (int i = 1; i <= MaxClients; i++)
 	{
@@ -51,7 +54,10 @@ public bool OnFuncSelect(int client)
 		}
 	}
 	if (!ctList.ItemCount)
-		ctList.AddItem("", "Нет свободных КТ", ITEMDRAW_DISABLED);
+	{
+		FormatEx(lang, sizeof(lang), "%T", "TransWarden_NoCT", LANG_SERVER);
+		ctList.AddItem("", lang, ITEMDRAW_DISABLED);
+	}
 	
 	ctList.ExitBackButton = true;
 	ctList.ExitButton = true;
@@ -77,7 +83,7 @@ public int ctList_Callback(Menu menu, MenuAction action, int param1, int param2)
 			
 			if (target && IsClientInGame(target) && IsPlayerAlive(target))
 			{
-				JWP_ActionMsgAll("\x04%N \x06передал командование игроку \x02%N", param1, target);
+				JWP_ActionMsgAll("\x04%T", "TransWarden_Action", LANG_SERVER, param1, target);
 				JWP_SetWarden(target);
 			}
 		}

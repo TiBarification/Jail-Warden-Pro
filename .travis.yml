@@ -20,19 +20,20 @@ before_script:
     - cd addons/sourcemod/scripting/
     - wget "http://www.doctormckay.com/download/scripting/include/morecolors.inc" -O include/morecolors.inc
     - wget "https://bitbucket.org/GoD_Tony/updater/raw/default/include/updater.inc" -O include/updater.inc
-    #- wget "https://updater.tibari.ru/other/include/csgo_colors.inc" -O include/csgo_colors.inc
     - chmod +x spcomp
     - mkdir compiled
 script: ./compile.sh jwp_core.sp
 
 #Releases
 before_deploy:
-    - cd ..
-    - mkdir jwp_core jwp_core/addons jwp_core/addons/sourcemod jwp_core/addons/sourcemod/scripting jwp_core/addons/sourcemod/scripting/include jwp_core/addons/sourcemod/translations
-    - mv scripting/jwp_core.sp jwp_core/addons/sourcemod/scripting/
-    - mv scripting/compiled jwp_core/addons/sourcemod/plugins
-    - mv scripting/include/jwp* jwp_core/addons/sourcemod/scripting/include/
-    - mv translations/jwp* jwp_core/addons/sourcemod/translations/
+    - cd ../../..
+    - mkdir jwp_core jwp_core/cfg jwp_core/cfg/jwp jwp_core/addons jwp_core/addons/sourcemod jwp_core/addons/sourcemod/scripting jwp_core/addons/sourcemod/scripting/jwp jwp_core/addons/sourcemod/scripting/include jwp_core/addons/sourcemod/translations
+    - mv addons/sourcemod/scripting/jwp_core.sp jwp_core/addons/sourcemod/scripting/
+    - mv addons/sourcemod/scripting/jwp/* jwp_core/addons/sourcemod/scripting/jwp/
+    - mv addons/sourcemod/scripting/compiled jwp_core/addons/sourcemod/plugins
+    - mv addons/sourcemod/scripting/include/jwp* jwp_core/addons/sourcemod/scripting/include/
+    - mv addons/sourcemod/translations/jwp* jwp_core/addons/sourcemod/translations/
+    - mv cfg/jwp/* jwp_core/cfg/jwp/
     - zip -rq jwp_core jwp_core
     - tar -czf jwp_core.tar.gz jwp_core
 deploy:
@@ -42,7 +43,6 @@ deploy:
         - jwp_core.zip
         - jwp_core.tar.gz
         - jwp_core/addons/sourcemod/plugins/jwp_core.smx
-        - jwp_core/addons/sourcemod/scripting/jwp_core.sp
     skip_cleanup: true
     on:
         tags: true

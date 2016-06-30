@@ -6,7 +6,7 @@
 // Force 1.7 syntax
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.2"
+#define PLUGIN_VERSION "1.3"
 #define ITEM "pris_counter"
 
 ConVar g_CvarRadius, g_CvarIncludeFD;
@@ -22,8 +22,8 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
-	g_CvarRadius = CreateConVar("jwp_pris_counter_radius", "650.0", "Радиус в котором считать Т", FCVAR_PLUGIN, true, 1.0, true, 2750.0);
-	g_CvarIncludeFD = CreateConVar("jwp_pris_counter_fd", "1", "Включать фридейщиков в поиск?", FCVAR_PLUGIN, true, 0.0, true, 1.0);
+	g_CvarRadius = CreateConVar("jwp_pris_counter_radius", "650.0", "Радиус в котором считать Т", _, true, 1.0, true, 2750.0);
+	g_CvarIncludeFD = CreateConVar("jwp_pris_counter_fd", "1", "Включать фридейщиков в поиск?", _, true, 0.0, true, 1.0);
 	
 	g_CvarRadius.AddChangeHook(OnCvarChange);
 	g_CvarIncludeFD.AddChangeHook(OnCvarChange);
@@ -42,7 +42,7 @@ public void JWP_Started()
 
 public void OnPluginEnd()
 {
-	JWP_RemoveFromMainMenu(ITEM, OnFuncDisplay, OnFuncSelect);
+	JWP_RemoveFromMainMenu();
 }
 
 public void OnCvarChange(ConVar cvar, const char[] oldValue, const char[] newValue)
@@ -53,7 +53,7 @@ public void OnCvarChange(ConVar cvar, const char[] oldValue, const char[] newVal
 
 public bool OnFuncDisplay(int client, char[] buffer, int maxlength, int style)
 {
-	FormatEx(buffer, maxlength, "%T", "JWP_Pris_Counter_Menu", LANG_SERVER);
+	FormatEx(buffer, maxlength, "%T", "Pris_Counter_Menu", LANG_SERVER);
 	return true;
 }
 
@@ -94,14 +94,14 @@ public bool OnFuncSelect(int client)
 		}
 	}
 	
-	JWP_ActionMsg(client, "\x04%d\x03/\x04%d \x03%T", count[0], count[2], "JWP_Pris_Counter_ActionMessage_Near", LANG_SERVER);
+	JWP_ActionMsg(client, "\x04%d\x03/\x04%d \x03%T", count[0], count[2], "Pris_Counter_ActionMessage_Near", LANG_SERVER);
 	if (g_CvarIncludeFD.BoolValue)
-		JWP_ActionMsg(client, "\x05%T \x02%d", "JWP_Pris_Counter_ActionMessage_Freeday", LANG_SERVER, count[1]);
+		JWP_ActionMsg(client, "\x05%T \x02%d", "Pris_Counter_ActionMessage_Freeday", LANG_SERVER, count[1]);
 	
 	if (Rebels.Length > 0)
 	{
 		int user;
-		JWP_ActionMsg(client, "\x06Ники сбежавших зеков: ");
+		JWP_ActionMsg(client, "\x06%T", "Pris_Counter_ActionMessage_Escaped", LANG_SERVER);
 		for (int i = 0; i < Rebels.Length; ++i)
 		{
 			user = Rebels.Get(i);

@@ -4,7 +4,7 @@
 
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.2"
+#define PLUGIN_VERSION "1.3"
 #define DROPEN "door_aim_open"
 #define DRCLOSE "door_aim_close"
 
@@ -31,8 +31,7 @@ public void JWP_Started()
 
 public void OnPluginEnd()
 {
-	JWP_RemoveFromMainMenu(DROPEN, OnFuncDrOpenDisplay, OnFuncDrOpenSelect);
-	JWP_RemoveFromMainMenu(DRCLOSE, OnFuncDrCloseDisplay, OnFuncDrCloseSelect);
+	JWP_RemoveFromMainMenu();
 }
 
 public bool OnFuncDrOpenDisplay(int client, char[] buffer, int maxlength, int style)

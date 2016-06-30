@@ -455,20 +455,25 @@
 		"ru"		"Не удалось телепортировать игрока {1}"
 	}
 	
-	"JWP_Pris_Counter_Menu"
+	"Pris_Counter_Menu"
 	{
 		"en"		"Count prisoners"
 		"ru"		"Посчитать зеков"
 	}
-	"JWP_Pris_Counter_ActionMessage_Near"
+	"Pris_Counter_ActionMessage_Near"
 	{
 		"en"		"prisoners near you"
 		"ru"		"зеков рядом с вами"
 	}
-	"JWP_Pris_Counter_ActionMessage_Freeday"
+	"Pris_Counter_ActionMessage_Freeday"
 	{
 		"en"		"Prisoners with Freeday:"
 		"ru"		"Игроков с Freeday:"
+	}
+	"Pris_Counter_ActionMessage_Escaped"
+	{
+		"en"		"Prisoners that escaped:"
+		"ru"		"Ники сбежавших зеков:"
 	}
 	
 	"RE_Menu"
@@ -498,5 +503,186 @@
 	{
 		"en"		"Unable to respawn target. Maybe he leaved?"
 		"ru"		"Не удалось возродить игрока. Возможно он ливнул/админ?"
+	}
+	
+	"Admin_Control_Title"
+	{
+		"en"		"Warden control"
+		"ru"		"Управление командиром"
+	}
+	"Admin_Control_Change"
+	{
+		"en"		"Change warden"
+		"ru"		"Сменить командира"
+	}
+	"Admin_Control_Remove"
+	{
+		"en"		"Remove warden"
+		"ru"		"Удалить командира"
+	}
+	"Admin_Control_Main"
+	{
+		"en"		"Wardening"
+		"ru"		"Командование"
+	}
+	"Admin_Control_Choose"
+	{
+		"en"		"Choose new warden"
+		"ru"		"Выберите нового командира"
+	}
+	"Admin_Control_FiredActivity"
+	{
+		"#format"	"{1:N}"
+		"en"		"fired {1} from warden"
+		"ru"		"снял {1} с поста командира"
+	}
+	"Admin_Control_FiredFailed"
+	{
+		"en"		"Failed to firing warden"
+		"ru"		"Не удалось снять командира с поста"
+	}
+	"Admin_Control_ChangeActivity"
+	{
+		"#format"	"{1:N}"
+		"en"		"changed warden to {1}"
+		"ru"		"сменил командира на {1}"
+	}
+	"Admin_Control_ChangeFailed"
+	{
+		"en"		"Failed to change warden"
+		"ru"		"Не удалось сменить командира"
+	}
+	
+	"BeQuiet_Listen"
+	{
+		"en"		"Listen warden order"
+		"ru"		"Слушайте приказ КМД"
+	}
+	
+	"Handcuffs_Menu"
+	{
+		"en"		"Release handcuffs"
+		"ru"		"Снять арест"
+	}
+	"Handcuffs_Prefix"
+	{
+		"en"		"[Handcuffs]"
+		"ru"		"[Арест]"
+	}
+	"Handcuffs_Arrest"
+	{
+		"#format"	"{1:N},{2:N}"
+		"en"		"{1} arrested {2}"
+		"ru"		"{1} арестовал {2}"
+	}
+	"Handcuffs_Release"
+	{
+		"#format"	"{1:N},{2:N}"
+		"en"		"{1} released {2}"
+		"ru"		"{1} освободил {2}"
+	}
+	
+	"Manual_Coloring_Menu"
+	{
+		"en"		"Color prisoner"
+		"ru"		"Покрасить зека"
+	}
+	"Manual_Coloring_UnableToColor"
+	{
+		"en"		"Player not found, maybe disconnected/died?"
+		"ru"		"Игрок не найден, возможно отключился/сдох?"
+	}
+	"Manual_Coloring_Choose"
+	{
+		"en"		"Choose prisoner:"
+		"ru"		"Выберите зека:"
+	}
+	"Manual_Coloring_ChooseColor"
+	{
+		"en"		"Choose color:"
+		"ru"		"Выберите цвет:"
+	}
+	
+	"PlaySound_Menu"
+	{
+		"en"		"Play sound"
+		"ru"		"Проиграть звук"
+	}
+	
+	"Pointer_Menu"
+	{
+		"en"		"Set Pointer"
+		"ru"		"Поставить указатель"
+	}
+	
+	"Rebel_Message"
+	{
+		"#format"	"{1:N}"
+		"en"		"Prisoner {1} is rebel"
+		"ru"		"Заключенный {1} бунтует"
+	}
+	
+	"TransWarden_Menu"
+	{
+		"en"		"Transfer warden"
+		"ru"		"Передать КМД"
+	}
+	"TransWarden_Title"
+	{
+		"en"		"Transfer warden"
+		"ru"		"Передать КМД:"
+	}
+	"TransWarden_NoCT"
+	{
+		"en"		"No available CT"
+		"ru"		"Нет доступных КТ"
+	}
+	"TransWarden_Action"
+	{
+		"#format"	"{1:N},{2:N}"
+		"en"		"{1} transfered warden rights to {2}"
+		"ru"		"{1} передал командование игроку {2}"
+	}
+	
+	"WTimer_TimerStopped"
+	{
+		"en"		"Timer stopped"
+		"ru"		"Таймер остановлен"
+	}
+	"WTimer_InputCancelled"
+	{
+		"en"		"Input cancelled"
+		"ru"		"Ввод отменен"
+	}
+	"WTimer_TimerStop"
+	{
+		"en"		"Stop timer"
+		"ru"		"Остановить таймер"
+	}
+	"WTimer_Menu"
+	{
+		"en"		"Timer"
+		"ru"		"Таймер"
+	}
+	"WTimer_HelpMessage"
+	{
+		"en"		"Just press ENTER to abort"
+		"ru"		"Нажмите просто ВВОД для отмены"
+	}
+	"WTimer_WardenStoppedHint"
+	{
+		"en"		"Warden stopped timer"
+		"ru"		"Командир остановил таймер"
+	}
+	"WTimer_TimerHint"
+	{
+		"#format"	"{1:d}"
+		"en"		"Timer: {1} left"
+		"ru"		"Таймер: {1} с"
+	}
+	"WTimer_Finished"
+	{
+		"en"		"Time has gone"
+		"ru"		"Время закончилось"
 	}
 }

@@ -5,7 +5,7 @@
 
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.1"
+#define PLUGIN_VERSION "1.3"
 #define ITEM "noblock"
 
 EngineVersion engine;
@@ -25,7 +25,14 @@ public Plugin myinfo =
 public void OnPluginStart()
 {
 	engine = GetEngineVersion();
+	HookEvent("round_start", Event_OnRoundStart, EventHookMode_PostNoCopy);
+	if (JWP_IsStarted()) JWP_Started();
 	
+	LoadTranslations("jwp_modules.phrases");
+}
+
+public void OnMapStart()
+{
 	if (engine == Engine_CSGO)
 	{
 		Cvar_SolidTeamMates = FindConVar("mp_solid_teammates");
@@ -33,16 +40,12 @@ public void OnPluginStart()
 	}
 	else
 	{
-		g_CollisionGroupOffset = FindSendPropOffs("CBaseEntity", "m_CollisionGroup");
+		g_CollisionGroupOffset = FindSendPropInfo("CBaseEntity", "m_CollisionGroup");
 		if (g_CollisionGroupOffset == -1)
 			LogError("CBaseEntity::m_CollisionGroup offset not found");
 		HookEvent("player_spawn", Event_OnPlayerSpawn, EventHookMode_Post);
 		g_bOldValue = false;
 	}
-	HookEvent("round_start", Event_OnRoundStart, EventHookMode_PostNoCopy);
-	if (JWP_IsStarted()) JWP_Started();
-	
-	LoadTranslations("jwp_modules.phrases");
 }
 
 public void Event_OnRoundStart(Event event, const char[] name, bool dontBroadcast)
@@ -76,7 +79,7 @@ public void JWP_Started()
 
 public void OnPluginEnd()
 {
-	JWP_RemoveFromMainMenu(ITEM, OnFuncDisplay, OnFuncSelect);
+	JWP_RemoveFromMainMenu();
 }
 
 public bool OnFuncDisplay(int client, char[] buffer, int maxlength, int style)

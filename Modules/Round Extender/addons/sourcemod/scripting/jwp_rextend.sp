@@ -5,7 +5,7 @@
 // Force 1.7 syntax
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.2"
+#define PLUGIN_VERSION "1.3"
 #define ITEM "rextend"
 
 ConVar g_CvarRE_Limit, g_CvarRE_Extend;
@@ -23,8 +23,8 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
-	g_CvarRE_Limit = CreateConVar("jwp_re_limit", "1", "Сколько раз командир может продлить раунд", FCVAR_PLUGIN, true, 0.0);
-	g_CvarRE_Extend = CreateConVar("jwp_re_extend", "5", "На сколько минут продлить раунд", FCVAR_PLUGIN, true, 1.0);
+	g_CvarRE_Limit = CreateConVar("jwp_re_limit", "1", "How many times warden can extend round per round", _, true, 0.0);
+	g_CvarRE_Extend = CreateConVar("jwp_re_extend", "5", "How many minutes", _, true, 1.0);
 	
 	HookEvent("round_start", Event_OnRoundStart, EventHookMode_PostNoCopy);
 	
@@ -48,7 +48,7 @@ public void JWP_Started()
 
 public void OnPluginEnd()
 {
-	JWP_RemoveFromMainMenu(ITEM, OnRextendDisplay, OnRextendSelect);
+	JWP_RemoveFromMainMenu();
 }
 
 public bool OnRextendDisplay(int client, char[] buffer, int maxlength, int style)

@@ -3,7 +3,7 @@
 
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.2"
+#define PLUGIN_VERSION "1.3"
 
 ConVar	g_CvarWardenColor_r,
 		g_CvarWardenColor_g,
@@ -25,14 +25,14 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
-	g_CvarWardenColor_r = CreateConVar("jwp_warden_color_r", "255", "Красный оттенок командира (rgba)", FCVAR_PLUGIN, true, 0.0, true, 255.0);
-	g_CvarWardenColor_g = CreateConVar("jwp_warden_color_g", "255", "Зеленый оттенок командира (rgba)", FCVAR_PLUGIN, true, 0.0, true, 255.0);
-	g_CvarWardenColor_b = CreateConVar("jwp_warden_color_b", "0", "Синий оттенок командира (rgba)", FCVAR_PLUGIN, true, 0.0, true, 255.0);
-	g_CvarWardenColor_a = CreateConVar("jwp_warden_color_a", "255", "Прозрачность командира (rgba)", FCVAR_PLUGIN, true, 0.0, true, 255.0);
-	g_CvarWardenZamColor_r = CreateConVar("jwp_warden_zam_color_r", "0", "Красный оттенок зама командира (rgba)", FCVAR_PLUGIN, true, 0.0, true, 255.0);
-	g_CvarWardenZamColor_g = CreateConVar("jwp_warden_zam_color_g", "255", "Зеленый оттенок зама командира (rgba)", FCVAR_PLUGIN, true, 0.0, true, 255.0);
-	g_CvarWardenZamColor_b = CreateConVar("jwp_warden_zam_color_b", "255", "Синий оттенок зама командира (rgba)", FCVAR_PLUGIN, true, 0.0, true, 255.0);
-	g_CvarWardenZamColor_a = CreateConVar("jwp_warden_zam_color_a", "255", "Прозрачность зама командира (rgba)", FCVAR_PLUGIN, true, 0.0, true, 255.0);
+	g_CvarWardenColor_r = CreateConVar("jwp_warden_color_r", "255", "Красный оттенок командира (rgba)", _, true, 0.0, true, 255.0);
+	g_CvarWardenColor_g = CreateConVar("jwp_warden_color_g", "255", "Зеленый оттенок командира (rgba)", _, true, 0.0, true, 255.0);
+	g_CvarWardenColor_b = CreateConVar("jwp_warden_color_b", "0", "Синий оттенок командира (rgba)", _, true, 0.0, true, 255.0);
+	g_CvarWardenColor_a = CreateConVar("jwp_warden_color_a", "255", "Прозрачность командира (rgba)", _, true, 0.0, true, 255.0);
+	g_CvarWardenZamColor_r = CreateConVar("jwp_warden_zam_color_r", "0", "Красный оттенок зама командира (rgba)", _, true, 0.0, true, 255.0);
+	g_CvarWardenZamColor_g = CreateConVar("jwp_warden_zam_color_g", "255", "Зеленый оттенок зама командира (rgba)", _, true, 0.0, true, 255.0);
+	g_CvarWardenZamColor_b = CreateConVar("jwp_warden_zam_color_b", "255", "Синий оттенок зама командира (rgba)", _, true, 0.0, true, 255.0);
+	g_CvarWardenZamColor_a = CreateConVar("jwp_warden_zam_color_a", "255", "Прозрачность зама командира (rgba)", _, true, 0.0, true, 255.0);
 	
 	AutoExecConfig(true, "wcolor", "jwp");
 }
