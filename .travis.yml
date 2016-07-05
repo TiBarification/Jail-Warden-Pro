@@ -8,7 +8,7 @@ addons:
 
 #Set the build environment
 env:
-    - SMVERSION=1.7
+    #- SMVERSION=1.7
     - SMVERSION=1.8
 
 #And compile!
@@ -22,27 +22,31 @@ before_script:
     - wget "https://bitbucket.org/GoD_Tony/updater/raw/default/include/updater.inc" -O include/updater.inc
     - chmod +x spcomp
     - mkdir compiled
-script: ./compile.sh jwp_core.sp
+script: ./compile.sh jwp_core.sp jwp_admincontrol.sp jwp_bequiet.sp jwp_coloring.sp jwp_dooraimcontrol.sp jwp_doorcontrol.sp jwp_fdnobunt.sp jwp_ff.sp jwp_freeday.sp jwp_guns.sp jwp_handcuffs.sp jwp_healthkit.sp jwp_isolator.sp jwp_laserbeam.sp jwp_mcoloring.sp jwp_mute.sp jwp_noblock.sp jwp_onlrstarted.sp jwp_order.sp jwp_otkaz_m.sp jwp_playsound.sp jwp_pris_counter.sp jwp_rebel.sp jwp_respawn.sp jwp_rextend.sp jwp_skin.sp jwp_slay.sp jwp_speed.sp jwp_stoplr.sp jwp_stripknife.sp jwp_tojail.sp jwp_transwarden.sp jwp_wcolor.sp jwp_whealth.sp jwp_wtimer.sp
 
 #Releases
 before_deploy:
     - cd ../../..
-    - mkdir jwp_core jwp_core/cfg jwp_core/cfg/jwp jwp_core/addons jwp_core/addons/sourcemod jwp_core/addons/sourcemod/scripting jwp_core/addons/sourcemod/scripting/jwp jwp_core/addons/sourcemod/scripting/include jwp_core/addons/sourcemod/translations
-    - mv addons/sourcemod/scripting/jwp_core.sp jwp_core/addons/sourcemod/scripting/
-    - mv addons/sourcemod/scripting/jwp/* jwp_core/addons/sourcemod/scripting/jwp/
-    - mv addons/sourcemod/scripting/compiled jwp_core/addons/sourcemod/plugins
-    - mv addons/sourcemod/scripting/include/jwp* jwp_core/addons/sourcemod/scripting/include/
-    - mv addons/sourcemod/translations/jwp* jwp_core/addons/sourcemod/translations/
-    - mv cfg/jwp/* jwp_core/cfg/jwp/
-    - zip -rq jwp_core jwp_core
-    - tar -czf jwp_core.tar.gz jwp_core
+    - mkdir jwp jwp/cfg jwp/cfg/jwp jwp/addons jwp/addons/sourcemod jwp/addons/sourcemod/scripting jwp/addons/sourcemod/scripting/jwp jwp/addons/sourcemod/scripting/include jwp/addons/sourcemod/translations
+    - mkdir jwp/materials jwp/materials/overlays jwp/materials/overlays/MyJailbreak
+    - mkdir jwp/sound jwp/sound/ui
+    - mv addons/sourcemod/scripting/jwp_*.sp jwp/addons/sourcemod/scripting/
+    - mv addons/sourcemod/scripting/jwp/* jwp/addons/sourcemod/scripting/jwp/
+    - mv addons/sourcemod/scripting/compiled jwp/addons/sourcemod/plugins
+    - mv addons/sourcemod/scripting/include/jwp* jwp/addons/sourcemod/scripting/include/
+    - mv addons/sourcemod/translations/jwp* jwp/addons/sourcemod/translations/
+    - mv cfg/jwp/* jwp/cfg/jwp/
+    - mv materials/* jwp/materials/
+    - mv sound/* jwp/sound/
+    - zip -rq jwp jwp
+    - tar -czf jwp.tar.gz jwp
 deploy:
     provider: releases
     api_key: ${GH_TOKEN}
     file:
-        - jwp_core.zip
-        - jwp_core.tar.gz
-        - jwp_core/addons/sourcemod/plugins/jwp_core.smx
+        - jwp.zip
+        - jwp.tar.gz
+        - jwp/addons/sourcemod/plugins/jwp_core.smx
     skip_cleanup: true
     on:
         tags: true
