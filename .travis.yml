@@ -31,16 +31,14 @@ script: ./compile.sh jwp_core.sp jwp_admincontrol.sp jwp_bequiet.sp jwp_coloring
 before_deploy:
     - cd ../../..
     - mkdir jwp jwp/cfg jwp/cfg/jwp jwp/addons jwp/addons/sourcemod jwp/addons/sourcemod/scripting jwp/addons/sourcemod/scripting/jwp jwp/addons/sourcemod/scripting/include jwp/addons/sourcemod/translations
-    - mkdir jwp/materials jwp/materials/overlays jwp/materials/overlays/MyJailbreak
-    - mkdir jwp/sound jwp/sound/ui
     - mv addons/sourcemod/scripting/jwp_*.sp jwp/addons/sourcemod/scripting/
     - mv addons/sourcemod/scripting/jwp/* jwp/addons/sourcemod/scripting/jwp/
     - mv addons/sourcemod/scripting/compiled jwp/addons/sourcemod/plugins
     - mv addons/sourcemod/scripting/include/jwp* jwp/addons/sourcemod/scripting/include/
     - mv addons/sourcemod/translations/jwp* jwp/addons/sourcemod/translations/
     - mv cfg/jwp/* jwp/cfg/jwp/
-    - mv materials/* jwp/materials/
-    - mv sound/* jwp/sound/
+    - mv materials jwp/
+    - mv sound jwp/
     - zip -rq jwp jwp
     - tar -czf jwp.tar.gz jwp
 deploy:
