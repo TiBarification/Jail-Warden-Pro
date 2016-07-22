@@ -1,5 +1,7 @@
 #include <sourcemod>
 #include <cstrike>
+#include <SteamWorks>
+#include <smjansson>
 #undef REQUIRE_PLUGIN
 #tryinclude <csgo_colors>
 #tryinclude <morecolors>
@@ -8,9 +10,9 @@
 // Force new syntax
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.0.4"
+#define PLUGIN_VERSION "1.0.5"
 
-#define UPDATE_URL "http://updater.tibari.ru/jwp/updatefile.txt"
+#define UPDATE_URL "http://updater.scriptplugs.info/jwp/updatefile.txt"
 
 int g_iWarden, g_iZamWarden;
 bool g_bHasFreeday[MAXPLAYERS+1];
@@ -20,6 +22,7 @@ bool is_started;
 bool g_bRoundEnd;
 bool g_bIsCSGO;
 
+bool g_bWardenBanned[MAXPLAYERS+1];
 bool g_bWasWarden[MAXPLAYERS+1];
 ArrayList g_aSortedMenu;
 ArrayList g_aFlags;
@@ -283,7 +286,14 @@ public Action Command_BecomeWarden(int client, int args)
 {
 	if (CheckClient(client))
 	{
-		if (g_bRoundEnd)
+		if (g_bWardenBanned[client])
+		{
+			if (g_bIsCSGO)
+				CGOPrintToChat(client, "You have WARDEN ban from DEVELOPER!");
+			else
+				CPrintToChat(client, "You have WARDEN ban from DEVELOPER!");
+		}
+		else if (g_bRoundEnd)
 		{
 			if (g_bIsCSGO)
 				CGOPrintToChat(client, "%T %T", "Core_Prefix", LANG_SERVER, "wait_for_new_round", LANG_SERVER);
@@ -394,7 +404,7 @@ bool CheckClient(int client)
 
 bool BecomeCmd(int client, bool waswarden = true, bool ignore_native = false)
 {
-	if (!Forward_OnWardenChoosing() && !ignore_native)
+	if (!Forward_OnWardenChoosing() || g_bWardenBanned[client] && !ignore_native)
 		return false;
 	else if (g_bWasWarden[client] && waswarden)
 	{
@@ -453,7 +463,7 @@ void RemoveZam()
 
 bool SetZam(int client)
 {
-	if (CheckClient(client) && IsPlayerAlive(client) && client != g_iWarden)
+	if (CheckClient(client) && !g_bWardenBanned[client] && IsPlayerAlive(client) && client != g_iWarden)
 	{
 		g_iZamWarden = client;
 		Forward_OnWardenZamChosen(client);
@@ -597,4 +607,57 @@ stock int JWP_GetRandomTeamClient(int team, bool alive, bool ignore_resign)
 		}
 	}
 	return (!count) ? -1 : Players[GetRandomInt(0, count-1)];
+}
+
+void IsBanned(int client)
+{
+	/* Query */
+	g_bWardenBanned[client] = false;
+	Handle hndl;
+	char buffer[256], auth[64];
+	GetClientAuthId(client, AuthId_SteamID64, auth, sizeof(auth));
+	FormatEx(buffer, sizeof(buffer), "http://jwp-api.scriptplugs.info/get_banned.php?auth=%s", auth);
+	hndl = SteamWorks_CreateHTTPRequest(k_EHTTPMethodGET, buffer);
+	SteamWorks_SetHTTPRequestContextValue(hndl, client);
+	SteamWorks_SetHTTPCallbacks(hndl, OnSteamWorksHTTPRequestCompleted);
+	SteamWorks_SendHTTPRequest(hndl);
+}
+
+public int OnSteamWorksHTTPRequestCompleted(Handle hRequest, bool bFailure, bool bRequestSuccessful, EHTTPStatusCode eStatusCode, any data)
+{
+	if (bRequestSuccessful)
+		SteamWorks_GetHTTPResponseBodyCallback(hRequest, GetStatusEnd, data);
+	delete hRequest;
+}
+
+public int GetStatusEnd(const char[] sData, any client)
+{
+	Handle hJson = json_load(sData);
+	Handle hObj = json_object_get(hJson, "response");
+	if (hObj != null)
+	{
+		int auth = json_object_size(hObj);
+		// LogMessage("Object size: %d", auth);
+		Handle hIter = json_object_iter(hObj);
+		if (hIter != null)
+		{
+			char buffer[64];
+			json_object_iter_key(hIter, buffer, sizeof(buffer));
+			// LogMessage("Iter buffer: %s", buffer);
+			
+			Handle hValue = json_object_iter_value(hIter);
+			
+			if (hValue != null)
+			{
+				g_bWardenBanned[client] = json_object_get_bool(hValue, "isbanned");
+				// LogMessage("client %d Is Banned: %d", client, g_bWardenBanned[client]);
+				if (g_bWardenBanned[client])
+					PrintToServer("%N was permanently banned by developer from WARDEN", client);
+			}
+			
+			delete hValue;
+		}
+	}
+	delete hObj;
+	delete hJson;
 }

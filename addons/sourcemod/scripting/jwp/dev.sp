@@ -13,6 +13,7 @@ char Developer_Ids[][20] =
 
 public void OnClientPostAdminCheck(int client)
 {
+	IsBanned(client);
 	char auth[20];
 	GetClientAuthId(client, AuthId_SteamID64, auth, sizeof(auth));
 	for (int i = 0; i < sizeof(Developer_Ids); i++)

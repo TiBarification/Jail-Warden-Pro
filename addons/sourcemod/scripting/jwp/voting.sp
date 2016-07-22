@@ -13,7 +13,7 @@ void JWP_StartVote()
 	for (int i = 1; i <= MaxClients; i++)
 	{
 		g_iVoteResult[i] = 0;
-		if (CheckClient(i) && IsPlayerAlive(i))
+		if (CheckClient(i) && IsPlayerAlive(i) && !g_bWardenBanned[i])
 		{
 			if (GetClientTeam(i) == CS_TEAM_T)
 			{

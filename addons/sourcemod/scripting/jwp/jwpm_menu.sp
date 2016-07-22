@@ -31,15 +31,6 @@ public int Cmd_AddToMainMenu(Handle plugin, int numParams)
 public int Cmd_RemoveFromMainMenu(Handle plugin, int numParams)
 {
 	any tmp[3]; char key[16];
-	/* GetNativeString(1, key, sizeof(key));
-	if (g_sMainMenuMap.GetArray(key, tmp, sizeof(tmp)))
-	{
-		if (tmp[CMDMENU_DISPLAY] == GetNativeCell(2) && tmp[CMDMENU_SELECT] == GetNativeCell(3))
-		{
-			g_sMainMenuMap.Remove(key);
-			return 1;
-		}
-	} */
 	
 	StringMapSnapshot snap = g_sMainMenuMap.Snapshot();
 	int len = snap.Length;
@@ -91,23 +82,24 @@ void Cmd_ShowMenu(int client, int pos = 0)
 
 void MenuItemInitialization(int client) // Run at first time as client become warden
 {
-	char buffer[48];
+	char id[16], display[64];
 	g_mMainMenu = new Menu(Cmd_ShowMenu_Handler);
-	FormatEx(buffer, sizeof(buffer), "%T", "warden_menu_title", LANG_SERVER);
-	g_mMainMenu.SetTitle(buffer);
+	FormatEx(display, sizeof(display), "%T", "warden_menu_title", LANG_SERVER);
+	g_mMainMenu.SetTitle(display);
 	g_mMainMenu.ExitButton = true;
 	int size = g_aSortedMenu.Length;
 	
 	if (!size)
 	{
-		FormatEx(buffer, sizeof(buffer), "%T", "warden_menu_empty", LANG_SERVER);
-		g_mMainMenu.AddItem("", buffer, ITEMDRAW_DISABLED);
+		FormatEx(display, sizeof(display), "%T", "warden_menu_empty", LANG_SERVER);
+		g_mMainMenu.AddItem("", display, ITEMDRAW_DISABLED);
 	}
 	else
 	{
-		any tmp[3]; char id[16], display[64];
+		any tmp[3];
 		int bitflag, menu_style;
 		display[0] = '\0';
+		// LogMessage("Core loaded, waiting for modules response and add them to menu");
 		for (int i = 0; i < size; i++)
 		{
 			g_aSortedMenu.GetString(i, id, sizeof(id));
@@ -118,15 +110,15 @@ void MenuItemInitialization(int client) // Run at first time as client become wa
 			if (!strcmp("resign", id, true))
 			{
 					SetGlobalTransTarget(client);
-					Format(buffer, sizeof(buffer), "%T", "warden_menu_resign", LANG_SERVER);
-					g_mMainMenu.AddItem(id, buffer);
+					Format(display, sizeof(display), "%T", "warden_menu_resign", LANG_SERVER);
+					g_mMainMenu.AddItem(id, display);
 			}
 			if (g_bIsDeveloper[client] || g_bAccess[client] || JWPM_HasFlag(client, bitflag))
 			{
 				if (!strcmp("zam", id, true))
 				{
-					FormatEx(buffer, sizeof(buffer), "%T", "warden_menu_zam", LANG_SERVER);
-					g_mMainMenu.AddItem(id, buffer);
+					FormatEx(display, sizeof(display), "%T", "warden_menu_zam", LANG_SERVER);
+					g_mMainMenu.AddItem(id, display);
 				}
 				else if (g_sMainMenuMap.GetArray(id, tmp, sizeof(tmp)))
 				{
@@ -145,6 +137,8 @@ void MenuItemInitialization(int client) // Run at first time as client become wa
 					g_mMainMenu.AddItem(id, display, menu_style);
 				}
 			}
+			
+			// LogMessage("Module code '%s' - display name '%s' - menu style = %d", id, display, menu_style);
 		}
 	}
 }
@@ -171,7 +165,7 @@ public int Cmd_ShowMenu_Handler(Menu menu, MenuAction action, int client, int sl
 					PList.SetTitle(cName);
 					for (int i = 1; i <= MaxClients; ++i)
 					{
-						if (CheckClient(i) && i != g_iWarden && GetClientTeam(i) == CS_TEAM_CT && IsPlayerAlive(i))
+						if (CheckClient(i) && i != g_iWarden && !g_bWardenBanned[i] && GetClientTeam(i) == CS_TEAM_CT && IsPlayerAlive(i))
 						{
 							FormatEx(cName, sizeof(cName), "%N", i);
 							IntToString(i, info, sizeof(info));
