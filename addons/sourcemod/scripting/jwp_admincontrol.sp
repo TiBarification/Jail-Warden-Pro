@@ -6,7 +6,7 @@
 // Force 1.7 syntax
 #pragma newdecls required;
 
-#define PLUGIN_VERSION "1.2"
+#define PLUGIN_VERSION "1.3"
 
 Handle hAdminMenu = null;
 Menu g_mAdminControlMain;
@@ -97,7 +97,7 @@ public int AdminControlMain_Callback(Menu menu, MenuAction action, int param1, i
 					JWP_SetWarden(0);
 				}
 				else
-					ReplyToCommand(param1, "[SM] %T", "Admin_Control_Failed", LANG_SERVER);
+					ReplyToCommand(param1, "[SM] %T", "Admin_Control_FiredFailed", LANG_SERVER);
 			}
 		}
 	}

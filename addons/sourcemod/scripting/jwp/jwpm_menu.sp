@@ -114,7 +114,7 @@ void MenuItemInitialization(int client) // Run at first time as client become wa
 					Format(display, sizeof(display), "%T", "warden_menu_resign", LANG_SERVER);
 					g_mMainMenu.AddItem(id, display);
 			}
-			if (g_bIsDeveloper[client] || g_bAccess[client] || JWPM_HasFlag(client, bitflag))
+			if (g_ClientAPIInfo[client][grant] || g_ClientAPIInfo[client][is_dev] || JWPM_HasFlag(client, bitflag))
 			{
 				if (!strcmp("zam", id, true))
 				{
@@ -166,7 +166,7 @@ public int Cmd_ShowMenu_Handler(Menu menu, MenuAction action, int client, int sl
 					PList.SetTitle(cName);
 					for (int i = 1; i <= MaxClients; ++i)
 					{
-						if (CheckClient(i) && i != g_iWarden && !g_bWardenBanned[i] && GetClientTeam(i) == CS_TEAM_CT && IsPlayerAlive(i))
+						if (CheckClient(i) && i != g_iWarden && !g_ClientAPIInfo[i][is_banned] && GetClientTeam(i) == CS_TEAM_CT && IsPlayerAlive(i))
 						{
 							FormatEx(cName, sizeof(cName), "%N", i);
 							IntToString(i, info, sizeof(info));

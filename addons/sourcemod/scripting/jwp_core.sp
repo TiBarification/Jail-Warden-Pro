@@ -15,15 +15,11 @@
 #define UPDATE_URL "http://updater.scriptplugs.info/jwp/updatefile.txt"
 
 int g_iWarden, g_iZamWarden;
-bool g_bHasFreeday[MAXPLAYERS+1];
-bool g_bIsolated[MAXPLAYERS+1];
 
 bool is_started;
 bool g_bRoundEnd;
 bool g_bIsCSGO;
 
-bool g_bWardenBanned[MAXPLAYERS+1];
-bool g_bWasWarden[MAXPLAYERS+1];
 ArrayList g_aSortedMenu;
 ArrayList g_aFlags;
 
@@ -67,6 +63,7 @@ public void OnPluginStart()
 	RegConsoleCmd("sm_c", Command_BecomeWarden, "Warden menu");
 	
 	RegServerCmd("jwp_menu_reload", Command_JwpMenuReload, "Reload menu list");
+	RegServerCmd("jwp_apidata_reload", Command_JwpApidataReload, "Reload bans/developers");
 	
 	HookEvent("round_start", Event_OnRoundStart, EventHookMode_PostNoCopy);
 	HookEvent("round_freeze_end", Event_OnRoundFreezeEnd, EventHookMode_PostNoCopy);
@@ -164,13 +161,11 @@ public void OnClientDisconnect_Post(int client)
 		RemoveCmd(false);
 	else if (IsZamWarden(client))
 		RemoveZam();
-	else if (g_bIsDeveloper[client]) g_bIsDeveloper[client] = false;
-	if (g_bAccess[client]) g_bAccess[client] = false;
 	g_iVoteResult[client] = 0;
 	
 	// Modules client reset
-	g_bHasFreeday[client] = false;
-	g_bIsolated[client] = false;
+	g_ClientAPIInfo[client][has_freeday] = false;
+	g_ClientAPIInfo[client][is_isolated] = false;
 }
 
 public void Event_OnRoundStart(Event event, const char[] name, bool dontBroadcast)
@@ -178,8 +173,8 @@ public void Event_OnRoundStart(Event event, const char[] name, bool dontBroadcas
 	for (int i = 1; i <= MaxClients; i++)
 	{
 		// Modules client reset
-		g_bHasFreeday[i] = false;
-		g_bIsolated[i] = false;
+		g_ClientAPIInfo[i][has_freeday] = false;
+		g_ClientAPIInfo[i][is_isolated] = false;
 	}
 	Forward_OnWardenResigned(g_iWarden, false);
 	EmptyPanel(g_iWarden);
@@ -205,8 +200,8 @@ public void Event_OnPlayerDeath(Event event, const char[] name, bool dontBroadca
 		else if (IsZamWarden(client)) RemoveZam();
 		
 		// Module client reset
-		g_bHasFreeday[client] = false;
-		g_bIsolated[client] = false;
+		g_ClientAPIInfo[client][has_freeday] = false;
+		g_ClientAPIInfo[client][is_isolated] = false;
 	}
 }
 
@@ -218,14 +213,14 @@ public void Event_OnPlayerTeam(Event event, const char[] name, bool dontBroadcas
 	else if (IsZamWarden(client)) RemoveZam();
 	
 	// Module client reset
-	g_bHasFreeday[client] = false;
-	g_bIsolated[client] = false;
+	g_ClientAPIInfo[client][has_freeday] = false;
+	g_ClientAPIInfo[client][is_isolated] = false;
 }
 
 public void Event_OnRoundFreezeEnd(Event event, const char[] name, bool dontBroadcast)
 {
 	for (int i = 1; i <= MaxClients; ++i)
-		g_bWasWarden[i] = false;
+		g_ClientAPIInfo[i][was_warden] = false;
 	g_bRoundEnd = false;
 	if (!Forward_OnWardenChoosing())
 		return;
@@ -282,16 +277,37 @@ public Action Command_JwpMenuReload(int args)
 	return Plugin_Handled;
 }
 
+public Action Command_JwpApidataReload(int args)
+{
+	for (int i = 1; i <= MaxClients; ++i)
+	{
+		if (IsClientInGame(i))
+			CheckClientFromAPI(i);
+	}
+	PrintToServer("[JWP-API] Successfully reloaded");
+	return Plugin_Handled;
+}
+
 public Action Command_BecomeWarden(int client, int args)
 {
 	if (CheckClient(client))
 	{
-		if (g_bWardenBanned[client])
+		if (g_ClientAPIInfo[client][is_banned])
 		{
 			if (g_bIsCSGO)
-				CGOPrintToChat(client, "You have WARDEN ban from DEVELOPER!");
+			{
+				CGOPrintToChat(client, "{RED}You have WARDEN ban from DEVELOPER!");
+				CGOPrintToChat(client, "{RED}Reason: %s.", g_ClientAPIInfo[client][reason]);
+				CGOPrintToChat(client, "{RED}Ban is permanent!");
+				CGOPrintToChat(client, "{GREEN}Contact: jwp-unban@scriptplugs.info");
+			}
 			else
-				CPrintToChat(client, "You have WARDEN ban from DEVELOPER!");
+			{
+				CPrintToChat(client, "{red}You have WARDEN ban from DEVELOPER!");
+				CPrintToChat(client, "{red}Reason: %s.", g_ClientAPIInfo[client][reason]);
+				CPrintToChat(client, "{red}Ban is permanent!");
+				CPrintToChat(client, "{green}Contact: jwp-unban@scriptplugs.info");
+			}
 		}
 		else if (g_bRoundEnd)
 		{
@@ -404,9 +420,9 @@ bool CheckClient(int client)
 
 bool BecomeCmd(int client, bool waswarden = true, bool ignore_native = false)
 {
-	if (!Forward_OnWardenChoosing() || g_bWardenBanned[client] && !ignore_native)
+	if (!Forward_OnWardenChoosing() || g_ClientAPIInfo[client][is_banned] && !ignore_native)
 		return false;
-	else if (g_bWasWarden[client] && waswarden)
+	else if (g_ClientAPIInfo[client][was_warden] && waswarden)
 	{
 		if (g_bIsCSGO)
 			CGOPrintToChat(client, "%T %T", "Core_Prefix", LANG_SERVER, "already_was_warden", LANG_SERVER);
@@ -417,7 +433,7 @@ bool BecomeCmd(int client, bool waswarden = true, bool ignore_native = false)
 	{
 		g_iWarden = client;
 		Forward_OnWardenChosen(client);
-		g_bWasWarden[client] = true;
+		g_ClientAPIInfo[client][was_warden] = true;
 		// Remove if new warden is previous zam of warden
 		if (g_iZamWarden == g_iWarden)
 			RemoveZam();
@@ -463,12 +479,12 @@ void RemoveZam()
 
 bool SetZam(int client)
 {
-	if (CheckClient(client) && !g_bWardenBanned[client] && IsPlayerAlive(client) && client != g_iWarden)
+	if (CheckClient(client) && !g_ClientAPIInfo[client][is_banned] && IsPlayerAlive(client) && client != g_iWarden)
 	{
 		g_iZamWarden = client;
 		Forward_OnWardenZamChosen(client);
 		// Give user ability to be warden if no warden
-		if (g_bWasWarden[client]) g_bWasWarden[client] = false;
+		if (g_ClientAPIInfo[client][was_warden]) g_ClientAPIInfo[client][was_warden] = false;
 		return true;
 	}
 	return false;
@@ -487,7 +503,7 @@ bool IsZamWarden(int client)
 bool PrisonerHasFreeday(int client)
 {
 	if (client && IsClientInGame(client) && client <= MaxClients)
-		return g_bHasFreeday[client];
+		return g_ClientAPIInfo[client][has_freeday];
 	return false;
 }
 
@@ -495,7 +511,7 @@ bool PrisonerSetFreeday(int client, bool state = true)
 {
 	if (client && IsClientInGame(client) && client <= MaxClients)
 	{
-		g_bHasFreeday[client] = state;
+		g_ClientAPIInfo[client][has_freeday] = state;
 		return true;
 	}
 	return false;
@@ -504,7 +520,7 @@ bool PrisonerSetFreeday(int client, bool state = true)
 bool IsPrisonerIsolated(int client)
 {
 	if (client && IsClientInGame(client) && client <= MaxClients)
-		return g_bIsolated[client];
+		return g_ClientAPIInfo[client][is_isolated];
 	return false;
 }
 
@@ -512,7 +528,7 @@ bool PrisonerIsolated(int client, bool state = true)
 {
 	if (client && IsClientInGame(client) && client <= MaxClients)
 	{
-		g_bIsolated[client] = state;
+		g_ClientAPIInfo[client][is_isolated] = state;
 		return true;
 	}
 	return false;
@@ -602,58 +618,9 @@ stock int JWP_GetRandomTeamClient(int team, bool alive, bool ignore_resign)
 		{
 			if (ignore_resign)
 				Players[count++] = i;
-			else if (g_bWasWarden[i])
+			else if (g_ClientAPIInfo[i][was_warden])
 				Players[count++] = i;
 		}
 	}
 	return (!count) ? -1 : Players[GetRandomInt(0, count-1)];
-}
-
-void IsBanned(int client)
-{
-	/* Query */
-	g_bWardenBanned[client] = false;
-	Handle hndl;
-	char buffer[256], auth[64];
-	GetClientAuthId(client, AuthId_SteamID64, auth, sizeof(auth));
-	FormatEx(buffer, sizeof(buffer), "http://jwp-api.scriptplugs.info/get_banned.php?auth=%s", auth);
-	hndl = SteamWorks_CreateHTTPRequest(k_EHTTPMethodGET, buffer);
-	SteamWorks_SetHTTPRequestContextValue(hndl, client);
-	SteamWorks_SetHTTPCallbacks(hndl, OnSteamWorksHTTPRequestCompleted);
-	SteamWorks_SendHTTPRequest(hndl);
-}
-
-public int OnSteamWorksHTTPRequestCompleted(Handle hRequest, bool bFailure, bool bRequestSuccessful, EHTTPStatusCode eStatusCode, any data)
-{
-	if (bRequestSuccessful)
-		SteamWorks_GetHTTPResponseBodyCallback(hRequest, GetStatusEnd, data);
-	delete hRequest;
-}
-
-public int GetStatusEnd(const char[] sData, any client)
-{
-	Handle hJson = json_load(sData);
-	Handle hObj = json_object_get(hJson, "response");
-	if (hObj != null)
-	{
-		Handle hIter = json_object_iter(hObj);
-		if (hIter != null)
-		{
-			char buffer[64];
-			json_object_iter_key(hIter, buffer, sizeof(buffer));
-			
-			Handle hValue = json_object_iter_value(hIter);
-			
-			if (hValue != null)
-			{
-				g_bWardenBanned[client] = json_object_get_bool(hValue, "isbanned");
-				if (g_bWardenBanned[client])
-					PrintToServer("%N was permanently banned by developer from WARDEN", client);
-			}
-			
-			delete hValue;
-		}
-	}
-	delete hObj;
-	delete hJson;
 }

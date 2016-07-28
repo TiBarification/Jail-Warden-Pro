@@ -2,6 +2,7 @@
 #include <sdktools>
 #include <cstrike>
 #include <jwp>
+#include <emitsoundany>
 #undef REQUIRE_PLUGIN
 #tryinclude <csgo_colors>
 #tryinclude <morecolors>
@@ -48,6 +49,14 @@ public void OnPluginStart()
 	
 	LoadTranslations("jwp_modules.phrases");
 	LoadTranslations("core.phrases");
+}
+
+public void OnMapStart()
+{
+	char buffer[PLATFORM_MAX_PATH];
+	FormatEx(buffer, sizeof(buffer), "sound/%s", g_cOrderSound);
+	if (FileExists(buffer, true, NULL_STRING))
+		PrecacheSoundAny(buffer);
 }
 
 public void OnConfigsExecuted()
