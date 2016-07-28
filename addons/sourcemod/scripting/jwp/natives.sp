@@ -44,7 +44,7 @@ public int Native_SetWarden(Handle plugin, int numParams)
 		RemoveCmd(false);
 		return true;
 	}
-	else if (CheckClient(client) && GetClientTeam(client) == CS_TEAM_CT)
+	else if (CheckClient(client) && !g_bWardenBanned[client] && GetClientTeam(client) == CS_TEAM_CT)
 	{
 		RemoveCmd(false);
 		BecomeCmd(client, false, true);
@@ -66,7 +66,7 @@ public int Native_SetZamWarden(Handle plugin, int numParams)
 		RemoveZam();
 		return true;
 	}
-	else if (CheckClient(client) && GetClientTeam(client) == CS_TEAM_CT)
+	else if (CheckClient(client) && !g_bWardenBanned[client] && GetClientTeam(client) == CS_TEAM_CT)
 	{
 		RemoveZam();
 		SetZam(client);

@@ -19,6 +19,7 @@ ConVar	g_CvarOrderSound,
 char g_cOrderSound[PLATFORM_MAX_PATH], g_cOrderMsg[250];
 
 bool g_bChatListen;
+bool g_bIsCSGO;
 
 public Plugin myinfo = 
 {
@@ -37,8 +38,13 @@ public void OnPluginStart()
 	g_CvarOrderPanel = CreateConVar("jwp_order_panel", "0", "Включить отображение приказа в панели", _, true, 0.0, true, 1.0);
 	g_CvarPanelTime = CreateConVar("jwp_order_panel_time", "20", "Сколько секунд показывать меню приказа.", _, true, 1.0, true, 40.0);
 	
+	g_CvarOrderMsg.AddChangeHook(OnCvarChange);
+	
 	if (JWP_IsStarted()) JWP_Started();
 	AutoExecConfig(true, ITEM, "jwp");
+	
+	if (GetEngineVersion() == Engine_CSGO) g_bIsCSGO = true;
+	else g_bIsCSGO = false;
 	
 	LoadTranslations("jwp_modules.phrases");
 	LoadTranslations("core.phrases");
@@ -48,6 +54,18 @@ public void OnConfigsExecuted()
 {
 	g_CvarOrderSound.GetString(g_cOrderSound, sizeof(g_cOrderSound));
 	g_CvarOrderMsg.GetString(g_cOrderMsg, sizeof(g_cOrderMsg));
+	
+	// Need be loaded after phrases
+	RecheckOrderMsg();
+}
+
+public void OnCvarChange(ConVar cvar, const char[] oldValue, const char[] newValue)
+{
+	if (cvar == g_CvarOrderMsg)
+	{
+		strcopy(g_cOrderMsg, sizeof(g_cOrderMsg), newValue);
+		RecheckOrderMsg();
+	}
 }
 
 public void JWP_Started()
@@ -121,33 +139,33 @@ public int PreOrderPanel_Callback(Menu panel, MenuAction action, int client, int
 
 void CreateOrderMsg(int client, const char[] order)
 {
-	char text[250], orderbuf[250], name[MAX_NAME_LENGTH], langbuffer[24];
-	GetClientName(client, name, sizeof(name));
+	char text[250], orderbuf[250], nick[MAX_NAME_LENGTH];
+	GetClientName(client, nick, sizeof(nick));
 	strcopy(text, sizeof(text), order);
+	// To prevent using colors tags by user(player)
+	if (!g_bIsCSGO)
+		CRemoveTags(text, sizeof(text));
 	if (text[0] != '+')
 		ReplaceString(text, sizeof(text), "+", "\n", true);
 	strcopy(orderbuf, sizeof(orderbuf), text);
 	
 	/* Работа с чатом */
-	if (GetEngineVersion() == Engine_CSS)
-		CReplaceColorCodes(g_cOrderMsg, client, false, sizeof(g_CvarOrderMsg));
-	else
-		CGOReplaceColorSay(g_cOrderMsg, sizeof(g_cOrderMsg));
-	
-	ReplaceString(g_cOrderMsg, sizeof(g_cOrderMsg), "{text}", "", true);
 	
 	Format(text, sizeof(text), "%s%s", g_cOrderMsg, text);
-	ReplaceString(text, sizeof(text), "{nick}", name, true);
-	Format(langbuffer, sizeof(langbuffer), "%T", "Order_Warden_Prefix", LANG_SERVER);
-	ReplaceString(text, sizeof(text), "{prefix}", langbuffer, true);
-	PrintToChatAll("\x01%s", text);
+	ReplaceString(text, sizeof(text), "{nick}", nick, true);
+	if (g_bIsCSGO)
+		PrintToChatAll("\x01%s", text);
+	else
+		CPrintToChatAll("%s", text);
+	
 	
 	/* Конец работы с чатом */
 	
 	// И покажем террористам приказ в меню если квар позволяет
 	if (g_CvarOrderPanel.BoolValue)
 	{
-		Format(orderbuf, sizeof(orderbuf), "(%T) %s: %s\n \n", "Order_Warden_Prefix", LANG_SERVER, name, orderbuf);
+		char langbuffer[24];
+		Format(orderbuf, sizeof(orderbuf), "(%T) %s: %s\n \n", "Order_Warden_Prefix", LANG_SERVER, nick, orderbuf);
 		
 		Panel p1 = new Panel();
 		p1.DrawText(orderbuf);
@@ -166,4 +184,17 @@ void CreateOrderMsg(int client, const char[] order)
 public int OrderMsg_Callback(Menu panel, MenuAction action, int client, int slot)
 {
 	panel.Close();
+}
+
+void RecheckOrderMsg()
+{
+	char langbuffer[24];
+	if (g_bIsCSGO)
+		CGOReplaceColorSay(g_cOrderMsg, sizeof(g_cOrderMsg));
+	else
+		CReplaceColorCodes(g_cOrderMsg);
+	
+	FormatEx(langbuffer, sizeof(langbuffer), "%T", "Order_Warden_Prefix", LANG_SERVER);
+	ReplaceString(g_cOrderMsg, sizeof(g_cOrderMsg), "{prefix}", langbuffer, true);
+	ReplaceString(g_cOrderMsg, sizeof(g_cOrderMsg), "{text}", "", true);
 }

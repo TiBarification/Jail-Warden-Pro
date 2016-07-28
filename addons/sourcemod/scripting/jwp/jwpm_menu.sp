@@ -44,7 +44,8 @@ public int Cmd_RemoveFromMainMenu(Handle plugin, int numParams)
 			if (tmp[CMDMENU_PLUGIN] == plugin)
 			{
 				g_sMainMenuMap.Remove(key);
-				RehashMenu();
+				if (g_iWarden > 0)
+					RehashMenu();
 				found = true;
 			}
 		}

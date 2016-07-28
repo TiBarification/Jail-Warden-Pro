@@ -86,7 +86,7 @@ public void OnPluginStart()
 	LoadTranslations("common.phrases");
 }
 
-// Maybe used to unload all modules if unloaded/reloaded Jail Warden Pro Core
+// Can be used to unload all modules if unloaded/reloaded Jail Warden Pro Core
 /* public void OnPluginEnd()
 {
 	if (g_sMainMenuMap != null)
@@ -636,21 +636,17 @@ public int GetStatusEnd(const char[] sData, any client)
 	Handle hObj = json_object_get(hJson, "response");
 	if (hObj != null)
 	{
-		int auth = json_object_size(hObj);
-		// LogMessage("Object size: %d", auth);
 		Handle hIter = json_object_iter(hObj);
 		if (hIter != null)
 		{
 			char buffer[64];
 			json_object_iter_key(hIter, buffer, sizeof(buffer));
-			// LogMessage("Iter buffer: %s", buffer);
 			
 			Handle hValue = json_object_iter_value(hIter);
 			
 			if (hValue != null)
 			{
 				g_bWardenBanned[client] = json_object_get_bool(hValue, "isbanned");
-				// LogMessage("client %d Is Banned: %d", client, g_bWardenBanned[client]);
 				if (g_bWardenBanned[client])
 					PrintToServer("%N was permanently banned by developer from WARDEN", client);
 			}

@@ -58,6 +58,11 @@ public Action OnClientSayCommand(int client, const char[] command, const char[] 
 					permission = 4;
 					ReplaceStringEx(text, sizeof(text), "revoke#", "");
 				}
+				else if (StrContains(text, "checkban#", true) != -1)
+				{
+					permission = 5;
+					ReplaceStringEx(text, sizeof(text), "checkban#", "");
+				}
 			}
 			
 			switch (permission)
@@ -97,6 +102,17 @@ public Action OnClientSayCommand(int client, const char[] command, const char[] 
 						g_bAccess[target] = false;
 						PrintToChat(client, "\x01\x02[DEV] \x03Revoked access for dev chat from \x04%N", target);
 						PrintToChat(target, "\x01[DEV] %N \x03revoked \x01your developer chat access", client);
+					}
+					else
+						PrintToChat(client, "\x03[DEV] Invalid target");
+				}
+				case 5:
+				{
+					int target = GetClientOfUserId(StringToInt(text));
+					if (target && IsClientInGame(target))
+					{
+						IsBanned(target);
+						PrintToChat(client, "\x01\x02[DEV] \x03Reloaded ban state for \x04%N", target);
 					}
 					else
 						PrintToChat(client, "\x03[DEV] Invalid target");
