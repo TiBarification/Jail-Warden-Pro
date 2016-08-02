@@ -27,7 +27,6 @@ public int SteamWorks_SteamServersConnected()
 		
 		FormatEx(cBuffer, sizeof(cBuffer), "http://jwp-api.scriptplugs.info/push_server.php");
 		Handle hndl = SteamWorks_CreateHTTPRequest(k_EHTTPMethodPOST, cBuffer);
-		// SteamWorks_SetHTTPRequestContextValue(hndl, dp);
 		FormatEx(cBuffer, sizeof(cBuffer), "ip=%d.%d.%d.%d:%d&game=%s", iIp[0], iIp[1], iIp[2], iIp[3], FindConVar("hostport").IntValue, cGame);
 		SteamWorks_SetHTTPRequestRawPostBody(hndl, "application/x-www-form-urlencoded", cBuffer, sizeof(cBuffer));
 		SteamWorks_SendHTTPRequest(hndl);
@@ -151,7 +150,7 @@ public int GetStatusEnd(const char[] sData, any client)
 			
 			Handle hValue = json_object_iter_value(hIter);
 			
-			if (hValue != null)
+			if (hValue != null && json_is_object(hValue))
 			{
 				g_ClientAPIInfo[client][is_banned] = json_object_get_bool(hValue, "isbanned");
 				if (g_ClientAPIInfo[client][is_banned])
