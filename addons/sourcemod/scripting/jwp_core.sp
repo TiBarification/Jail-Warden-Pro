@@ -225,16 +225,12 @@ public void Event_OnRoundFreezeEnd(Event event, const char[] name, bool dontBroa
 	if (!Forward_OnWardenChoosing())
 		return;
 	else if (g_CvarChooseMode.IntValue == 1)
-	{
-		int client = JWP_GetRandomTeamClient(CS_TEAM_CT, true, true);
-		if (client != -1)
-			BecomeCmd(client);
-	}
+		JWP_FindNewWarden();
 	else if (g_CvarChooseMode.IntValue == 2)
 	{
 		for (int i = 1; i <= MaxClients; ++i)
 		{
-			if (CheckClient(i))
+			if (CheckClient(i) && GetClientTeam(i) == CS_TEAM_CT)
 			{
 				if (g_bIsCSGO)
 					CGOPrintToChat(i, "%T %T", "Core_Prefix", LANG_SERVER, "use_warden_cmd", LANG_SERVER);
@@ -546,10 +542,8 @@ int JWP_GetTeamClient(int team, bool alive)
 	{
 		if (CheckClient(i) && GetClientTeam(i) == team)
 		{
-			if (alive)
-			{
-				if (IsPlayerAlive(i)) counter++;
-			}
+			if (alive && IsPlayerAlive(i))
+				counter++;
 			else counter++;
 		}
 	}
@@ -558,14 +552,15 @@ int JWP_GetTeamClient(int team, bool alive)
 
 void JWP_FindNewWarden()
 {
-	if (!Forward_OnWardenChoosing() || !JWP_GetTeamClient(CS_TEAM_T, true) || !JWP_GetTeamClient(CS_TEAM_CT, true))
+	if (!Forward_OnWardenChoosing())
 		return;
-	else if (g_iZamWarden)
+	
+	if (g_iZamWarden)
 	{
 		BecomeCmd(g_iZamWarden);
 		RemoveZam();
 	}
-	else if (g_CvarChooseMode.IntValue == 1 || g_iZamWarden > 0)
+	else if (g_CvarChooseMode.IntValue == 1)
 	{
 		if (g_hChooseTimer != null)
 		{
@@ -578,7 +573,7 @@ void JWP_FindNewWarden()
 	{
 		for (int i = 1; i <= MaxClients; ++i)
 		{
-			if (CheckClient(i))
+			if (CheckClient(i) && GetClientTeam(i) == CS_TEAM_CT)
 			{
 				if (g_bIsCSGO)
 					CGOPrintToChat(i, "%T %T", "Core_Prefix", LANG_SERVER, "use_warden_cmd", LANG_SERVER);
@@ -600,10 +595,24 @@ public Action g_ChooseTimer_Callback(Handle timer)
 	if (!g_iWarden)
 	{
 		int client = g_iZamWarden;
+		
 		if (!client)
 			client = JWP_GetRandomTeamClient(CS_TEAM_CT, true, true);
 		if (client != -1)
-			BecomeCmd(client);
+			BecomeCmd(client, false);
+		else
+		{
+			int t_count, ct_count;
+			t_count = JWP_GetTeamClient(CS_TEAM_T, true);
+			ct_count = JWP_GetTeamClient(CS_TEAM_CT, true);
+			if (!t_count || !ct_count)
+			{
+				if (g_bIsCSGO)
+					CGOPrintToChatAll("%T %T", "Core_Prefix", LANG_SERVER, "warden_unable_due_to_teamcount", LANG_SERVER, t_count, ct_count);
+				else
+					CPrintToChatAll("%T %T", "Core_Prefix", LANG_SERVER, "warden_unable_due_to_teamcount", LANG_SERVER, t_count, ct_count);
+			}
+		}
 	}
 	g_hChooseTimer = null;
 }
@@ -618,7 +627,7 @@ stock int JWP_GetRandomTeamClient(int team, bool alive, bool ignore_resign)
 		{
 			if (ignore_resign)
 				Players[count++] = i;
-			else if (g_ClientAPIInfo[i][was_warden])
+			else if (!g_ClientAPIInfo[i][was_warden])
 				Players[count++] = i;
 		}
 	}

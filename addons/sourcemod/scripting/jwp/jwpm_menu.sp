@@ -67,11 +67,14 @@ public int Cmd_ShowMainMenu(Handle plugin, int numParams)
 {
 	int client = GetNativeCell(1);
 	
-	char error[64];
 	if (!CheckClient(client))
-		ThrowNativeError(SP_ERROR_NATIVE, error);
-	else if (!IsWarden(client)) return;
-	Cmd_ShowMenu(client, g_iLastMenuItemPos);
+		ThrowNativeError(SP_ERROR_NATIVE, "Client index %d is not in game or a bot or doesn't exist on server", client);
+	else if (!IsWarden(client))
+		ThrowNativeError(SP_ERROR_NATIVE, "Client %d isn't a warden. No menu generated, so no menu to display");
+	else if (g_mMainMenu == null)
+		ThrowNativeError(SP_ERROR_NATIVE, "No menu generated to display. You must set warden to show menu");
+	else
+		Cmd_ShowMenu(client, g_iLastMenuItemPos);
 }
 
 void Cmd_ShowMenu(int client, int pos = 0)
