@@ -1,0 +1,19 @@
+machine:
+  environment:
+    SMVERSION: 1.8
+test:
+  pre:
+    - wget --input-file=http://sourcemod.net/smdrop/$SMVERSION/sourcemod-latest-linux
+    - tar -xzf $(cat sourcemod-latest-linux)
+  override:
+    - cd addons/sourcemod/scripting/ && sudo wget "http://www.doctormckay.com/download/scripting/include/morecolors.inc" -O include/morecolors.inc
+    - cd addons/sourcemod/scripting/ && sudo wget "https://bitbucket.org/GoD_Tony/updater/raw/default/include/updater.inc" -O include/updater.inc
+    - cd addons/sourcemod/scripting/ && sudo wget "https://raw.githubusercontent.com/Franc1sco/VoiceAnnounceEX/master/scripting/include/voiceannounce_ex.inc" -O include/voiceannounce_ex.inc
+    - cd addons/sourcemod/scripting/ && sudo wget "https://raw.githubusercontent.com/Kailo97/smartjaildoors/master/addons/sourcemod/scripting/include/smartjaildoors.inc" -O include/smartjaildoors.inc
+    - cd addons/sourcemod/scripting/ && sudo wget "https://raw.githubusercontent.com/dataviruset/sm-hosties/master/addons/sourcemod/scripting/include/lastrequest.inc" -O include/lastrequest.inc
+    - cd addons/sourcemod/scripting/ && sudo wget "https://raw.githubusercontent.com/KyleSanderson/SteamWorks/master/Pawn/includes/SteamWorks.inc" -O include/SteamWorks.inc
+    - cd addons/sourcemod/scripting/ && sudo wget "https://raw.githubusercontent.com/thraaawn/SMJansson/master/pawn/scripting/include/smjansson.inc" -O include/smjansson.inc
+    - cd addons/sourcemod/scripting/ && sudo chmod +x spcomp
+    - cd addons/sourcemod/scripting/ && sudo mkdir compiled
+  post:
+    - cd addons/sourcemod/scripting/ && sudo sh compile.sh jwp_core.sp jwp_admincontrol.sp jwp_bequiet.sp jwp_coloring.sp jwp_dooraimcontrol.sp jwp_doorcontrol.sp jwp_fdnobunt.sp jwp_ff.sp jwp_freeday.sp jwp_guns.sp jwp_handcuffs.sp jwp_healthkit.sp jwp_isolator.sp jwp_laserbeam.sp jwp_mcoloring.sp jwp_mute.sp jwp_noblock.sp jwp_onlrstarted.sp jwp_order.sp jwp_otkaz_m.sp jwp_playsound.sp jwp_pris_counter.sp jwp_rebel.sp jwp_respawn.sp jwp_rextend.sp jwp_skin.sp jwp_slay.sp jwp_speed.sp jwp_stoplr.sp jwp_stripknife.sp jwp_tojail.sp jwp_transwarden.sp jwp_wcolor.sp jwp_whealth.sp jwp_wtimer.sp jwp_icon.sp
