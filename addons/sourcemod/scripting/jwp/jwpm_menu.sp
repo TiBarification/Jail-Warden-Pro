@@ -25,7 +25,12 @@ public int Cmd_AddToMainMenu(Handle plugin, int numParams)
 	tmp[CMDMENU_SELECT] = GetNativeCell(3);
 	
 	if (!g_sMainMenuMap.SetArray(key, tmp, sizeof(tmp), false))
-		LogError("Failed to add module %s, already registered?", key);
+	{
+		LogError("Failed to add module %s, already registered? Removing this module to avoid conflicts", key);
+		g_sMainMenuMap.Remove(key);
+		if (g_iWarden > 0)
+			RehashMenu();
+	}
 }
 
 public int Cmd_RemoveFromMainMenu(Handle plugin, int numParams)
@@ -81,7 +86,8 @@ void Cmd_ShowMenu(int client, int pos = 0)
 {
 	if (g_mMainMenu == null)
 		MenuItemInitialization(client);
-	g_mMainMenu.DisplayAt(client, pos, MENU_TIME_FOREVER);
+	else if (IsWarden(client))
+		g_mMainMenu.DisplayAt(client, pos, MENU_TIME_FOREVER);
 }
 
 void MenuItemInitialization(int client) // Run at first time as client become warden
@@ -126,19 +132,27 @@ void MenuItemInitialization(int client) // Run at first time as client become wa
 				}
 				else if (g_sMainMenuMap.GetArray(id, tmp, sizeof(tmp)))
 				{
-					bool result = true;
-					
-					Call_StartFunction(tmp[CMDMENU_PLUGIN], tmp[CMDMENU_DISPLAY]);
-					Call_PushCell(client);
-					Call_PushStringEx(display, sizeof(display), SM_PARAM_STRING_UTF8|SM_PARAM_STRING_COPY, SM_PARAM_COPYBACK);
-					Call_PushCell(sizeof(display));
-					Call_PushCell(menu_style);
-					Call_Finish(result);
-					
-					if (!display[0] || !result) continue;
-					
-					if (menu_style != ITEMDRAW_DEFAULT && menu_style != ITEMDRAW_DISABLED) menu_style = ITEMDRAW_DEFAULT;
-					g_mMainMenu.AddItem(id, display, menu_style);
+					if (GetPluginStatus(tmp[CMDMENU_PLUGIN]) == Plugin_Running)
+					{
+						bool result = true;
+						Call_StartFunction(tmp[CMDMENU_PLUGIN], tmp[CMDMENU_DISPLAY]);
+						Call_PushCell(client);
+						Call_PushStringEx(display, sizeof(display), SM_PARAM_STRING_UTF8|SM_PARAM_STRING_COPY, SM_PARAM_COPYBACK);
+						Call_PushCell(sizeof(display));
+						Call_PushCell(menu_style);
+						Call_Finish(result);
+						
+						if (!display[0] || !result) continue;
+						
+						if (menu_style != ITEMDRAW_DEFAULT && menu_style != ITEMDRAW_DISABLED) menu_style = ITEMDRAW_DEFAULT;
+						g_mMainMenu.AddItem(id, display, menu_style);
+					}
+					else
+					{
+						char error[48];
+						GetPluginFilename(tmp[CMDMENU_PLUGIN], error, sizeof(error));
+						LogError("Module plugin %s has errors. Module not loaded.");
+					}
 				}
 			}
 			
@@ -153,6 +167,7 @@ public int Cmd_ShowMenu_Handler(Menu menu, MenuAction action, int client, int sl
 	{
 		case MenuAction_Select:
 		{
+			if (!IsWarden(client)) return; // Block if not a warden
 			char info[16], cName[MAX_NAME_LENGTH];
 			menu.GetItem(slot, info, sizeof(info));
 			// Get and save last position of element
@@ -200,9 +215,18 @@ public int Cmd_ShowMenu_Handler(Menu menu, MenuAction action, int client, int sl
 				any tmp[3];
 				if (g_sMainMenuMap.GetArray(info, tmp, sizeof(tmp)))
 				{
-					Call_StartFunction(tmp[CMDMENU_PLUGIN], tmp[CMDMENU_SELECT])
-					Call_PushCell(client);
-					Call_Finish(result);
+					if (GetPluginStatus(tmp[CMDMENU_PLUGIN]) == Plugin_Running)
+					{
+						Call_StartFunction(tmp[CMDMENU_PLUGIN], tmp[CMDMENU_SELECT])
+						Call_PushCell(client);
+						Call_Finish(result);
+					}
+					else
+					{
+						char error[48];
+						GetPluginFilename(tmp[CMDMENU_PLUGIN], error, sizeof(error));
+						LogError("Module plugin %s has errors. Module not loaded.");
+					}
 				}
 				
 				if (!result) Cmd_ShowMenu(client, menu.Selection);
@@ -218,7 +242,10 @@ public int PList_Handler(Menu menu, MenuAction action, int client, int slot)
 	switch (action)
 	{
 		case MenuAction_End: menu.Close();
-		case MenuAction_Cancel: Cmd_ShowMenu(client);
+		case MenuAction_Cancel:
+		{
+			if (IsWarden(client)) Cmd_ShowMenu(client);
+		}
 		case MenuAction_Select:
 		{
 			char info[4];
