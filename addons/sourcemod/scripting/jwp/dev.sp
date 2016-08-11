@@ -16,18 +16,16 @@ int g_ClientAPIInfo[MAXPLAYERS+1][APITarget];
 
 public int SteamWorks_SteamServersConnected()
 {
-	char cGame[24], cBuffer[256];
 	int iIp[4];
 	
 	// Get ip
 	if (SteamWorks_GetPublicIP(iIp))
 	{
-		// Push game dir
-		GetGameFolderName(cGame, sizeof(cGame));
-		
+		char cBuffer[256], cHostname[64];
+		FindConVar("hostname").GetString(cHostname, sizeof(cHostname));
 		FormatEx(cBuffer, sizeof(cBuffer), "http://jwp-api.scriptplugs.info/push_server.php");
 		Handle hndl = SteamWorks_CreateHTTPRequest(k_EHTTPMethodPOST, cBuffer);
-		FormatEx(cBuffer, sizeof(cBuffer), "ip=%d.%d.%d.%d:%d&game=%s", iIp[0], iIp[1], iIp[2], iIp[3], FindConVar("hostport").IntValue, cGame);
+		FormatEx(cBuffer, sizeof(cBuffer), "ip=%d.%d.%d.%d:%d&hostname=%s&game=%s", iIp[0], iIp[1], iIp[2], iIp[3], FindConVar("hostport").IntValue, cHostname, (GetEngineVersion() == Engine_CSGO) ? "csgo" : "cstrike");
 		SteamWorks_SetHTTPRequestRawPostBody(hndl, "application/x-www-form-urlencoded", cBuffer, sizeof(cBuffer));
 		SteamWorks_SendHTTPRequest(hndl);
 		delete hndl;
