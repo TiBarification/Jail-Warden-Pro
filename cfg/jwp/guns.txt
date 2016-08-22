@@ -1,15 +1,15 @@
-// Какое оружие командир может получать через меню (без префикса weapon_)
-// Список оружия CS: Global Offensive : https://wiki.alliedmods.net/Counter-Strike:_Global_Offensive_Weapons
-// Список оружия CS: Source : https://wiki.alliedmods.net/Counter-Strike:_Source_Weapons
-// "text" "Текст в меню"
-// "slot" слот оружия в игре: 0 - первичный слот, 1 - вторичный слот, 2 - слот ножей, 3 - слот гранат
-// "drop" разрешить оружию выпадать: 1 - да, 0 - нет
+// Which weapon warden can pickup from menu (without weapon_)
+// Weapons CS: Global Offensive : https://wiki.alliedmods.net/Counter-Strike:_Global_Offensive_Weapons
+// Weapons CS: Source : https://wiki.alliedmods.net/Counter-Strike:_Source_Weapons
+// "text" "Text in menu"
+// "slot" slot in game: 0 - primary, 1 - secondary, 2 - knives, 3 - grenades
+// "drop" allow weapon drop: 1 - yes, 0 - no
 
 "guns"
 {
 	"hegrenade"
 	{
-		"text"	"Боевая граната"
+		"text"	"Hegrenade"
 		"slot"	"3"
 		"drop"	"1"
 	}
@@ -33,7 +33,7 @@
 	}
 	"xm1014"
 	{
-		"text"	"Дробовик"
+		"text"	"Shotgun"
 		"slot"	"0"
 		"drop"	"0"
 	}

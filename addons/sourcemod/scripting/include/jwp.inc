@@ -3,7 +3,7 @@
 	Author: White Wolf
 	www.hlmod.ru
 	
-	|Version by Core: 1.0.4+ /) 
+	|Version by Core: 1.0.5+ /) 
 */
 
 #if defined _jwp_included
@@ -261,6 +261,31 @@ native bool JWP_IsPrisonerIsolated(int client);
 native bool JWP_PrisonerIsolated(int client, bool state = true);
 
 /********************* END OF INTEGRATION WITH ISOLATOR MODULE ****************/
+/******************************************************************************/
+
+/********************* INTEGRATION WITH REBEL MODULE ***********************/
+/******************************************************************************/
+
+/**
+ *	Function to check if player rebelling
+ *	-
+ *	@param client			Client index
+ *	-
+ *	@return true if player is rebel, false otherwise
+ */
+native bool JWP_IsPrisonerRebel(int client);
+
+/**
+ *	Function to set player rebel state
+ *	-
+ *	@param client			Client index
+ *	@param state			True to set player state as rebel, false to remove this state
+ *	-
+ *	@return true if player state has been successfully changed, false otherwise
+ */
+native bool JWP_PrisonerRebel(int client, bool state = true);
+
+/********************* END OF INTEGRATION WITH REBEL MODULE ****************/
 /******************************************************************************/
 
 /**

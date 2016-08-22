@@ -166,6 +166,7 @@ public void OnClientDisconnect_Post(int client)
 	// Modules client reset
 	g_ClientAPIInfo[client][has_freeday] = false;
 	g_ClientAPIInfo[client][is_isolated] = false;
+	g_ClientAPIInfo[client][is_rebel] = false;
 }
 
 public void Event_OnRoundStart(Event event, const char[] name, bool dontBroadcast)
@@ -202,6 +203,7 @@ public void Event_OnPlayerDeath(Event event, const char[] name, bool dontBroadca
 		// Module client reset
 		g_ClientAPIInfo[client][has_freeday] = false;
 		g_ClientAPIInfo[client][is_isolated] = false;
+		g_ClientAPIInfo[client][is_rebel] = false;
 	}
 }
 
@@ -215,6 +217,7 @@ public void Event_OnPlayerTeam(Event event, const char[] name, bool dontBroadcas
 	// Module client reset
 	g_ClientAPIInfo[client][has_freeday] = false;
 	g_ClientAPIInfo[client][is_isolated] = false;
+	g_ClientAPIInfo[client][is_rebel] = false;
 }
 
 public void Event_OnRoundFreezeEnd(Event event, const char[] name, bool dontBroadcast)
@@ -527,6 +530,23 @@ bool PrisonerIsolated(int client, bool state = true)
 		g_ClientAPIInfo[client][is_isolated] = state;
 		return true;
 	}
+	return false;
+}
+
+bool PrisonerRebel(int client, bool state = true)
+{
+	if (client && IsClientInGame(client) && client <= MaxClients)
+	{
+		g_ClientAPIInfo[client][is_rebel] = state;
+		return true;
+	}
+	return false;
+}
+
+bool IsPrisonerRebel(int client)
+{
+	if (client && IsClientInGame(client) && client <= MaxClients)
+		return g_ClientAPIInfo[client][is_rebel];
 	return false;
 }
 

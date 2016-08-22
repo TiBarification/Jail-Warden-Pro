@@ -7,7 +7,7 @@
 #include <lastrequest>
 
 #define ITEM "handcuffs"
-#define PLUGIN_VERSION "1.1"
+#define PLUGIN_VERSION "1.2"
 
 int g_iClipOffset, g_iActiveWeaponOffset;
 bool g_bArrested[MAXPLAYERS+1];
@@ -149,19 +149,22 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 					int target = GetClientAimTarget(client, true);
 					if (target > 0 && IsClientInGame(target) && GetClientTeam(target) == CS_TEAM_T && IsPlayerAlive(target) && g_bArrested[target])
 					{
-						float origin[3], location[3], ang[3], location2[3];
-						GetClientAbsOrigin(client, origin);
-						GetClientEyePosition(client, location);
-						GetClientEyeAngles(client, ang);
-						location2[0] = (location[0]+(100*((Cosine(DegToRad(ang[1]))) * (Cosine(DegToRad(ang[0]))))));
-						location2[1] = (location[1]+(100*((Sine(DegToRad(ang[1]))) * (Cosine(DegToRad(ang[0]))))));
-						ang[0] -= (2*ang[0]);
-						location2[2] = origin[2] += 5.0;
-						origin[0] = 0.0;
-						origin[1] = 0.0;
-						origin[2] = 0.0;
-						
-						TeleportEntity(target, location2, ang, origin);
+						if (!Client_IsLookingAtWall(client, Entity_GetDistance(client, target)+40.0))
+						{
+							float origin[3], location[3], ang[3], location2[3];
+							GetClientAbsOrigin(client, origin);
+							GetClientEyePosition(client, location);
+							GetClientEyeAngles(client, ang);
+							location2[0] = (location[0]+(100*((Cosine(DegToRad(ang[1]))) * (Cosine(DegToRad(ang[0]))))));
+							location2[1] = (location[1]+(100*((Sine(DegToRad(ang[1]))) * (Cosine(DegToRad(ang[0]))))));
+							ang[0] -= (2*ang[0]);
+							location2[2] = origin[2] += 5.0;
+							origin[0] = 0.0;
+							origin[1] = 0.0;
+							origin[2] = 0.0;
+							
+							TeleportEntity(target, location2, ang, origin);
+						}
 					}
 				}
 			}
@@ -249,4 +252,105 @@ void ShowOverlayCuffs(int client, bool clear)
 			ClientCommand(client, "r_screenoverlay \"%s\"", g_cOverlayPath);
 		SetCommandFlags("r_screenoverlay", iFlag);
 	}
+}
+
+/** Original from smlib
+ * Checks if the client is currently looking at the wall in front
+ * of him with the given distance as max value.
+ * 
+ * @param client		Client Index.
+ * @param distance		Max Distance as Float value.
+ * @return				True if he is looking at a wall, false otherwise.
+ */
+stock bool Client_IsLookingAtWall(int client, float distance=40.0) {
+
+	float posEye[3], posEyeAngles[3];
+	bool isClientLookingAtWall = false;
+	
+	GetClientEyePosition(client, posEye);
+	GetClientEyeAngles(client, posEyeAngles);
+	
+	posEyeAngles[0] = 0.0;
+
+	Handle trace = TR_TraceRayFilterEx(posEye, posEyeAngles, CONTENTS_SOLID, RayType_Infinite, _smlib_TraceEntityFilter);
+	
+	if (TR_DidHit(trace)) {
+		
+		if (TR_GetEntityIndex(trace) > 0) {
+			delete trace;
+			return false;
+		}
+		
+		float posEnd[3];
+
+		TR_GetEndPosition(posEnd, trace);
+		
+		if (GetVectorDistance(posEye, posEnd, true) <= (distance * distance)) {
+			isClientLookingAtWall = true;
+		}
+	}
+	
+	delete trace;
+	
+	return isClientLookingAtWall;
+}
+
+public bool _smlib_TraceEntityFilter(int entity, int contentsMask)
+{
+	return entity == 0;
+}
+
+/**
+ * Returns the Float distance between two entities.
+ * Both entities must be valid.
+ *
+ * @param entity		Entity Index.
+ * @param target		Target Entity Index.
+ * @return				Distance Float value.
+ */
+stock float Entity_GetDistance(int entity, int target)
+{
+	float targetVec[3];
+	Entity_GetAbsOrigin(target, targetVec);
+	
+	return Entity_GetDistanceOrigin(entity, targetVec);
+}
+
+/**
+ * Gets the Absolute Origin (position) of an entity.
+ *
+ * @param entity			Entity index.
+ * @param vec				3 dimensional vector array.
+ * @noreturn
+ */
+stock void Entity_GetAbsOrigin(int entity, float vec[3])
+{
+	GetEntPropVector(entity, Prop_Send, "m_vecOrigin", vec);
+}
+
+/**
+ * Returns the Float distance between an entity
+ * and a vector origin.
+ *
+ * @param entity		Entity Index.
+ * @param target		Vector Origin.
+ * @return				Distance Float value.
+ */
+stock float Entity_GetDistanceOrigin(int entity, const float vec[3])
+{
+	float entityVec[3];
+	Entity_GetAbsOrigin(entity, entityVec);
+	
+	return GetVectorDistance(entityVec, vec);
+}
+
+/**
+ * Converts Source Game Units to metric Meters (abstract value)
+ * 
+ * @param units			Float value
+ * @return				Meters as Float value.
+ */
+stock float Math_UnitsToMeters(float units)
+{
+	return (units * 0.01905);
 }

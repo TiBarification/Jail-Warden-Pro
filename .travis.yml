@@ -52,7 +52,6 @@ deploy:
     file:
         - jwp.zip
         - jwp.tar.gz
-        - jwp/addons/sourcemod/plugins/jwp_core.smx
     skip_cleanup: true
     on:
         tags: true

@@ -4,6 +4,7 @@ enum APITarget
 {
 	bool:has_freeday,
 	bool:is_isolated,
+	bool:is_rebel,
 	bool:was_warden,
 	bool:is_banned,
 	bool:is_dev,
