@@ -13,6 +13,7 @@
 #define PLUGIN_VERSION "1.0.5-d"
 
 #define UPDATE_URL "http://updater.scriptplugs.info/jwp/updatefile.txt"
+#define LOG_PATH "addons/sourcemod/logs/JWP_Log.log"
 
 int g_iWarden, g_iZamWarden;
 
@@ -83,31 +84,6 @@ public void OnPluginStart()
 	LoadTranslations("common.phrases");
 }
 
-// Can be used to unload all modules if unloaded/reloaded Jail Warden Pro Core
-/* public void OnPluginEnd()
-{
-	if (g_sMainMenuMap != null)
-	{
-		any tmp[3];
-		char key[16], filename[48];
-		StringMapSnapshot snap = g_sMainMenuMap.Snapshot();
-		int len = snap.Length;
-		
-		for (int i = 0; i < len; i++)
-		{
-			snap.GetKey(i, key, sizeof(key));
-			if (g_sMainMenuMap.GetArray(key, tmp, sizeof(tmp)))
-			{
-				GetPluginFilename(tmp[CMDMENU_PLUGIN], filename, sizeof(filename));
-				ServerCommand("sm plugins unload \"%s\"", filename);
-				g_sMainMenuMap.Remove(key);
-			}
-		}
-		
-		delete snap;
-	}
-} */
-
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
 	// Forwards
@@ -141,7 +117,7 @@ public Action Updater_OnPluginChecking()
 
 public int Updater_OnPluginUpdated()
 {
-	LogMessage("Plugin updated. Old version was %s. Now reloading.", PLUGIN_VERSION);
+	LogToFile(LOG_PATH, "Plugin updated. Old version was %s. Now reloading.", PLUGIN_VERSION);
 	ReloadPlugin();
 }
 
