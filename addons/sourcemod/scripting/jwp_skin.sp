@@ -158,8 +158,8 @@ bool SetRandomSkin(int client, ArrayList& myArray, KeyValues& kv)
 		return false;
 	}
 	kv.GetString("path", model, sizeof(model), "");
-	// SetEntityModel(client, model);
-	PrintToChat(client, "Your new player skin: %s", model);
+	SetEntityModel(client, model);
+	// PrintToChat(client, "Your new player skin: %s", model);
 	
 	kv.GetString("arms_path", model, sizeof(model), "");
 	if (model[0] == 'm')
