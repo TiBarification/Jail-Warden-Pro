@@ -38,6 +38,15 @@ before_deploy:
     - mv addons/sourcemod/scripting/jwp/* jwp/addons/sourcemod/scripting/jwp/
     - mv addons/sourcemod/scripting/compiled jwp/addons/sourcemod/plugins
     - mv addons/sourcemod/scripting/include/jwp* jwp/addons/sourcemod/scripting/include/
+    - mv addons/sourcemod/scripting/include/morecolors.inc jwp/addons/sourcemod/scripting/include/
+    - mv addons/sourcemod/scripting/include/updater.inc jwp/addons/sourcemod/scripting/include/
+    - mv addons/sourcemod/scripting/include/voiceannounce_ex.inc jwp/addons/sourcemod/scripting/include/
+    - mv addons/sourcemod/scripting/include/smartjaildoors.inc jwp/addons/sourcemod/scripting/include/
+    - mv addons/sourcemod/scripting/include/lastrequest.inc jwp/addons/sourcemod/scripting/include/
+    - mv addons/sourcemod/scripting/include/SteamWorks.inc jwp/addons/sourcemod/scripting/include/
+    - mv addons/sourcemod/scripting/include/smjansson.inc jwp/addons/sourcemod/scripting/include/
+    - mv addons/sourcemod/scripting/include/csgo_colors.inc jwp/addons/sourcemod/scripting/include/
+    - mv addons/sourcemod/scripting/include/emitsoundany.inc jwp/addons/sourcemod/scripting/include/
     - mv addons/sourcemod/translations/jwp* jwp/addons/sourcemod/translations/
     - mv cfg/jwp/* jwp/cfg/jwp/
     - mv materials jwp/

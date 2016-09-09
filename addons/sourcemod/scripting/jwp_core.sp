@@ -1,7 +1,7 @@
 #include <sourcemod>
 #include <cstrike>
-#include <SteamWorks>
-#include <smjansson>
+// #include <SteamWorks>
+// #include <smjansson>
 #undef REQUIRE_PLUGIN
 #tryinclude <csgo_colors>
 #tryinclude <morecolors>
@@ -10,7 +10,7 @@
 // Force new syntax
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.0.5-d"
+#define PLUGIN_VERSION "1.0.5-e"
 
 #define UPDATE_URL "http://updater.scriptplugs.info/jwp/updatefile.txt"
 #define LOG_PATH "addons/sourcemod/logs/JWP_Log.log"
@@ -64,7 +64,7 @@ public void OnPluginStart()
 	RegConsoleCmd("sm_c", Command_BecomeWarden, "Warden menu");
 	
 	RegServerCmd("jwp_menu_reload", Command_JwpMenuReload, "Reload menu list");
-	RegServerCmd("jwp_apidata_reload", Command_JwpApidataReload, "Reload bans/developers");
+	// RegServerCmd("jwp_apidata_reload", Command_JwpApidataReload, "Reload bans/developers");
 	
 	HookEvent("round_start", Event_OnRoundStart, EventHookMode_PostNoCopy);
 	HookEvent("round_freeze_end", Event_OnRoundFreezeEnd, EventHookMode_PostNoCopy);
@@ -252,7 +252,7 @@ public Action Command_JwpMenuReload(int args)
 	return Plugin_Handled;
 }
 
-public Action Command_JwpApidataReload(int args)
+/* public Action Command_JwpApidataReload(int args)
 {
 	for (int i = 1; i <= MaxClients; ++i)
 	{
@@ -261,7 +261,7 @@ public Action Command_JwpApidataReload(int args)
 	}
 	PrintToServer("[JWP-API] Successfully reloaded");
 	return Plugin_Handled;
-}
+} */
 
 public Action Command_BecomeWarden(int client, int args)
 {

