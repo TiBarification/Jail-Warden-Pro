@@ -14,6 +14,8 @@ void Native_Initialization()
 	CreateNative("JWP_PrisonerSetFreeday", Native_PrisonerSetFreeday);
 	CreateNative("JWP_IsPrisonerIsolated", Native_IsPrisonerIsolated);
 	CreateNative("JWP_PrisonerIsolated", Native_PrisonerIsolated);
+	CreateNative("JWP_PrisonerRebel", Native_PrisonerRebel);
+	CreateNative("JWP_IsPrisonerRebel", Native_IsPrisonerRebel);
 	CreateNative("JWP_RehashMenu", Native_RehashMenu);
 	CreateNative("JWP_GetMenuItemCount", Native_JWPGetMenuItemCount);
 	CreateNative("JWP_RefreshMenuItem", Native_JWPRefreshMenuItem);
@@ -44,7 +46,7 @@ public int Native_SetWarden(Handle plugin, int numParams)
 		RemoveCmd(false);
 		return true;
 	}
-	else if (CheckClient(client) && GetClientTeam(client) == CS_TEAM_CT)
+	else if (CheckClient(client) && !g_ClientAPIInfo[client][is_banned] && GetClientTeam(client) == CS_TEAM_CT)
 	{
 		RemoveCmd(false);
 		BecomeCmd(client, false, true);
@@ -66,7 +68,7 @@ public int Native_SetZamWarden(Handle plugin, int numParams)
 		RemoveZam();
 		return true;
 	}
-	else if (CheckClient(client) && GetClientTeam(client) == CS_TEAM_CT)
+	else if (CheckClient(client) && !g_ClientAPIInfo[client][is_banned] && GetClientTeam(client) == CS_TEAM_CT)
 	{
 		RemoveZam();
 		SetZam(client);
@@ -137,6 +139,19 @@ public int Native_PrisonerIsolated(Handle plugin, int numParams)
 	int client = GetNativeCell(1);
 	bool state = view_as<bool>(GetNativeCell(2));
 	return PrisonerIsolated(client, state);
+}
+
+public int Native_PrisonerRebel(Handle plugin, int numParams)
+{
+	int client = GetNativeCell(1);
+	bool state = view_as<bool>(GetNativeCell(2));
+	return PrisonerRebel(client, state);
+}
+
+public int Native_IsPrisonerRebel(Handle plugin, int numParams)
+{
+	int client = GetNativeCell(1);
+	return IsPrisonerRebel(client);
 }
 
 public int Native_RehashMenu(Handle plugin, int numParams)

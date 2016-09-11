@@ -5,10 +5,10 @@
 
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.2"
+#define PLUGIN_VERSION "1.3"
 #define ITEM "speed"
 
-ConVar Cvar_SpeedValue;
+ConVar Cvar_AutoSpeed, Cvar_SpeedValue;
 bool g_bSpeed;
 
 public Plugin myinfo = 
@@ -22,6 +22,7 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
+	Cvar_AutoSpeed = CreateConVar("jwp_warden_autospeed", "1", "Enable speed of warden by default", _, true, 0.0, true, 1.0);
 	Cvar_SpeedValue = CreateConVar("jwp_warden_speed", "1.5", "Скорость командира", _, true, 1.0, true, 3.0);
 	if (JWP_IsStarted()) JWP_Started();
 	AutoExecConfig(true, ITEM, "jwp");
@@ -31,7 +32,12 @@ public void OnPluginStart()
 
 public void JWP_OnWardenChosen(int client)
 {
-	g_bSpeed = false;
+	if (Cvar_AutoSpeed.IntValue)
+		g_bSpeed = true;
+	else
+		g_bSpeed = false;
+	
+	SetEntPropFloat(client, Prop_Send, "m_flLaggedMovementValue", (g_bSpeed) ? Cvar_SpeedValue.FloatValue : 1.0);
 }
 
 public void JWP_OnWardenResigned(int client)

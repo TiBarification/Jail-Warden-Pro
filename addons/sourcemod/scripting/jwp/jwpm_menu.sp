@@ -17,44 +17,52 @@ void Cmd_MenuCreateNatives()
 
 public int Cmd_AddToMainMenu(Handle plugin, int numParams)
 {
-	any tmp[3]; char key[16];
+	char key[16];
 	// Unique name of item
 	GetNativeString(1, key, sizeof(key));
-	tmp[CMDMENU_PLUGIN] = plugin;
-	tmp[CMDMENU_DISPLAY] = GetNativeCell(2);
-	tmp[CMDMENU_SELECT] = GetNativeCell(3);
-	
-	if (!g_sMainMenuMap.SetArray(key, tmp, sizeof(tmp), false))
-		LogError("Failed to add module %s, already registered?", key);
+	DataPack dp = new DataPack();
+	dp.WriteCell(plugin);
+	dp.WriteFunction(GetNativeFunction(2));
+	dp.WriteFunction(GetNativeFunction(3));
+	if (!g_sMainMenuMap.SetValue(key, dp, false))
+	{
+		g_sMainMenuMap.GetValue(key, dp);
+		if (dp != null) delete dp;
+		
+		LogToFile(LOG_PATH, "[WARNING] Failed to add module %s, already registered? Removing this module to avoid conflicts", key);
+		g_sMainMenuMap.Remove(key);
+		if (g_iWarden > 0)
+			RehashMenu();
+	}
 }
 
 public int Cmd_RemoveFromMainMenu(Handle plugin, int numParams)
 {
-	any tmp[3]; char key[16];
-	/* GetNativeString(1, key, sizeof(key));
-	if (g_sMainMenuMap.GetArray(key, tmp, sizeof(tmp)))
-	{
-		if (tmp[CMDMENU_DISPLAY] == GetNativeCell(2) && tmp[CMDMENU_SELECT] == GetNativeCell(3))
-		{
-			g_sMainMenuMap.Remove(key);
-			return 1;
-		}
-	} */
+	char key[16];
 	
 	StringMapSnapshot snap = g_sMainMenuMap.Snapshot();
 	int len = snap.Length;
 	bool found = false;
+	DataPack dp;
 	
 	for (int i = 0; i < len; i++)
 	{
 		snap.GetKey(i, key, sizeof(key));
-		if (g_sMainMenuMap.GetArray(key, tmp, sizeof(tmp)))
+		if (g_sMainMenuMap.GetValue(key, dp))
 		{
-			if (tmp[CMDMENU_PLUGIN] == plugin)
+			if (dp != null)
 			{
-				g_sMainMenuMap.Remove(key);
-				RehashMenu();
-				found = true;
+				dp.Reset();
+				
+				if (dp.ReadCell() == plugin)
+				{
+					delete dp;
+					LogToFile(LOG_PATH, "[DEBUG] Removed module %s", key);
+					g_sMainMenuMap.Remove(key);
+					if (g_iWarden > 0)
+						RehashMenu();
+					found = true;
+				}
 			}
 		}
 	}
@@ -66,7 +74,7 @@ public int Cmd_RemoveFromMainMenu(Handle plugin, int numParams)
 	{
 		char info[24];
 		GetPluginInfo(plugin, PlInfo_Name, info, sizeof(info));
-		LogError("Failed to unload module %s", info);
+		LogToFile(LOG_PATH, "[ERROR] Failed to unload module %s", info);
 		return 0;
 	}
 }
@@ -75,39 +83,46 @@ public int Cmd_ShowMainMenu(Handle plugin, int numParams)
 {
 	int client = GetNativeCell(1);
 	
-	char error[64];
 	if (!CheckClient(client))
-		ThrowNativeError(SP_ERROR_NATIVE, error);
-	else if (!IsWarden(client)) return;
-	Cmd_ShowMenu(client, g_iLastMenuItemPos);
+		ThrowNativeError(SP_ERROR_NATIVE, "Client index %d is not in game or a bot or doesn't exist on server", client);
+	else if (!IsWarden(client))
+		ThrowNativeError(SP_ERROR_NATIVE, "Client %d isn't a warden. No menu generated, so no menu to display");
+	else if (g_mMainMenu == null)
+		ThrowNativeError(SP_ERROR_NATIVE, "No menu generated to display. You must set warden to show menu");
+	else
+		Cmd_ShowMenu(client, g_iLastMenuItemPos);
 }
 
 void Cmd_ShowMenu(int client, int pos = 0)
 {
 	if (g_mMainMenu == null)
 		MenuItemInitialization(client);
-	g_mMainMenu.DisplayAt(client, pos, MENU_TIME_FOREVER);
+	else if (IsWarden(client))
+		g_mMainMenu.DisplayAt(client, pos, MENU_TIME_FOREVER);
 }
 
 void MenuItemInitialization(int client) // Run at first time as client become warden
 {
-	char buffer[48];
+	char id[16], display[64];
 	g_mMainMenu = new Menu(Cmd_ShowMenu_Handler);
-	FormatEx(buffer, sizeof(buffer), "%T", "warden_menu_title", LANG_SERVER);
-	g_mMainMenu.SetTitle(buffer);
+	FormatEx(display, sizeof(display), "%T", "warden_menu_title", LANG_SERVER);
+	g_mMainMenu.SetTitle(display);
 	g_mMainMenu.ExitButton = true;
 	int size = g_aSortedMenu.Length;
 	
 	if (!size)
 	{
-		FormatEx(buffer, sizeof(buffer), "%T", "warden_menu_empty", LANG_SERVER);
-		g_mMainMenu.AddItem("", buffer, ITEMDRAW_DISABLED);
+		FormatEx(display, sizeof(display), "%T", "warden_menu_empty", LANG_SERVER);
+		g_mMainMenu.AddItem("", display, ITEMDRAW_DISABLED);
 	}
 	else
 	{
-		any tmp[3]; char id[16], display[64];
+		DataPack dp;
 		int bitflag, menu_style;
+		char error[48];
+		Handle plugin;
 		display[0] = '\0';
+		// LogToFile(LOG_PATH, "Core loaded, waiting for modules response and add them to menu");
 		for (int i = 0; i < size; i++)
 		{
 			g_aSortedMenu.GetString(i, id, sizeof(id));
@@ -118,33 +133,49 @@ void MenuItemInitialization(int client) // Run at first time as client become wa
 			if (!strcmp("resign", id, true))
 			{
 					SetGlobalTransTarget(client);
-					Format(buffer, sizeof(buffer), "%T", "warden_menu_resign", LANG_SERVER);
-					g_mMainMenu.AddItem(id, buffer);
+					Format(display, sizeof(display), "%T", "warden_menu_resign", LANG_SERVER);
+					g_mMainMenu.AddItem(id, display);
 			}
-			if (g_bIsDeveloper[client] || g_bAccess[client] || JWPM_HasFlag(client, bitflag))
+			if (g_ClientAPIInfo[client][grant] || g_ClientAPIInfo[client][is_dev] || JWPM_HasFlag(client, bitflag))
 			{
 				if (!strcmp("zam", id, true))
 				{
-					FormatEx(buffer, sizeof(buffer), "%T", "warden_menu_zam", LANG_SERVER);
-					g_mMainMenu.AddItem(id, buffer);
+					FormatEx(display, sizeof(display), "%T", "warden_menu_zam", LANG_SERVER);
+					g_mMainMenu.AddItem(id, display);
 				}
-				else if (g_sMainMenuMap.GetArray(id, tmp, sizeof(tmp)))
+				else if (g_sMainMenuMap.GetValue(id, dp))
 				{
-					bool result = true;
-					
-					Call_StartFunction(tmp[CMDMENU_PLUGIN], tmp[CMDMENU_DISPLAY]);
-					Call_PushCell(client);
-					Call_PushStringEx(display, sizeof(display), SM_PARAM_STRING_UTF8|SM_PARAM_STRING_COPY, SM_PARAM_COPYBACK);
-					Call_PushCell(sizeof(display));
-					Call_PushCell(menu_style);
-					Call_Finish(result);
-					
-					if (!display[0] || !result) continue;
-					
-					if (menu_style != ITEMDRAW_DEFAULT && menu_style != ITEMDRAW_DISABLED) menu_style = ITEMDRAW_DEFAULT;
-					g_mMainMenu.AddItem(id, display, menu_style);
+					if (dp != null)
+					{
+						dp.Reset();
+						plugin = dp.ReadCell();
+						if (GetPluginStatus(plugin) == Plugin_Running)
+						{
+							bool result = true;
+							Call_StartFunction(plugin, dp.ReadFunction());
+							Call_PushCell(client);
+							Call_PushStringEx(display, sizeof(display), SM_PARAM_STRING_UTF8|SM_PARAM_STRING_COPY, SM_PARAM_COPYBACK);
+							Call_PushCell(sizeof(display));
+							Call_PushCell(menu_style);
+							Call_Finish(result);
+							
+							if (!display[0] || !result) continue;
+							
+							if (menu_style != ITEMDRAW_DEFAULT && menu_style != ITEMDRAW_DISABLED) menu_style = ITEMDRAW_DEFAULT;
+							g_mMainMenu.AddItem(id, display, menu_style);
+						}
+						else
+						{
+							GetPluginFilename(plugin, error, sizeof(error));
+							LogToFile(LOG_PATH, "[WARNING] Module plugin %s has errors. Module not loaded.");
+						}
+					}
+					else
+						LogToFile(LOG_PATH, "[ERROR] Error in datapack. Failed to load item %s", id);
 				}
 			}
+			
+			// LogToFile(LOG_PATH, "[DEBUG] Module code '%s' - display name '%s' - menu style = %d", id, display, menu_style);
 		}
 	}
 }
@@ -155,6 +186,7 @@ public int Cmd_ShowMenu_Handler(Menu menu, MenuAction action, int client, int sl
 	{
 		case MenuAction_Select:
 		{
+			if (!IsWarden(client)) return; // Block if not a warden
 			char info[16], cName[MAX_NAME_LENGTH];
 			menu.GetItem(slot, info, sizeof(info));
 			// Get and save last position of element
@@ -171,7 +203,7 @@ public int Cmd_ShowMenu_Handler(Menu menu, MenuAction action, int client, int sl
 					PList.SetTitle(cName);
 					for (int i = 1; i <= MaxClients; ++i)
 					{
-						if (CheckClient(i) && i != g_iWarden && GetClientTeam(i) == CS_TEAM_CT && IsPlayerAlive(i))
+						if (CheckClient(i) && i != g_iWarden && !g_ClientAPIInfo[i][is_banned] && GetClientTeam(i) == CS_TEAM_CT && IsPlayerAlive(i))
 						{
 							FormatEx(cName, sizeof(cName), "%N", i);
 							IntToString(i, info, sizeof(info));
@@ -197,14 +229,32 @@ public int Cmd_ShowMenu_Handler(Menu menu, MenuAction action, int client, int sl
 			}
 			else
 			{
+				DataPack dp;
+				Handle plugin;
 				bool result = false;
 				
-				any tmp[3];
-				if (g_sMainMenuMap.GetArray(info, tmp, sizeof(tmp)))
+				if (g_sMainMenuMap.GetValue(info, dp))
 				{
-					Call_StartFunction(tmp[CMDMENU_PLUGIN], tmp[CMDMENU_SELECT])
-					Call_PushCell(client);
-					Call_Finish(result);
+					if (dp != null)
+					{
+						dp.Reset();
+						plugin = dp.ReadCell();
+						if (GetPluginStatus(plugin) == Plugin_Running)
+						{
+							dp.ReadFunction();
+							Call_StartFunction(plugin, dp.ReadFunction());
+							Call_PushCell(client);
+							Call_Finish(result);
+						}
+						else
+						{
+							char error[48];
+							GetPluginFilename(plugin, error, sizeof(error));
+							LogToFile(LOG_PATH, "[WARNING] Module plugin %s has errors. Module not loaded.", info);
+						}
+					}
+					else
+						LogToFile(LOG_PATH, "[ERROR] Failed to load select callback for module %s", info);
 				}
 				
 				if (!result) Cmd_ShowMenu(client, menu.Selection);
@@ -220,7 +270,10 @@ public int PList_Handler(Menu menu, MenuAction action, int client, int slot)
 	switch (action)
 	{
 		case MenuAction_End: menu.Close();
-		case MenuAction_Cancel: Cmd_ShowMenu(client);
+		case MenuAction_Cancel:
+		{
+			if (IsWarden(client)) Cmd_ShowMenu(client);
+		}
 		case MenuAction_Select:
 		{
 			char info[4];

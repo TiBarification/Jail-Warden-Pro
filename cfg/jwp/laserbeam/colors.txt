@@ -1,0 +1,45 @@
+"Colors"
+{
+	"rainbow"
+	{
+		"name"	"COLOR_Rainbow"
+		"rgba"	"0 0 0 0" // Cause this color does not exists :)
+		"life"	"25.0"
+		"width"	"2.0"
+	}
+	"red"
+	{
+		"name"	"COLOR_Red"
+		"rgba"	"255 0 0 255" // Color of laser in RGBA
+		"life"	"25.0" // Lifetime of laser in seconds
+		"width"	"2.0" // Width of laser
+	}
+	"green"
+	{
+		"name"	"COLOR_Green"
+		"rgba"	"0 255 0 255"
+		"life"	"25.0"
+		"width"	"2.0"
+	}
+	"blue"
+	{
+		"name"	"COLOR_Blue"
+		"rgba"	"0 0 255 255"
+		"life"	"25.0"
+		"width"	"2.0"
+	}
+	"magenta"
+	{
+		"name"	"COLOR_Magenta"
+		"rgba"	"255 0 255 255"
+		"life"	"25.0"
+		"width"	"2.0"
+	}
+	"cyan"
+	{
+		"name"	"COLOR_Cyan"
+		"rgba"	"0 255 255 255"
+		"life"	"25.0"
+		"width"	"2.0"
+	}
+}

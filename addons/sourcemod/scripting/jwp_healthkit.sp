@@ -8,7 +8,7 @@
 // Force 1.7 syntax
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.2"
+#define PLUGIN_VERSION "1.3"
 #define ITEM "healthkit"
 
 ConVar g_CvarHK_Limit, g_CvarHK_Wait, g_CvarHK_Life, g_CvarHK_Team, g_CvarHK_Hp, g_CvarHK_LimitHp, g_CvarHK_Model;
@@ -41,7 +41,18 @@ public void OnPluginStart()
 	
 	AutoExecConfig(true, ITEM, "jwp");
 	
+	g_CvarHK_Model.AddChangeHook(OnCvarChange);
+	
 	LoadTranslations("jwp_modules.phrases");
+}
+
+public void OnCvarChange(ConVar cvar, const char[] oldValue, const char[] newValue)
+{
+	if (cvar == g_CvarHK_Model)
+	{
+		g_CvarHK_Model.GetString(g_cHKModel, sizeof(g_cHKModel));
+		PrecacheModel(g_cHKModel, true);
+	}
 }
 
 public void OnMapStart()

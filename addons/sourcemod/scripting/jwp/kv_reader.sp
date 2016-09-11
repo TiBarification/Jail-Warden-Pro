@@ -20,9 +20,9 @@ void Load_SortingWardenMenu()
 			} while (kv.GotoNextKey(true));
 		}
 		else
-			LogError("GotoFirstSubKey error: cfg/jwp/warden_menu.txt");
+			LogToFile(LOG_PATH, "[ERROR] GotoFirstSubKey error: cfg/jwp/warden_menu.txt");
 	}
 	else
-		LogError("ImportFile error: cfg/jwp/warden_menu.txt");
+		LogToFile(LOG_PATH, "[ERROR] Import file error: cfg/jwp/warden_menu.txt");
 	delete kv;
 }

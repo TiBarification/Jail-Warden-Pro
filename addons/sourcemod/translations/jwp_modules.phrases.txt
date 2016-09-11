@@ -268,6 +268,73 @@
 		"en"		"Laser Beam"
 		"ru"		"Направляющий свет"
 	}
+	"LaserBeam_ToggleSelfStatus"
+	{
+		"en"		"Status"
+		"ru"		"Статус"
+	}
+	"LaserBeam_AccessForT"
+	{
+		"en"		"Access for T"
+		"ru"		"Доступ для Т"
+	}
+	"LaserBeam_PickUpColor"
+	{
+		"en"		"Pickup beam color"
+		"ru"		"Выбрать цвет луча"
+	}
+	"LaserBeam_TakeAction"
+	{
+		"#format"	"{1:N}"
+		"en"		"{1} revoked your laser beam"
+		"ru"		"{1} забрал у вас направляющий свет"
+	}
+	"LaserBeam_GrantAction"
+	{
+		"#format"	"{1:N}"
+		"en"		"{1} grant your laser beam. Use: !lpaints"
+		"ru"		"{1} дал вам направляющий свет. Напишите: !lpaints"
+	}
+	"LaserBeam_WardenMustGiveAccess"
+	{
+		"en"		"Only warden can give you access to this"
+		"ru"		"Только комадир может выдать вам доступ к этому"
+	}
+	"LaserBeam_ColorMenu"
+	{
+		"en"		"Choose color:"
+		"ru"		"Выберите цвет:"
+	}
+	"LaserBeam_COLOR_Rainbow"
+	{
+		"en"		"Rainbow"
+		"ru"		"Радуга"
+	}
+	"LaserBeam_COLOR_Red"
+	{
+		"en"		"Red"
+		"ru"		"Красный"
+	}
+	"LaserBeam_COLOR_Green"
+	{
+		"en"		"Green"
+		"ru"		"Зеленый"
+	}
+	"LaserBeam_COLOR_Blue"
+	{
+		"en"		"Blue"
+		"ru"		"Синий"
+	}
+	"LaserBeam_COLOR_Magenta"
+	{
+		"en"		"Magenta"
+		"ru"		"Magenta"
+	}
+	"LaserBeam_COLOR_Cyan"
+	{
+		"en"		"Cyan"
+		"ru"		"Cyan"
+	}
 	
 	"Mute_Menu_GiveMute"
 	{

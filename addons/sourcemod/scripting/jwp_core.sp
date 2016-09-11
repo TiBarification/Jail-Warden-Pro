@@ -1,5 +1,7 @@
 #include <sourcemod>
 #include <cstrike>
+#include <SteamWorks>
+#include <smjansson>
 #undef REQUIRE_PLUGIN
 #tryinclude <csgo_colors>
 #tryinclude <morecolors>
@@ -8,19 +10,17 @@
 // Force new syntax
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.0.4"
+#define PLUGIN_VERSION "1.0.5"
 
-#define UPDATE_URL "http://updater.tibari.ru/jwp/updatefile.txt"
+#define UPDATE_URL "http://updater.scriptplugs.info/jwp/updatefile.txt"
+#define LOG_PATH "addons/sourcemod/logs/JWP_Log.log"
 
 int g_iWarden, g_iZamWarden;
-bool g_bHasFreeday[MAXPLAYERS+1];
-bool g_bIsolated[MAXPLAYERS+1];
 
 bool is_started;
 bool g_bRoundEnd;
 bool g_bIsCSGO;
 
-bool g_bWasWarden[MAXPLAYERS+1];
 ArrayList g_aSortedMenu;
 ArrayList g_aFlags;
 
@@ -43,9 +43,9 @@ public Plugin myinfo =
 {
 	name = "[JWP] Core",
 	description = "Jail Warden Pro Core",
-	author = "White Wolf",
+	author = "White Wolf & TiBarification",
 	version = PLUGIN_VERSION,
-	url = "http://tibari.ru http://hlmod.ru"
+	url = "https://scriptplugs.info http://hlmod.ru http://steamcommunity.com/id/doctor_white"
 };
 
 public void OnPluginStart()
@@ -64,6 +64,7 @@ public void OnPluginStart()
 	RegConsoleCmd("sm_c", Command_BecomeWarden, "Warden menu");
 	
 	RegServerCmd("jwp_menu_reload", Command_JwpMenuReload, "Reload menu list");
+	RegServerCmd("jwp_apidata_reload", Command_JwpApidataReload, "Reload bans/developers");
 	
 	HookEvent("round_start", Event_OnRoundStart, EventHookMode_PostNoCopy);
 	HookEvent("round_freeze_end", Event_OnRoundFreezeEnd, EventHookMode_PostNoCopy);
@@ -82,31 +83,6 @@ public void OnPluginStart()
 	LoadTranslations("jwp.phrases");
 	LoadTranslations("common.phrases");
 }
-
-// Maybe used to unload all modules if unloaded/reloaded Jail Warden Pro Core
-/* public void OnPluginEnd()
-{
-	if (g_sMainMenuMap != null)
-	{
-		any tmp[3];
-		char key[16], filename[48];
-		StringMapSnapshot snap = g_sMainMenuMap.Snapshot();
-		int len = snap.Length;
-		
-		for (int i = 0; i < len; i++)
-		{
-			snap.GetKey(i, key, sizeof(key));
-			if (g_sMainMenuMap.GetArray(key, tmp, sizeof(tmp)))
-			{
-				GetPluginFilename(tmp[CMDMENU_PLUGIN], filename, sizeof(filename));
-				ServerCommand("sm plugins unload \"%s\"", filename);
-				g_sMainMenuMap.Remove(key);
-			}
-		}
-		
-		delete snap;
-	}
-} */
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -141,7 +117,7 @@ public Action Updater_OnPluginChecking()
 
 public int Updater_OnPluginUpdated()
 {
-	LogMessage("Plugin updated. Old version was %s. Now reloading.", PLUGIN_VERSION);
+	LogToFile(LOG_PATH, "Plugin updated. Old version was %s. Now reloading.", PLUGIN_VERSION);
 	ReloadPlugin();
 }
 
@@ -161,13 +137,12 @@ public void OnClientDisconnect_Post(int client)
 		RemoveCmd(false);
 	else if (IsZamWarden(client))
 		RemoveZam();
-	else if (g_bIsDeveloper[client]) g_bIsDeveloper[client] = false;
-	if (g_bAccess[client]) g_bAccess[client] = false;
 	g_iVoteResult[client] = 0;
 	
 	// Modules client reset
-	g_bHasFreeday[client] = false;
-	g_bIsolated[client] = false;
+	g_ClientAPIInfo[client][has_freeday] = false;
+	g_ClientAPIInfo[client][is_isolated] = false;
+	g_ClientAPIInfo[client][is_rebel] = false;
 }
 
 public void Event_OnRoundStart(Event event, const char[] name, bool dontBroadcast)
@@ -175,8 +150,8 @@ public void Event_OnRoundStart(Event event, const char[] name, bool dontBroadcas
 	for (int i = 1; i <= MaxClients; i++)
 	{
 		// Modules client reset
-		g_bHasFreeday[i] = false;
-		g_bIsolated[i] = false;
+		g_ClientAPIInfo[i][has_freeday] = false;
+		g_ClientAPIInfo[i][is_isolated] = false;
 	}
 	Forward_OnWardenResigned(g_iWarden, false);
 	EmptyPanel(g_iWarden);
@@ -202,8 +177,9 @@ public void Event_OnPlayerDeath(Event event, const char[] name, bool dontBroadca
 		else if (IsZamWarden(client)) RemoveZam();
 		
 		// Module client reset
-		g_bHasFreeday[client] = false;
-		g_bIsolated[client] = false;
+		g_ClientAPIInfo[client][has_freeday] = false;
+		g_ClientAPIInfo[client][is_isolated] = false;
+		g_ClientAPIInfo[client][is_rebel] = false;
 	}
 }
 
@@ -215,28 +191,25 @@ public void Event_OnPlayerTeam(Event event, const char[] name, bool dontBroadcas
 	else if (IsZamWarden(client)) RemoveZam();
 	
 	// Module client reset
-	g_bHasFreeday[client] = false;
-	g_bIsolated[client] = false;
+	g_ClientAPIInfo[client][has_freeday] = false;
+	g_ClientAPIInfo[client][is_isolated] = false;
+	g_ClientAPIInfo[client][is_rebel] = false;
 }
 
 public void Event_OnRoundFreezeEnd(Event event, const char[] name, bool dontBroadcast)
 {
 	for (int i = 1; i <= MaxClients; ++i)
-		g_bWasWarden[i] = false;
+		g_ClientAPIInfo[i][was_warden] = false;
 	g_bRoundEnd = false;
 	if (!Forward_OnWardenChoosing())
 		return;
 	else if (g_CvarChooseMode.IntValue == 1)
-	{
-		int client = JWP_GetRandomTeamClient(CS_TEAM_CT, true, true);
-		if (client != -1)
-			BecomeCmd(client);
-	}
+		JWP_FindNewWarden();
 	else if (g_CvarChooseMode.IntValue == 2)
 	{
 		for (int i = 1; i <= MaxClients; ++i)
 		{
-			if (CheckClient(i))
+			if (CheckClient(i) && GetClientTeam(i) == CS_TEAM_CT)
 			{
 				if (g_bIsCSGO)
 					CGOPrintToChat(i, "%T %T", "Core_Prefix", LANG_SERVER, "use_warden_cmd", LANG_SERVER);
@@ -279,11 +252,39 @@ public Action Command_JwpMenuReload(int args)
 	return Plugin_Handled;
 }
 
+public Action Command_JwpApidataReload(int args)
+{
+	for (int i = 1; i <= MaxClients; ++i)
+	{
+		if (IsClientInGame(i))
+			CheckClientFromAPI(i);
+	}
+	PrintToServer("[JWP-API] Successfully reloaded");
+	return Plugin_Handled;
+}
+
 public Action Command_BecomeWarden(int client, int args)
 {
 	if (CheckClient(client))
 	{
-		if (g_bRoundEnd)
+		if (g_ClientAPIInfo[client][is_banned])
+		{
+			if (g_bIsCSGO)
+			{
+				CGOPrintToChat(client, "{RED}You have WARDEN ban from DEVELOPER!");
+				CGOPrintToChat(client, "{RED}Reason: %s.", g_ClientAPIInfo[client][reason]);
+				CGOPrintToChat(client, "{RED}Ban is permanent!");
+				CGOPrintToChat(client, "{GREEN}Contact: jwp-unban@scriptplugs.info");
+			}
+			else
+			{
+				CPrintToChat(client, "{red}You have WARDEN ban from DEVELOPER!");
+				CPrintToChat(client, "{red}Reason: %s.", g_ClientAPIInfo[client][reason]);
+				CPrintToChat(client, "{red}Ban is permanent!");
+				CPrintToChat(client, "{green}Contact: jwp-unban@scriptplugs.info");
+			}
+		}
+		else if (g_bRoundEnd)
 		{
 			if (g_bIsCSGO)
 				CGOPrintToChat(client, "%T %T", "Core_Prefix", LANG_SERVER, "wait_for_new_round", LANG_SERVER);
@@ -394,9 +395,9 @@ bool CheckClient(int client)
 
 bool BecomeCmd(int client, bool waswarden = true, bool ignore_native = false)
 {
-	if (!Forward_OnWardenChoosing() && !ignore_native)
+	if (!Forward_OnWardenChoosing() || g_ClientAPIInfo[client][is_banned] && !ignore_native)
 		return false;
-	else if (g_bWasWarden[client] && waswarden)
+	else if (g_ClientAPIInfo[client][was_warden] && waswarden)
 	{
 		if (g_bIsCSGO)
 			CGOPrintToChat(client, "%T %T", "Core_Prefix", LANG_SERVER, "already_was_warden", LANG_SERVER);
@@ -407,7 +408,7 @@ bool BecomeCmd(int client, bool waswarden = true, bool ignore_native = false)
 	{
 		g_iWarden = client;
 		Forward_OnWardenChosen(client);
-		g_bWasWarden[client] = true;
+		g_ClientAPIInfo[client][was_warden] = true;
 		// Remove if new warden is previous zam of warden
 		if (g_iZamWarden == g_iWarden)
 			RemoveZam();
@@ -453,12 +454,12 @@ void RemoveZam()
 
 bool SetZam(int client)
 {
-	if (CheckClient(client) && IsPlayerAlive(client) && client != g_iWarden)
+	if (CheckClient(client) && !g_ClientAPIInfo[client][is_banned] && IsPlayerAlive(client) && client != g_iWarden)
 	{
 		g_iZamWarden = client;
 		Forward_OnWardenZamChosen(client);
 		// Give user ability to be warden if no warden
-		if (g_bWasWarden[client]) g_bWasWarden[client] = false;
+		if (g_ClientAPIInfo[client][was_warden]) g_ClientAPIInfo[client][was_warden] = false;
 		return true;
 	}
 	return false;
@@ -477,7 +478,7 @@ bool IsZamWarden(int client)
 bool PrisonerHasFreeday(int client)
 {
 	if (client && IsClientInGame(client) && client <= MaxClients)
-		return g_bHasFreeday[client];
+		return g_ClientAPIInfo[client][has_freeday];
 	return false;
 }
 
@@ -485,7 +486,7 @@ bool PrisonerSetFreeday(int client, bool state = true)
 {
 	if (client && IsClientInGame(client) && client <= MaxClients)
 	{
-		g_bHasFreeday[client] = state;
+		g_ClientAPIInfo[client][has_freeday] = state;
 		return true;
 	}
 	return false;
@@ -494,7 +495,7 @@ bool PrisonerSetFreeday(int client, bool state = true)
 bool IsPrisonerIsolated(int client)
 {
 	if (client && IsClientInGame(client) && client <= MaxClients)
-		return g_bIsolated[client];
+		return g_ClientAPIInfo[client][is_isolated];
 	return false;
 }
 
@@ -502,9 +503,26 @@ bool PrisonerIsolated(int client, bool state = true)
 {
 	if (client && IsClientInGame(client) && client <= MaxClients)
 	{
-		g_bIsolated[client] = state;
+		g_ClientAPIInfo[client][is_isolated] = state;
 		return true;
 	}
+	return false;
+}
+
+bool PrisonerRebel(int client, bool state = true)
+{
+	if (client && IsClientInGame(client) && client <= MaxClients)
+	{
+		g_ClientAPIInfo[client][is_rebel] = state;
+		return true;
+	}
+	return false;
+}
+
+bool IsPrisonerRebel(int client)
+{
+	if (client && IsClientInGame(client) && client <= MaxClients)
+		return g_ClientAPIInfo[client][is_rebel];
 	return false;
 }
 
@@ -520,10 +538,8 @@ int JWP_GetTeamClient(int team, bool alive)
 	{
 		if (CheckClient(i) && GetClientTeam(i) == team)
 		{
-			if (alive)
-			{
-				if (IsPlayerAlive(i)) counter++;
-			}
+			if (alive && IsPlayerAlive(i))
+				counter++;
 			else counter++;
 		}
 	}
@@ -532,14 +548,15 @@ int JWP_GetTeamClient(int team, bool alive)
 
 void JWP_FindNewWarden()
 {
-	if (!Forward_OnWardenChoosing() || !JWP_GetTeamClient(CS_TEAM_T, true) || !JWP_GetTeamClient(CS_TEAM_CT, true))
+	if (!Forward_OnWardenChoosing())
 		return;
-	else if (g_iZamWarden)
+	
+	if (g_iZamWarden)
 	{
 		BecomeCmd(g_iZamWarden);
 		RemoveZam();
 	}
-	else if (g_CvarChooseMode.IntValue == 1 || g_iZamWarden > 0)
+	else if (g_CvarChooseMode.IntValue == 1)
 	{
 		if (g_hChooseTimer != null)
 		{
@@ -552,7 +569,7 @@ void JWP_FindNewWarden()
 	{
 		for (int i = 1; i <= MaxClients; ++i)
 		{
-			if (CheckClient(i))
+			if (CheckClient(i) && GetClientTeam(i) == CS_TEAM_CT)
 			{
 				if (g_bIsCSGO)
 					CGOPrintToChat(i, "%T %T", "Core_Prefix", LANG_SERVER, "use_warden_cmd", LANG_SERVER);
@@ -574,10 +591,24 @@ public Action g_ChooseTimer_Callback(Handle timer)
 	if (!g_iWarden)
 	{
 		int client = g_iZamWarden;
+		
 		if (!client)
 			client = JWP_GetRandomTeamClient(CS_TEAM_CT, true, true);
 		if (client != -1)
-			BecomeCmd(client);
+			BecomeCmd(client, false);
+		else
+		{
+			int t_count, ct_count;
+			t_count = JWP_GetTeamClient(CS_TEAM_T, true);
+			ct_count = JWP_GetTeamClient(CS_TEAM_CT, true);
+			if (!t_count || !ct_count)
+			{
+				if (g_bIsCSGO)
+					CGOPrintToChatAll("%T %T", "Core_Prefix", LANG_SERVER, "warden_unable_due_to_teamcount", LANG_SERVER, t_count, ct_count);
+				else
+					CPrintToChatAll("%T %T", "Core_Prefix", LANG_SERVER, "warden_unable_due_to_teamcount", LANG_SERVER, t_count, ct_count);
+			}
+		}
 	}
 	g_hChooseTimer = null;
 }
@@ -592,7 +623,7 @@ stock int JWP_GetRandomTeamClient(int team, bool alive, bool ignore_resign)
 		{
 			if (ignore_resign)
 				Players[count++] = i;
-			else if (g_bWasWarden[i])
+			else if (!g_ClientAPIInfo[i][was_warden])
 				Players[count++] = i;
 		}
 	}

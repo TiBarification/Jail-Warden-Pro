@@ -167,4 +167,10 @@
 		"en"		"NO"
 		"ru"		"НЕТ"
 	}
+	"warden_unable_due_to_teamcount"
+	{
+		"#format"	"{1:d},{2:d}"
+		"en"		"Warden unavailable due to teams count (T = {1} / CT = {2})"
+		"ru"		"Командир недоступен из-за отсутствия одной из команд (T = {1} / CT = {2})"
+	}
 }

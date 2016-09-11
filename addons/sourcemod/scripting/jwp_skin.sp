@@ -5,12 +5,13 @@
 
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.2"
+#define PLUGIN_VERSION "1.3"
 
 ConVar g_CvarWardenSkin, g_CvarWardenZamSkin, g_CvarTRandomSkins, g_CvarCTRandomSkins;
 char g_cWardenSkin[PLATFORM_MAX_PATH], g_cWardenZamSkin[PLATFORM_MAX_PATH];
 
 ArrayList tModels_Array, ctModels_Array;
+KeyValues g_KvT, g_KvCT;
 
 public Plugin myinfo = 
 {
@@ -38,8 +39,7 @@ public Action Event_OnPlayerSpawn(Event event, const char[] name, bool dontBroad
 	if (CheckClient(client))
 	{
 		int team = GetClientTeam(client);
-		if (!TiB_SetSkin(client, team))
-			return Plugin_Continue;
+		TiB_SetSkin(client, team)
 	}
 	
 	return Plugin_Continue;
@@ -59,14 +59,12 @@ public void OnMapStart()
 	else
 		PrecacheModel("models/player/ct_sas.mdl", true);
 	// Other models
-	if (g_cWardenSkin[0] == 'm')
-		PrecacheModel(g_cWardenSkin, true);
-	if (g_cWardenZamSkin[0] == 'm')
-		PrecacheModel(g_cWardenZamSkin, true);
+	CheckMdlPath(g_cWardenSkin); // Precache warden skin
+	CheckMdlPath(g_cWardenZamSkin); // Precache zam warden skin
 	if (g_CvarTRandomSkins.BoolValue)
-		LoadSkinsFromFile("cfg/jwp/skin/t_models.txt", tModels_Array);
+		LoadSkinsFromFile("cfg/jwp/skin/t_models.txt", tModels_Array, g_KvT);
 	if (g_CvarCTRandomSkins.BoolValue)
-		LoadSkinsFromFile("cfg/jwp/skin/ct_models.txt", ctModels_Array);
+		LoadSkinsFromFile("cfg/jwp/skin/ct_models.txt", ctModels_Array, g_KvCT);
 }
 
 public void JWP_OnWardenChosen(int client)
@@ -97,61 +95,91 @@ public void JWP_OnWardenResigned(int client, bool himself)
 	}
 }
 
-void LoadSkinsFromFile(char[] path, ArrayList& myArray)
+void LoadSkinsFromFile(char[] path, ArrayList& myArray, KeyValues& kv)
 {
-	if (myArray != null)
+	if (kv != null) delete kv;
+	kv = new KeyValues("Models");
+	if (kv.ImportFromFile(path))
 	{
-		myArray.Clear();
-		myArray = null;
-	}
-	myArray = new ArrayList(PLATFORM_MAX_PATH);
-	Handle hFile = OpenFile(path, "r");
-	if (hFile != null)
-	{
-		char model[PLATFORM_MAX_PATH];
-		while (!IsEndOfFile(hFile) && ReadFileLine(hFile, model, sizeof(model)))
+		if (myArray != null)
 		{
-			if (TrimString(model) > 7 && (StrContains(model, "models", false) > -1) && (StrContains(model, ".mdl", false) > -1))
-			{
-				if (FileExists(model, false))
-				{
-					PrecacheModel(model, true);
-					myArray.PushString(model);
-				}
-				else
-					LogError("[JWP|Skins] Model path %s does not exists.", model);
-			}
+			myArray.Clear();
+			myArray = null;
 		}
+		char model[PLATFORM_MAX_PATH];
+		myArray = new ArrayList(1);
+		int sec_id;
+		
+		if (kv.GotoFirstSubKey(true))
+		{
+			do
+			{
+				if (kv.GetSectionSymbol(sec_id))
+				{
+					kv.GetString("path", model, sizeof(model), "");
+					if (CheckMdlPath(model))
+					{
+						myArray.Push(sec_id);
+						kv.GetString("arms_path", model, sizeof(model), "");
+						CheckMdlPath(model);
+					}
+					else
+						LogError("[JWP|Skins] Failed to find model path '%s'", model);
+				}
+			} while (kv.GotoNextKey(true));
+		}
+		kv.Rewind();
 	}
 	else
-		LogError("[JWP|Skins] Unable to load config file %s", path);
-	delete hFile;
+		SetFailState("[JWP|Skins] Unable to load config file %s", path);
 }
 
 bool TiB_SetSkin(int client, int team)
 {
 	if (team == CS_TEAM_T && g_CvarTRandomSkins.BoolValue)
-		return GetRandomSkin(client, tModels_Array);
+		return SetRandomSkin(client, tModels_Array, g_KvT);
 	else if (team == CS_TEAM_CT && g_CvarCTRandomSkins.BoolValue)
-		return GetRandomSkin(client, ctModels_Array);
+		return SetRandomSkin(client, ctModels_Array, g_KvCT);
 	return false;
 }
 
-bool GetRandomSkin(int client, ArrayList& myArray)
+bool SetRandomSkin(int client, ArrayList& myArray, KeyValues& kv)
 {
 	if (myArray == null || !myArray.Length)
 		return false;
+	kv.Rewind();
+	
 	char model[PLATFORM_MAX_PATH];
 	int randomid = GetRandomInt(0, myArray.Length-1);
-	if (myArray.GetString(randomid, model, sizeof(model)) && model[0] == 'm')
+	int sec_id = myArray.Get(randomid);
+	if (!kv.JumpToKeySymbol(sec_id))
 	{
-		SetEntityModel(client, model);
-		return true;
+		LogError("[JWP|Skins] Failed to find section number %d", sec_id);
+		return false;
 	}
-	return false;
+	kv.GetString("path", model, sizeof(model), "");
+	SetEntityModel(client, model);
+	// PrintToChat(client, "Your new player skin: %s", model);
+	
+	kv.GetString("arms_path", model, sizeof(model), "");
+	if (model[0] == 'm')
+		SetEntPropString(client, Prop_Send, "m_szArmsModel", model);
+	
+	int skin_id = kv.GetNum("skin", 0);
+	if (skin_id != 0)
+		SetEntProp(client, Prop_Send, "m_nSkin", skin_id); 
+	return true;
 }
 
 bool CheckClient(int client)
 {
 	return (client && IsClientConnected(client) && IsClientInGame(client) && !IsFakeClient(client));
+}
+
+bool CheckMdlPath(const char[] path)
+{
+	if (path[0] != 'm' || StrContains(path, ".mdl", false) == -1)
+		return false;
+	if(strlen(path) > 3 && FileExists(path) && !IsModelPrecached(path)) PrecacheModel(path, true);
+	return true;
 }
