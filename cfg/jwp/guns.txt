@@ -4,55 +4,76 @@
 // "text" "Text in menu"
 // "slot" slot in game: 0 - primary, 1 - secondary, 2 - knives, 3 - grenades
 // "drop" allow weapon drop: 1 - yes, 0 - no
+// "clip" ammo in clip: -1 - to skip this as default
+// "ammo" all ammo: -1 - to skip as default
+// To give weapon without ammo, need to setup `clip` and `ammo` parameters to 0 and drop exist weapon on this weapon slot.
+// Ex. i need deagle NO AMMO, i drop exist deagle or pistol in slot and press button on menu. Now i have deagle without ammo. Profit!
 
 "guns"
 {
-	"hegrenade"
+	"hegrenade" // UNIQUE NAME, do not duplicate them!!!
 	{
+		"weapon" "weapon_hegrenade"
 		"text"	"Hegrenade"
 		"slot"	"3"
 		"drop"	"1"
 	}
-	"ak47"
-	{
-		"text"	"AK-47"
-		"slot"	"0"
-		"drop"	"0"
-	}
 	"m4a1"
 	{
-		"text"	"M4"
+		"weapon" "weapon_m4a1"
+		"text"	"M-16"
 		"slot"	"0"
 		"drop"	"0"
 	}
 	"awp"
 	{
+		"weapon" "weapon_awp"
 		"text"	"AWP"
 		"slot"	"0"
 		"drop"	"0"
 	}
 	"xm1014"
 	{
-		"text"	"Shotgun"
+		"weapon" "weapon_xm1014"
+		"text"	"Дробовик"
 		"slot"	"0"
 		"drop"	"0"
 	}
 	"deagle"
 	{
+		"weapon" "weapon_deagle"
 		"text"	"Deagle"
 		"slot"	"1"
 		"drop"	"0"
 	}
+	"deagle_0"
+	{
+		"weapon"	"weapon_deagle"
+		"text"	"Deagle [NO AMMO]"
+		"slot"	"1"
+		"drop"	"0"
+		"clip"	"0"
+		"ammo"	"0"
+	}
 	"aug"
 	{
+		"weapon" "weapon_aug"
 		"text"	"AUG"
 		"slot"	"0"
 		"drop"	"0"
 	}
 	"taser"
 	{
+		"weapon" "weapon_taser"
 		"text"	"Taser"
 		"slot"	"2"
 		"drop"	"1"
+	}
+	"tagrenade"
+	{
+		"weapon" "weapon_tagrenade"
+		"text"	"Tagrenade"
+		"slot"	"3"
+		"drop"	"0"
 	}
 }

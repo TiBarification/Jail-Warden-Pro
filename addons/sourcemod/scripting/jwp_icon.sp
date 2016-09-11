@@ -41,7 +41,7 @@ public void JWP_OnWardenChosen(int client)
 public void OnMapStart()
 {
 	char path[PLATFORM_MAX_PATH];
-	if (path[0])
+	if (path[0] && !IsModelPrecached(path))
 	{
 		PrecacheModel(path);
 		FormatEx(path, sizeof(path), "materials/%s.vmt", g_cPath);

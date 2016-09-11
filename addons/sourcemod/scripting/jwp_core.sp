@@ -10,7 +10,7 @@
 // Force new syntax
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.0.5-f"
+#define PLUGIN_VERSION "1.0.5-f1"
 
 #define UPDATE_URL "http://updater.scriptplugs.info/jwp/updatefile.txt"
 #define LOG_PATH "addons/sourcemod/logs/JWP_Log.log"
@@ -43,9 +43,9 @@ public Plugin myinfo =
 {
 	name = "[JWP] Core",
 	description = "Jail Warden Pro Core",
-	author = "White Wolf",
+	author = "White Wolf & TiBarification",
 	version = PLUGIN_VERSION,
-	url = "http://tibari.ru http://hlmod.ru"
+	url = "https://scriptplugs.info http://hlmod.ru http://steamcommunity.com/id/doctor_white"
 };
 
 public void OnPluginStart()

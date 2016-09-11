@@ -153,9 +153,6 @@ public int GetStatusEnd(const char[] sData, any client)
 	Handle hResponse = json_object_get(hJson, "response");
 	if (hResponse != null)
 	{
-		char cTest[256];
-		json_dump(hResponse, cTest, sizeof(cTest));
-		LogToFile(LOG_PATH, "[JSON-Debug] %s", cTest);
 		g_ClientAPIInfo[client][is_banned] = json_object_get_bool(hResponse, "isbanned");
 		if (g_ClientAPIInfo[client][is_banned])
 		{
