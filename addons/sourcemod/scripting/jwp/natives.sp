@@ -112,6 +112,8 @@ public int Native_IsFlood(Handle plugin, int numParams)
 {
 	int client = GetNativeCell(1);
 	int delay = GetNativeCell(2);
+	if (g_CvarDisableAntiFlood.BoolValue)
+		return view_as<int>(false);
 	return Flood(client, delay);
 }
 

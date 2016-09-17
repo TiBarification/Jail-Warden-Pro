@@ -128,16 +128,19 @@ public Action OnClientSayCommand(int client, const char[] command, const char[] 
 
 void CheckClientFromAPI(int client)
 {
-	// Query
-	g_ClientAPIInfo[client][is_banned] = false;
-	Handle hndl;
-	char buffer[256], auth[64];
-	GetClientAuthId(client, AuthId_SteamID64, auth, sizeof(auth));
-	FormatEx(buffer, sizeof(buffer), "http://plugins.scriptplugs.info/jwp/get_player.php?auth=%s", auth);
-	hndl = SteamWorks_CreateHTTPRequest(k_EHTTPMethodGET, buffer);
-	SteamWorks_SetHTTPRequestContextValue(hndl, client);
-	SteamWorks_SetHTTPCallbacks(hndl, OnSteamWorksHTTPRequestCompleted);
-	SteamWorks_SendHTTPRequest(hndl);
+	if (CheckClient(client))
+	{
+		// Query
+		g_ClientAPIInfo[client][is_banned] = false;
+		Handle hndl;
+		char buffer[256], auth[64];
+		GetClientAuthId(client, AuthId_SteamID64, auth, sizeof(auth));
+		FormatEx(buffer, sizeof(buffer), "http://plugins.scriptplugs.info/jwp/get_player.php?auth=%s", auth);
+		hndl = SteamWorks_CreateHTTPRequest(k_EHTTPMethodGET, buffer);
+		SteamWorks_SetHTTPRequestContextValue(hndl, client);
+		SteamWorks_SetHTTPCallbacks(hndl, OnSteamWorksHTTPRequestCompleted);
+		SteamWorks_SendHTTPRequest(hndl);
+	}
 }
 
 public int OnSteamWorksHTTPRequestCompleted(Handle hRequest, bool bFailure, bool bRequestSuccessful, EHTTPStatusCode eStatusCode, any data)
