@@ -4,10 +4,11 @@
 #include <cstrike>
 #include <jwp>
 #undef REQUIRE_PLUGIN
+#include <hosties>
 #include <lastrequest>
 
 #define ITEM "handcuffs"
-#define PLUGIN_VERSION "1.2"
+#define PLUGIN_VERSION "1.3"
 
 int g_iClipOffset, g_iActiveWeaponOffset;
 bool g_bArrested[MAXPLAYERS+1];

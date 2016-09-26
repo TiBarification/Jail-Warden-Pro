@@ -1,10 +1,11 @@
 #include <sourcemod>
+#include <hosties>
 #include <lastrequest>
 #include <jwp>
 
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.1"
+#define PLUGIN_VERSION "1.2"
 
 bool g_bEnabled = true;
 
