@@ -18,8 +18,8 @@ install:
     - tar -xzf $(cat sourcemod-latest-linux)
 before_script:
 # TODO Import other modules to compilation
-    - wget "https://raw.githubusercontent.com/thraaawn/SMJansson/master/bin/smjansson.ext.so" -O addons/sourcemod/extensions
-    - wget "https://raw.githubusercontent.com/thraaawn/SMJansson/master/bin/smjansson.ext.dll" -O addons/sourcemod/extensions
+    - wget "https://raw.githubusercontent.com/thraaawn/SMJansson/master/bin/smjansson.ext.so" -O addons/sourcemod/extensions/smjansson.ext.so
+    - wget "https://raw.githubusercontent.com/thraaawn/SMJansson/master/bin/smjansson.ext.dll" -O addons/sourcemod/extensions/smjansson.ext.dll
     - cd addons/sourcemod/scripting/
     - wget "http://www.doctormckay.com/download/scripting/include/morecolors.inc" -O include/morecolors.inc
     - wget "https://bitbucket.org/GoD_Tony/updater/raw/default/include/updater.inc" -O include/updater.inc
