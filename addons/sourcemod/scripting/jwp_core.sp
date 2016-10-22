@@ -10,7 +10,7 @@
 // Force new syntax
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.0.5A"
+#define PLUGIN_VERSION "1.0.6A"
 
 #define UPDATE_URL "http://updater.scriptplugs.info/jwp/updatefile.txt"
 #define LOG_PATH "addons/sourcemod/logs/JWP_Log.log"
@@ -432,19 +432,22 @@ bool BecomeCmd(int client, bool waswarden = true, bool ignore_native = false)
 
 void RemoveCmd(bool themself = true)
 {
-	Forward_OnWardenResigned(g_iWarden, themself);
-	if (themself)
+	if (g_iWarden)
 	{
-		if (g_bIsCSGO)
-			CGOPrintToChatAll("%T %T", "Core_Prefix", LANG_SERVER, "warden_resign", LANG_SERVER, g_iWarden);
-		else
-			CPrintToChatAll("%T %T", "Core_Prefix", LANG_SERVER, "warden_resign", LANG_SERVER, g_iWarden);
+		Forward_OnWardenResigned(g_iWarden, themself);
+		if (themself)
+		{
+			if (g_bIsCSGO)
+				CGOPrintToChatAll("%T %T", "Core_Prefix", LANG_SERVER, "warden_resign", LANG_SERVER, g_iWarden);
+			else
+				CPrintToChatAll("%T %T", "Core_Prefix", LANG_SERVER, "warden_resign", LANG_SERVER, g_iWarden);
+		}
+		EmptyPanel(g_iWarden);
+		g_iWarden = 0;
+		delete g_mMainMenu;
+		
+		JWP_FindNewWarden();
 	}
-	EmptyPanel(g_iWarden);
-	if (g_iWarden) g_iWarden = 0;
-	delete g_mMainMenu;
-	
-	JWP_FindNewWarden();
 }
 
 void RemoveZam()
@@ -583,6 +586,19 @@ void JWP_FindNewWarden()
 		int client = JWP_GetRandomTeamClient(CS_TEAM_CT, true, false);
 		if (client != -1)
 			BecomeCmd(client);
+		else
+		{
+			int t_count, ct_count;
+			t_count = JWP_GetTeamClient(CS_TEAM_T, true);
+			ct_count = JWP_GetTeamClient(CS_TEAM_CT, true);
+			if (!t_count || !ct_count)
+			{
+				if (g_bIsCSGO)
+					CGOPrintToChatAll("%T %T", "Core_Prefix", LANG_SERVER, "warden_unable_due_to_teamcount", LANG_SERVER, t_count, ct_count);
+				else
+					CPrintToChatAll("%T %T", "Core_Prefix", LANG_SERVER, "warden_unable_due_to_teamcount", LANG_SERVER, t_count, ct_count);
+			}
+		}
 	}
 }
 
@@ -611,13 +627,14 @@ public Action g_ChooseTimer_Callback(Handle timer)
 		}
 	}
 	g_hChooseTimer = null;
+	return Plugin_Stop;
 }
 
 stock int JWP_GetRandomTeamClient(int team, bool alive, bool ignore_resign)
 {
-	int[] Players = new int[MaxClients];
+	int[] Players = new int[MaxClients + 1];
 	int count;
-	for (int i = 1; i <= MaxClients; i++)
+	for (int i = 1; i <= MaxClients; ++i)
 	{
 		if (IsClientInGame(i) && GetClientTeam(i) == team && (alive && IsPlayerAlive(i)))
 		{

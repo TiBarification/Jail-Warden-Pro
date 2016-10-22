@@ -18,6 +18,8 @@ install:
     - tar -xzf $(cat sourcemod-latest-linux)
 before_script:
 # TODO Import other modules to compilation
+    - wget "https://raw.githubusercontent.com/thraaawn/SMJansson/master/bin/smjansson.ext.so" -O addons/sourcemod/extensions/smjansson.ext.so
+    - wget "https://raw.githubusercontent.com/thraaawn/SMJansson/master/bin/smjansson.ext.dll" -O addons/sourcemod/extensions/smjansson.ext.dll
     - cd addons/sourcemod/scripting/
     - wget "http://www.doctormckay.com/download/scripting/include/morecolors.inc" -O include/morecolors.inc
     - wget "https://bitbucket.org/GoD_Tony/updater/raw/default/include/updater.inc" -O include/updater.inc
@@ -34,7 +36,8 @@ script: ./compile.sh jwp_core.sp jwp_admincontrol.sp jwp_bequiet.sp jwp_coloring
 #Releases
 before_deploy:
     - cd ../../..
-    - mkdir jwp jwp/cfg jwp/cfg/jwp jwp/addons jwp/addons/sourcemod jwp/addons/sourcemod/scripting jwp/addons/sourcemod/scripting/jwp jwp/addons/sourcemod/scripting/include jwp/addons/sourcemod/translations
+    - mkdir jwp jwp/cfg jwp/cfg/jwp jwp/addons jwp/addons/sourcemod jwp/addons/sourcemod/extensions jwp/addons/sourcemod/scripting jwp/addons/sourcemod/scripting/jwp jwp/addons/sourcemod/scripting/include jwp/addons/sourcemod/translations
+    - mv addons/sourcemod/extensions/smjansson* jwp/addons/sourcemod/extensions/
     - mv addons/sourcemod/scripting/jwp_*.sp jwp/addons/sourcemod/scripting/
     - mv addons/sourcemod/scripting/jwp/* jwp/addons/sourcemod/scripting/jwp/
     - mv addons/sourcemod/scripting/compiled jwp/addons/sourcemod/plugins
