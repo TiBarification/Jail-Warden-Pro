@@ -20,7 +20,7 @@ public void OnPluginStart()
 }
 
 //When Warden speaks or muted client wants to speak
-public bool OnClientSpeakingEx(client)
+public int OnClientSpeakingEx(client)
 {
 	if (client && IsClientInGame(client) && (JWP_IsWarden(client) || JWP_IsZamWarden(client)))
 	{
