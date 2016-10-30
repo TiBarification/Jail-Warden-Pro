@@ -10,8 +10,8 @@ public Plugin:myinfo = {
 	name = "[JWP] Be quiet",
 	author = "Fastmancz & White Wolf",
 	description = "Be quiet, please!",
-	version = "1.2",
-	url = "http://tibari.ru http://hlmod.ru"
+	version = "1.3",
+	url = "http://scriptplugs.info http://hlmod.ru"
 };
 
 public void OnPluginStart()
@@ -20,7 +20,7 @@ public void OnPluginStart()
 }
 
 //When Warden speaks or muted client wants to speak
-public int OnClientSpeakingEx(client)
+public bool OnClientSpeakingEx(client)
 {
 	if (client && IsClientInGame(client) && (JWP_IsWarden(client) || JWP_IsZamWarden(client)))
 	{
@@ -31,9 +31,10 @@ public int OnClientSpeakingEx(client)
 				if (GetClientTeam(i) == CS_TEAM_T)
 				{
 					PrintCenterText(i, "%T", "BeQuiet_Listen", LANG_SERVER);
-					SetClientListeningFlags(i, VOICE_MUTED);
 					if (GetUserAdmin(i) != INVALID_ADMIN_ID)
 						SetClientListeningFlags(i, VOICE_NORMAL);
+					else
+						SetClientListeningFlags(i, VOICE_MUTED);
 				}
 			}
 		}
@@ -47,7 +48,7 @@ public int OnClientSpeakingEnd(client)
 	{
 		if(IsClientInGame(i))
 		{
-			if (GetClientTeam(i) == CS_TEAM_T && !BaseComm_IsClientMuted(i) && IsPlayerAlive(i))
+			if (!BaseComm_IsClientMuted(i))
 			{
 				SetClientListeningFlags(i, VOICE_NORMAL);
 			}
