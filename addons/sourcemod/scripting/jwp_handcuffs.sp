@@ -25,6 +25,8 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
+	if (GetEngineVersion() != Engine_CSGO) SetFailState("Plugin works only in CS:GO");
+	
 	g_iClipOffset = FindSendPropInfo("CBaseCombatWeapon", "m_iClip1");
 	g_iActiveWeaponOffset = FindSendPropInfo("CCSPlayer", "m_hActiveWeapon");
 	if (JWP_IsStarted()) JWP_Started();

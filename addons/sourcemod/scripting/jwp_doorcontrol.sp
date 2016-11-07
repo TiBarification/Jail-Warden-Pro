@@ -6,7 +6,7 @@
 
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.2"
+#define PLUGIN_VERSION "1.3"
 #define ITEM_DOOR_OPEN "door_open"
 #define ITEM_DOOR_CLOSE "door_close"
 
@@ -31,7 +31,8 @@ public void OnPluginStart()
 
 public void OnMapStart()
 {
-	CreateDoorList();
+	if (!g_bSmartDoors)
+		CreateDoorList();
 }
 
 public void OnAllPluginsLoaded()

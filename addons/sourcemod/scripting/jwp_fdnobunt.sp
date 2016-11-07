@@ -8,8 +8,8 @@
 
 public Plugin myinfo = 
 {
-	name = "[JWP] Freeday no weapon & bunt",
-	description = "If player has freeday, he can't bunt",
+	name = "[JWP] Freeday no weapon & rebel",
+	description = "If player has freeday, he can't be a rebel",
 	author = "White Wolf",
 	version = PLUGIN_VERSION,
 	url = "http://hlmod.ru"

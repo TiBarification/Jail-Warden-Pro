@@ -10,7 +10,7 @@
 // Force new syntax
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.0.6A"
+#define PLUGIN_VERSION "1.0.6B"
 
 #define UPDATE_URL "http://updater.scriptplugs.info/jwp/updatefile.txt"
 #define LOG_PATH "addons/sourcemod/logs/JWP_Log.log"
@@ -267,7 +267,14 @@ public Action Command_BecomeWarden(int client, int args)
 {
 	if (CheckClient(client))
 	{
-		if (g_ClientAPIInfo[client][is_banned])
+		if (!Forward_OnWardenChoosing())
+		{
+			if (g_bIsCSGO)
+				CGOPrintToChat(client, "%T %T", "Core_Prefix", LANG_SERVER, "warden_blocked", LANG_SERVER);
+			else
+				CPrintToChat(client, "%T %T", "Core_Prefix", LANG_SERVER, "warden_blocked", LANG_SERVER);
+		}
+		else if (g_ClientAPIInfo[client][is_banned])
 		{
 			if (g_bIsCSGO)
 			{
@@ -302,15 +309,7 @@ public Action Command_BecomeWarden(int client, int args)
 		}
 		else
 		{
-			if (!Forward_OnWardenChoosing())
-			{
-				if (g_bIsCSGO)
-					CGOPrintToChat(client, "%T %T", "Core_Prefix", LANG_SERVER, "warden_blocked", LANG_SERVER);
-				else
-					CPrintToChat(client, "%T %T", "Core_Prefix", LANG_SERVER, "warden_blocked", LANG_SERVER);
-				return Plugin_Handled;
-			}
-			else if (g_CvarChooseMode.IntValue == 1)
+			if (g_CvarChooseMode.IntValue == 1)
 			{
 				if (g_bIsCSGO)
 					CGOPrintToChat(client, "%T %T", "Core_Prefix", LANG_SERVER, "warden_choose_random", LANG_SERVER);
