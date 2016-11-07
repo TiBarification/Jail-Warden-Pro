@@ -31,7 +31,7 @@ before_script:
     - wget "https://raw.githubusercontent.com/thraaawn/SMJansson/master/pawn/scripting/include/smjansson.inc" -O include/smjansson.inc
     - chmod +x spcomp
     - mkdir compiled
-script: ./compile.sh jwp_core.sp jwp_admincontrol.sp jwp_bequiet.sp jwp_coloring.sp jwp_dooraimcontrol.sp jwp_doorcontrol.sp jwp_fdnobunt.sp jwp_ff.sp jwp_freeday.sp jwp_guns.sp jwp_handcuffs.sp jwp_healthkit.sp jwp_isolator.sp jwp_laserbeam.sp jwp_mcoloring.sp jwp_mute.sp jwp_noblock.sp jwp_onlrstarted.sp jwp_order.sp jwp_otkaz_m.sp jwp_playsound.sp jwp_pris_counter.sp jwp_rebel.sp jwp_respawn.sp jwp_rextend.sp jwp_skin.sp jwp_slay.sp jwp_speed.sp jwp_stoplr.sp jwp_stripknife.sp jwp_tojail.sp jwp_transwarden.sp jwp_wcolor.sp jwp_whealth.sp jwp_wtimer.sp jwp_icon.sp
+script: ./compile.sh jwp_core.sp jwp_admincontrol.sp jwp_bequiet.sp jwp_coloring.sp jwp_dooraimcontrol.sp jwp_doorcontrol.sp jwp_fdnobunt.sp jwp_ff.sp jwp_freeday.sp jwp_guns.sp jwp_handcuffs.sp jwp_healthkit.sp jwp_isolator.sp jwp_laserbeam.sp jwp_mcoloring.sp jwp_mute.sp jwp_noblock.sp jwp_onlrstarted.sp jwp_order.sp jwp_otkaz_m.sp jwp_playsound.sp jwp_pris_counter.sp jwp_rebel.sp jwp_respawn.sp jwp_rextend.sp jwp_skin.sp jwp_slay.sp jwp_speed.sp jwp_stoplr.sp jwp_stripknife.sp jwp_tojail.sp jwp_transwarden.sp jwp_wcolor.sp jwp_whealth.sp jwp_wtimer.sp jwp_icon.sp jwp_shootguns.sp
 
 #Releases
 before_deploy:

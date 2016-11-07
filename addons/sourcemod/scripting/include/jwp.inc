@@ -13,7 +13,7 @@
 
 public SharedPlugin __pl_jwp =
 {
-	name = "jwp_core", 
+	name = "jwp", 
 	file = "jwp_core.smx", 
 	#if defined REQUIRE_PLUGIN
 	required = 1, 
