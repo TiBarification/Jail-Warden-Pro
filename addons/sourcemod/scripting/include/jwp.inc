@@ -11,6 +11,17 @@
 #endif
 #define _jwp_included
 
+public SharedPlugin __pl_jwp =
+{
+	name = "jwp", 
+	file = "jwp_core.smx", 
+	#if defined REQUIRE_PLUGIN
+	required = 1, 
+	#else
+	required = 0, 
+	#endif
+};
+
 /**
  *	Called when the jail warden pro is ready
  *	-
@@ -316,3 +327,42 @@ native int JWP_GetMenuItemCount();
  *	@return true if style changed, false otherwise
  */
 native bool JWP_RefreshMenuItem(char[] item, char[] newdisp = "", int style = ITEMDRAW_DEFAULT);
+
+
+
+#if !defined REQUIRE_PLUGIN
+public void __pl_jwp_SetNTVOptional()
+{
+	MarkNativeAsOptional("JWP_IsStarted");
+	MarkNativeAsOptional("JWP_AddToMainMenu");
+	MarkNativeAsOptional("JWP_RemoveFromMainMenu");
+	MarkNativeAsOptional("JWP_ShowMainMenu");
+	
+	MarkNativeAsOptional("JWP_IsWarden");
+	MarkNativeAsOptional("JWP_IsZamWarden");
+	
+	MarkNativeAsOptional("JWP_GetWarden");
+	MarkNativeAsOptional("JWP_SetWarden");
+	MarkNativeAsOptional("JWP_GetZamWarden");
+	MarkNativeAsOptional("JWP_SetZamWarden");
+	
+	MarkNativeAsOptional("JWP_ActionMsgAll");
+	MarkNativeAsOptional("JWP_ActionMsg");
+	
+	MarkNativeAsOptional("JWP_GetRandomTeamClient");
+	MarkNativeAsOptional("JWP_IsFlood");
+	
+	MarkNativeAsOptional("JWP_PrisonerHasFreeday");
+	MarkNativeAsOptional("JWP_PrisonerSetFreeday");
+	
+	MarkNativeAsOptional("JWP_IsPrisonerIsolated");
+	MarkNativeAsOptional("JWP_PrisonerIsolated");
+	
+	MarkNativeAsOptional("JWP_IsPrisonerRebel");
+	MarkNativeAsOptional("JWP_PrisonerRebel");
+	
+	MarkNativeAsOptional("JWP_RehashMenu");
+	MarkNativeAsOptional("JWP_GetMenuItemCount");
+	MarkNativeAsOptional("JWP_RefreshMenuItem");
+}
+#endif
