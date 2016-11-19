@@ -8,14 +8,23 @@ addons:
 
 #Set the build environment
 env:
+  global:
+    - STEAMWORKS_VERS=SteamWorks-git121
+  matrix:
     #- SMVERSION=1.7
     - SMVERSION=1.8
     - SMVERSION=1.9
 
-#And compile!
+#And start build!
 install:
+    # Sourcemod download
     - wget --input-file=http://sourcemod.net/smdrop/$SMVERSION/sourcemod-latest-linux
     - tar -xzf $(cat sourcemod-latest-linux)
+    # SteamWorks download
+    - wget http://users.alliedmods.net/~kyles/builds/SteamWorks/$STEAMWORKS_VERS-linux.tar.gz
+    - wget http://users.alliedmods.net/~kyles/builds/SteamWorks/$STEAMWORKS_VERS-windows.zip
+    - tar -xzf $STEAMWORKS_VERS-linux.tar.gz addons/sourcemod/extensions/SteamWorks.ext.so addons/sourcemod/scripting/include/SteamWorks.inc
+    - unzip -j $STEAMWORKS_VERS-windows.zip addons/sourcemod/extensions/SteamWorks.ext.dll -d addons/sourcemod/extensions
 before_script:
 # TODO Import other modules to compilation
     - wget "https://raw.githubusercontent.com/thraaawn/SMJansson/master/bin/smjansson.ext.so" -O addons/sourcemod/extensions/smjansson.ext.so
@@ -38,6 +47,7 @@ before_deploy:
     - cd ../../..
     - mkdir jwp jwp/cfg jwp/cfg/jwp jwp/addons jwp/addons/sourcemod jwp/addons/sourcemod/extensions jwp/addons/sourcemod/scripting jwp/addons/sourcemod/scripting/jwp jwp/addons/sourcemod/scripting/include jwp/addons/sourcemod/translations
     - mv addons/sourcemod/extensions/smjansson* jwp/addons/sourcemod/extensions/
+    - mv addons/sourcemod/extensions/SteamWorks.ext* jwp/addons/sourcemod/extensions/
     - mv addons/sourcemod/scripting/jwp_*.sp jwp/addons/sourcemod/scripting/
     - mv addons/sourcemod/scripting/jwp/* jwp/addons/sourcemod/scripting/jwp/
     - mv addons/sourcemod/scripting/compiled jwp/addons/sourcemod/plugins
