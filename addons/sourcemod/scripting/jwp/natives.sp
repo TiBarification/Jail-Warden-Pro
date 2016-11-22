@@ -46,12 +46,13 @@ public int Native_SetWarden(Handle plugin, int numParams)
 		RemoveCmd(false);
 		return true;
 	}
-	else if (CheckClient(client) && !g_ClientAPIInfo[client][is_banned] && GetClientTeam(client) == CS_TEAM_CT)
+	else if (GetClientTeam(client) == CS_TEAM_CT)
 	{
 		RemoveCmd(false);
-		BecomeCmd(client, false, true);
-		return true;
+		return BecomeCmd(client, false);
 	}
+	else
+		ThrowNativeError(SP_ERROR_NATIVE, "Client must be Counter-Terrorist...");
 	return false;
 }
 
@@ -68,12 +69,14 @@ public int Native_SetZamWarden(Handle plugin, int numParams)
 		RemoveZam();
 		return true;
 	}
-	else if (CheckClient(client) && !g_ClientAPIInfo[client][is_banned] && GetClientTeam(client) == CS_TEAM_CT)
+	else if (GetClientTeam(client) == CS_TEAM_CT)
 	{
 		RemoveZam();
-		SetZam(client);
-		return true;
+		return SetZam(client);
 	}
+	else
+		ThrowNativeError(SP_ERROR_NATIVE, "Client must be Counter-Terrorist...");
+	
 	return false;
 }
 
@@ -113,7 +116,7 @@ public int Native_IsFlood(Handle plugin, int numParams)
 	int client = GetNativeCell(1);
 	int delay = GetNativeCell(2);
 	if (g_CvarDisableAntiFlood.BoolValue)
-		return view_as<int>(false);
+		return 0; // aka false
 	return Flood(client, delay);
 }
 

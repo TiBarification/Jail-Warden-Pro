@@ -10,7 +10,7 @@
 // Force new syntax
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.0.6B"
+#define PLUGIN_VERSION "1.0.6C"
 
 #define UPDATE_URL "http://updater.scriptplugs.info/jwp/updatefile.txt"
 #define LOG_PATH "addons/sourcemod/logs/JWP_Log.log"
@@ -392,39 +392,43 @@ bool CheckClient(int client)
 	return false;
 }
 
-bool BecomeCmd(int client, bool waswarden = true, bool ignore_native = false)
+bool BecomeCmd(int client, bool waswarden = true)
 {
-	if (!Forward_OnWardenChoosing() || g_ClientAPIInfo[client][is_banned] && !ignore_native)
+	if (!Forward_OnWardenChoosing())
 		return false;
-	else if (g_ClientAPIInfo[client][was_warden] && waswarden)
+	
+	if (!g_ClientAPIInfo[client][is_banned] && CheckClient(client))
 	{
-		if (g_bIsCSGO)
-			CGOPrintToChat(client, "%T %T", "Core_Prefix", LANG_SERVER, "already_was_warden", LANG_SERVER);
+		if (g_ClientAPIInfo[client][was_warden] && waswarden)
+		{
+			if (g_bIsCSGO)
+				CGOPrintToChat(client, "%T %T", "Core_Prefix", LANG_SERVER, "already_was_warden", LANG_SERVER);
+			else
+				CPrintToChat(client, "%T %T", "Core_Prefix", LANG_SERVER, "already_was_warden", LANG_SERVER);
+		}
+		else if (IsPlayerAlive(client))
+		{
+			g_iWarden = client;
+			Forward_OnWardenChosen(client);
+			g_ClientAPIInfo[client][was_warden] = true;
+			// Remove if new warden is previous zam of warden
+			if (g_iZamWarden == g_iWarden)
+				RemoveZam();
+			// Show our warden menu
+			Cmd_ShowMenu(client);
+			if (g_bIsCSGO)
+				CGOPrintToChatAll("%T %T", "Core_Prefix", LANG_SERVER, "warden_become", LANG_SERVER, g_iWarden);
+			else
+				CPrintToChatAll("%T %T", "Core_Prefix", LANG_SERVER, "warden_become", LANG_SERVER, g_iWarden);
+			return true;
+		}
 		else
-			CPrintToChat(client, "%T %T", "Core_Prefix", LANG_SERVER, "already_was_warden", LANG_SERVER);
-	}
-	else if (IsPlayerAlive(client))
-	{
-		g_iWarden = client;
-		Forward_OnWardenChosen(client);
-		g_ClientAPIInfo[client][was_warden] = true;
-		// Remove if new warden is previous zam of warden
-		if (g_iZamWarden == g_iWarden)
-			RemoveZam();
-		// Show our warden menu
-		Cmd_ShowMenu(client);
-		if (g_bIsCSGO)
-			CGOPrintToChatAll("%T %T", "Core_Prefix", LANG_SERVER, "warden_become", LANG_SERVER, g_iWarden);
-		else
-			CPrintToChatAll("%T %T", "Core_Prefix", LANG_SERVER, "warden_become", LANG_SERVER, g_iWarden);
-		return true;
-	}
-	else
-	{
-		if (g_bIsCSGO)
-			CGOPrintToChat(client, "%T %T", "Core_Prefix", LANG_SERVER, "warden_must_be_alive", LANG_SERVER);
-		else
-			CPrintToChat(client, "%T %T", "Core_Prefix", LANG_SERVER, "warden_must_be_alive", LANG_SERVER);
+		{
+			if (g_bIsCSGO)
+				CGOPrintToChat(client, "%T %T", "Core_Prefix", LANG_SERVER, "warden_must_be_alive", LANG_SERVER);
+			else
+				CPrintToChat(client, "%T %T", "Core_Prefix", LANG_SERVER, "warden_must_be_alive", LANG_SERVER);
+		}
 	}
 	return false;
 }
@@ -479,14 +483,14 @@ bool IsZamWarden(int client)
 
 bool PrisonerHasFreeday(int client)
 {
-	if (client && IsClientInGame(client) && client <= MaxClients)
+	if (client <= MaxClients && CheckClient(client))
 		return g_ClientAPIInfo[client][has_freeday];
 	return false;
 }
 
 bool PrisonerSetFreeday(int client, bool state = true)
 {
-	if (client && IsClientInGame(client) && client <= MaxClients)
+	if (client <= MaxClients && CheckClient(client))
 	{
 		g_ClientAPIInfo[client][has_freeday] = state;
 		return true;
@@ -496,14 +500,14 @@ bool PrisonerSetFreeday(int client, bool state = true)
 
 bool IsPrisonerIsolated(int client)
 {
-	if (client && IsClientInGame(client) && client <= MaxClients)
+	if (client <= MaxClients && CheckClient(client))
 		return g_ClientAPIInfo[client][is_isolated];
 	return false;
 }
 
 bool PrisonerIsolated(int client, bool state = true)
 {
-	if (client && IsClientInGame(client) && client <= MaxClients)
+	if (client <= MaxClients && CheckClient(client))
 	{
 		g_ClientAPIInfo[client][is_isolated] = state;
 		return true;
@@ -513,7 +517,7 @@ bool PrisonerIsolated(int client, bool state = true)
 
 bool PrisonerRebel(int client, bool state = true)
 {
-	if (client && IsClientInGame(client) && client <= MaxClients)
+	if (client <= MaxClients && CheckClient(client))
 	{
 		g_ClientAPIInfo[client][is_rebel] = state;
 		return true;
@@ -523,7 +527,7 @@ bool PrisonerRebel(int client, bool state = true)
 
 bool IsPrisonerRebel(int client)
 {
-	if (client && IsClientInGame(client) && client <= MaxClients)
+	if (client <= MaxClients && CheckClient(client))
 		return g_ClientAPIInfo[client][is_rebel];
 	return false;
 }
@@ -635,7 +639,7 @@ stock int JWP_GetRandomTeamClient(int team, bool alive, bool ignore_resign)
 	int count;
 	for (int i = 1; i <= MaxClients; ++i)
 	{
-		if (IsClientInGame(i) && GetClientTeam(i) == team && (alive && IsPlayerAlive(i)))
+		if (IsClientInGame(i) && !IsFakeClient(i) && GetClientTeam(i) == team && (alive && IsPlayerAlive(i)))
 		{
 			if (ignore_resign)
 				Players[count++] = i;
