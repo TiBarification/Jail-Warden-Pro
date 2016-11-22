@@ -57,7 +57,7 @@ public int Cmd_RemoveFromMainMenu(Handle plugin, int numParams)
 				if (dp.ReadCell() == plugin)
 				{
 					delete dp;
-					LogToFile(LOG_PATH, "[DEBUG] Removed module %s", key);
+					// LogToFile(LOG_PATH, "[DEBUG] Removed module %s", key);
 					g_sMainMenuMap.Remove(key);
 					if (g_iWarden > 0)
 						RehashMenu();
@@ -84,11 +84,11 @@ public int Cmd_ShowMainMenu(Handle plugin, int numParams)
 	int client = GetNativeCell(1);
 	
 	if (!CheckClient(client))
-		ThrowNativeError(SP_ERROR_NATIVE, "Client index %d is not in game or a bot or doesn't exist on server", client);
-	else if (!IsWarden(client))
-		ThrowNativeError(SP_ERROR_NATIVE, "Client %d isn't a warden. No menu generated, so no menu to display");
-	else if (g_mMainMenu == null)
-		ThrowNativeError(SP_ERROR_NATIVE, "No menu generated to display. You must set warden to show menu");
+	{
+		LogToFile(LOG_PATH, "[ERROR] Client index %d is not in game or a bot or doesn't exist on server", client);
+		return;
+	}
+	else if (!IsWarden(client)) return;
 	else
 		Cmd_ShowMenu(client, g_iLastMenuItemPos);
 }
@@ -167,11 +167,11 @@ void MenuItemInitialization(int client) // Run at first time as client become wa
 						else
 						{
 							GetPluginFilename(plugin, error, sizeof(error));
-							LogToFile(LOG_PATH, "[WARNING] Module plugin %s has errors. Module not loaded.");
+							LogToFile(LOG_PATH, "[WARNING] Module plugin '%s' has errors. Module not loaded.");
 						}
 					}
 					else
-						LogToFile(LOG_PATH, "[ERROR] Error in datapack. Failed to load item %s", id);
+						LogToFile(LOG_PATH, "[ERROR] Error in datapack. Failed to load item '%s'", id);
 				}
 			}
 			
@@ -250,11 +250,11 @@ public int Cmd_ShowMenu_Handler(Menu menu, MenuAction action, int client, int sl
 						{
 							char error[48];
 							GetPluginFilename(plugin, error, sizeof(error));
-							LogToFile(LOG_PATH, "[WARNING] Module plugin %s has errors. Module not loaded.", info);
+							LogToFile(LOG_PATH, "[WARNING] Module plugin '%s' has errors. Module not loaded.", info);
 						}
 					}
 					else
-						LogToFile(LOG_PATH, "[ERROR] Failed to load select callback for module %s", info);
+						LogToFile(LOG_PATH, "[ERROR] Failed to load select callback for module '%s'", info);
 				}
 				
 				if (!result) Cmd_ShowMenu(client, menu.Selection);
@@ -335,18 +335,7 @@ public int ConfirmMenu_Callback(Menu menu, MenuAction action, int client, int sl
 void EmptyPanel(int client)
 {
 	if (CheckClient(client))
-	{
-		/* close menu if exists with empty panel */
-		Panel panel = new Panel();
-		panel.SetTitle(" ");
-		panel.Send(client, EmptyPanel_Callback, 1);
-	}
-}
-
-public int EmptyPanel_Callback(Menu menu, MenuAction action, int client, int slot)
-{
-	if (action == MenuAction_End)
-		menu.Close();
+		g_mMainMenu.Cancel();
 }
 
 void RehashMenu()
