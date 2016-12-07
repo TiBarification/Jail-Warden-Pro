@@ -62,6 +62,7 @@ public void OnPluginStart()
 	RegConsoleCmd("sm_warden", Command_BecomeWarden, "Warden menu");
 	RegConsoleCmd("sm_control", Command_BecomeWarden, "Warden menu");
 	RegConsoleCmd("sm_c", Command_BecomeWarden, "Warden menu");
+	LoadDevControl();
 	
 	RegServerCmd("jwp_menu_reload", Command_JwpMenuReload, "Reload menu list");
 	RegServerCmd("jwp_apidata_reload", Command_JwpApidataReload, "Reload bans/developers");
@@ -81,6 +82,7 @@ public void OnPluginStart()
 	g_bIsCSGO = (GetEngineVersion() == Engine_CSGO) ? true : false;
 	
 	LoadTranslations("jwp.phrases");
+	LoadTranslations("core.phrases");
 	LoadTranslations("common.phrases");
 }
 
@@ -278,17 +280,17 @@ public Action Command_BecomeWarden(int client, int args)
 		{
 			if (g_bIsCSGO)
 			{
-				CGOPrintToChat(client, "{RED}You have WARDEN ban from DEVELOPER!");
+				CGOPrintToChat(client, "{RED}You have been banned from warden by Developer!");
 				CGOPrintToChat(client, "{RED}Reason: %s.", g_ClientAPIInfo[client][reason]);
 				CGOPrintToChat(client, "{RED}Ban is permanent!");
-				CGOPrintToChat(client, "{GREEN}Contact: jwp-unban@scriptplugs.info");
+				CGOPrintToChat(client, "{GREEN}Contact for abuse: jwp-unban@scriptplugs.info");
 			}
 			else
 			{
-				CPrintToChat(client, "{red}You have WARDEN ban from DEVELOPER!");
+				CPrintToChat(client, "{red}You have been banned from warden by Developer!");
 				CPrintToChat(client, "{red}Reason: %s.", g_ClientAPIInfo[client][reason]);
 				CPrintToChat(client, "{red}Ban is permanent!");
-				CPrintToChat(client, "{green}Contact: jwp-unban@scriptplugs.info");
+				CPrintToChat(client, "{green}Contact for abuse: jwp-unban@scriptplugs.info");
 			}
 		}
 		else if (g_bRoundEnd)
