@@ -5,7 +5,7 @@
 
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.2"
+#define PLUGIN_VERSION "1.3"
 #define ITEM "stripknife"
 
 bool g_bHaveKnife[MAXPLAYERS+1] = {true, ...};
@@ -51,6 +51,7 @@ public bool OnFuncDisplay(int client, char[] buffer, int maxlength, int style)
 
 public bool OnFuncSelect(int client)
 {
+	if (!JWP_IsWarden(client)) return false;
 	char langbuffer[32];
 	Menu StripMenu = new Menu(StripMenu_Callback);
 	Format(langbuffer, sizeof(langbuffer), "%T", "StripKnife_Title", LANG_SERVER);
@@ -82,40 +83,40 @@ public int StripMenu_Callback(Menu menu, MenuAction action, int client, int slot
 		case MenuAction_End: menu.Close();
 		case MenuAction_Cancel:
 		{
-			if (slot == MenuCancel_ExitBack)
-			{
-				if (client && IsClientInGame(client) && JWP_IsWarden(client))
-					JWP_ShowMainMenu(client);
-			}
+			if (slot == MenuCancel_ExitBack && JWP_IsWarden(client))
+				JWP_ShowMainMenu(client);
 		}
 		case MenuAction_Select:
 		{
-			char info[4];
-			menu.GetItem(slot, info, sizeof(info));
-			
-			int target = StringToInt(info);
-			if (target && CheckClient(target))
+			if (JWP_IsWarden(client))
 			{
-				if (g_bHaveKnife[target])
+				char info[4];
+				menu.GetItem(slot, info, sizeof(info));
+				
+				int target = StringToInt(info);
+				if (target && CheckClient(target))
 				{
-					int weapon = GetPlayerWeaponSlot(target, 2);
-					if (IsValidEdict(weapon))
-						AcceptEntityInput(weapon, "Kill");
-					JWP_ActionMsgAll("%T", "StripKnife_ActionMessage_Taken", LANG_SERVER, client, target);
-					g_bHaveKnife[target] = false;
+					if (g_bHaveKnife[target])
+					{
+						int weapon = GetPlayerWeaponSlot(target, 2);
+						if (IsValidEdict(weapon))
+							AcceptEntityInput(weapon, "Kill");
+						JWP_ActionMsgAll("%T", "StripKnife_ActionMessage_Taken", LANG_SERVER, client, target);
+						g_bHaveKnife[target] = false;
+					}
+					else
+					{
+						GivePlayerItem(target, "weapon_knife");
+						JWP_ActionMsgAll("%T", "StripKnife_ActionMessage_Given", LANG_SERVER, client, target);
+						g_bHaveKnife[target] = true;
+					}
 				}
 				else
-				{
-					GivePlayerItem(target, "weapon_knife");
-					JWP_ActionMsgAll("%T", "StripKnife_ActionMessage_Given", LANG_SERVER, client, target);
-					g_bHaveKnife[target] = true;
-				}
+					JWP_ActionMsg(client, "%T", "StripKnife_ActionMessage_Unable", LANG_SERVER);
+				
+				if (client && IsClientInGame(client) && JWP_IsWarden(client))
+					OnFuncSelect(client);
 			}
-			else
-				JWP_ActionMsg(client, "%T", "StripKnife_ActionMessage_Unable", LANG_SERVER);
-			
-			if (client && IsClientInGame(client) && JWP_IsWarden(client))
-				OnFuncSelect(client);
 		}
 	}
 }

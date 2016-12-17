@@ -5,7 +5,7 @@
 
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.3"
+#define PLUGIN_VERSION "1.4"
 #define FDGIVE "freeday_give"
 #define FDTAKE "freeday_take"
 
@@ -55,8 +55,12 @@ public bool OnFuncFDGiveDisplay(int client, char[] buffer, int maxlength, int st
 
 public bool OnFuncFDGiveSelect(int client)
 {
-	ShowFreedayMenu(client, false);
-	return true;
+	if (JWP_IsWarden(client))
+	{
+		ShowFreedayMenu(client, false);
+		return true;
+	}
+	return false;
 }
 
 public bool OnFuncFDTakeDisplay(int client, char[] buffer, int maxlength, int style)
@@ -67,8 +71,12 @@ public bool OnFuncFDTakeDisplay(int client, char[] buffer, int maxlength, int st
 
 public bool OnFuncFDTakeSelect(int client)
 {
-	ShowFreedayMenu(client, true);
-	return true;
+	if (JWP_IsWarden(client))
+	{
+		ShowFreedayMenu(client, true);
+		return true;
+	}
+	return false;
 }
 
 void ShowFreedayMenu(int client, bool fd_players)
@@ -118,34 +126,36 @@ public int PList_Callback(Menu menu, MenuAction action, int client, int slot)
 		case MenuAction_End: menu.Close();
 		case MenuAction_Cancel:
 		{
-			if (slot == MenuCancel_ExitBack)
+			if (slot == MenuCancel_ExitBack && JWP_IsWarden(client))
 				JWP_ShowMainMenu(client);
 		}
 		case MenuAction_Select:
 		{
-			char info[4];
-			menu.GetItem(slot, info, sizeof(info));
-			
-			int target = StringToInt(info);
-			bool state = JWP_PrisonerHasFreeday(target);
-			
-			bool b = state;
-			if (target && CheckClient(target))
+			if (JWP_IsWarden(client))
 			{
-				state = !state;
+				char info[4];
+				menu.GetItem(slot, info, sizeof(info));
 				
-				JWP_PrisonerSetFreeday(target, state);
+				int target = StringToInt(info);
+				bool state = JWP_PrisonerHasFreeday(target);
 				
-				SetEntityRenderMode(target, RENDER_TRANSCOLOR);
-				SetEntityRenderColor(target, (state) ? g_Cvar_r.IntValue : 255,
-											(state) ? g_Cvar_g.IntValue : 255,
-											(state) ? g_Cvar_b.IntValue : 255,
-											(state) ? g_Cvar_a.IntValue : 255);
-				JWP_ActionMsgAll("%T", (state) ? "Freeday_ActionMessage_Gived" : "Freeday_ActionMessage_Taken", LANG_SERVER, client, target);
+				bool b = state;
+				if (target && CheckClient(target))
+				{
+					state = !state;
+					
+					JWP_PrisonerSetFreeday(target, state);
+					
+					SetEntityRenderMode(target, RENDER_TRANSCOLOR);
+					SetEntityRenderColor(target, (state) ? g_Cvar_r.IntValue : 255,
+												(state) ? g_Cvar_g.IntValue : 255,
+												(state) ? g_Cvar_b.IntValue : 255,
+												(state) ? g_Cvar_a.IntValue : 255);
+					JWP_ActionMsgAll("%T", (state) ? "Freeday_ActionMessage_Gived" : "Freeday_ActionMessage_Taken", LANG_SERVER, client, target);
+				}
+				menu.RemoveItem(slot);
+				ShowFreedayMenu(client, b);
 			}
-			menu.RemoveItem(slot);
-			
-			ShowFreedayMenu(client, b);
 		}
 	}
 }

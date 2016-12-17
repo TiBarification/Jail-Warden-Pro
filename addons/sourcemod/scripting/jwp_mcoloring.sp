@@ -4,7 +4,7 @@
 
 // Force 1.7 syntax
 #pragma newdecls required
-#define PLUGIN_VERSION "1.0"
+#define PLUGIN_VERSION "1.1"
 #define ITEM "mcoloring"
 
 KeyValues g_Kv;
@@ -41,15 +41,17 @@ public void OnPluginEnd()
 public bool OnFuncDisplay(int client, char[] buffer, int maxlength, int style)
 {
 	FormatEx(buffer, maxlength, "%T", "Manual_Coloring_Menu", LANG_SERVER);
-	
 	return true;
 }
 
 public bool OnFuncSelect(int client)
 {
-	PlayerListMenu(client);
-	
-	return true;
+	if (JWP_IsWarden(client))
+	{
+		PlayerListMenu(client);
+		return true;
+	}
+	return false;
 }
 
 public int plList_Callback(Menu menu, MenuAction action, int param1, int param2)
@@ -58,19 +60,22 @@ public int plList_Callback(Menu menu, MenuAction action, int param1, int param2)
 	{
 		case MenuAction_Cancel:
 		{
-			if (param2 == MenuCancel_ExitBack)
+			if (param2 == MenuCancel_ExitBack && JWP_IsWarden(param1))
 				JWP_ShowMainMenu(param1);
 		}
 		case MenuAction_End: delete menu;
 		case MenuAction_Select:
 		{
-			char idx[4];
-			menu.GetItem(param2, idx, sizeof(idx));
-			g_iTarget = StringToInt(idx);
-			if (g_iTarget && IsClientInGame(g_iTarget) && GetClientTeam(g_iTarget) == CS_TEAM_T && IsPlayerAlive(g_iTarget))
-				g_ColorsMenu.Display(param1, MENU_TIME_FOREVER);
-			else
-				JWP_ActionMsg(param1, "%T", "Manual_Coloring_UnableToColor", LANG_SERVER);
+			if (JWP_IsWarden(param1))
+			{
+				char idx[4];
+				menu.GetItem(param2, idx, sizeof(idx));
+				g_iTarget = StringToInt(idx);
+				if (g_iTarget && IsClientInGame(g_iTarget) && GetClientTeam(g_iTarget) == CS_TEAM_T && IsPlayerAlive(g_iTarget))
+					g_ColorsMenu.Display(param1, MENU_TIME_FOREVER);
+				else
+					JWP_ActionMsg(param1, "%T", "Manual_Coloring_UnableToColor", LANG_SERVER);
+			}
 		}
 	}
 }
@@ -81,27 +86,30 @@ public int ColorsMenu_Callback(Menu menu, MenuAction action, int param1, int par
 	{
 		case MenuAction_Cancel:
 		{
-			if (param2 == MenuCancel_ExitBack)
+			if (param2 == MenuCancel_ExitBack && JWP_IsWarden(param1))
 				PlayerListMenu(param1);
 		}
 		case MenuAction_Select:
 		{
-			char c_name[16];
-			menu.GetItem(param2, c_name, sizeof(c_name));
-			
-			if (c_name[0] && g_Kv.JumpToKey(c_name, false))
+			if (JWP_IsWarden(param1))
 			{
-				if (g_iTarget && IsClientInGame(g_iTarget) && GetClientTeam(g_iTarget) == CS_TEAM_T && IsPlayerAlive(g_iTarget))
+				char c_name[16];
+				menu.GetItem(param2, c_name, sizeof(c_name));
+				
+				if (c_name[0] && g_Kv.JumpToKey(c_name, false))
 				{
-					int color[4];
-					SetEntityRenderMode(g_iTarget, RENDER_TRANSCOLOR);
-					g_Kv.GetColor4("rgba", color);
-					SetEntityRenderColor(g_iTarget, color[0], color[1], color[2], color[3]);
+					if (g_iTarget && IsClientInGame(g_iTarget) && GetClientTeam(g_iTarget) == CS_TEAM_T && IsPlayerAlive(g_iTarget))
+					{
+						int color[4];
+						SetEntityRenderMode(g_iTarget, RENDER_TRANSCOLOR);
+						g_Kv.GetColor4("rgba", color);
+						SetEntityRenderColor(g_iTarget, color[0], color[1], color[2], color[3]);
+					}
+					g_Kv.Rewind();
 				}
-				g_Kv.Rewind();
+				
+				JWP_ShowMainMenu(param1);
 			}
-			
-			JWP_ShowMainMenu(param1);
 		}
 	}
 }

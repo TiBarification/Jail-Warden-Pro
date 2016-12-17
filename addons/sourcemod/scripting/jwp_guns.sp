@@ -4,7 +4,7 @@
 
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.3"
+#define PLUGIN_VERSION "1.4"
 #define ITEM "guns"
 #define MAX_WEAPON_STRING 32
 
@@ -52,8 +52,12 @@ public bool OnFuncDisplay(int client, char[] buffer, int maxlength, int style)
 
 public bool OnFuncSelect(int client)
 {
-	g_WeaponMenu.Display(client, MENU_TIME_FOREVER);
-	return true;
+	if (JWP_IsWarden(client))
+	{
+		g_WeaponMenu.Display(client, MENU_TIME_FOREVER);
+		return true;
+	}
+	return false;
 }
 
 void LoadGunsFile()
@@ -103,37 +107,40 @@ public int g_WeaponMenu_Callback(Menu menu, MenuAction action, int client, int s
 	{
 		case MenuAction_Cancel:
 		{
-			if (slot == MenuCancel_ExitBack)
+			if (slot == MenuCancel_ExitBack && JWP_IsWarden(client))
 				JWP_ShowMainMenu(client);
 		}
 		case MenuAction_Select:
 		{
-			int options[5]; char info[32];
-			menu.GetItem(slot, info, sizeof(info));
-			g_sOptions.GetArray(info, options, sizeof(options));
-			
-			g_aWeaponNames.GetString(options[4], info, sizeof(info));
-			
-			if (!options[1])
+			if (JWP_IsWarden(client))
 			{
-				if (JWP_IsFlood(client, 2)) return;
-				int weapon = GetPlayerWeaponSlot(client, options[0]);
-				if (IsValidEdict(weapon))
-					AcceptEntityInput(weapon, "Kill");
+				int options[5]; char info[32];
+				menu.GetItem(slot, info, sizeof(info));
+				g_sOptions.GetArray(info, options, sizeof(options));
+				
+				g_aWeaponNames.GetString(options[4], info, sizeof(info));
+				
+				if (!options[1])
+				{
+					if (JWP_IsFlood(client, 2)) return;
+					int weapon = GetPlayerWeaponSlot(client, options[0]);
+					if (IsValidEdict(weapon))
+						AcceptEntityInput(weapon, "Kill");
+				}
+				
+				int weapon = GivePlayerItem(client, info);
+				if (options[2] != -1)
+					SetEntProp(weapon, Prop_Data, "m_iClip1", options[2]);
+				if (options[3] != -1)
+				{
+					if (g_bIsCSGO)
+						SetEntProp(weapon, Prop_Send, "m_iPrimaryReserveAmmoCount", options[3]);
+					else
+						SetEntProp(weapon, Prop_Send, "m_iPrimaryAmmoCount", options[3]);
+				}
+				
+				g_WeaponMenu.Display(client, MENU_TIME_FOREVER);
 			}
-			
-			int weapon = GivePlayerItem(client, info);
-			if (options[2] != -1)
-				SetEntProp(weapon, Prop_Data, "m_iClip1", options[2]);
-			if (options[3] != -1)
-			{
-				if (g_bIsCSGO)
-					SetEntProp(weapon, Prop_Send, "m_iPrimaryReserveAmmoCount", options[3]);
-				else
-					SetEntProp(weapon, Prop_Send, "m_iPrimaryAmmoCount", options[3]);
-			}
-			
-			g_WeaponMenu.Display(client, MENU_TIME_FOREVER);
 		}
 	}
 }

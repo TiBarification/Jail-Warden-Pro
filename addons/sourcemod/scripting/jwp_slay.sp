@@ -5,7 +5,7 @@
 
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.3"
+#define PLUGIN_VERSION "1.4"
 #define ITEM "slay"
 
 public Plugin myinfo = 
@@ -42,6 +42,7 @@ public bool OnFuncDisplay(int client, char[] buffer, int maxlength, int style)
 
 public bool OnFuncSelect(int client)
 {
+	if (!JWP_IsWarden(client)) return false;
 	char langbuffer[48];
 	Menu SlayMenu = new Menu(SlayMenu_Callback);
 	Format(langbuffer, sizeof(langbuffer), "%T:", "Slay_Menu", LANG_SERVER);
@@ -73,32 +74,35 @@ public int SlayMenu_Callback(Menu menu, MenuAction action, int client, int slot)
 		case MenuAction_End: menu.Close();
 		case MenuAction_Cancel:
 		{
-			if (slot == MenuCancel_ExitBack)
+			if (slot == MenuCancel_ExitBack && JWP_IsWarden(client))
 				JWP_ShowMainMenu(client);
 		}
 		case MenuAction_Select:
 		{
-			char info[4];
-			menu.GetItem(slot, info, sizeof(info));
-			int target = StringToInt(info);
-			if (CheckClient(target))
+			if (JWP_IsWarden(client))
 			{
-				if (!CanUserTarget(client, target))
-					PrintToChat(client, "[JWP|Slay] %t", "Unable to target");
-				else
+				char info[4];
+				menu.GetItem(slot, info, sizeof(info));
+				int target = StringToInt(info);
+				if (CheckClient(target))
 				{
-					ForcePlayerSuicide(target);
-					JWP_ActionMsgAll("%T", "Slay_ActionMessage_Slayed", LANG_SERVER, client, target);
+					if (!CanUserTarget(client, target))
+						PrintToChat(client, "[JWP|Slay] %t", "Unable to target");
+					else
+					{
+						ForcePlayerSuicide(target);
+						JWP_ActionMsgAll("%T", "Slay_ActionMessage_Slayed", LANG_SERVER, client, target);
+					}
 				}
+				else
+					JWP_ActionMsg(client, "%T", "Slay_UnableToSlay", LANG_SERVER);
+				JWP_ShowMainMenu(client);
 			}
-			else
-				JWP_ActionMsg(client, "%T", "Slay_UnableToSlay", LANG_SERVER);
-			JWP_ShowMainMenu(client);
 		}
 	}
 }
 
 bool CheckClient(int client)
 {
-	return (IsClientInGame(client) && IsClientConnected(client) && !IsFakeClient(client) /* && (GetClientTeam(client) == CS_TEAM_T) */ && IsPlayerAlive(client));
+	return (IsClientInGame(client) && IsClientConnected(client) && !IsFakeClient(client) && (GetClientTeam(client) == CS_TEAM_T) && IsPlayerAlive(client));
 }

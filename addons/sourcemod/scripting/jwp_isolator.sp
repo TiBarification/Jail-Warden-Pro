@@ -127,33 +127,37 @@ public bool OnFuncDisplay(int client, char[] buffer, int maxlength, int style)
 
 public bool OnFuncSelect(int client)
 {
-	char langbuffer[40];
-	Menu IsolatorMenu = new Menu(IsolatorMenu_Callback);
-	
-	Format(langbuffer, sizeof(langbuffer), "%T:\n%T", "Isolator_Menu", LANG_SERVER, "Isolator_Menu_Info", LANG_SERVER);
-	
-	IsolatorMenu.SetTitle(langbuffer);
-	char id[4], name[MAX_NAME_LENGTH];
-	for (int i = 1; i <= MaxClients; ++i)
+	if (JWP_IsWarden(client))
 	{
-		if (CheckClient(i))
+		char langbuffer[40];
+		Menu IsolatorMenu = new Menu(IsolatorMenu_Callback);
+		
+		Format(langbuffer, sizeof(langbuffer), "%T:\n%T", "Isolator_Menu", LANG_SERVER, "Isolator_Menu_Info", LANG_SERVER);
+		
+		IsolatorMenu.SetTitle(langbuffer);
+		char id[4], name[MAX_NAME_LENGTH];
+		for (int i = 1; i <= MaxClients; ++i)
 		{
-			IntToString(i, id, sizeof(id));
-			if (JWP_IsPrisonerIsolated(i))
-				Format(name, sizeof(name), "[#]%N", i);
-			else
-				Format(name, sizeof(name), "%N", i);
-			IsolatorMenu.AddItem(id, name);
+			if (CheckClient(i))
+			{
+				IntToString(i, id, sizeof(id));
+				if (JWP_IsPrisonerIsolated(i))
+					Format(name, sizeof(name), "[#]%N", i);
+				else
+					Format(name, sizeof(name), "%N", i);
+				IsolatorMenu.AddItem(id, name);
+			}
 		}
+		if (!IsolatorMenu.ItemCount)
+		{
+			Format(langbuffer, sizeof(langbuffer), "%T", "Isolator_NoMore_Prisoners", LANG_SERVER);
+			IsolatorMenu.AddItem("", langbuffer, ITEMDRAW_DISABLED);
+		}
+		IsolatorMenu.ExitBackButton = true;
+		IsolatorMenu.Display(client, MENU_TIME_FOREVER);
+		return true;
 	}
-	if (!IsolatorMenu.ItemCount)
-	{
-		Format(langbuffer, sizeof(langbuffer), "%T", "Isolator_NoMore_Prisoners", LANG_SERVER);
-		IsolatorMenu.AddItem("", langbuffer, ITEMDRAW_DISABLED);
-	}
-	IsolatorMenu.ExitBackButton = true;
-	IsolatorMenu.Display(client, MENU_TIME_FOREVER);
-	return true;
+	return false;
 }
 
 public int IsolatorMenu_Callback(Menu menu, MenuAction action, int client, int slot)
@@ -163,34 +167,37 @@ public int IsolatorMenu_Callback(Menu menu, MenuAction action, int client, int s
 		case MenuAction_End: menu.Close();
 		case MenuAction_Cancel:
 		{
-			if (slot == MenuCancel_ExitBack)
+			if (slot == MenuCancel_ExitBack && JWP_IsWarden(client))
 				JWP_ShowMainMenu(client);
 		}
 		case MenuAction_Select:
 		{
-			char info[4];
-			menu.GetItem(slot, info, sizeof(info));
-			
-			int target = StringToInt(info);
-			if (target && IsClientInGame(target) && GetClientTeam(target) == CS_TEAM_T)
+			if (JWP_IsWarden(client))
 			{
-				if (JWP_IsPrisonerIsolated(target))
+				char info[4];
+				menu.GetItem(slot, info, sizeof(info));
+				
+				int target = StringToInt(info);
+				if (target && IsClientInGame(target) && GetClientTeam(target) == CS_TEAM_T)
 				{
-					TryKillIsolator(target);
-					JWP_ActionMsgAll("%T", "Isolator_Action_Released", LANG_SERVER, client, target);
-					JWP_PrisonerIsolated(target, false);
-				}
-				else if (TryPushPrisonerInIsolator(client, target))
-				{
-					JWP_ActionMsgAll("%T", "Isolator_Action_Isolated", LANG_SERVER, client, target);
-					JWP_PrisonerIsolated(target, true);
+					if (JWP_IsPrisonerIsolated(target))
+					{
+						TryKillIsolator(target);
+						JWP_ActionMsgAll("%T", "Isolator_Action_Released", LANG_SERVER, client, target);
+						JWP_PrisonerIsolated(target, false);
+					}
+					else if (TryPushPrisonerInIsolator(client, target))
+					{
+						JWP_ActionMsgAll("%T", "Isolator_Action_Isolated", LANG_SERVER, client, target);
+						JWP_PrisonerIsolated(target, true);
+					}
+					else
+						JWP_ActionMsg(client, "%T", "Isolator_FailedToIsolate", LANG_SERVER, target);
 				}
 				else
-					JWP_ActionMsg(client, "%T", "Isolator_FailedToIsolate", LANG_SERVER, target);
+					JWP_ActionMsg(client, "%T", "Isolator_FailedToIsolate_Leave", LANG_SERVER);
+				OnFuncSelect(client);
 			}
-			else
-				JWP_ActionMsg(client, "%T", "Isolator_FailedToIsolate_Leave", LANG_SERVER);
-			OnFuncSelect(client);
 		}
 	}
 }

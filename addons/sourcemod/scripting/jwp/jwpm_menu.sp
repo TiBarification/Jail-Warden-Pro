@@ -332,9 +332,9 @@ public int ConfirmMenu_Callback(Menu menu, MenuAction action, int client, int sl
 	}
 }
 
-void EmptyPanel(int client)
+void EmptyPanel()
 {
-	if (CheckClient(client))
+	if (g_mMainMenu != null)
 		g_mMainMenu.Cancel();
 }
 
@@ -345,7 +345,8 @@ void RehashMenu()
 	Load_SortingWardenMenu();
 	if (g_iWarden != 0)
 	{
-		delete g_mMainMenu;
+		if (g_mMainMenu != null)
+			delete g_mMainMenu;
 		MenuItemInitialization(g_iWarden);
 	}
 }
@@ -378,22 +379,25 @@ bool Flood(int client, int delay)
 
 bool RefreshMenuItem(char[] item, char[] newdisp = "", int style = ITEMDRAW_DEFAULT)
 {
-	int oldstyle;
-	char id[16], display[64];
-	for (int i = 0; i < g_aSortedMenu.Length; i++)
+	if (g_mMainMenu != null)
 	{
-		g_mMainMenu.GetItem(i, id, sizeof(id), oldstyle, display, sizeof(display));
-		if (!strcmp(item, id, true))
+		int oldstyle;
+		char id[16], display[64];
+		for (int i = 0; i < g_aSortedMenu.Length; i++)
 		{
-			if (newdisp[0] != '\0')
-				strcopy(display, sizeof(display), newdisp);
-			if (style != oldstyle)
-				oldstyle = style;
-			if (g_mMainMenu.RemoveItem(i))
+			g_mMainMenu.GetItem(i, id, sizeof(id), oldstyle, display, sizeof(display));
+			if (!strcmp(item, id, true))
 			{
-				if (!g_mMainMenu.InsertItem(i, id, display, oldstyle))
-					g_mMainMenu.AddItem(id, display, oldstyle);
-				return true;
+				if (newdisp[0] != '\0')
+					strcopy(display, sizeof(display), newdisp);
+				if (style != oldstyle)
+					oldstyle = style;
+				if (g_mMainMenu.RemoveItem(i))
+				{
+					if (!g_mMainMenu.InsertItem(i, id, display, oldstyle))
+						g_mMainMenu.AddItem(id, display, oldstyle);
+					return true;
+				}
 			}
 		}
 	}

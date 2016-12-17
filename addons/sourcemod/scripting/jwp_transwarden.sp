@@ -39,6 +39,7 @@ public bool OnFuncDisplay(int client, char[] buffer, int maxlength, int style)
 
 public bool OnFuncSelect(int client)
 {
+	if (!JWP_IsWarden(client)) return false;
 	Menu ctList = new Menu(ctList_Callback);
 	char lang[48];
 	FormatEx(lang, sizeof(lang), "%T", "TransWarden_Title", LANG_SERVER);
@@ -72,19 +73,22 @@ public int ctList_Callback(Menu menu, MenuAction action, int param1, int param2)
 		case MenuAction_End: menu.Close();
 		case MenuAction_Cancel:
 		{
-			if (param2 == MenuCancel_ExitBack)
+			if (param2 == MenuCancel_ExitBack && JWP_IsWarden(param1))
 				JWP_ShowMainMenu(param1);
 		}
 		case MenuAction_Select:
 		{
-			char userid[4];
-			menu.GetItem(param2, userid, sizeof(userid));
-			int target = StringToInt(userid);
-			
-			if (target && IsClientInGame(target) && IsPlayerAlive(target))
+			if (JWP_IsWarden(param1))
 			{
-				JWP_ActionMsgAll("\x04%T", "TransWarden_Action", LANG_SERVER, param1, target);
-				JWP_SetWarden(target);
+				char userid[4];
+				menu.GetItem(param2, userid, sizeof(userid));
+				int target = StringToInt(userid);
+				
+				if (target && IsClientInGame(target) && IsPlayerAlive(target))
+				{
+					JWP_ActionMsgAll("\x04%T", "TransWarden_Action", LANG_SERVER, param1, target);
+					JWP_SetWarden(target);
+				}
 			}
 		}
 	}

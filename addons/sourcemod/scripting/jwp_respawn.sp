@@ -5,7 +5,7 @@
 
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.2"
+#define PLUGIN_VERSION "1.3"
 #define ITEM "respawn"
 
 ConVar g_CvarMaxUses, g_CvarMethod;
@@ -65,28 +65,32 @@ public bool OnFuncDisplay(int client, char[] buffer, int maxlength, int style)
 
 public bool OnFuncSelect(int client)
 {
-	char langbuffer[48];
-	Menu RespawnMenu = new Menu(RespawnMenu_Callback);
-	Format(langbuffer, sizeof(langbuffer), "%T:", "Respawn_Menu", LANG_SERVER);
-	RespawnMenu.SetTitle(langbuffer);
-	char id[4], name[MAX_NAME_LENGTH];
-	for (int i = 1; i <= MaxClients; ++i)
+	if (JWP_IsWarden(client))
 	{
-		if (CheckClient(i))
+		char langbuffer[48];
+		Menu RespawnMenu = new Menu(RespawnMenu_Callback);
+		Format(langbuffer, sizeof(langbuffer), "%T:", "Respawn_Menu", LANG_SERVER);
+		RespawnMenu.SetTitle(langbuffer);
+		char id[4], name[MAX_NAME_LENGTH];
+		for (int i = 1; i <= MaxClients; ++i)
 		{
-			Format(name, sizeof(name), "%N", i);
-			IntToString(i, id, sizeof(id));
-			RespawnMenu.AddItem(id, name);
+			if (CheckClient(i))
+			{
+				Format(name, sizeof(name), "%N", i);
+				IntToString(i, id, sizeof(id));
+				RespawnMenu.AddItem(id, name);
+			}
 		}
+		if (!RespawnMenu.ItemCount)
+		{
+			Format(langbuffer, sizeof(langbuffer), "%T", "General_No_Dead_Prisoners", LANG_SERVER);
+			RespawnMenu.AddItem("", langbuffer, ITEMDRAW_DISABLED);
+		}
+		RespawnMenu.ExitBackButton = true;
+		RespawnMenu.Display(client, MENU_TIME_FOREVER);
+		return true;
 	}
-	if (!RespawnMenu.ItemCount)
-	{
-		Format(langbuffer, sizeof(langbuffer), "%T", "General_No_Dead_Prisoners", LANG_SERVER);
-		RespawnMenu.AddItem("", langbuffer, ITEMDRAW_DISABLED);
-	}
-	RespawnMenu.ExitBackButton = true;
-	RespawnMenu.Display(client, MENU_TIME_FOREVER);
-	return true;
+	return false;
 }
 
 public int RespawnMenu_Callback(Menu menu, MenuAction action, int client, int slot)
@@ -96,39 +100,42 @@ public int RespawnMenu_Callback(Menu menu, MenuAction action, int client, int sl
 		case MenuAction_End: menu.Close();
 		case MenuAction_Cancel:
 		{
-			if (slot == MenuCancel_ExitBack)
+			if (slot == MenuCancel_ExitBack && JWP_IsWarden(client))
 				JWP_ShowMainMenu(client);
 		}
 		case MenuAction_Select:
 		{
-			char info[4];
-			menu.GetItem(slot, info, sizeof(info));
-			int target = StringToInt(info);
-			if (target && CheckClient(target))
+			if (JWP_IsWarden(client))
 			{
-				g_iUses++;
-		
-				if (g_CvarMaxUses.IntValue)
+				char info[4];
+				menu.GetItem(slot, info, sizeof(info));
+				int target = StringToInt(info);
+				if (target && CheckClient(target))
 				{
-					char buffer[48];
-					Format(buffer, sizeof(buffer), "%T (%d/%d)", "Respawn_Menu", LANG_SERVER, g_iUses, g_CvarMaxUses.IntValue);
-					JWP_RefreshMenuItem(ITEM, buffer, (g_iUses < g_CvarMaxUses.IntValue) ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED);
+					g_iUses++;
+			
+					if (g_CvarMaxUses.IntValue)
+					{
+						char buffer[48];
+						Format(buffer, sizeof(buffer), "%T (%d/%d)", "Respawn_Menu", LANG_SERVER, g_iUses, g_CvarMaxUses.IntValue);
+						JWP_RefreshMenuItem(ITEM, buffer, (g_iUses < g_CvarMaxUses.IntValue) ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED);
+					}
+					
+					CS_RespawnPlayer(target);
+					
+					if (g_CvarMethod.BoolValue)
+					{
+						float endpos[3];
+						if (TiB_GetAimInfo(client, endpos))
+							TeleportEntity(target, endpos, NULL_VECTOR, NULL_VECTOR);
+					}
+					
+					JWP_ActionMsgAll("%T", "Respawn_ActionMessage_Respawned", LANG_SERVER, client, target);
 				}
-				
-				CS_RespawnPlayer(target);
-				
-				if (g_CvarMethod.BoolValue)
-				{
-					float endpos[3];
-					if (TiB_GetAimInfo(client, endpos))
-						TeleportEntity(target, endpos, NULL_VECTOR, NULL_VECTOR);
-				}
-				
-				JWP_ActionMsgAll("%T", "Respawn_ActionMessage_Respawned", LANG_SERVER, client, target);
+				else
+					JWP_ActionMsg(client, "%T", "Respawn_UnableToRespawn", LANG_SERVER);
+				JWP_ShowMainMenu(client);
 			}
-			else
-				JWP_ActionMsg(client, "%T", "Respawn_UnableToRespawn", LANG_SERVER);
-			JWP_ShowMainMenu(client);
 		}
 	}
 }

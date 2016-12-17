@@ -5,7 +5,7 @@
 
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.1"
+#define PLUGIN_VERSION "1.2"
 #define ITEM "tojail"
 
 float g_fCoords[MAXPLAYERS+1][3];
@@ -54,6 +54,7 @@ public bool OnFuncDisplay(int client, char[] buffer, int maxlength, int style)
 
 public bool OnFuncSelect(int client)
 {
+	if (!JWP_IsWarden(client)) return false;
 	char langbuffer[32];
 	Menu ToJailMenu = new Menu(ToJailMenu_Callback);
 	Format(langbuffer, sizeof(langbuffer), "%T:", "ToJail_Menu", LANG_SERVER);
@@ -85,28 +86,31 @@ public int ToJailMenu_Callback(Menu menu, MenuAction action, int client, int slo
 		case MenuAction_End: menu.Close();
 		case MenuAction_Cancel:
 		{
-			if (slot == MenuCancel_ExitBack)
+			if (slot == MenuCancel_ExitBack && JWP_IsWarden(client))
 				JWP_ShowMainMenu(client);
 		}
 		case MenuAction_Select:
 		{
-			char info[4];
-			menu.GetItem(slot, info, sizeof(info));
-			
-			int target = StringToInt(info);
-			if (target && CheckClient(target) && GetClientTeam(target) == CS_TEAM_T)
+			if (JWP_IsWarden(client))
 			{
-				if (CoordsExists(target))
+				char info[4];
+				menu.GetItem(slot, info, sizeof(info));
+				
+				int target = StringToInt(info);
+				if (CheckClient(target) && GetClientTeam(target) == CS_TEAM_T)
 				{
-					if (TeleportEntity(target, g_fCoords[target], NULL_VECTOR, NULL_VECTOR))
-						JWP_ActionMsgAll("%T", "ToJail_ActionMessage_Teleported", LANG_SERVER, client, target);
+					if (CoordsExists(target))
+					{
+						if (TeleportEntity(target, g_fCoords[target], NULL_VECTOR, NULL_VECTOR))
+							JWP_ActionMsgAll("%T", "ToJail_ActionMessage_Teleported", LANG_SERVER, client, target);
+					}
+					else
+						JWP_ActionMsg(client, "%T", "ToJail_FailedCoords", LANG_SERVER, target);
 				}
 				else
-					JWP_ActionMsg(client, "%T", "ToJail_FailedCoords", LANG_SERVER, target);
+					JWP_ActionMsg(client, "%T", "ToJail_UnableToTP", LANG_SERVER);
+				JWP_ShowMainMenu(client);
 			}
-			else
-				JWP_ActionMsg(client, "%T", "ToJail_UnableToTP", LANG_SERVER);
-			JWP_ShowMainMenu(client);
 		}
 	}
 }

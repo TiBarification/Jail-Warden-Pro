@@ -5,15 +5,15 @@
 
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.4"
+#define PLUGIN_VERSION "1.6"
 #define ITEM "laserbeam"
 
 #define DEFAULT_RED_COLOR 255
 #define DEFAULT_GREEN_COLOR 0
 #define DEFAULT_BLUE_COLOR 0
 #define DEFAULT_ALPHA_COLOR 255
-#define DEFAULT_BEAM_WIDTH 25.0
-#define DEFAULT_BEAM_LIFE 2.0
+#define DEFAULT_BEAM_WIDTH 2.0
+#define DEFAULT_BEAM_LIFE 25.0
 
 enum Target
 {
@@ -81,17 +81,11 @@ public Action Event_OnRoundStart(Event event, const char[] name, bool dontBroadc
 {
 	for (int i = 1; i <= MaxClients; ++i)
 	{
-		if (IsClientInGame(i) && g_iClientData[i][lightActive])
+		if (IsClientInGame(i))
 			DisableAllForClient(i);
 	}
 	
 	g_bTCanUse = false;
-}
-
-public void OnClientPostAdminCheck(int client)
-{
-	if (client && IsClientInGame(client) && g_iClientData[client][lightActive])
-		DisableAllForClient(client);
 }
 
 public Action Command_LPaints(int client, int args)
@@ -145,13 +139,17 @@ public bool OnFuncDisplay(int client, char[] buffer, int maxlength, int style)
 
 public bool OnFuncSelect(int client)
 {
-	g_mMainMenu.Display(client, MENU_TIME_FOREVER);
-	return true;
+	if (JWP_IsWarden(client))
+	{
+		g_mMainMenu.Display(client, MENU_TIME_FOREVER);
+		return true;
+	}
+	return false;
 }
 
 public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon, int &subtype, int &cmdnum, int &tickcount, int &seed, int mouse[2])
 {
-	if (client && IsClientInGame(client) && IsPlayerAlive(client) && g_iClientData[client][lightActive] /* && buttons & IN_USE */)
+	if (client && IsClientInGame(client) && IsPlayerAlive(client) && g_iClientData[client][lightActive])
 	{
 		if (buttons & IN_USE) // Runs many times per sec
 		{
@@ -299,6 +297,7 @@ void DisableAllForClient(int client)
 	g_iClientData[client][lastLaserPos][1] = 0.0;
 	g_iClientData[client][lastLaserPos][2] = 0.0;
 	g_iClientData[client][lastButtons] = 0;
+	g_mColorMenu.Cancel();
 }
 
 void LoadMenus()
@@ -331,7 +330,7 @@ void LoadMenus()
 	g_mColorMenu.SetTitle(buffer);
 	g_mColorMenu.ExitBackButton = true;
 	int color[4];
-	float other[2];
+	float fLife, fWidth;
 	if (kv.GotoFirstSubKey(true))
 	{
 		do
@@ -343,10 +342,10 @@ void LoadMenus()
 				Format(langbuffer, sizeof(langbuffer), "%T", langbuffer, LANG_SERVER);
 			}
 			kv.GetColor4("rgba", color);
-			other[0] = kv.GetFloat("life", DEFAULT_BEAM_LIFE);
-			other[1] = kv.GetFloat("width", DEFAULT_BEAM_WIDTH);
+			fLife = kv.GetFloat("life", DEFAULT_BEAM_LIFE);
+			fWidth = kv.GetFloat("width", DEFAULT_BEAM_WIDTH);
 			
-			FormatEx(buffer, sizeof(buffer), "%d:%d:%d:%d:%.1f:%.1f", color[0], color[1], color[2], color[3], other[0], other[1]);
+			FormatEx(buffer, sizeof(buffer), "%d:%d:%d:%d:%.1f:%.1f", color[0], color[1], color[2], color[3], fLife, fWidth);
 			g_mColorMenu.AddItem(buffer, langbuffer);
 		} while (kv.GotoNextKey(true));
 	}

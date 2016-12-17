@@ -6,7 +6,7 @@
 // Force 1.7 syntax
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.0"
+#define PLUGIN_VERSION "1.1"
 #define ITEM "wtimer"
 
 ConVar g_CvarMinTime, g_CvarMaxTime;
@@ -105,6 +105,7 @@ public bool OnItemDisplay(int client, char[] buffer, int maxlength, int style)
 
 public bool OnItemSelect(int client)
 {
+	if (!JWP_IsWarden(client)) return false;
 	if (g_hTimer == null)
 	{
 		JWP_ActionMsg(client, "\x03%T", "WTimer_HelpMessage", LANG_SERVER);
@@ -141,7 +142,8 @@ public Action WTimer_Callback(Handle timer, any client)
 	char lang[48];
 	FormatEx(lang, sizeof(lang), "%T", "WTimer_Menu", LANG_SERVER);
 	JWP_RefreshMenuItem(ITEM, lang);
-	JWP_ShowMainMenu(client);
+	if (JWP_IsWarden(client))
+		JWP_ShowMainMenu(client);
 	
 	g_hTimer = null;
 	return Plugin_Stop;

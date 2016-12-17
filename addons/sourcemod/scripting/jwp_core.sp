@@ -10,7 +10,7 @@
 // Force new syntax
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.0.6C"
+#define PLUGIN_VERSION "1.0.6D5"
 
 #define UPDATE_URL "http://updater.scriptplugs.info/jwp/updatefile.txt"
 #define LOG_PATH "addons/sourcemod/logs/JWP_Log.log"
@@ -155,8 +155,9 @@ public void Event_OnRoundStart(Event event, const char[] name, bool dontBroadcas
 		g_ClientAPIInfo[i][has_freeday] = false;
 		g_ClientAPIInfo[i][is_isolated] = false;
 	}
-	Forward_OnWardenResigned(g_iWarden, false);
-	EmptyPanel(g_iWarden);
+	if (g_iWarden > 0)
+		Forward_OnWardenResigned(g_iWarden, false);
+	EmptyPanel();
 	delete g_mMainMenu;
 	g_iWarden = 0;
 	g_iZamWarden = 0;
@@ -203,7 +204,7 @@ public void Event_OnRoundFreezeEnd(Event event, const char[] name, bool dontBroa
 	for (int i = 1; i <= MaxClients; ++i)
 		g_ClientAPIInfo[i][was_warden] = false;
 	g_bRoundEnd = false;
-	if (!Forward_OnWardenChoosing())
+	if (Forward_OnWardenChoosing() == false)
 		return;
 	else if (g_CvarChooseMode.IntValue == 1)
 		JWP_FindNewWarden();
@@ -227,8 +228,9 @@ public void Event_OnRoundFreezeEnd(Event event, const char[] name, bool dontBroa
 public Action Event_OnRoundEnd(Event event, const char[] name, bool dontBroadcast)
 {
 	g_bRoundEnd = true;
-	Forward_OnWardenResigned(g_iWarden, false);
-	EmptyPanel(g_iWarden);
+	if (g_iWarden > 0)
+		Forward_OnWardenResigned(g_iWarden, false);
+	EmptyPanel();
 	delete g_mMainMenu;
 	g_iWarden = 0;
 	RemoveZam();
@@ -269,7 +271,7 @@ public Action Command_BecomeWarden(int client, int args)
 {
 	if (CheckClient(client))
 	{
-		if (!Forward_OnWardenChoosing())
+		if (Forward_OnWardenChoosing() == false)
 		{
 			if (g_bIsCSGO)
 				CGOPrintToChat(client, "%T %T", "Core_Prefix", LANG_SERVER, "warden_blocked", LANG_SERVER);
@@ -390,25 +392,32 @@ void OnReadyToStart()
 
 bool CheckClient(int client)
 {
-	if (client && IsClientConnected(client) && !IsFakeClient(client) && IsClientInGame(client)) return true;
+	if (client > 0 && IsClientConnected(client) && !IsFakeClient(client) && IsClientInGame(client)) return true;
 	return false;
 }
 
 bool BecomeCmd(int client, bool waswarden = true)
 {
-	if (!Forward_OnWardenChoosing())
+	if (CheckClient(client) == false || Forward_OnWardenChoosing() == false)
 		return false;
 	
-	if (!g_ClientAPIInfo[client][is_banned] && CheckClient(client))
+	if (!g_ClientAPIInfo[client][is_banned])
 	{
-		if (g_ClientAPIInfo[client][was_warden] && waswarden)
+		if (!IsPlayerAlive(client))
+		{
+			if (g_bIsCSGO)
+				CGOPrintToChat(client, "%T %T", "Core_Prefix", LANG_SERVER, "warden_must_be_alive", LANG_SERVER);
+			else
+				CPrintToChat(client, "%T %T", "Core_Prefix", LANG_SERVER, "warden_must_be_alive", LANG_SERVER);
+		}
+		else if (g_ClientAPIInfo[client][was_warden] && waswarden)
 		{
 			if (g_bIsCSGO)
 				CGOPrintToChat(client, "%T %T", "Core_Prefix", LANG_SERVER, "already_was_warden", LANG_SERVER);
 			else
 				CPrintToChat(client, "%T %T", "Core_Prefix", LANG_SERVER, "already_was_warden", LANG_SERVER);
 		}
-		else if (IsPlayerAlive(client))
+		else
 		{
 			g_iWarden = client;
 			Forward_OnWardenChosen(client);
@@ -423,13 +432,6 @@ bool BecomeCmd(int client, bool waswarden = true)
 			else
 				CPrintToChatAll("%T %T", "Core_Prefix", LANG_SERVER, "warden_become", LANG_SERVER, g_iWarden);
 			return true;
-		}
-		else
-		{
-			if (g_bIsCSGO)
-				CGOPrintToChat(client, "%T %T", "Core_Prefix", LANG_SERVER, "warden_must_be_alive", LANG_SERVER);
-			else
-				CPrintToChat(client, "%T %T", "Core_Prefix", LANG_SERVER, "warden_must_be_alive", LANG_SERVER);
 		}
 	}
 	return false;
@@ -447,11 +449,12 @@ void RemoveCmd(bool themself = true)
 			else
 				CPrintToChatAll("%T %T", "Core_Prefix", LANG_SERVER, "warden_resign", LANG_SERVER, g_iWarden);
 		}
-		EmptyPanel(g_iWarden);
+		EmptyPanel();
 		g_iWarden = 0;
 		delete g_mMainMenu;
 		
-		JWP_FindNewWarden();
+		if (Forward_OnWardenChoosing() == true)
+			JWP_FindNewWarden();
 	}
 }
 
@@ -556,7 +559,7 @@ int JWP_GetTeamClient(int team, bool alive)
 
 void JWP_FindNewWarden()
 {
-	if (!Forward_OnWardenChoosing())
+	if (Forward_OnWardenChoosing() == false)
 		return;
 	
 	if (g_iZamWarden)
@@ -613,7 +616,7 @@ public Action g_ChooseTimer_Callback(Handle timer)
 	{
 		int client = g_iZamWarden;
 		
-		if (!client)
+		if (CheckClient(client))
 			client = JWP_GetRandomTeamClient(CS_TEAM_CT, true, true);
 		if (client != -1)
 			BecomeCmd(client, false);
@@ -638,7 +641,7 @@ public Action g_ChooseTimer_Callback(Handle timer)
 stock int JWP_GetRandomTeamClient(int team, bool alive, bool ignore_resign)
 {
 	int[] Players = new int[MaxClients + 1];
-	int count;
+	int count = 0;
 	for (int i = 1; i <= MaxClients; ++i)
 	{
 		if (IsClientInGame(i) && !IsFakeClient(i) && GetClientTeam(i) == team && (alive && IsPlayerAlive(i)))
