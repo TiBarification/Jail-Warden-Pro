@@ -3,7 +3,7 @@
 	Author: White Wolf
 	www.hlmod.ru
 	
-	|Version by Core: 1.0.5+ /) 
+	|Version by Core: 1.0.6+ /) 
 */
 
 #if defined _jwp_included
@@ -208,7 +208,7 @@ native void JWP_ActionMsg(int client, const char[] msg, any ...);
 /**
  *	Get random player from team
  *	-
- *	@param team				Number of team (0 - unassigned, 1 - spec, 2 - terr, 3 - counter-terr)
+ *	@param team				Number of team (-1 - any team, 0 - unassigned, 1 - spec, 2 - terr, 3 - counter-terr)
  *	@param alive			Changing it to true can exclude dead players (with specs) from random system
  *	-
  *	@return random client index

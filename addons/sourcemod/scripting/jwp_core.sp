@@ -10,7 +10,7 @@
 // Force new syntax
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.0.6D5"
+#define PLUGIN_VERSION "1.0.6E"
 
 #define UPDATE_URL "http://updater.scriptplugs.info/jwp/updatefile.txt"
 #define LOG_PATH "addons/sourcemod/logs/JWP_Log.log"
@@ -417,16 +417,16 @@ bool BecomeCmd(int client, bool waswarden = true)
 			else
 				CPrintToChat(client, "%T %T", "Core_Prefix", LANG_SERVER, "already_was_warden", LANG_SERVER);
 		}
-		else
+		else if (client > 0)
 		{
 			g_iWarden = client;
-			Forward_OnWardenChosen(client);
-			g_ClientAPIInfo[client][was_warden] = true;
+			Forward_OnWardenChosen(g_iWarden);
+			g_ClientAPIInfo[g_iWarden][was_warden] = true;
 			// Remove if new warden is previous zam of warden
 			if (g_iZamWarden == g_iWarden)
 				RemoveZam();
 			// Show our warden menu
-			Cmd_ShowMenu(client);
+			Cmd_ShowMenu(g_iWarden);
 			if (g_bIsCSGO)
 				CGOPrintToChatAll("%T %T", "Core_Prefix", LANG_SERVER, "warden_become", LANG_SERVER, g_iWarden);
 			else
@@ -570,10 +570,7 @@ void JWP_FindNewWarden()
 	else if (g_CvarChooseMode.IntValue == 1)
 	{
 		if (g_hChooseTimer != null)
-		{
 			KillTimer(g_hChooseTimer);
-			g_hChooseTimer = null;
-		}
 		g_hChooseTimer = CreateTimer(g_CvarRandomWait.FloatValue, g_ChooseTimer_Callback);
 	}
 	else if (g_CvarChooseMode.IntValue == 2)
@@ -616,9 +613,9 @@ public Action g_ChooseTimer_Callback(Handle timer)
 	{
 		int client = g_iZamWarden;
 		
-		if (CheckClient(client))
+		if (CheckClient(client) == false)
 			client = JWP_GetRandomTeamClient(CS_TEAM_CT, true, true);
-		if (client != -1)
+		if (CheckClient(client))
 			BecomeCmd(client, false);
 		else
 		{
@@ -635,7 +632,6 @@ public Action g_ChooseTimer_Callback(Handle timer)
 		}
 	}
 	g_hChooseTimer = null;
-	return Plugin_Stop;
 }
 
 stock int JWP_GetRandomTeamClient(int team, bool alive, bool ignore_resign)
@@ -644,11 +640,16 @@ stock int JWP_GetRandomTeamClient(int team, bool alive, bool ignore_resign)
 	int count = 0;
 	for (int i = 1; i <= MaxClients; ++i)
 	{
-		if (IsClientInGame(i) && !IsFakeClient(i) && GetClientTeam(i) == team && (alive && IsPlayerAlive(i)))
+		if (IsClientInGame(i) /* && !IsFakeClient(i) */)
 		{
-			if (ignore_resign)
+			if (alive == true && IsPlayerAlive(i) == false)
+				continue;
+			
+			if (ignore_resign == false && g_ClientAPIInfo[i][was_warden] == true) continue;
+			
+			if (team != -1 && GetClientTeam(i) == team)
 				Players[count++] = i;
-			else if (!g_ClientAPIInfo[i][was_warden])
+			else
 				Players[count++] = i;
 		}
 	}
