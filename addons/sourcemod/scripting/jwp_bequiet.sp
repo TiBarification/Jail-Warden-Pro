@@ -20,7 +20,7 @@ public void OnPluginStart()
 }
 
 //When Warden speaks or muted client wants to speak
-public int OnClientSpeakingEx(client)
+public void OnClientSpeakingEx(client)
 {
 	if (client && IsClientInGame(client) && (JWP_IsWarden(client) || JWP_IsZamWarden(client)))
 	{
@@ -42,7 +42,7 @@ public int OnClientSpeakingEx(client)
 }
 
 // When client stops talk
-public int OnClientSpeakingEnd(client)
+public void OnClientSpeakingEnd(client)
 {
 	for (int i = 1; i <= MaxClients; i++)
 	{
