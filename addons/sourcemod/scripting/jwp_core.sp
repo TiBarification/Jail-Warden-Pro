@@ -10,7 +10,7 @@
 // Force new syntax
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.0.6E"
+#define PLUGIN_VERSION "1.0.7"
 
 #define UPDATE_URL "http://updater.scriptplugs.info/jwp/updatefile.txt"
 #define LOG_PATH "addons/sourcemod/logs/JWP_Log.log"
@@ -278,23 +278,6 @@ public Action Command_BecomeWarden(int client, int args)
 			else
 				CPrintToChat(client, "%T %T", "Core_Prefix", LANG_SERVER, "warden_blocked", LANG_SERVER);
 		}
-		else if (g_ClientAPIInfo[client][is_banned])
-		{
-			if (g_bIsCSGO)
-			{
-				CGOPrintToChat(client, "{RED}You have been banned from warden by Developer!");
-				CGOPrintToChat(client, "{RED}Reason: %s.", g_ClientAPIInfo[client][reason]);
-				CGOPrintToChat(client, "{RED}Ban is permanent!");
-				CGOPrintToChat(client, "{GREEN}Contact for abuse: jwp-unban@scriptplugs.info");
-			}
-			else
-			{
-				CPrintToChat(client, "{red}You have been banned from warden by Developer!");
-				CPrintToChat(client, "{red}Reason: %s.", g_ClientAPIInfo[client][reason]);
-				CPrintToChat(client, "{red}Ban is permanent!");
-				CPrintToChat(client, "{green}Contact for abuse: jwp-unban@scriptplugs.info");
-			}
-		}
 		else if (g_bRoundEnd)
 		{
 			if (g_bIsCSGO)
@@ -401,38 +384,35 @@ bool BecomeCmd(int client, bool waswarden = true)
 	if (CheckClient(client) == false || Forward_OnWardenChoosing() == false)
 		return false;
 	
-	if (!g_ClientAPIInfo[client][is_banned])
+	if (!IsPlayerAlive(client))
 	{
-		if (!IsPlayerAlive(client))
-		{
-			if (g_bIsCSGO)
-				CGOPrintToChat(client, "%T %T", "Core_Prefix", LANG_SERVER, "warden_must_be_alive", LANG_SERVER);
-			else
-				CPrintToChat(client, "%T %T", "Core_Prefix", LANG_SERVER, "warden_must_be_alive", LANG_SERVER);
-		}
-		else if (g_ClientAPIInfo[client][was_warden] && waswarden)
-		{
-			if (g_bIsCSGO)
-				CGOPrintToChat(client, "%T %T", "Core_Prefix", LANG_SERVER, "already_was_warden", LANG_SERVER);
-			else
-				CPrintToChat(client, "%T %T", "Core_Prefix", LANG_SERVER, "already_was_warden", LANG_SERVER);
-		}
-		else if (client > 0)
-		{
-			g_iWarden = client;
-			Forward_OnWardenChosen(g_iWarden);
-			g_ClientAPIInfo[g_iWarden][was_warden] = true;
-			// Remove if new warden is previous zam of warden
-			if (g_iZamWarden == g_iWarden)
-				RemoveZam();
-			// Show our warden menu
-			Cmd_ShowMenu(g_iWarden);
-			if (g_bIsCSGO)
-				CGOPrintToChatAll("%T %T", "Core_Prefix", LANG_SERVER, "warden_become", LANG_SERVER, g_iWarden);
-			else
-				CPrintToChatAll("%T %T", "Core_Prefix", LANG_SERVER, "warden_become", LANG_SERVER, g_iWarden);
-			return true;
-		}
+		if (g_bIsCSGO)
+			CGOPrintToChat(client, "%T %T", "Core_Prefix", LANG_SERVER, "warden_must_be_alive", LANG_SERVER);
+		else
+			CPrintToChat(client, "%T %T", "Core_Prefix", LANG_SERVER, "warden_must_be_alive", LANG_SERVER);
+	}
+	else if (g_ClientAPIInfo[client][was_warden] && waswarden)
+	{
+		if (g_bIsCSGO)
+			CGOPrintToChat(client, "%T %T", "Core_Prefix", LANG_SERVER, "already_was_warden", LANG_SERVER);
+		else
+			CPrintToChat(client, "%T %T", "Core_Prefix", LANG_SERVER, "already_was_warden", LANG_SERVER);
+	}
+	else if (client > 0)
+	{
+		g_iWarden = client;
+		Forward_OnWardenChosen(g_iWarden);
+		g_ClientAPIInfo[g_iWarden][was_warden] = true;
+		// Remove if new warden is previous zam of warden
+		if (g_iZamWarden == g_iWarden)
+			RemoveZam();
+		// Show our warden menu
+		Cmd_ShowMenu(g_iWarden);
+		if (g_bIsCSGO)
+			CGOPrintToChatAll("%T %T", "Core_Prefix", LANG_SERVER, "warden_become", LANG_SERVER, g_iWarden);
+		else
+			CPrintToChatAll("%T %T", "Core_Prefix", LANG_SERVER, "warden_become", LANG_SERVER, g_iWarden);
+		return true;
 	}
 	return false;
 }
@@ -465,7 +445,7 @@ void RemoveZam()
 
 bool SetZam(int client)
 {
-	if (CheckClient(client) && !g_ClientAPIInfo[client][is_banned] && IsPlayerAlive(client) && client != g_iWarden)
+	if (CheckClient(client) && IsPlayerAlive(client) && client != g_iWarden)
 	{
 		g_iZamWarden = client;
 		Forward_OnWardenZamChosen(client);
@@ -588,7 +568,7 @@ void JWP_FindNewWarden()
 	}
 	else if (g_CvarChooseMode.IntValue == 3)
 	{
-		int client = JWP_GetRandomTeamClient(CS_TEAM_CT, true, false);
+		int client = JWP_GetRandomTeamClient(CS_TEAM_CT, true, false, false);
 		if (client != -1)
 			BecomeCmd(client);
 		else
@@ -614,7 +594,7 @@ public Action g_ChooseTimer_Callback(Handle timer)
 		int client = g_iZamWarden;
 		
 		if (CheckClient(client) == false)
-			client = JWP_GetRandomTeamClient(CS_TEAM_CT, true, true);
+			client = JWP_GetRandomTeamClient(CS_TEAM_CT, true, true, false);
 		if (CheckClient(client))
 			BecomeCmd(client, false);
 		else
@@ -634,14 +614,15 @@ public Action g_ChooseTimer_Callback(Handle timer)
 	g_hChooseTimer = null;
 }
 
-stock int JWP_GetRandomTeamClient(int team, bool alive, bool ignore_resign)
+stock int JWP_GetRandomTeamClient(int team, bool alive, bool ignore_resign, bool allow_bot)
 {
 	int[] Players = new int[MaxClients + 1];
 	int count = 0;
 	for (int i = 1; i <= MaxClients; ++i)
 	{
-		if (IsClientInGame(i) /* && !IsFakeClient(i) */)
+		if (IsClientInGame(i))
 		{
+			if (allow_bot == false && IsFakeClient(i) == true) continue;
 			if (alive == true && IsPlayerAlive(i) == false)
 				continue;
 			
@@ -649,7 +630,7 @@ stock int JWP_GetRandomTeamClient(int team, bool alive, bool ignore_resign)
 			
 			if (team != -1 && GetClientTeam(i) == team)
 				Players[count++] = i;
-			else
+			else if (team == -1)
 				Players[count++] = i;
 		}
 	}

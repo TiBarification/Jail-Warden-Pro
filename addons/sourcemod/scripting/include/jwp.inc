@@ -3,7 +3,7 @@
 	Author: White Wolf
 	www.hlmod.ru
 	
-	|Version by Core: 1.0.6+ /) 
+	|Version by Core: 1.0.7+ /) 
 */
 
 #if defined _jwp_included
@@ -210,10 +210,11 @@ native void JWP_ActionMsg(int client, const char[] msg, any ...);
  *	-
  *	@param team				Number of team (-1 - any team, 0 - unassigned, 1 - spec, 2 - terr, 3 - counter-terr)
  *	@param alive			Changing it to true can exclude dead players (with specs) from random system
+ *	@param allow_bot		Allows bot to be in random choosing
  *	-
  *	@return random client index
  */
-native int JWP_GetRandomTeamClient(int team, bool alive = false);
+native int JWP_GetRandomTeamClient(int team, bool alive = false, bool allow_bot = true);
 
 /**
  *	Function for anti-flood in menu

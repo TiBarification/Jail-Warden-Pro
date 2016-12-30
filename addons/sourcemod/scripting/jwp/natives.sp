@@ -108,7 +108,8 @@ public int Native_GetRandomTeamClient(Handle plugin, int numParams)
 {
 	int team = GetNativeCell(1);
 	bool alive = view_as<bool>(GetNativeCell(2));
-	return JWP_GetRandomTeamClient(team, alive, true);
+	bool allow_bot = view_as<bool>(GetNativeCell(3));
+	return JWP_GetRandomTeamClient(team, alive, true, allow_bot);
 }
 
 public int Native_IsFlood(Handle plugin, int numParams)

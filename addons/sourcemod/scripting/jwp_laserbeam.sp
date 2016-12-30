@@ -5,7 +5,7 @@
 
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.6"
+#define PLUGIN_VERSION "1.7"
 #define ITEM "laserbeam"
 
 #define DEFAULT_RED_COLOR 255
@@ -401,24 +401,28 @@ public int MainMenu_Callback(Menu menu, MenuAction action, int param1, int param
 							g_iClientData[param1][lightActive] = false;
 					}
 					else
+					{
+						DisableAllForClient(param1);
 						g_iClientData[param1][lightActive] = true;
+					}
 				}
 				else // if param2 == 1
 				{
-					g_bTCanUse = !g_bTCanUse;
-					for (int i = 1; i <=MaxClients; ++i)
+					if (g_iClientData[param1][lightActive])
 					{
-						if (i != param1 && IsClientInGame(i) && IsPlayerAlive(i) && GetClientTeam(i) == CS_TEAM_T)
+						g_bTCanUse = !g_bTCanUse;
+						for (int i = 1; i <=MaxClients; ++i)
 						{
-							if (g_bTCanUse)
-							{
-								g_iClientData[i][paintActive] = true;
-								JWP_ActionMsg(i, "\x03%T", "LaserBeam_GrantAction", LANG_SERVER, param1);
-							}
-							else
+							if (i != param1 && IsClientInGame(i) && IsPlayerAlive(i) && GetClientTeam(i) == CS_TEAM_T)
 							{
 								DisableAllForClient(i);
-								JWP_ActionMsg(i, "\x03%T", "LaserBeam_TakeAction", LANG_SERVER, param1);
+								if (g_bTCanUse)
+								{
+									g_iClientData[i][lightActive] = true;
+									JWP_ActionMsg(i, "\x03%T", "LaserBeam_GrantAction", LANG_SERVER, param1);
+								}
+								else
+									JWP_ActionMsg(i, "\x03%T", "LaserBeam_TakeAction", LANG_SERVER, param1);
 							}
 						}
 					}
