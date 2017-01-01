@@ -65,7 +65,7 @@
 	"warden_vote_chat_stopped"
 	{
 		"en"		"Voting for chosing warden has been stopped!"
-		"ru"		"Голосование за выбор командира остановлено"
+		"ru"		"Голосование за выбор командира остановлено!"
 	}
 	"warden_vote_hint_stopped"
 	{
@@ -111,7 +111,7 @@
 	}
 	"warden_menu_title"
 	{
-		"en"		"Warden menu"
+		"en"		"Warden menu:"
 		"ru"		"Меню командования:"
 	}
 	"warden_menu_empty"

@@ -3,12 +3,13 @@
 #include <sdkhooks>
 #include <cstrike>
 #include <jwp>
+#include <csgo_colors>
 #undef REQUIRE_PLUGIN
 #include <hosties>
 #include <lastrequest>
 
 #define ITEM "handcuffs"
-#define PLUGIN_VERSION "1.3"
+#define PLUGIN_VERSION "1.4"
 
 int g_iClipOffset, g_iActiveWeaponOffset;
 bool g_bArrested[MAXPLAYERS+1];
@@ -215,7 +216,7 @@ void CuffsEm(int client, int attacker)
 	SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 0.0);
 	ShowOverlayCuffs(client, false);
 	
-	PrintToChatAll("%T %T", "Handcuffs_Prefix", LANG_SERVER, "Handcuffs_Arrest", LANG_SERVER, attacker, client);
+	CGOPrintToChatAll("%T %T", "Handcuffs_Prefix", LANG_SERVER, "Handcuffs_Arrest", LANG_SERVER, attacker, client);
 }
 
 void FreeEm(int client, int attacker)
@@ -225,7 +226,7 @@ void FreeEm(int client, int attacker)
 	SetEntityRenderColor(client, 255, 255, 255, 255);
 	g_bArrested[client] = false;
 	ShowOverlayCuffs(client, true);
-	PrintToChatAll("%T %T", "Handcuffs_Prefix", LANG_SERVER, "Handcuffs_Release", LANG_SERVER, attacker, client);
+	CGOPrintToChatAll("%T %T", "Handcuffs_Prefix", LANG_SERVER, "Handcuffs_Release", LANG_SERVER, attacker, client);
 }
 
 void UnArrestAll()

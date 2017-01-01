@@ -45,17 +45,17 @@
 	}
 	"Coloring_Red_Color"
 	{
-		"en"	"Red"
-		"ru"	"КРАСНЫЙ"
+		"en"	"{LIGHTRED}RED"
+		"ru"	"{LIGHTRED}КРАСНЫЙ"
 	}
 	"Coloring_Blue_Color"
 	{
-		"en"	"Blue"
-		"ru"	"СИНИЙ"
+		"en"	"{BLUE}BLUE"
+		"ru"	"{BLUE}СИНИЙ"
 	}
 	"Coloring_Standart_Color"
 	{
-		"en"	"Standart"
+		"en"	"STANDARD"
 		"ru"	"СТАНДАРТНЫЙ"
 	}
 	"Coloring_ActionMessage"
@@ -65,13 +65,13 @@
 	}
 	"Coloring_State_On"
 	{
-		"en"	"turned on"
-		"ru"	"включено"
+		"en"	"turned {GREEN}on"
+		"ru"	"{GREEN}включено"
 	}
 	"Coloring_State_Off"
 	{
-		"en"	"turned off"
-		"ru"	"отключено"
+		"en"	"turned {LIGHTRED}off"
+		"ru"	"{LIGHTRED}отключено"
 	}
 	
 	"DoorAimControl_Menu_Open"
@@ -113,14 +113,14 @@
 	"DoorControl_ActionMessage_Opened"
 	{
 		"#format"	"{1:N}"
-		"en"	"{1} opened cells"
-		"ru"	"{1} открыл клетки джайлов"
+		"en"	"{BLUE}{1}{DEFALULT}: opened cells"
+		"ru"	"{BLUE}{1}{DEFALULT}: открыл клетки джайлов"
 	}
 	"DoorControl_ActionMessage_Closed"
 	{
 		"#format"	"{1:N}"
-		"en"	"{1} closed cells"
-		"ru"	"{1} закрыл клетки джайлов"
+		"en"	"{BLUE}{1}{DEFALULT}: closed cells"
+		"ru"	"{BLUE}{1}{DEFALULT}: закрыл клетки джайлов"
 	}
 	"DoorControl_NoDoors"
 	{
@@ -151,14 +151,14 @@
 	"Freeday_ActionMessage_Gived"
 	{
 		"#format"	"{1:N},{2:N}"
-		"en"	"{1} gived freeday {2}"
-		"ru"	"{1} дал фридей {2}"
+		"en"	"{BLUE}{1}{DEFAULT}: gived freeday {RED}{2}"
+		"ru"	"{BLUE}{1}{DEFAULT}: дал фридей {RED}{2}"
 	}
 	"Freeday_ActionMessage_Taken"
 	{
 		"#format"	"{1:N},{2:N}"
-		"en"	"{1} taken freeday from {2}"
-		"ru"	"{1} забрал фридей у {2}"
+		"en"	"{BLUE}{1}{DEFAULT}: taken freeday from {RED}{2}"
+		"ru"	"{BLUE}{1}{DEFAULT}: забрал фридей у {RED}{2}"
 	}
 	
 	"FF_Menu"
@@ -173,13 +173,13 @@
 	}
 	"FF_State_On"
 	{
-		"en"		"turned on"
-		"ru"		"ВКЛЮЧЕН"
+		"en"		"turned {GREEN}on"
+		"ru"		"{GREEN}ВКЛЮЧЕН"
 	}
 	"FF_State_Off"
 	{
-		"en"		"turned off"
-		"ru"		"ВЫКЛЮЧЕН"
+		"en"		"turned {LIGHTRED}off"
+		"ru"		"{LIGHTRED}ВЫКЛЮЧЕН"
 	}
 	
 	"Guns_Menu"
@@ -201,7 +201,7 @@
 	"HealthKit_RemoveAim"
 	{
 		"en"		"Remove aim from player"
-		"ru"		"Не флудите аптечкой"
+		"ru"		"Уберите прицел с игрока"
 	}
 	"HealthKit_FailedToMedkit"
 	{
@@ -227,14 +227,14 @@
 	"Isolator_Action_Isolated"
 	{
 		"#format"	"{1:N},{2:N}"
-		"en"		"{1} isolated player {2}"
-		"ru"		"{1} посадил зека {2} в карцер"
+		"en"		"{BLUE}{1}{DEFAULT}: isolated player {RED}{2}"
+		"ru"		"{BLUE}{1}{DEFAULT}: посадил зека {RED}{2} {DEFAULT}в карцер"
 	}
 	"Isolator_Action_Released"
 	{
 		"#format"	"{1:N},{2:N}"
-		"en"		"{1} released {2} from custody"
-		"ru"		"{1} освободил зека {2} из карцера"
+		"en"		"{BLUE}{1}{DEFAULT}: released {RED}{2} {DEFAULT}from custody"
+		"ru"		"{BLUE}{1}{DEFAULT}: освободил зека {RED}{2} {DEFAULT}из карцера"
 	}
 	"Isolator_FailedToIsolate"
 	{
@@ -286,14 +286,14 @@
 	"LaserBeam_TakeAction"
 	{
 		"#format"	"{1:N}"
-		"en"		"{1} revoked your laser beam"
-		"ru"		"{1} забрал у вас направляющий свет"
+		"en"		"{BLUE}{1}{DEFAULT}: revoked your laser beam"
+		"ru"		"{BLUE}{1}{DEFAULT}: забрал у вас направляющий свет"
 	}
 	"LaserBeam_GrantAction"
 	{
 		"#format"	"{1:N}"
-		"en"		"{1} grant your laser beam. Use: !lpaints"
-		"ru"		"{1} дал вам направляющий свет. Напишите: !lpaints"
+		"en"		"{BLUE}{1}{DEFAULT}: grant your laser beam. {GREEN}Use: {OLIVE}!lpaints"
+		"ru"		"{BLUE}{1}{DEFAULT}: дал вам направляющий свет. {GREEN}Напишите: {OLIVE}!lpaints"
 	}
 	"LaserBeam_WardenMustGiveAccess"
 	{
@@ -366,26 +366,26 @@
 	"Mute_ActionMessage_UnMuted_All"
 	{
 		"#format"	"{1:N}"
-		"en"		"{1} unmuted all prisoners"
-		"ru"		"{1} включил всем террористам микрофон."
+		"en"		"{BLUE}{1}{DEFAULT}: unmuted all prisoners"
+		"ru"		"{BLUE}{1}{DEFAULT}: включил всем террористам микрофон."
 	}
 	"Mute_ActionMessage_Muted_All"
 	{
 		"#format"	"{1:N},{2:.f}"
-		"en"		"{1} muted all prisoners for {2} s"
-		"ru"		"{1} отключил всем террористам микрофон на {2} секунд"
+		"en"		"{BLUE}{1}{DEFAULT}: muted all prisoners for {2} s"
+		"ru"		"{BLUE}{1}{DEFAULT}: отключил всем террористам микрофон на {2} секунд"
 	}
 	"Mute_ActionMessage_Muted"
 	{
 		"#format"	"{1:N},{2:N}"
-		"en"		"{1} muted {2}"
-		"ru"		"{1} дал мут {2}"
+		"en"		"{BLUE}{1}{DEFAULT}: muted {RED}{2}"
+		"ru"		"{BLUE}{1}{DEFAULT}: дал мут {RED}{2}"
 	}
 	"Mute_ActionMessage_UnMuted"
 	{
 		"#format"	"{1:N},{2:N}"
-		"en"		"{1} un-muted {2}"
-		"ru"		"{1} снял мут с {2}"
+		"en"		"{BLUE}{1}{DEFAULT}: un-muted {RED}{2}"
+		"ru"		"{BLUE}{1}{DEFAULT}: снял мут с {RED}{2}"
 	}
 	"Mute_ActionMessage_MicroAvailable"
 	{
@@ -405,13 +405,13 @@
 	}
 	"Noblock_ActionMessage_On"
 	{
-		"en"		"turned on"
-		"ru"		"ВКЛЮЧЕН"
+		"en"		"turned {GREEN}on"
+		"ru"		"{GREEN}ВКЛЮЧЕН"
 	}
 	"Noblock_ActionMessage_Off"
 	{
-		"en"		"turned off"
-		"ru"		"ВЫКЛЮЧЕН"
+		"en"		"turned {LIGHTRED}off"
+		"ru"		"{LIGHTRED}ВЫКЛЮЧЕН"
 	}
 	
 	"Otkaz_Menu"
@@ -433,8 +433,8 @@
 	"Slay_ActionMessage_Slayed"
 	{
 		"#format"	"{1:N},{2:N}"
-		"en"		"{1}: slayed {2}"
-		"ru"		"{1}: убил {2}"
+		"en"		"{BLUE}{1}{DEFAULT}: slayed {RED}{2}"
+		"ru"		"{BLUE}{1}{DEFAULT}: убил {RED}{2}"
 	}
 	"Slay_UnableToSlay"
 	{
@@ -462,8 +462,8 @@
 	"StopLR_ActionMessage_Stopped"
 	{
 		"#format"	"{1:N}"
-		"en"		"{1}: stopped LR"
-		"ru"		"{1}: остановил LR"
+		"en"		"{BLUE}{1}{DEFAULT}: stopped LR"
+		"ru"		"{BLUE}{1}{DEFAULT}: остановил LR"
 	}
 	"StopLR_ActionMessage_ReachedMaximum"
 	{
@@ -484,14 +484,14 @@
 	"StripKnife_ActionMessage_Given"
 	{
 		"#format"	"{1:N},{2:N}"
-		"en"		"{1}: gived knife to {2}"
-		"ru"		"{1}: дал заточку {2}"
+		"en"		"{BLUE}{1}{DEFAULT}: gived knife to {RED}{2}"
+		"ru"		"{BLUE}{1}{DEFAULT}: дал заточку {RED}{2}"
 	}
 	"StripKnife_ActionMessage_Taken"
 	{
 		"#format"	"{1:N},{2:N}"
-		"en"		"{1}: took knife from {2}"
-		"ru"		"{1}: забрал заточку игрока {2}"
+		"en"		"{BLUE}{1}{DEFAULT}: took knife from {RED}{2}"
+		"ru"		"{BLUE}{1}{DEFAULT}: забрал заточку игрока {RED}{2}"
 	}
 	"StripKnife_ActionMessage_Unable"
 	{
@@ -507,8 +507,8 @@
 	"ToJail_ActionMessage_Teleported"
 	{
 		"#format"	"{1:N},{2:N}"
-		"en"		"{1}: teleported {2} back to jail"
-		"ru"		"{1}: телепортировал зека {2} обратно в джайл"
+		"en"		"{BLUE}{1}{DEFAULT}: teleported {2} back to jail"
+		"ru"		"{BLUE}{1}{DEFAULT}: телепортировал зека {2} обратно в джайл"
 	}
 	"ToJail_UnableToTP"
 	{
@@ -551,8 +551,8 @@
 	"RE_ActionMessage_Extend"
 	{
 		"#format"	"{1:N},{2:d}"
-		"en"		"{1} extended this round on {2} minutes"
-		"ru"		"{1} продлил раунд на {2} минут(ы)"
+		"en"		"{BLUE}{1} {DEFAULT}extended this round on {GREEN}{2} minutes"
+		"ru"		"{BLUE}{1} {DEFAULT}продлил раунд на {GREEN}{2} минут(ы)"
 	}
 	
 	"Respawn_Menu"
@@ -563,8 +563,8 @@
 	"Respawn_ActionMessage_Respawned"
 	{
 		"#format"	"{1:N},{2:N}"
-		"en"		"{1}: respawned {2}"
-		"ru"		"{1}: возродил {2}"
+		"en"		"{BLUE}{1}{DEFAULT}: respawned {RED}{2}"
+		"ru"		"{BLUE}{1}{DEFAULT}: возродил {RED}{2}"
 	}
 	"Respawn_UnableToRespawn"
 	{
@@ -633,20 +633,20 @@
 	}
 	"Handcuffs_Prefix"
 	{
-		"en"		"[Handcuffs]"
-		"ru"		"[Арест]"
+		"en"		"[{GREEN}Handcuffs{DEFAULT}]"
+		"ru"		"[{GREEN}Арест{DEFAULT}]"
 	}
 	"Handcuffs_Arrest"
 	{
 		"#format"	"{1:N},{2:N}"
-		"en"		"{1} arrested {2}"
-		"ru"		"{1} арестовал {2}"
+		"en"		"{BLUE}{1} {DEFAULT}arrested {RED}{2}"
+		"ru"		"{BLUE}{1} {DEFAULT}арестовал {RED}{2}"
 	}
 	"Handcuffs_Release"
 	{
 		"#format"	"{1:N},{2:N}"
-		"en"		"{1} released {2}"
-		"ru"		"{1} освободил {2}"
+		"en"		"{BLUE}{1} released {RED}{2}"
+		"ru"		"{BLUE}{1} освободил {RED}{2}"
 	}
 	
 	"Manual_Coloring_Menu"
@@ -685,8 +685,8 @@
 	"Rebel_Message"
 	{
 		"#format"	"{1:N}"
-		"en"		"Prisoner {1} is rebel"
-		"ru"		"Заключенный {1} бунтует"
+		"en"		"Prisoner {RED}{1} {DEFAULT}is rebel"
+		"ru"		"Заключенный {RED}{1} {DEFAULT}бунтует"
 	}
 	
 	"TransWarden_Menu"
@@ -707,8 +707,8 @@
 	"TransWarden_Action"
 	{
 		"#format"	"{1:N},{2:N}"
-		"en"		"{1} transfered warden rights to {2}"
-		"ru"		"{1} передал командование игроку {2}"
+		"en"		"{BLUE}{1} {DEFAULT}transfered warden rights to {BLUE}{2}"
+		"ru"		"{BLUE}{1} {DEFAULT}передал командование игроку {BLUE}{2}"
 	}
 	
 	"WTimer_TimerStopped"
