@@ -5,7 +5,7 @@
 
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.2"
+#define PLUGIN_VERSION "1.3"
 #define ITEM "coloring"
 
 bool g_bColoring;
@@ -70,12 +70,12 @@ public bool OnFuncSelect(int client)
 				if (red)
 				{
 					SetEntityRenderColor(i, 255, 0, 0, 255);
-					PrintToChat(i, "\x01\x04%T %T", "Coloring_Your_Color", LANG_SERVER, "Coloring_Red_Color", LANG_SERVER);
+					JWP_ActionMsg(i, "%T %T", "Coloring_Your_Color", LANG_SERVER, "Coloring_Red_Color", LANG_SERVER);
 				}
 				else
 				{
 					SetEntityRenderColor(i, 0, 0, 255, 255);
-					PrintToChat(i, "\x01\x04%T %T", "Coloring_Your_Color", LANG_SERVER, "Coloring_Blue_Color", LANG_SERVER);
+					JWP_ActionMsg(i, "%T %T", "Coloring_Your_Color", LANG_SERVER, "Coloring_Blue_Color", LANG_SERVER);
 				}
 			}
 		}
@@ -88,7 +88,7 @@ public bool OnFuncSelect(int client)
 			{
 				SetEntityRenderMode(i, RENDER_TRANSCOLOR);
 				SetEntityRenderColor(i, 255, 255, 255, 255);
-				PrintToChat(i, "\x01\x04%T %T", "Coloring_Your_Color", LANG_SERVER, "Coloring_Standart_Color", LANG_SERVER);
+				JWP_ActionMsg(i, "%T %T", "Coloring_Your_Color", LANG_SERVER, "Coloring_Standart_Color", LANG_SERVER);
 			}
 		}
 	}
@@ -104,7 +104,7 @@ public bool OnFuncSelect(int client)
 		FormatEx(menuitem, sizeof(menuitem), "[+]%T", "Coloring_Menu", LANG_SERVER);
 		JWP_RefreshMenuItem(ITEM, menuitem);
 	}
-	JWP_ActionMsg(client, "\x03%T \x02%T", "Coloring_ActionMessage", LANG_SERVER, (g_bColoring) ? "Coloring_State_On" : "Coloring_State_Off", LANG_SERVER);
+	JWP_ActionMsg(client, "%T %T", "Coloring_ActionMessage", LANG_SERVER, (g_bColoring) ? "Coloring_State_On" : "Coloring_State_Off", LANG_SERVER);
 	JWP_ShowMainMenu(client);
 	return true;
 }

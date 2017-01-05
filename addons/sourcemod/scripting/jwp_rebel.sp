@@ -7,7 +7,7 @@
 // Force 1.7 syntax
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.6"
+#define PLUGIN_VERSION "1.7"
 
 ConVar	g_CvarRebelColor_r,
 		g_CvarRebelColor_g,
@@ -79,7 +79,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 				SetEntityRenderMode(attacker, RENDER_TRANSCOLOR);
 				SetEntityRenderColor(attacker, g_CvarRebelColor_r.IntValue, g_CvarRebelColor_g.IntValue, g_CvarRebelColor_b.IntValue, g_CvarRebelColor_a.IntValue);
 			}
-			PrintToChatAll("\x01\x02%T", "Rebel_Message", LANG_SERVER, attacker);
+			JWP_ActionMsgAll("%T", "Rebel_Message", LANG_SERVER, attacker);
 			if (g_CvarRebelTime.IntValue)
 				g_TimerColor[attacker] = CreateTimer(g_CvarRebelTime.FloatValue, g_TimerColor_Callback, attacker);
 			JWP_PrisonerRebel(attacker, true);

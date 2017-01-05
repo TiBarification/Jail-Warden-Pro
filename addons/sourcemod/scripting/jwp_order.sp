@@ -9,7 +9,7 @@
 
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.2"
+#define PLUGIN_VERSION "1.3"
 #define ITEM "order"
 
 ConVar	g_CvarOrderSound,
@@ -163,7 +163,7 @@ void CreateOrderMsg(int client, const char[] order)
 	Format(text, sizeof(text), "%s%s", g_cOrderMsg, text);
 	ReplaceString(text, sizeof(text), "{nick}", nick, true);
 	if (g_bIsCSGO)
-		PrintToChatAll("\x01%s", text);
+		CGOPrintToChatAll("%s", text);
 	else
 		CPrintToChatAll("%s", text);
 	

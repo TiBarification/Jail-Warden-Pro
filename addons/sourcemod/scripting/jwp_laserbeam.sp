@@ -5,7 +5,7 @@
 
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.7"
+#define PLUGIN_VERSION "1.8"
 #define ITEM "laserbeam"
 
 #define DEFAULT_RED_COLOR 255
@@ -99,13 +99,13 @@ public Action Command_LPaints(int client, int args)
 				if (g_iClientData[client][lightActive])
 					g_mColorMenu.Display(client, MENU_TIME_FOREVER);
 				else
-					PrintToChat(client, "\x01\x03%T", "LaserBeam_WardenMustGiveAccess", LANG_SERVER);
+					JWP_ActionMsg(client, "%T", "LaserBeam_WardenMustGiveAccess", LANG_SERVER);
 			}
 			else
-				PrintToChat(client, "\x01\x03%T", "warden_must_be_alive", LANG_SERVER);
+				JWP_ActionMsg(client, "%T", "warden_must_be_alive", LANG_SERVER);
 		}
 		else
-			PrintToChat(client, "\x01\x03%T", "LaserBeam_AccessForT", LANG_SERVER);
+			JWP_ActionMsg(client, "%T", "LaserBeam_AccessForT", LANG_SERVER);
 	}
 }
 
