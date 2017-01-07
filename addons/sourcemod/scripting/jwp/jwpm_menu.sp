@@ -95,10 +95,13 @@ public int Cmd_ShowMainMenu(Handle plugin, int numParams)
 
 void Cmd_ShowMenu(int client, int pos = 0)
 {
-	if (g_mMainMenu == null)
-		MenuItemInitialization(client);
-	else if (IsWarden(client))
-		g_mMainMenu.DisplayAt(client, pos, MENU_TIME_FOREVER);
+	if (CheckClient(client) && IsPlayerAlive(client))
+	{
+		if (g_mMainMenu == null)
+			MenuItemInitialization(client);
+		else if (IsWarden(client))
+			g_mMainMenu.DisplayAt(client, pos, MENU_TIME_FOREVER);
+	}
 }
 
 void MenuItemInitialization(int client) // Run at first time as client become warden
@@ -354,7 +357,7 @@ void RehashMenu()
 bool JWPM_HasFlag(int client, int bitflag)
 {
 	if (!bitflag) return true;
-	else if (bitflag != 0 && ((GetUserFlagBits(client) & bitflag) || (GetUserFlagBits(client) & ADMFLAG_ROOT)) && GetUserAdmin(client) != INVALID_ADMIN_ID)
+	else if (bitflag != 0 && (((client > 0) && CheckClient(client)) && (GetUserFlagBits(client) & bitflag) || (GetUserFlagBits(client) & ADMFLAG_ROOT)) && GetUserAdmin(client) != INVALID_ADMIN_ID)
 		return true;
 	return false;
 }

@@ -1,0 +1,617 @@
+"Phrases"
+{
+	"General_No_Prisoners"
+	{
+		"ru"	"Нет доступных зеков"
+	}
+	"General_No_Alive_Prisoners"
+	{
+		"ru"	"Нет живых зеков"
+	}
+	"General_No_Dead_Prisoners"
+	{
+		"ru"	"Нет мертвых зеков"
+	}
+	
+	
+	"Order_Menu"
+	{
+		"ru"	"Отдать приказ"
+	}
+	"Order_Menu_Info"
+	{
+		"ru"	"Введите в чат ваш приказ.\nСимвол '+' это переход\nна новую строку."
+	}
+	"Order_Warden_Prefix"
+	{
+		"ru"	"КОМАНДИР"
+	}
+	
+	"Coloring_Menu"
+	{
+		"ru"	"Разделить по цветам"
+	}
+	"Coloring_Your_Color"
+	{
+		"ru"	"Ваш цвет:"
+	}
+	"Coloring_Red_Color"
+	{
+		"ru"	"{LIGHTRED}КРАСНЫЙ"
+	}
+	"Coloring_Blue_Color"
+	{
+		"ru"	"{BLUE}СИНИЙ"
+	}
+	"Coloring_Standart_Color"
+	{
+		"ru"	"СТАНДАРТНЫЙ"
+	}
+	"Coloring_ActionMessage"
+	{
+		"ru"	"Разделение по цветам"
+	}
+	"Coloring_State_On"
+	{
+		"ru"	"{GREEN}включено"
+	}
+	"Coloring_State_Off"
+	{
+		"ru"	"{LIGHTRED}отключено"
+	}
+	
+	"DoorAimControl_Menu_Open"
+	{
+		"ru"	"Открыть камеру (прицел)"
+	}
+	"DoorAimControl_Menu_Close"
+	{
+		"ru"	"Закрыть камеру (прицел)"
+	}
+	"DoorAimControl_ActionMessage_Open"
+	{
+		"ru"	"Вы успешно открыли дверь"
+	}
+	"DoorAimControl_ActionMessage_Close"
+	{
+		"ru"	"Вы успешно закрыли дверь"
+	}
+	"DoorAimControl_Take_Aim"
+	{
+		"ru"	"Наведите прицел на дверь"
+	}
+	
+	"DoorControl_Menu_Open"
+	{
+		"ru"	"Открыть клетки джайлов"
+	}
+	"DoorControl_Menu_Close"
+	{
+		"ru"	"Закрыть клетки джайлов"
+	}
+	"DoorControl_ActionMessage_Opened"
+	{
+		"#format"	"{1:N}"
+		"ru"	"{BLUE}{1}{DEFAULT}: открыл клетки джайлов"
+	}
+	"DoorControl_ActionMessage_Closed"
+	{
+		"#format"	"{1:N}"
+		"ru"	"{BLUE}{1}{DEFAULT}: закрыл клетки джайлов"
+	}
+	"DoorControl_NoDoors"
+	{
+		"ru"	"Не найдено дверей на карте"
+	}
+	
+	"Freeday_Menu_Give"
+	{
+		"ru"	"Дать фридей"
+	}
+	"Freeday_Menu_Take"
+	{
+		"ru"	"Забрать фридей"
+	}
+	"Freeday_Players_TakeFD_Title"
+	{
+		"ru"	"У кого забрать фридей:"
+	}
+	"Freeday_Players_GiveFD_Title"
+	{
+		"ru"	"Кому дать фридей:"
+	}
+	"Freeday_ActionMessage_Gived"
+	{
+		"#format"	"{1:N},{2:N}"
+		"ru"	"{BLUE}{1}{DEFAULT}: дал фридей {RED}{2}"
+	}
+	"Freeday_ActionMessage_Taken"
+	{
+		"#format"	"{1:N},{2:N}"
+		"ru"	"{BLUE}{1}{DEFAULT}: забрал фридей у {RED}{2}"
+	}
+	
+	"FF_Menu"
+	{
+		"ru"		"Огонь по своим"
+	}
+	"FF_ActionMessage_FriendlyFire"
+	{
+		"ru"		"Дружественный огонь:"
+	}
+	"FF_State_On"
+	{
+		"ru"		"{GREEN}ВКЛЮЧЕН"
+	}
+	"FF_State_Off"
+	{
+		"ru"		"{LIGHTRED}ВЫКЛЮЧЕН"
+	}
+	
+	"Guns_Menu"
+	{
+		"ru"		"Оружие"
+	}
+	
+	"HealthKit_Menu"
+	{
+		"ru"		"Создать аптечку"
+	}
+	"HealthKit_StopFlood"
+	{
+		"ru"		"Не флудите аптечкой"
+	}
+	"HealthKit_RemoveAim"
+	{
+		"ru"		"Уберите прицел с игрока"
+	}
+	"HealthKit_FailedToMedkit"
+	{
+		"ru"		"Не удалось создать аптечку"
+	}
+	
+	"Isolator_Menu"
+	{
+		"ru"		"Управление карцером"
+	}
+	"Isolator_Menu_Info"
+	{
+		"ru"		"[#] - в карцере"
+	}
+	"Isolator_NoMore_Prisoners"
+	{
+		"ru"		"Нет живых зеков"
+	}
+	"Isolator_Action_Isolated"
+	{
+		"#format"	"{1:N},{2:N}"
+		"ru"		"{BLUE}{1}{DEFAULT}: посадил зека {RED}{2} {DEFAULT}в карцер"
+	}
+	"Isolator_Action_Released"
+	{
+		"#format"	"{1:N},{2:N}"
+		"ru"		"{BLUE}{1}{DEFAULT}: освободил зека {RED}{2} {DEFAULT}из карцера"
+	}
+	"Isolator_FailedToIsolate"
+	{
+		"#format"	"{1:N}"
+		"ru"		"Не удалось посадить {1} в карцер"
+	}
+	"Isolator_FailedToIsolate_Leave"
+	{
+		"ru"		"Не удалось посадить игрока. Возможно он ливнул?"
+	}
+	"Isolator_NearPlayer"
+	{
+		"ru"		"Рядом игрок, нельзя установить карцер"
+	}
+	"Isolator_CantCreate"
+	{
+		"ru"		"Невозможно здесь установить карцер"
+	}
+	"Isolator_FindAnotherLocation"
+	{
+		"ru"		"Нельзя создать изолятор, выберите другое место"
+	}
+	
+	"LaserBeam_Menu"
+	{
+		"ru"		"Направляющий свет"
+	}
+	"LaserBeam_ToggleSelfStatus"
+	{
+		"ru"		"Статус"
+	}
+	"LaserBeam_AccessForT"
+	{
+		"ru"		"Доступ для Т"
+	}
+	"LaserBeam_PickUpColor"
+	{
+		"ru"		"Выбрать цвет луча"
+	}
+	"LaserBeam_TakeAction"
+	{
+		"#format"	"{1:N}"
+		"ru"		"{BLUE}{1}{DEFAULT}: забрал у вас направляющий свет"
+	}
+	"LaserBeam_GrantAction"
+	{
+		"#format"	"{1:N}"
+		"ru"		"{BLUE}{1}{DEFAULT}: дал вам направляющий свет. {GREEN}Напишите: {OLIVE}!lpaints"
+	}
+	"LaserBeam_WardenMustGiveAccess"
+	{
+		"ru"		"Только комадир может выдать вам доступ к этому"
+	}
+	"LaserBeam_ColorMenu"
+	{
+		"ru"		"Выберите цвет:"
+	}
+	"LaserBeam_COLOR_Rainbow"
+	{
+		"ru"		"Радуга"
+	}
+	"LaserBeam_COLOR_Red"
+	{
+		"ru"		"Красный"
+	}
+	"LaserBeam_COLOR_Green"
+	{
+		"ru"		"Зеленый"
+	}
+	"LaserBeam_COLOR_Blue"
+	{
+		"ru"		"Синий"
+	}
+	"LaserBeam_COLOR_Magenta"
+	{
+		"ru"		"Magenta"
+	}
+	"LaserBeam_COLOR_Cyan"
+	{
+		"ru"		"Cyan"
+	}
+	
+	"Mute_Menu_GiveMute"
+	{
+		"ru"		"Дать мут"
+	}
+	"Mute_Menu_TakeMute"
+	{
+		"ru"		"Снять мут"
+	}
+	"Mute_UnMuteAll"
+	{
+		"ru"		"Снять общий мут"
+	}
+	"Mute_MuteAll"
+	{
+		"#format"	"{1:.f}"
+		"ru"		"Мут всем ({1} с)"
+	}
+	"Mute_Dont_Have_Permission"
+	{
+		"#format"	"{1:N}"
+		"ru"		"Не удалось включить микрофон игроку {1}. Возможно мут поставлен администратором."
+	}
+	"Mute_ActionMessage_UnMuted_All"
+	{
+		"#format"	"{1:N}"
+		"ru"		"{BLUE}{1}{DEFAULT}: включил всем террористам микрофон."
+	}
+	"Mute_ActionMessage_Muted_All"
+	{
+		"#format"	"{1:N},{2:.f}"
+		"ru"		"{BLUE}{1}{DEFAULT}: отключил всем террористам микрофон на {2} секунд"
+	}
+	"Mute_ActionMessage_Muted"
+	{
+		"#format"	"{1:N},{2:N}"
+		"ru"		"{BLUE}{1}{DEFAULT}: дал мут {RED}{2}"
+	}
+	"Mute_ActionMessage_UnMuted"
+	{
+		"#format"	"{1:N},{2:N}"
+		"ru"		"{BLUE}{1}{DEFAULT}: снял мут с {RED}{2}"
+	}
+	"Mute_ActionMessage_MicroAvailable"
+	{
+		"ru"		"Микрофон снова доступен террористам"
+	}
+	
+	"Noblock_Menu"
+	{
+		"ru"		"Noblock"
+	}
+	"Noblock_ActionMessage_Title"
+	{
+		"ru"		"НОБЛОК:"
+	}
+	"Noblock_ActionMessage_On"
+	{
+		"ru"		"{GREEN}ВКЛЮЧЕН"
+	}
+	"Noblock_ActionMessage_Off"
+	{
+		"ru"		"{LIGHTRED}ВЫКЛЮЧЕН"
+	}
+	
+	"Otkaz_Menu"
+	{
+		"ru"		"Рассмотреть отказы"
+	}
+	
+	"Slay_Menu"
+	{
+		"ru"		"Убить игрока"
+	}
+	"Slay_NoAlive"
+	{
+		"ru"		"Нет живых игроков"
+	}
+	"Slay_ActionMessage_Slayed"
+	{
+		"#format"	"{1:N},{2:N}"
+		"ru"		"{BLUE}{1}{DEFAULT}: убил {RED}{2}"
+	}
+	"Slay_UnableToSlay"
+	{
+		"ru"		"Не удалось убить игрока. Возможно он ливнул/админ?"
+	}
+	
+	"Speed_Menu"
+	{
+		"ru"		"Скорость"
+	}
+	
+	"StopLR_Menu"
+	{
+		"ru"		"Остановить LR"
+	}
+	"StopLR_StopLeft"
+	{
+		"#format"	"{1:d}"
+		"ru"		"(ост: {1})"
+	}
+	"StopLR_ActionMessage_Stopped"
+	{
+		"#format"	"{1:N}"
+		"ru"		"{BLUE}{1}{DEFAULT}: остановил LR"
+	}
+	"StopLR_ActionMessage_ReachedMaximum"
+	{
+		"ru"		"Вы использовали максимальное количество отмен LR."
+	}
+	
+	"StripKnife_Menu"
+	{
+		"ru"		"Дать/Забрать заточку"
+	}
+	"StripKnife_Title"
+	{
+		"ru"		"+/- Заточка"
+	}
+	"StripKnife_ActionMessage_Given"
+	{
+		"#format"	"{1:N},{2:N}"
+		"ru"		"{BLUE}{1}{DEFAULT}: дал заточку {RED}{2}"
+	}
+	"StripKnife_ActionMessage_Taken"
+	{
+		"#format"	"{1:N},{2:N}"
+		"ru"		"{BLUE}{1}{DEFAULT}: забрал заточку игрока {RED}{2}"
+	}
+	"StripKnife_ActionMessage_Unable"
+	{
+		"ru"		"Не удалось выполнить действие."
+	}
+	
+	"ToJail_Menu"
+	{
+		"ru"		"Вернуть в камеру"
+	}
+	"ToJail_ActionMessage_Teleported"
+	{
+		"#format"	"{1:N},{2:N}"
+		"ru"		"{BLUE}{1}{DEFAULT}: телепортировал зека {2} обратно в джайл"
+	}
+	"ToJail_UnableToTP"
+	{
+		"ru"		"Не удалось телепортировать в камеру"
+	}
+	"ToJail_FailedCoords"
+	{
+		"#format"	"{1:N}"
+		"ru"		"Не удалось телепортировать игрока {1}"
+	}
+	
+	"Pris_Counter_Menu"
+	{
+		"ru"		"Посчитать зеков"
+	}
+	"Pris_Counter_ActionMessage_Near"
+	{
+		"ru"		"зеков рядом с вами"
+	}
+	"Pris_Counter_ActionMessage_Freeday"
+	{
+		"ru"		"Игроков с Freeday:"
+	}
+	"Pris_Counter_ActionMessage_Escaped"
+	{
+		"ru"		"Ники сбежавших зеков:"
+	}
+	
+	"RE_Menu"
+	{
+		"ru"		"Продлить раунд"
+	}
+	"RE_ActionMessage_Extend"
+	{
+		"#format"	"{1:N},{2:d}"
+		"ru"		"{BLUE}{1} {DEFAULT}продлил раунд на {GREEN}{2} минут(ы)"
+	}
+	
+	"Respawn_Menu"
+	{
+		"ru"		"Возродить игрока"
+	}
+	"Respawn_ActionMessage_Respawned"
+	{
+		"#format"	"{1:N},{2:N}"
+		"ru"		"{BLUE}{1}{DEFAULT}: возродил {RED}{2}"
+	}
+	"Respawn_UnableToRespawn"
+	{
+		"ru"		"Не удалось возродить игрока. Возможно он ливнул/админ?"
+	}
+	
+	"Admin_Control_Title"
+	{
+		"ru"		"Управление командиром"
+	}
+	"Admin_Control_Change"
+	{
+		"ru"		"Сменить командира"
+	}
+	"Admin_Control_Remove"
+	{
+		"ru"		"Удалить командира"
+	}
+	"Admin_Control_Main"
+	{
+		"ru"		"Командование"
+	}
+	"Admin_Control_Choose"
+	{
+		"ru"		"Выберите нового командира"
+	}
+	"Admin_Control_FiredActivity"
+	{
+		"#format"	"{1:N}"
+		"ru"		"снял {1} с поста командира"
+	}
+	"Admin_Control_FiredFailed"
+	{
+		"ru"		"Не удалось снять командира с поста"
+	}
+	"Admin_Control_ChangeActivity"
+	{
+		"#format"	"{1:N}"
+		"ru"		"сменил командира на {1}"
+	}
+	"Admin_Control_ChangeFailed"
+	{
+		"ru"		"Не удалось сменить командира"
+	}
+	
+	"BeQuiet_Listen"
+	{
+		"ru"		"Слушайте приказ КМД"
+	}
+	
+	"Handcuffs_Menu"
+	{
+		"ru"		"Снять арест"
+	}
+	"Handcuffs_Prefix"
+	{
+		"ru"		"[{GREEN}Арест{DEFAULT}]"
+	}
+	"Handcuffs_Arrest"
+	{
+		"#format"	"{1:N},{2:N}"
+		"ru"		"{BLUE}{1} {DEFAULT}арестовал {RED}{2}"
+	}
+	"Handcuffs_Release"
+	{
+		"#format"	"{1:N},{2:N}"
+		"ru"		"{BLUE}{1} освободил {RED}{2}"
+	}
+	
+	"Manual_Coloring_Menu"
+	{
+		"ru"		"Покрасить зека"
+	}
+	"Manual_Coloring_UnableToColor"
+	{
+		"ru"		"Игрок не найден, возможно отключился/сдох?"
+	}
+	"Manual_Coloring_Choose"
+	{
+		"ru"		"Выберите зека:"
+	}
+	"Manual_Coloring_ChooseColor"
+	{
+		"ru"		"Выберите цвет:"
+	}
+	
+	"PlaySound_Menu"
+	{
+		"ru"		"Проиграть звук"
+	}
+	
+	"Pointer_Menu"
+	{
+		"ru"		"Поставить указатель"
+	}
+	
+	"Rebel_Message"
+	{
+		"#format"	"{1:N}"
+		"ru"		"Заключенный {RED}{1} {DEFAULT}бунтует"
+	}
+	
+	"TransWarden_Menu"
+	{
+		"ru"		"Передать КМД"
+	}
+	"TransWarden_Title"
+	{
+		"ru"		"Передать КМД:"
+	}
+	"TransWarden_NoCT"
+	{
+		"ru"		"Нет доступных КТ"
+	}
+	"TransWarden_Action"
+	{
+		"#format"	"{1:N},{2:N}"
+		"ru"		"{BLUE}{1} {DEFAULT}передал командование игроку {BLUE}{2}"
+	}
+	
+	"WTimer_TimerStopped"
+	{
+		"ru"		"Таймер остановлен"
+	}
+	"WTimer_InputCancelled"
+	{
+		"ru"		"Ввод отменен"
+	}
+	"WTimer_TimerStop"
+	{
+		"ru"		"Остановить таймер"
+	}
+	"WTimer_Menu"
+	{
+		"ru"		"Таймер"
+	}
+	"WTimer_HelpMessage"
+	{
+		"ru"		"Нажмите просто ВВОД для отмены"
+	}
+	"WTimer_WardenStoppedHint"
+	{
+		"ru"		"Командир остановил таймер"
+	}
+	"WTimer_TimerHint"
+	{
+		"#format"	"{1:d}"
+		"ru"		"Таймер: {1} с"
+	}
+	"WTimer_Finished"
+	{
+		"ru"		"Время закончилось"
+	}
+}

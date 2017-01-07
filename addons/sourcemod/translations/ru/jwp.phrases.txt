@@ -1,0 +1,143 @@
+"Phrases"
+{
+	"Core_Prefix"
+	{
+		"ru"		"{DEFAULT}[{GREEN}КОМАНДИР{DEFAULT}]"	
+	}
+	"warden_death"
+	{
+		"#format"	"{1:N}"
+		"ru"		"Командир {1} умер."
+	}
+	"use_warden_cmd"
+	{
+		"ru"		"{GREEN}Чтобы стать {LIGHTGREEN}командиром{GREEN}, пишите в чат {DEFAULT}!w"
+	}
+	"menu_success_reloaded"
+	{
+		"ru"		"[JWP] Menu has been successfully reloaded"
+	}
+	"wait_for_new_round"
+	{
+		"ru"		"{LIGHTGREEN}Дождитесь начала нового раунда"
+	}
+	"warden_exists"
+	{
+		"#format"	"{1:N}"
+		"ru"		"Командиром является {1}"
+	}
+	"warden_blocked"
+	{
+		"ru"		"{RED}Командир недоступен"
+	}
+	"warden_choose_random"
+	{
+		"ru"		"{LIGHTGREEN}Командир выбирается случайно"
+	}
+	"cmd_not_available"
+	{
+		"ru"		"{RED}Команда сейчас недоступна"
+	}
+	"warden_zam_choose"
+	{
+		"ru"		"Выберите ЗАМа:"
+	}
+	"warden_choose_vote"
+	{
+		"ru"		"{LIGHTGREEN}Выбор командира только по голосованию"
+	}
+	"warden_vote_no_warden"
+	{
+		"ru"		"Командир не выбран"
+	}
+	"warden_vote_chat_stopped"
+	{
+		"ru"		"Голосование за выбор командира остановлено!"
+	}
+	"warden_vote_hint_stopped"
+	{
+		"ru"		"ГОЛОСОВАНИЕ ОСТАНОВЛЕНО"
+	}
+	"vote_who_will_be_warden"
+	{
+		"ru"		"Кто будет командиром?"
+	}
+	"warden_only_ct"
+	{
+		"ru"		"{RED}Командиром может быть только КТ"
+	}
+	"already_was_warden"
+	{
+		"ru"		"Вы уже были командиром"
+	}
+	"warden_become"
+	{
+		"#format"	"{1:N}"
+		"ru"		"Командиром стал {1}"
+	}
+	"warden_must_be_alive"
+	{
+		"ru"		"Вы должны быть живы"
+	}
+	"warden_resign_confirm"
+	{
+		"ru"		"Вы действительно хотите покинуть пост командира?"
+	}
+	"warden_resign"
+	{
+		"#format"	"{1:N}"
+		"ru"		"{1} покинул пост"
+	}
+	"warden_menu_title"
+	{
+		"ru"		"Меню командования:"
+	}
+	"warden_menu_empty"
+	{
+		"ru"		"Меню не имеет элементов"
+	}
+	"warden_menu_resign"
+	{
+		"ru"		"Покинуть пост"
+	}
+	"warden_menu_zam"
+	{
+		"ru"		"Выбрать ЗАМа"
+	}
+	"no_available_ct"
+	{
+		"ru"		"Нет доступных КТ для ЗАМа"
+	}
+	"zam_chosen"
+	{
+		"#format"	"{1:N}"
+		"ru"		"Замом был назначен {1}"
+	}
+	"zam_notify"
+	{
+		"#format"	"{1:N},{2:N}"
+		"ru"		"{1} назначил ЗАМа {2}"
+	}
+	"anti_flood"
+	{
+		"#format"	"{1:d}"
+		"ru"		"Не флуди командой, подожди {1} с."
+	}
+	"vote_player_not_found"
+	{
+		"ru"		"Игрок не найден. Выберите другого."
+	}
+	"warden_yes"
+	{
+		"ru"		"ДА"
+	}
+	"warden_no"
+	{
+		"ru"		"НЕТ"
+	}
+	"warden_unable_due_to_teamcount"
+	{
+		"#format"	"{1:d},{2:d}"
+		"ru"		"Командир недоступен из-за отсутствия одной из команд (T = {1} / CT = {2})"
+	}
+}
