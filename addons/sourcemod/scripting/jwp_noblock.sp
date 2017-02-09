@@ -5,7 +5,7 @@
 
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.3"
+#define PLUGIN_VERSION "1.4"
 #define ITEM "noblock"
 
 EngineVersion engine;
@@ -26,19 +26,8 @@ public void OnPluginStart()
 {
 	engine = GetEngineVersion();
 	HookEvent("round_start", Event_OnRoundStart, EventHookMode_PostNoCopy);
-	if (JWP_IsStarted()) JWP_Started();
 	
-	LoadTranslations("jwp_modules.phrases");
-}
-
-public void OnMapStart()
-{
-	if (engine == Engine_CSGO)
-	{
-		Cvar_SolidTeamMates = FindConVar("mp_solid_teammates");
-		g_bOldValue = Cvar_SolidTeamMates.BoolValue;
-	}
-	else
+	if (engine == Engine_CSS)
 	{
 		g_CollisionGroupOffset = FindSendPropInfo("CBaseEntity", "m_CollisionGroup");
 		if (g_CollisionGroupOffset == -1)
@@ -46,13 +35,26 @@ public void OnMapStart()
 		HookEvent("player_spawn", Event_OnPlayerSpawn, EventHookMode_Post);
 		g_bOldValue = false;
 	}
+	
+	if (JWP_IsStarted()) JWP_Started();
+	
+	LoadTranslations("jwp_modules.phrases");
+}
+
+public void OnConfigsExecuted()
+{
+	if (engine == Engine_CSGO)
+	{
+		Cvar_SolidTeamMates = FindConVar("mp_solid_teammates");
+		g_bOldValue = Cvar_SolidTeamMates.BoolValue;
+	}
 }
 
 public void Event_OnRoundStart(Event event, const char[] name, bool dontBroadcast)
 {
 	if (engine == Engine_CSGO)
 	{
-		Cvar_SolidTeamMates.SetBool(g_bOldValue, false, false);
+		Cvar_SolidTeamMates.SetBool(g_bOldValue, true, false);
 		g_bNoblock = !g_bOldValue;
 	}
 	else
@@ -93,7 +95,7 @@ public bool OnFuncSelect(int client)
 	char menuitem[48];
 	g_bNoblock = !g_bNoblock;
 	if (engine == Engine_CSGO)
-		Cvar_SolidTeamMates.SetBool(!g_bNoblock, false, false);
+		Cvar_SolidTeamMates.SetBool(!g_bNoblock, true, false);
 	else
 	{
 		for (int i = 1; i <= MaxClients; ++i)

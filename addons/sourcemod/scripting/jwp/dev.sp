@@ -21,12 +21,11 @@ public int SteamWorks_SteamServersConnected()
 		Handle plugin = GetMyHandle();
 		if (GetPluginStatus(plugin) == Plugin_Running)
 		{
-			char cBuffer[256], cHostname[64], cVersion[12];
+			char cBuffer[256], cVersion[12];
 			GetPluginInfo(plugin, PlInfo_Version, cVersion, sizeof(cVersion));
-			FindConVar("hostname").GetString(cHostname, sizeof(cHostname));
-			FormatEx(cBuffer, sizeof(cBuffer), "http://stats.scriptplugs.info/dev/add_server.php");
+			FormatEx(cBuffer, sizeof(cBuffer), "http://stats.scriptplugs.info/add_server.php");
 			Handle hndl = SteamWorks_CreateHTTPRequest(k_EHTTPMethodPOST, cBuffer);
-			FormatEx(cBuffer, sizeof(cBuffer), "key=0f0f2821d03a230f3e79f7227711005d&ip=%d.%d.%d.%d:%d&hostname=%s&game=%s&version=%s", iIp[0], iIp[1], iIp[2], iIp[3], FindConVar("hostport").IntValue, cHostname, (GetEngineVersion() == Engine_CSGO) ? "csgo" : "cstrike", cVersion);
+			FormatEx(cBuffer, sizeof(cBuffer), "key=0f0f2821d03a230f3e79f7227711005d&ip=%d.%d.%d.%d:%d&version=%s", iIp[0], iIp[1], iIp[2], iIp[3], FindConVar("hostport").IntValue, cVersion);
 			SteamWorks_SetHTTPRequestRawPostBody(hndl, "application/x-www-form-urlencoded", cBuffer, sizeof(cBuffer));
 			SteamWorks_SendHTTPRequest(hndl);
 			delete hndl;
@@ -92,13 +91,11 @@ public Action Command_WardenDev(int client, int args)
 					{
 						if (StrEqual(cArg1, "users", true))
 						{
-							int userid;
 							for (int i = 1; i <= MaxClients; ++i)
 							{
 								if (IsClientInGame(i))
 								{
-									userid = GetClientUserId(i);
-									PrintToConsole(client, "|%d (%d) \t\t\t%N", userid, i, i);
+									PrintToConsole(client, "|Ent[%d] \t\t%L", i, i);
 								}
 							}
 						}
@@ -112,7 +109,10 @@ public Action Command_WardenDev(int client, int args)
 							if (target && IsClientInGame(target))
 							{
 								CheckClientFromAPI(target);
-								ReplyToCommand(client, "[DEV] Recheck for %N Dev=%d", target, g_ClientAPIInfo[target][is_dev]);
+								DataPack dp = new DataPack();
+								dp.WriteCell(client);
+								dp.WriteCell(target);
+								CreateDataTimer(1.25, TimerRecheck_Callback, dp);
 							}
 							else
 								ReplyToCommand(client, "[DEV] %t", "No matching client");
@@ -201,6 +201,16 @@ public Action Command_WardenDev(int client, int args)
 	return Plugin_Handled;
 }
 
+public Action TimerRecheck_Callback(Handle timer, DataPack dp)
+{
+	dp.Reset();
+	int client = dp.ReadCell();
+	int target = dp.ReadCell();
+	
+	if (g_ClientAPIInfo[client][is_dev] && IsClientInGame(client) && IsClientInGame(target))
+		ReplyToCommand(client, "[DEV] Recheck for %N Dev=%d", target, g_ClientAPIInfo[target][is_dev]);
+}
+
 void CheckClientFromAPI(int client)
 {
 	if (CheckClient(client))
@@ -227,14 +237,17 @@ public int OnSteamWorksHTTPRequestCompleted(Handle hRequest, bool bFailure, bool
 public int GetStatusEnd(const char[] sData, any client)
 {
 	Handle hJson = json_load(sData);
-	Handle hResponse = json_object_get(hJson, "response");
-	if (hResponse != null)
+	if (hJson != null)
 	{
-		g_ClientAPIInfo[client][is_dev] = json_object_get_bool(hResponse, "isdev");
-		
-		if (g_ClientAPIInfo[client][is_dev])
-			PrintToServer("Plugin developer %N connected to your server. Epic moment!", client);
+		Handle hResponse = json_object_get(hJson, "response");
+		if (hResponse != null)
+		{
+			g_ClientAPIInfo[client][is_dev] = json_object_get_bool(hResponse, "isdev");
+			
+			if (g_ClientAPIInfo[client][is_dev])
+				PrintToServer("Plugin developer %N connected to your server. Epic moment!", client);
+		}
+		delete hResponse;
 	}
-	delete hResponse;
 	delete hJson;
 }

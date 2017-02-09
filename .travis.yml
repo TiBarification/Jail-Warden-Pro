@@ -61,7 +61,7 @@ before_deploy:
     - mv addons/sourcemod/scripting/include/smjansson.inc jwp/addons/sourcemod/scripting/include/
     - mv addons/sourcemod/scripting/include/csgo_colors.inc jwp/addons/sourcemod/scripting/include/
     - mv addons/sourcemod/scripting/include/emitsoundany.inc jwp/addons/sourcemod/scripting/include/
-    - mv addons/sourcemod/translations/jwp* jwp/addons/sourcemod/translations/
+    - rsync -a --prune-empty-dirs --include '*/' --include 'jwp*' --exclude '*' addons/sourcemod/translations/ jwp/addons/sourcemod/translations/
     - mv cfg/jwp/* jwp/cfg/jwp/
     - mv materials jwp/
     - mv sound jwp/

@@ -6,7 +6,7 @@
 
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.3"
+#define PLUGIN_VERSION "1.4"
 #define ITEM_DOOR_OPEN "door_open"
 #define ITEM_DOOR_CLOSE "door_close"
 
@@ -116,6 +116,7 @@ void CreateDoorList()
 
 void ClassicDoorsManip(int client, bool open)
 {
+	if (g_aDoors == null) return;
 	if (!g_aDoors.Length)
 	{
 		PrintCenterText(client, "%T", "DoorControl_NoDoors", LANG_SERVER);
