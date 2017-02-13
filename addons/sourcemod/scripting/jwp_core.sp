@@ -10,7 +10,7 @@
 // Force new syntax
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.0.9"
+#define PLUGIN_VERSION "1.1.0"
 
 #define UPDATE_URL "http://updater.scriptplugs.info/jwp/updatefile.txt"
 #define LOG_PATH "addons/sourcemod/logs/JWP_Log.log"
@@ -28,7 +28,8 @@ ConVar	g_CvarChooseMode,
 		g_CvarRandomWait,
 		g_CvarVoteTime,
 		g_CvarDisableAntiFlood,
-		g_CvarAutoUpdate;
+		g_CvarAutoUpdate,
+		g_CvarMenuAutoOpen;
 
 Handle g_hChooseTimer;
 
@@ -56,6 +57,7 @@ public void OnPluginStart()
 	g_CvarVoteTime = CreateConVar("jwp_vote_time", "30", "Time for voting if choose mode = 3", FCVAR_SPONLY, true, 10.0, true, 60.0);
 	g_CvarDisableAntiFlood = CreateConVar("jwp_disable_antiflood", "1", "Protect menu from random selecting", FCVAR_SPONLY, true, 0.0, true, 1.0);
 	g_CvarAutoUpdate = CreateConVar("jwp_autoupdate", "0", "Enable (1) or disable (0) auto update. Need Updater!", FCVAR_SPONLY, true, 0.0, true, 1.0);
+	g_CvarMenuAutoOpen = CreateConVar("jwp_menuautoopen", "1", "Enable (1) or disable (0) warden menu auto open after warden chosen!", FCVAR_SPONLY, true, 0.0, true, 1.0);
 	
 	RegConsoleCmd("sm_com", Command_BecomeWarden, "Warden menu");
 	RegConsoleCmd("sm_w", Command_BecomeWarden, "Warden menu");
@@ -322,7 +324,7 @@ public Action Command_BecomeWarden(int client, int args)
 			}
 			else if (g_CvarChooseMode.IntValue == 2 && GetClientTeam(client) == CS_TEAM_CT)
 			{
-				if (BecomeCmd(client)) Cmd_ShowMenu(client);
+				BecomeCmd(client);
 			}
 			else
 			{
@@ -407,7 +409,8 @@ bool BecomeCmd(int client, bool waswarden = true)
 		if (g_iZamWarden == g_iWarden)
 			RemoveZam();
 		// Show our warden menu
-		Cmd_ShowMenu(g_iWarden);
+		if (g_CvarMenuAutoOpen.BoolValue)
+			Cmd_ShowMenu(g_iWarden);
 		if (g_bIsCSGO)
 			CGOPrintToChatAll("%T %T", "Core_Prefix", LANG_SERVER, "warden_become", LANG_SERVER, g_iWarden);
 		else
