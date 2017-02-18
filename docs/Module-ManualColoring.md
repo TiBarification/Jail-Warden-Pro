@@ -4,7 +4,7 @@
 ## Configuration
 Config file is located by this path:
 File with colors, you can add your own
-[`cfg/jwp/colors/mcolors.txt`](../blob/master/cfg/jwp/colors/mcolors.txt)
+[`cfg/jwp/colors/mcolors.txt`](https://github.com/TiBarification/Jail-Warden-Pro/blob/master/cfg/jwp/colors/mcolors.txt)
 
 ## How to add to menu
 Add this section in `warden_menu.txt`. Field `flag` supports admin flags.

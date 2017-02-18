@@ -1,5 +1,5 @@
 ### How to install Jail Warden Pro
-1. Download [Jail Warden Pro release package](../releases)
+1. Download [Jail Warden Pro release package](https://github.com/TiBarification/Jail-Warden-Pro/releases)
   * It contains 2 types of release version:
     * `Pre-Release` - last features, but unstable
     * `Release` - stable version
@@ -21,4 +21,4 @@
 8. Profit! :smiley:
 
 ### Translation issues
-* If you have your native languge, send me your translations via PM's or [Pull Request](../pulls)
+* If you have your native languge, send me your translations via PM's or [Pull Request](https://github.com/TiBarification/Jail-Warden-Pro/pulls)

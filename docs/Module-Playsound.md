@@ -3,7 +3,7 @@
 
 ## Configuration
 Config file is located by this path:
-[`cfg/jwp/playsound.cfg`](../blob/master/cfg/jwp/playsound.cfg)
+[`cfg/jwp/playsound.cfg`](https://github.com/TiBarification/Jail-Warden-Pro/blob/master/cfg/jwp/playsound.cfg)
 ```
 // Sound path without sound dir
 // -

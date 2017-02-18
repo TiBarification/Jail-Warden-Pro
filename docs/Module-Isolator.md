@@ -3,7 +3,7 @@
 
 ## Configuration
 Config file is located by this path:
-[`cfg/jwp/isolator.cfg`](../blob/master/cfg/jwp/isolator.cfg)
+[`cfg/jwp/isolator.cfg`](https://github.com/TiBarification/Jail-Warden-Pro/blob/master/cfg/jwp/isolator.cfg)
 ```
 // Roof model of isolator
 // -
@@ -51,7 +51,7 @@ Add this section in `warden_menu.txt`. Field `flag` supports admin flags.
 
 ### For developers
 Natives that associated with this module
-```sourcepawn
+```h
 /**
  *	Function to check if player in isolator
  *	-

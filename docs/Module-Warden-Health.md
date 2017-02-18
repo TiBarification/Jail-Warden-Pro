@@ -3,7 +3,7 @@
 
 ## Configuration
 Config file is located by this path:
-[`cfg/jwp/whealth.cfg`](../blob/master/cfg/jwp/whealth.cfg)
+[`cfg/jwp/whealth.cfg`](https://github.com/TiBarification/Jail-Warden-Pro/blob/master/cfg/jwp/whealth.cfg)
 ```
 // Warden health
 // -

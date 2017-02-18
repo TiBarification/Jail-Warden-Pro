@@ -3,7 +3,7 @@
 
 ## Configuration
 Config file is located by this path:
-[`cfg/jwp/mute.cfg`](../blob/master/cfg/jwp/mute.cfg)
+[`cfg/jwp/mute.cfg`](https://github.com/TiBarification/Jail-Warden-Pro/blob/master/cfg/jwp/mute.cfg)
 ```
 // Mute all terrorists on time. 0 - disable
 // -

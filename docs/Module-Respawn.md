@@ -3,7 +3,7 @@
 
 ## Configuration
 Config file is located by this path:
-[`cfg/jwp/respawn.cfg`](../blob/master/cfg/jwp/respawn.cfg)
+[`cfg/jwp/respawn.cfg`](https://github.com/TiBarification/Jail-Warden-Pro/blob/master/cfg/jwp/respawn.cfg)
 ```
 // Amount of respawns available for warden per round
 // -

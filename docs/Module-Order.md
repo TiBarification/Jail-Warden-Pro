@@ -3,7 +3,7 @@
 
 ## Configuration
 Config file is located by this path:
-[`cfg/jwp/order.cfg`](../blob/master/cfg/jwp/order.cfg)
+[`cfg/jwp/order.cfg`](https://github.com/TiBarification/Jail-Warden-Pro/blob/master/cfg/jwp/order.cfg)
 ```
 // If 1, each message of warden is an order
 // -

@@ -3,7 +3,7 @@
 
 ## Configuration
 Config file is located by this path:
-[`cfg/jwp/wtimer.cfg`](../blob/master/cfg/jwp/wtimer.cfg)
+[`cfg/jwp/wtimer.cfg`](https://github.com/TiBarification/Jail-Warden-Pro/blob/master/cfg/jwp/wtimer.cfg)
 ```
 // Maximum allowed time for timer
 // -

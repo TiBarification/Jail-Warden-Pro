@@ -3,7 +3,7 @@
 
 ## Configuration
 Config file is located by this path:
-[`cfg/jwp/rebel.cfg`](../blob/master/cfg/jwp/rebel.cfg)
+[`cfg/jwp/rebel.cfg`](https://github.com/TiBarification/Jail-Warden-Pro/blob/master/cfg/jwp/rebel.cfg)
 ```
 // Alpha value of rebel in RGBA
 // -
@@ -56,7 +56,7 @@ jwp_rebel_sec "5"
 
 ### For developers
 Natives that associated with this module
-```sourcepawn
+```h
 /**
  *	Function to check if player rebelling
  *	-

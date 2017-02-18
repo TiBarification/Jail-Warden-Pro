@@ -3,7 +3,7 @@
 
 ## Configuration
 Config file is located by this path:
-[`cfg/jwp/healthkit.cfg`](../blob/master/cfg/jwp/healthkit.cfg)
+[`cfg/jwp/healthkit.cfg`](https://github.com/TiBarification/Jail-Warden-Pro/blob/master/cfg/jwp/healthkit.cfg)
 ```
 // How many HP regenerate healthkit
 // -

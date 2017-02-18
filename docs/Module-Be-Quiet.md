@@ -1,8 +1,8 @@
 ## Description
 >When warden talks, all T listening. No another voice line.
 
-## Additional Requirements
-Need DHooks: https://goo.gl/ZansZH and VoiceAnnounceEx: https://goo.gl/uYomu2
+!!! important
+    Need [DHooks](https://goo.gl/ZansZH) and [VoiceAnnounceEx](https://goo.gl/uYomu2)
 
 ## Configuration
 >This module has no configuration

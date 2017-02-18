@@ -3,7 +3,7 @@
 
 ## Configuration
 Config file is located by this path:
-[`cfg/jwp/stoplr.cfg`](../blob/master/cfg/jwp/stoplr.cfg)
+[`cfg/jwp/stoplr.cfg`](https://github.com/TiBarification/Jail-Warden-Pro/blob/master/cfg/jwp/stoplr.cfg)
 ```
 // How many times warden can stop Last Request
 // -

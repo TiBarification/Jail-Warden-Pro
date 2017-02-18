@@ -3,7 +3,7 @@
 
 ## Configuration
 Config file is located by this path:
-[`cfg/jwp/icon.cfg`](../blob/master/cfg/jwp/icon.cfg)
+[`cfg/jwp/icon.cfg`](https://github.com/TiBarification/Jail-Warden-Pro/blob/master/cfg/jwp/icon.cfg)
 ```
 // Path to the warden icon DONT TYPE .vmt or .vft
 // -

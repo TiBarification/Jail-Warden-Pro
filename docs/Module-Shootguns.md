@@ -3,7 +3,7 @@
 
 ## Configuration
 Config file is located by this path:
-[`cfg/jwp/shootguns.cfg`](../blob/master/cfg/jwp/shootguns.cfg)
+[`cfg/jwp/shootguns.cfg`](https://github.com/TiBarification/Jail-Warden-Pro/blob/master/cfg/jwp/shootguns.cfg)
 ```
 // Who can remove weapons on shoot 1 - warden / 2 - warden & deputy / 3 - every ct
 // -

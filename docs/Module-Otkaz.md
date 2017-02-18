@@ -1,8 +1,8 @@
 ## Description
 >Can watch Otkaz'es
 
-##Dependence
-For module work, you need to be installed [Otkaz](https://github.com/TiBarification/Otkaz/releases)
+!!! important
+    For module work, you need to be installed [Otkaz](https://github.com/TiBarification/Otkaz/releases)
 
 ## Configuration
 >This module has no configuration

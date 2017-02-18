@@ -3,7 +3,7 @@
 
 ## Configuration
 Config file is located by this path:
-[`cfg/jwp/freeday.cfg`](../blob/master/cfg/jwp/freeday.cfg)
+[`cfg/jwp/freeday.cfg`](https://github.com/TiBarification/Jail-Warden-Pro/blob/master/cfg/jwp/freeday.cfg)
 ```
 // Alpha value of freeday in RGBA
 // -
@@ -56,7 +56,7 @@ You can remove one of them if you need this.
 
 ### For developers
 Natives that associated with this module
-```sourcepawn
+```h
 /**
  *	Function to check if player has freeday
  *	-

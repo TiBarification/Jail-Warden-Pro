@@ -3,7 +3,7 @@
 
 ## Configuration
 Config file is located by this path:
-[`cfg/jwp/speed.cfg`](../blob/master/cfg/jwp/speed.cfg)
+[`cfg/jwp/speed.cfg`](https://github.com/TiBarification/Jail-Warden-Pro/blob/master/cfg/jwp/speed.cfg)
 ```
 // Warden speed
 // -

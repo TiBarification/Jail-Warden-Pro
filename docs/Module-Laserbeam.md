@@ -4,7 +4,7 @@
 
 ## Configuration
 Config file is located by this path:
-[`cfg/jwp/laserbeam.cfg`](../blob/master/cfg/jwp/laserbeam.cfg)
+[`cfg/jwp/laserbeam.cfg`](https://github.com/TiBarification/Jail-Warden-Pro/blob/master/cfg/jwp/laserbeam.cfg)
 ```
 // Warden can give this feature to terrorists
 // -
@@ -13,9 +13,8 @@ Config file is located by this path:
 // Maximum: "1.000000"
 jwp_laserbeam_t_feature "1"
 ```
-
-File with colors, you can add your own
-[`cfg/jwp/laserbeam/colors.txt`](../blob/master/cfg/jwp/laserbeam/colors.txt)
+!!! note
+    File with colors, you can add your own [`cfg/jwp/laserbeam/colors.txt`](https://github.com/TiBarification/Jail-Warden-Pro/blob/master/cfg/jwp/laserbeam/colors.txt)
 
 ## How to add to menu
 Add this section in `warden_menu.txt`. Field `flag` supports admin flags.

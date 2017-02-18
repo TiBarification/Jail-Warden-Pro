@@ -3,7 +3,7 @@
 
 ## Configuration
 Config file is located by this path:
-[`cfg/jwp/guns.txt`](../blob/master/cfg/jwp/guns.txt)
+[`cfg/jwp/guns.txt`](https://github.com/TiBarification/Jail-Warden-Pro/blob/master/cfg/jwp/guns.txt)
 
 ## How to add to menu
 Add this section in `warden_menu.txt`. Field `flag` supports admin flags.

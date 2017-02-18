@@ -1,9 +1,12 @@
 ## Description
 >This module sets models(skins) on warden/zam/ct/t
 
+!!! important
+    This module requires other plugin for downloading & precahing models
+
 ## Configuration
 Config file is located by this path:
-[`cfg/jwp/skin.cfg`](../blob/master/cfg/jwp/skin.cfg)
+[`cfg/jwp/skin.cfg`](https://github.com/TiBarification/Jail-Warden-Pro/blob/master/cfg/jwp/skin.cfg)
 ```
 // Set model on warden, leave empty for default model
 // -
@@ -25,10 +28,9 @@ jwp_random_t_skins "0"
 // Default: "0"
 jwp_random_ct_skins "0"
 ```
-
-File with models on T/CT teams, you can add your own
-[`cfg/jwp/skin/t_models.txt`](../blob/master/cfg/jwp/skin/t_models.txt)
-[`cfg/jwp/skin/ct_models.txt`](../blob/master/cfg/jwp/skin/ct_models.txt)
+##### File with models on T/CT teams, you can add your own
+* [`cfg/jwp/skin/t_models.txt`](https://github.com/TiBarification/Jail-Warden-Pro/blob/master/cfg/jwp/skin/t_models.txt)
+* [`cfg/jwp/skin/ct_models.txt`](https://github.com/TiBarification/Jail-Warden-Pro/blob/master/cfg/jwp/skin/ct_models.txt)
 
 ## How to add to menu
 >This module has no menu interface

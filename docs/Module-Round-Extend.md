@@ -3,7 +3,7 @@
 
 ## Configuration
 Config file is located by this path:
-[`cfg/jwp/round_extender.cfg`](../blob/master/cfg/jwp/round_extender.cfg)
+[`cfg/jwp/round_extender.cfg`](https://github.com/TiBarification/Jail-Warden-Pro/blob/master/cfg/jwp/round_extender.cfg)
 ```
 // How many minutes to extend the round
 // -

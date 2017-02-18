@@ -3,7 +3,7 @@
 
 ## Configuration
 Config file is located by this path:
-[`cfg/jwp/wcolor.cfg`](../blob/master/cfg/jwp/wcolor.cfg)
+[`cfg/jwp/wcolor.cfg`](https://github.com/TiBarification/Jail-Warden-Pro/blob/master/cfg/jwp/wcolor.cfg)
 ```
 // Alpha color of warden (rgba)
 // -

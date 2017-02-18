@@ -3,7 +3,7 @@
 
 ## Configuration
 Config file is located by this path:
-[`cfg/jwp/pris_counter.cfg`](../blob/master/cfg/jwp/pris_counter.cfg)
+[`cfg/jwp/pris_counter.cfg`](https://github.com/TiBarification/Jail-Warden-Pro/blob/master/cfg/jwp/pris_counter.cfg)
 ```
 // Include freeday players to search?
 // -

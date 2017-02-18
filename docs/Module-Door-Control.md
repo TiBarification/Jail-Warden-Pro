@@ -1,8 +1,8 @@
 ## Description
 >Give warden access to open/close all doors on map
 
-## Additional Requirements
-[SmartJailDoors](https://forums.alliedmods.net/showthread.php?p=2306018)
+!!! important
+    Additional Requirements [SmartJailDoors](https://forums.alliedmods.net/showthread.php?p=2306018)
 
 ## Configuration
 >This module has no configuration
