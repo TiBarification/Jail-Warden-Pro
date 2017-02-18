@@ -8,7 +8,7 @@
   
   <meta name="author" content="TiBarification">
   <link rel="shortcut icon" href="../img/favicon.ico">
-  <title>Handcuffs - Jail Warden Pro</title>
+  <title>Door Control - Jail Warden Pro</title>
   <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   <link rel="stylesheet" href="../css/theme.css" type="text/css" />
@@ -17,9 +17,9 @@
   
   <script>
     // Current page data
-    var mkdocs_page_name = "Handcuffs";
-    var mkdocs_page_input_path = "Module-Handcuffs.md";
-    var mkdocs_page_url = "/Module-Handcuffs/";
+    var mkdocs_page_name = "Door Control";
+    var mkdocs_page_input_path = "Module-Door-Control.md";
+    var mkdocs_page_url = "/Module-Door-Control/";
   </script>
   
   <script src="../js/jquery-2.1.1.min.js"></script>
@@ -87,8 +87,23 @@
 
         
             
-    <li class="toctree-l1 ">
-        <a class="" href="../Module-Door-Control/">Door Control</a>
+    <li class="toctree-l1 current">
+        <a class="current" href="./">Door Control</a>
+        
+            <ul>
+            
+                <li class="toctree-l3"><a href="#description">Description</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#configuration">Configuration</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#how-to-add-to-menu">How to add to menu</a></li>
+                
+                    <li><a class="toctree-l4" href="#files-that-corresponding-to-this-module">Files that corresponding to this module</a></li>
+                
+            
+            </ul>
         
     </li>
 
@@ -129,23 +144,8 @@
 
         
             
-    <li class="toctree-l1 current">
-        <a class="current" href="./">Handcuffs</a>
-        
-            <ul>
-            
-                <li class="toctree-l3"><a href="#description">Description</a></li>
-                
-            
-                <li class="toctree-l3"><a href="#configuration">Configuration</a></li>
-                
-            
-                <li class="toctree-l3"><a href="#how-to-add-to-menu">How to add to menu</a></li>
-                
-                    <li><a class="toctree-l4" href="#files-that-corresponding-to-this-module">Files that corresponding to this module</a></li>
-                
-            
-            </ul>
+    <li class="toctree-l1 ">
+        <a class="" href="../Module-Handcuffs/">Handcuffs</a>
         
     </li>
 
@@ -361,10 +361,10 @@
         
       
     
-    <li>Handcuffs</li>
+    <li>Door Control</li>
     <li class="wy-breadcrumbs-aside">
       
-        <a href="https://github.com/TiBarification/Jail-Warden-Pro/edit/master/docs/Module-Handcuffs.md"
+        <a href="https://github.com/TiBarification/Jail-Warden-Pro/edit/master/docs/Module-Door-Control.md"
           class="icon icon-github"> Edit on GitHub</a>
       
     </li>
@@ -376,15 +376,24 @@
               
                 <h2 id="description">Description</h2>
 <blockquote>
-<p>Counter-Terrorists can use handcuffs to arrest prisoners. Warden can release all terrorists from warden menu.</p>
+<p>Give warden access to open/close all doors on map</p>
 </blockquote>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>Additional Requirements <a href="https://forums.alliedmods.net/showthread.php?p=2306018">SmartJailDoors</a></p>
+</div>
 <h2 id="configuration">Configuration</h2>
 <blockquote>
 <p>This module has no configuration</p>
 </blockquote>
 <h2 id="how-to-add-to-menu">How to add to menu</h2>
-<p>Add this section in <code>warden_menu.txt</code>. Field <code>flag</code> supports admin flags.</p>
-<pre><code>&quot;handcuffs&quot;
+<p>Add this section in <code>warden_menu.txt</code>
+You can remove one of them if you need this.</p>
+<pre><code>&quot;door_open&quot;
+{
+    &quot;flag&quot;  &quot;&quot;
+}
+&quot;door_close&quot;
 {
     &quot;flag&quot;  &quot;&quot;
 }
@@ -392,8 +401,8 @@
 
 <h3 id="files-that-corresponding-to-this-module">Files that corresponding to this module</h3>
 <ul>
-<li><code>addons/sourcemod/scripting/jwp_handcuffs.sp</code> — source file</li>
-<li><code>addons/sourcemod/plugins/jwp_handcuffs.smx</code> — binary file</li>
+<li><code>addons/sourcemod/scripting/jwp_doorcontrol.sp</code> — source file</li>
+<li><code>addons/sourcemod/plugins/jwp_doorcontrol.smx</code> — binary file</li>
 <li><code>addons/sourcemod/translations/jwp_modules.phrases.txt</code> — translations file</li>
 </ul>
               
@@ -403,10 +412,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../Module-Healthkit/" class="btn btn-neutral float-right" title="Healthkit">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../Module-Door-Aim-Control/" class="btn btn-neutral float-right" title="Door Aim Control">Next <span class="icon icon-circle-arrow-right"></span></a>
       
       
-        <a href="../Module-Guns/" class="btn btn-neutral" title="Guns"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../Module-Be-Quiet/" class="btn btn-neutral" title="Be Quiet"><span class="icon icon-circle-arrow-left"></span> Previous</a>
       
     </div>
   
@@ -434,10 +443,10 @@
           <a href="https://github.com/TiBarification/Jail-Warden-Pro" class="icon icon-github" style="float: left; color: #fcfcfc"> GitHub</a>
       
       
-        <span><a href="../Module-Guns/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+        <span><a href="../Module-Be-Quiet/" style="color: #fcfcfc;">&laquo; Previous</a></span>
       
       
-        <span style="margin-left: 15px"><a href="../Module-Healthkit/" style="color: #fcfcfc">Next &raquo;</a></span>
+        <span style="margin-left: 15px"><a href="../Module-Door-Aim-Control/" style="color: #fcfcfc">Next &raquo;</a></span>
       
     </span>
 </div>

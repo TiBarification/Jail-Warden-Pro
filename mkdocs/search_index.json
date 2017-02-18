@@ -2,7 +2,7 @@
     "docs": [
         {
             "location": "/", 
-            "text": "Welcome to the Jail-Warden-Pro wiki!\n\n\n\n\nInstallation: \nInstallation Guide", 
+            "text": "Welcome to the Jail-Warden-Pro wiki!\n\n\n\n\nInstallation: \nInstallation Guide\n\n\nThis documentation can be found on \nReadTheDocs", 
             "title": "Home"
         }, 
         {
@@ -52,18 +52,13 @@
         }, 
         {
             "location": "/Module-Be-Quiet/", 
-            "text": "Description\n\n\n\n\nWhen warden talks, all T listening. No another voice line.\n\n\n\n\nAdditional Requirements\n\n\nNeed DHooks: https://goo.gl/ZansZH and VoiceAnnounceEx: https://goo.gl/uYomu2\n\n\nConfiguration\n\n\n\n\nThis module has no configuration\n\n\n\n\nHow to add to menu\n\n\n\n\nThis module has no menu interface\n\n\n\n\nFiles that corresponding to this module\n\n\n\n\naddons/sourcemod/scripting/jwp_bequiet.sp\n \u2014 source file\n\n\naddons/sourcemod/plugins/jwp_bequiet.smx\n \u2014 binary file\n\n\naddons/sourcemod/translations/jwp_modules.phrases.txt\n \u2014 translations file", 
+            "text": "Description\n\n\n\n\nWhen warden talks, all T listening. No another voice line.\n\n\n\n\n\n\nImportant\n\n\nNeed \nDHooks\n and \nVoiceAnnounceEx\n\n\n\n\nConfiguration\n\n\n\n\nThis module has no configuration\n\n\n\n\nHow to add to menu\n\n\n\n\nThis module has no menu interface\n\n\n\n\nFiles that corresponding to this module\n\n\n\n\naddons/sourcemod/scripting/jwp_bequiet.sp\n \u2014 source file\n\n\naddons/sourcemod/plugins/jwp_bequiet.smx\n \u2014 binary file\n\n\naddons/sourcemod/translations/jwp_modules.phrases.txt\n \u2014 translations file", 
             "title": "Be Quiet"
         }, 
         {
             "location": "/Module-Be-Quiet/#description", 
-            "text": "When warden talks, all T listening. No another voice line.", 
+            "text": "When warden talks, all T listening. No another voice line.    Important  Need  DHooks  and  VoiceAnnounceEx", 
             "title": "Description"
-        }, 
-        {
-            "location": "/Module-Be-Quiet/#additional-requirements", 
-            "text": "Need DHooks: https://goo.gl/ZansZH and VoiceAnnounceEx: https://goo.gl/uYomu2", 
-            "title": "Additional Requirements"
         }, 
         {
             "location": "/Module-Be-Quiet/#configuration", 
@@ -78,6 +73,31 @@
         {
             "location": "/Module-Be-Quiet/#files-that-corresponding-to-this-module", 
             "text": "addons/sourcemod/scripting/jwp_bequiet.sp  \u2014 source file  addons/sourcemod/plugins/jwp_bequiet.smx  \u2014 binary file  addons/sourcemod/translations/jwp_modules.phrases.txt  \u2014 translations file", 
+            "title": "Files that corresponding to this module"
+        }, 
+        {
+            "location": "/Module-Door-Control/", 
+            "text": "Description\n\n\n\n\nGive warden access to open/close all doors on map\n\n\n\n\n\n\nImportant\n\n\nAdditional Requirements \nSmartJailDoors\n\n\n\n\nConfiguration\n\n\n\n\nThis module has no configuration\n\n\n\n\nHow to add to menu\n\n\nAdd this section in \nwarden_menu.txt\n\nYou can remove one of them if you need this.\n\n\ndoor_open\n\n{\n    \nflag\n  \n\n}\n\ndoor_close\n\n{\n    \nflag\n  \n\n}\n\n\n\n\nFiles that corresponding to this module\n\n\n\n\naddons/sourcemod/scripting/jwp_doorcontrol.sp\n \u2014 source file\n\n\naddons/sourcemod/plugins/jwp_doorcontrol.smx\n \u2014 binary file\n\n\naddons/sourcemod/translations/jwp_modules.phrases.txt\n \u2014 translations file", 
+            "title": "Door Control"
+        }, 
+        {
+            "location": "/Module-Door-Control/#description", 
+            "text": "Give warden access to open/close all doors on map    Important  Additional Requirements  SmartJailDoors", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/Module-Door-Control/#configuration", 
+            "text": "This module has no configuration", 
+            "title": "Configuration"
+        }, 
+        {
+            "location": "/Module-Door-Control/#how-to-add-to-menu", 
+            "text": "Add this section in  warden_menu.txt \nYou can remove one of them if you need this.  door_open \n{\n     flag    \n} door_close \n{\n     flag    \n}", 
+            "title": "How to add to menu"
+        }, 
+        {
+            "location": "/Module-Door-Control/#files-that-corresponding-to-this-module", 
+            "text": "addons/sourcemod/scripting/jwp_doorcontrol.sp  \u2014 source file  addons/sourcemod/plugins/jwp_doorcontrol.smx  \u2014 binary file  addons/sourcemod/translations/jwp_modules.phrases.txt  \u2014 translations file", 
             "title": "Files that corresponding to this module"
         }, 
         {
@@ -317,7 +337,7 @@
         }, 
         {
             "location": "/Module-Laserbeam/", 
-            "text": "Description\n\n\n\n\nWarden can place following beam for T. He also can grant permission to paint T on walls.\nIf T has access to paint, he can type sm_lpaints to choose color of their paint.\n\n\n\n\nConfiguration\n\n\nConfig file is located by this path:\n\ncfg/jwp/laserbeam.cfg\n\n\n// Warden can give this feature to terrorists\n// -\n// Default: \n1\n\n// Minimum: \n0.000000\n\n// Maximum: \n1.000000\n\njwp_laserbeam_t_feature \n1\n\n\n\n\n\nFile with colors, you can add your own\n\ncfg/jwp/laserbeam/colors.txt\n\n\nHow to add to menu\n\n\nAdd this section in \nwarden_menu.txt\n. Field \nflag\n supports admin flags.\n\n\nlaserbeam\n\n{\n    \nflag\n  \n\n}\n\n\n\n\nFiles that corresponding to this module\n\n\n\n\naddons/sourcemod/scripting/jwp_laserbeam.sp\n \u2014 source file\n\n\naddons/sourcemod/plugins/jwp_laserbeam.smx\n \u2014 binary file\n\n\naddons/sourcemod/translations/jwp_modules.phrases.txt\n \u2014 translations file", 
+            "text": "Description\n\n\n\n\nWarden can place following beam for T. He also can grant permission to paint T on walls.\nIf T has access to paint, he can type sm_lpaints to choose color of their paint.\n\n\n\n\nConfiguration\n\n\nConfig file is located by this path:\n\ncfg/jwp/laserbeam.cfg\n\n\n// Warden can give this feature to terrorists\n// -\n// Default: \n1\n\n// Minimum: \n0.000000\n\n// Maximum: \n1.000000\n\njwp_laserbeam_t_feature \n1\n\n\n\n\n\n\n\nNote\n\n\nFile with colors, you can add your own \ncfg/jwp/laserbeam/colors.txt\n\n\n\n\nHow to add to menu\n\n\nAdd this section in \nwarden_menu.txt\n. Field \nflag\n supports admin flags.\n\n\nlaserbeam\n\n{\n    \nflag\n  \n\n}\n\n\n\n\nFiles that corresponding to this module\n\n\n\n\naddons/sourcemod/scripting/jwp_laserbeam.sp\n \u2014 source file\n\n\naddons/sourcemod/plugins/jwp_laserbeam.smx\n \u2014 binary file\n\n\naddons/sourcemod/translations/jwp_modules.phrases.txt\n \u2014 translations file", 
             "title": "Laserbeam"
         }, 
         {
@@ -327,7 +347,7 @@
         }, 
         {
             "location": "/Module-Laserbeam/#configuration", 
-            "text": "Config file is located by this path: cfg/jwp/laserbeam.cfg  // Warden can give this feature to terrorists\n// -\n// Default:  1 \n// Minimum:  0.000000 \n// Maximum:  1.000000 \njwp_laserbeam_t_feature  1   File with colors, you can add your own cfg/jwp/laserbeam/colors.txt", 
+            "text": "Config file is located by this path: cfg/jwp/laserbeam.cfg  // Warden can give this feature to terrorists\n// -\n// Default:  1 \n// Minimum:  0.000000 \n// Maximum:  1.000000 \njwp_laserbeam_t_feature  1    Note  File with colors, you can add your own  cfg/jwp/laserbeam/colors.txt", 
             "title": "Configuration"
         }, 
         {
@@ -467,18 +487,13 @@
         }, 
         {
             "location": "/Module-Otkaz/", 
-            "text": "Description\n\n\n\n\nCan watch Otkaz'es\n\n\n\n\nDependence\n\n\nFor module work, you need to be installed \nOtkaz\n\n\nConfiguration\n\n\n\n\nThis module has no configuration\n\n\n\n\nHow to add to menu\n\n\nAdd this section in \nwarden_menu.txt\n. Field \nflag\n supports admin flags.\n\n\notkaz\n\n{\n    \nflag\n  \n\n}\n\n\n\n\nFiles that corresponding to this module\n\n\n\n\naddons/sourcemod/scripting/jwp_otkaz_m.sp\n \u2014 source file\n\n\naddons/sourcemod/plugins/jwp_otkaz_m.smx\n \u2014 binary file\n\n\naddons/sourcemod/translations/jwp_modules.phrases.txt\n \u2014 translations file", 
+            "text": "Description\n\n\n\n\nCan watch Otkaz'es\n\n\n\n\n\n\nImportant\n\n\nFor module work, you need to be installed \nOtkaz\n\n\n\n\nConfiguration\n\n\n\n\nThis module has no configuration\n\n\n\n\nHow to add to menu\n\n\nAdd this section in \nwarden_menu.txt\n. Field \nflag\n supports admin flags.\n\n\notkaz\n\n{\n    \nflag\n  \n\n}\n\n\n\n\nFiles that corresponding to this module\n\n\n\n\naddons/sourcemod/scripting/jwp_otkaz_m.sp\n \u2014 source file\n\n\naddons/sourcemod/plugins/jwp_otkaz_m.smx\n \u2014 binary file\n\n\naddons/sourcemod/translations/jwp_modules.phrases.txt\n \u2014 translations file", 
             "title": "Otkaz"
         }, 
         {
             "location": "/Module-Otkaz/#description", 
-            "text": "Can watch Otkaz'es", 
+            "text": "Can watch Otkaz'es    Important  For module work, you need to be installed  Otkaz", 
             "title": "Description"
-        }, 
-        {
-            "location": "/Module-Otkaz/#dependence", 
-            "text": "For module work, you need to be installed  Otkaz", 
-            "title": "Dependence"
         }, 
         {
             "location": "/Module-Otkaz/#configuration", 
@@ -652,18 +667,23 @@
         }, 
         {
             "location": "/Module-Skin/", 
-            "text": "Description\n\n\n\n\nThis module sets models(skins) on warden/zam/ct/t\n\n\n\n\nConfiguration\n\n\nConfig file is located by this path:\n\ncfg/jwp/skin.cfg\n\n\n// Set model on warden, leave empty for default model\n// -\n// Default: \n\njwp_warden_skin \n\n\n// Set model on deputy(zam), leave empty for default model\n// -\n// Default: \n\njwp_warden_zam_skin \n\n\n// Enable auto-set model on T team. Needed file t_models.txt\n// -\n// Default: \n0\n\njwp_random_t_skins \n0\n\n\n// Enable auto-set model on CT team. Needed file ct_models.txt\n// -\n// Default: \n0\n\njwp_random_ct_skins \n0\n\n\n\n\n\nFile with models on T/CT teams, you can add your own\n\ncfg/jwp/skin/t_models.txt\n\n\ncfg/jwp/skin/ct_models.txt\n\n\nHow to add to menu\n\n\n\n\nThis module has no menu interface\n\n\n\n\nFiles that corresponding to this module\n\n\n\n\ncfg/jwp/skin.cfg\n \u2014 config file\n\n\ncfg/jwp/skin/t_models.txt\n \u2014 t models\n\n\ncfg/jwp/skin/ct_models.txt\n \u2014 ct models\n\n\naddons/sourcemod/scripting/jwp_skin.sp\n \u2014 source file\n\n\naddons/sourcemod/plugins/jwp_skin.smx\n \u2014 binary file", 
+            "text": "Description\n\n\n\n\nThis module sets models(skins) on warden/zam/ct/t\n\n\n\n\n\n\nImportant\n\n\nThis module requires other plugin for downloading \n precahing models\n\n\n\n\nConfiguration\n\n\nConfig file is located by this path:\n\ncfg/jwp/skin.cfg\n\n\n// Set model on warden, leave empty for default model\n// -\n// Default: \n\njwp_warden_skin \n\n\n// Set model on deputy(zam), leave empty for default model\n// -\n// Default: \n\njwp_warden_zam_skin \n\n\n// Enable auto-set model on T team. Needed file t_models.txt\n// -\n// Default: \n0\n\njwp_random_t_skins \n0\n\n\n// Enable auto-set model on CT team. Needed file ct_models.txt\n// -\n// Default: \n0\n\njwp_random_ct_skins \n0\n\n\n\n\n\nFile with models on T/CT teams, you can add your own\n\n\n\n\ncfg/jwp/skin/t_models.txt\n\n\ncfg/jwp/skin/ct_models.txt\n\n\n\n\nHow to add to menu\n\n\n\n\nThis module has no menu interface\n\n\n\n\nFiles that corresponding to this module\n\n\n\n\ncfg/jwp/skin.cfg\n \u2014 config file\n\n\ncfg/jwp/skin/t_models.txt\n \u2014 t models\n\n\ncfg/jwp/skin/ct_models.txt\n \u2014 ct models\n\n\naddons/sourcemod/scripting/jwp_skin.sp\n \u2014 source file\n\n\naddons/sourcemod/plugins/jwp_skin.smx\n \u2014 binary file", 
             "title": "Skin"
         }, 
         {
             "location": "/Module-Skin/#description", 
-            "text": "This module sets models(skins) on warden/zam/ct/t", 
+            "text": "This module sets models(skins) on warden/zam/ct/t    Important  This module requires other plugin for downloading   precahing models", 
             "title": "Description"
         }, 
         {
             "location": "/Module-Skin/#configuration", 
-            "text": "Config file is located by this path: cfg/jwp/skin.cfg  // Set model on warden, leave empty for default model\n// -\n// Default:  \njwp_warden_skin  \n\n// Set model on deputy(zam), leave empty for default model\n// -\n// Default:  \njwp_warden_zam_skin  \n\n// Enable auto-set model on T team. Needed file t_models.txt\n// -\n// Default:  0 \njwp_random_t_skins  0 \n\n// Enable auto-set model on CT team. Needed file ct_models.txt\n// -\n// Default:  0 \njwp_random_ct_skins  0   File with models on T/CT teams, you can add your own cfg/jwp/skin/t_models.txt  cfg/jwp/skin/ct_models.txt", 
+            "text": "Config file is located by this path: cfg/jwp/skin.cfg  // Set model on warden, leave empty for default model\n// -\n// Default:  \njwp_warden_skin  \n\n// Set model on deputy(zam), leave empty for default model\n// -\n// Default:  \njwp_warden_zam_skin  \n\n// Enable auto-set model on T team. Needed file t_models.txt\n// -\n// Default:  0 \njwp_random_t_skins  0 \n\n// Enable auto-set model on CT team. Needed file ct_models.txt\n// -\n// Default:  0 \njwp_random_ct_skins  0", 
             "title": "Configuration"
+        }, 
+        {
+            "location": "/Module-Skin/#file-with-models-on-tct-teams-you-can-add-your-own", 
+            "text": "cfg/jwp/skin/t_models.txt  cfg/jwp/skin/ct_models.txt", 
+            "title": "File with models on T/CT teams, you can add your own"
         }, 
         {
             "location": "/Module-Skin/#how-to-add-to-menu", 
