@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <meta name="author" content="TiBarification">
+  <link rel="shortcut icon" href="../img/favicon.ico">
+  <title>Installation Guide - Jail Warden Pro</title>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="../css/highlight.css">
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Installation Guide";
+    var mkdocs_page_input_path = "Installation-guide.md";
+    var mkdocs_page_url = "/Installation-guide/";
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js"></script>
+  <script src="../js/modernizr-2.8.3.min.js"></script>
+  <script type="text/javascript" src="../js/highlight.pack.js"></script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> Jail Warden Pro</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="current">
+          
+            <li>
+    <li class="toctree-l1 ">
+        <a class="" href="..">Home</a>
+        
+    </li>
+<li>
+          
+            <li>
+    <li class="toctree-l1 current">
+        <a class="current" href="./">Installation Guide</a>
+        
+            <ul>
+            
+                <li class="toctree-l3"><a href="#how-to-install-jail-warden-pro">How to install Jail Warden Pro</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#translation-issues">Translation issues</a></li>
+                
+            
+            </ul>
+        
+    </li>
+<li>
+          
+            <li>
+    <ul class="subnav">
+    <li><span>List of available modules for Core</span></li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../Modules/">Full list of modules</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../Module-Admin-Control/">Admin Control</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../Module-Be-Quiet/">Be Quiet</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../Module-Door-Aim-Control/">Door Aim Control</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../Module-Freeday-No-Bunt/">Freeday No Bunt rebel</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../Module-Friendly-Fire/">Friendly Fire</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../Module-Freeday/">Freeday</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../Module-Guns/">Guns</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../Module-Handcuffs/">Handcuffs</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../Module-Healthkit/">Healthkit</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../Module-Icon/">Icon</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../Module-Isolator/">Isolator</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../Module-Laserbeam/">Laserbeam</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../Module-ManualColoring/">Manual Coloring</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../Module-Mute/">Mute</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../Module-Noblock/">Noblock</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../Module-On-Lr-Started/">On Lr Started</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../Module-Order/">Order</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../Module-Otkaz/">Otkaz</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../Module-Playsound/">Play Sound</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../Module-Prisoner-Counter/">Count prisoners</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../Module-Rebel/">Rebel</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../Module-Respawn/">Respawn</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../Module-Round-Extend/">Round Extend</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../Module-Shootguns/">Shoot Guns</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../Module-Skin/">Skin</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../Module-Slay/">Slay</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../Module-Speed/">Speed</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../Module-Stoplr/">Stop LR</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../Module-Strip-Knife/">Strip Knife</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../Module-To-Jail/">TP to Jail</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../Module-Transfer-Warden/">Transfer Warden</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../Module-Warden-Color/">Warden Color</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../Module-Warden-Health/">Warden Health</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../Module-Timer/">Timer</a>
+        
+    </li>
+
+        
+    </ul>
+<li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">Jail Warden Pro</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+    
+    <li>Installation Guide</li>
+    <li class="wy-breadcrumbs-aside">
+      
+        <a href="https://github.com/TiBarification/Jail-Warden-Pro/edit/master/docs/Installation-guide.md"
+          class="icon icon-github"> Edit on GitHub</a>
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h3 id="how-to-install-jail-warden-pro">How to install Jail Warden Pro</h3>
+<ol>
+<li>Download <a href="../../releases">Jail Warden Pro release package</a></li>
+<li>It contains 2 types of release version:<ul>
+<li><code>Pre-Release</code> - last features, but unstable</li>
+<li><code>Release</code> - stable version</li>
+</ul>
+</li>
+<li>Package contains all modules and core</li>
+<li>Extract package somewhere</li>
+<li>Not on the game server yet</li>
+<li>Delete unwanted modules</li>
+<li>In <code>addons/sourcemod/plugins</code></li>
+<li>And configs for them in <code>cfg/jwp</code></li>
+<li>Set ConVars in <code>cfg/jwp</code></li>
+<li>Sort positions of items in menu from <code>warden_menu.txt</code></li>
+<li>Setup downloads if needed</li>
+<li>Some modules like <code>JWP Skins</code> don't have their own download manager, so you need to install some plugin to download <code>materials</code>, <code>models</code>, <code>sound</code>.</li>
+<li>Recommended <a href="https://forums.alliedmods.net/showthread.php?p=602270">SM File/Folder Downloader &amp; Precacher</a></li>
+<li>Upload Jail Warden Pro on game server</li>
+<li><code>addons/</code> and <code>cfg/</code> directories</li>
+<li><code>materials/</code>, <code>models/</code>, <code>sound/</code> if needed</li>
+<li>Change map to load Jail Warden Pro and all modules at once</li>
+<li>Profit! :smiley:</li>
+</ol>
+<h3 id="translation-issues">Translation issues</h3>
+<ul>
+<li>If you have your native languge, send me your translations via PM's or <a href="../../pulls">Pull Request</a></li>
+</ul>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../Modules/" class="btn btn-neutral float-right" title="Full list of modules">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href=".." class="btn btn-neutral" title="Home"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+	  
+        </div>
+      </div>
+
+    </section>
+    
+  </div>
+
+  <div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+          <a href="https://github.com/TiBarification/Jail-Warden-Pro" class="icon icon-github" style="float: left; color: #fcfcfc"> GitHub</a>
+      
+      
+        <span><a href=".." style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../Modules/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script src="../js/theme.js"></script>
+
+</body>
+</html>

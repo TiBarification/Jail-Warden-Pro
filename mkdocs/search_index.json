@@ -1,0 +1,904 @@
+{
+    "docs": [
+        {
+            "location": "/", 
+            "text": "Welcome to the Jail-Warden-Pro wiki!\n\n\n\n\nInstallation: \nInstallation Guide", 
+            "title": "Home"
+        }, 
+        {
+            "location": "/Installation-guide/", 
+            "text": "How to install Jail Warden Pro\n\n\n\n\nDownload \nJail Warden Pro release package\n\n\nIt contains 2 types of release version:\n\n\nPre-Release\n - last features, but unstable\n\n\nRelease\n - stable version\n\n\n\n\n\n\nPackage contains all modules and core\n\n\nExtract package somewhere\n\n\nNot on the game server yet\n\n\nDelete unwanted modules\n\n\nIn \naddons/sourcemod/plugins\n\n\nAnd configs for them in \ncfg/jwp\n\n\nSet ConVars in \ncfg/jwp\n\n\nSort positions of items in menu from \nwarden_menu.txt\n\n\nSetup downloads if needed\n\n\nSome modules like \nJWP Skins\n don't have their own download manager, so you need to install some plugin to download \nmaterials\n, \nmodels\n, \nsound\n.\n\n\nRecommended \nSM File/Folder Downloader \n Precacher\n\n\nUpload Jail Warden Pro on game server\n\n\naddons/\n and \ncfg/\n directories\n\n\nmaterials/\n, \nmodels/\n, \nsound/\n if needed\n\n\nChange map to load Jail Warden Pro and all modules at once\n\n\nProfit! :smiley:\n\n\n\n\nTranslation issues\n\n\n\n\nIf you have your native languge, send me your translations via PM's or \nPull Request", 
+            "title": "Installation Guide"
+        }, 
+        {
+            "location": "/Installation-guide/#how-to-install-jail-warden-pro", 
+            "text": "Download  Jail Warden Pro release package  It contains 2 types of release version:  Pre-Release  - last features, but unstable  Release  - stable version    Package contains all modules and core  Extract package somewhere  Not on the game server yet  Delete unwanted modules  In  addons/sourcemod/plugins  And configs for them in  cfg/jwp  Set ConVars in  cfg/jwp  Sort positions of items in menu from  warden_menu.txt  Setup downloads if needed  Some modules like  JWP Skins  don't have their own download manager, so you need to install some plugin to download  materials ,  models ,  sound .  Recommended  SM File/Folder Downloader   Precacher  Upload Jail Warden Pro on game server  addons/  and  cfg/  directories  materials/ ,  models/ ,  sound/  if needed  Change map to load Jail Warden Pro and all modules at once  Profit! :smiley:", 
+            "title": "How to install Jail Warden Pro"
+        }, 
+        {
+            "location": "/Installation-guide/#translation-issues", 
+            "text": "If you have your native languge, send me your translations via PM's or  Pull Request", 
+            "title": "Translation issues"
+        }, 
+        {
+            "location": "/Modules/", 
+            "text": "Admin Control\n \nAdmin can set warden\n\n\nBe Quiet\n \nWhen warden speak, all alive shutup\n\n\nColoring\n \nDivide by colors\n\n\nDoor Control\n \nOpen/close all doors on map\n\n\nDoor Aim Control\n \nOpen doors by aim\n\n\nFreeday No Bunt(rebel)\n \nFreeday player can't be a rebel or make damage\n\n\nFriendly Fire\n \nToggle friendly fire\n\n\nFreeday\n \nGive/take freeday from/to player\n\n\nGuns\n \nUse guns from menu\n\n\nHandcuffs\n \nArrest terrorist\n\n\nHealthkit\n \nSpawn healthkit\n\n\nIcon\n \nIcon over the warden head\n\n\nIsolator\n \nJail/Unjail prisoners\n\n\nLaserbeam\n \nLaserbeam for warden\n\n\nManual Coloring\n \nSet terrorist color\n\n\nMute\n \nSet terrorist mute\n\n\nNoblock\n \nToggle noblock\n\n\nOn Lr Started\n \nOn lr started, warden will be removed\n\n\nOrder\n \nWarden can make orders\n\n\nOtkaz\n\n\nPlay Sound\n\n\nCount prisoners\n \nCount prisoners in FOV\n\n\nRebel\n\n\nRespawn\n \nRespawn players\n\n\nRound Extend\n\n\nShoot Guns\n \nRemove guns by shoot on them\n\n\nSkin\n \nModel on players\n\n\nSlay\n\n\nSpeed\n\n\nStop LR\n\n\nStrip Knife\n\n\nTP to Jail\n\n\nTransfer Warden\n\n\nWarden Color\n\n\nWarden Health\n\n\nTimer", 
+            "title": "Full list of modules"
+        }, 
+        {
+            "location": "/Module-Admin-Control/", 
+            "text": "Description\n\n\n\n\nThis module provides admin to set/remove warden\n\n\n\n\nConfiguration\n\n\n\n\nThis module has no configuration\n\n\n\n\nHow to add to menu\n\n\n\n\nThis module has no menu interface\n\n\n\n\nFiles that corresponding to this module\n\n\n\n\naddons/sourcemod/scripting/jwp_admincontrol.sp\n \u2014 source file\n\n\naddons/sourcemod/plugins/jwp_admincontrol.smx\n \u2014 binary file\n\n\naddons/sourcemod/translations/jwp_modules.phrases.txt\n \u2014 translations file", 
+            "title": "Admin Control"
+        }, 
+        {
+            "location": "/Module-Admin-Control/#description", 
+            "text": "This module provides admin to set/remove warden", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/Module-Admin-Control/#configuration", 
+            "text": "This module has no configuration", 
+            "title": "Configuration"
+        }, 
+        {
+            "location": "/Module-Admin-Control/#how-to-add-to-menu", 
+            "text": "This module has no menu interface", 
+            "title": "How to add to menu"
+        }, 
+        {
+            "location": "/Module-Admin-Control/#files-that-corresponding-to-this-module", 
+            "text": "addons/sourcemod/scripting/jwp_admincontrol.sp  \u2014 source file  addons/sourcemod/plugins/jwp_admincontrol.smx  \u2014 binary file  addons/sourcemod/translations/jwp_modules.phrases.txt  \u2014 translations file", 
+            "title": "Files that corresponding to this module"
+        }, 
+        {
+            "location": "/Module-Be-Quiet/", 
+            "text": "Description\n\n\n\n\nWhen warden talks, all T listening. No another voice line.\n\n\n\n\nAdditional Requirements\n\n\nNeed DHooks: https://goo.gl/ZansZH and VoiceAnnounceEx: https://goo.gl/uYomu2\n\n\nConfiguration\n\n\n\n\nThis module has no configuration\n\n\n\n\nHow to add to menu\n\n\n\n\nThis module has no menu interface\n\n\n\n\nFiles that corresponding to this module\n\n\n\n\naddons/sourcemod/scripting/jwp_bequiet.sp\n \u2014 source file\n\n\naddons/sourcemod/plugins/jwp_bequiet.smx\n \u2014 binary file\n\n\naddons/sourcemod/translations/jwp_modules.phrases.txt\n \u2014 translations file", 
+            "title": "Be Quiet"
+        }, 
+        {
+            "location": "/Module-Be-Quiet/#description", 
+            "text": "When warden talks, all T listening. No another voice line.", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/Module-Be-Quiet/#additional-requirements", 
+            "text": "Need DHooks: https://goo.gl/ZansZH and VoiceAnnounceEx: https://goo.gl/uYomu2", 
+            "title": "Additional Requirements"
+        }, 
+        {
+            "location": "/Module-Be-Quiet/#configuration", 
+            "text": "This module has no configuration", 
+            "title": "Configuration"
+        }, 
+        {
+            "location": "/Module-Be-Quiet/#how-to-add-to-menu", 
+            "text": "This module has no menu interface", 
+            "title": "How to add to menu"
+        }, 
+        {
+            "location": "/Module-Be-Quiet/#files-that-corresponding-to-this-module", 
+            "text": "addons/sourcemod/scripting/jwp_bequiet.sp  \u2014 source file  addons/sourcemod/plugins/jwp_bequiet.smx  \u2014 binary file  addons/sourcemod/translations/jwp_modules.phrases.txt  \u2014 translations file", 
+            "title": "Files that corresponding to this module"
+        }, 
+        {
+            "location": "/Module-Door-Aim-Control/", 
+            "text": "Description\n\n\n\n\nGive warden access to open certain doors\n\n\n\n\nConfiguration\n\n\n\n\nThis module has no configuration\n\n\n\n\nHow to add to menu\n\n\nAdd this section in \nwarden_menu.txt\n\nYou can remove one of them if you need this.\n\n\ndoor_aim_open\n\n{\n    \nflag\n  \n\n}\n\ndoor_aim_close\n\n{\n    \nflag\n  \n\n}\n\n\n\n\nFiles that corresponding to this module\n\n\n\n\naddons/sourcemod/scripting/jwp_dooraimcontrol.sp\n \u2014 source file\n\n\naddons/sourcemod/plugins/jwp_dooraimcontrol.smx\n \u2014 binary file\n\n\naddons/sourcemod/translations/jwp_modules.phrases.txt\n \u2014 translations file", 
+            "title": "Door Aim Control"
+        }, 
+        {
+            "location": "/Module-Door-Aim-Control/#description", 
+            "text": "Give warden access to open certain doors", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/Module-Door-Aim-Control/#configuration", 
+            "text": "This module has no configuration", 
+            "title": "Configuration"
+        }, 
+        {
+            "location": "/Module-Door-Aim-Control/#how-to-add-to-menu", 
+            "text": "Add this section in  warden_menu.txt \nYou can remove one of them if you need this.  door_aim_open \n{\n     flag    \n} door_aim_close \n{\n     flag    \n}", 
+            "title": "How to add to menu"
+        }, 
+        {
+            "location": "/Module-Door-Aim-Control/#files-that-corresponding-to-this-module", 
+            "text": "addons/sourcemod/scripting/jwp_dooraimcontrol.sp  \u2014 source file  addons/sourcemod/plugins/jwp_dooraimcontrol.smx  \u2014 binary file  addons/sourcemod/translations/jwp_modules.phrases.txt  \u2014 translations file", 
+            "title": "Files that corresponding to this module"
+        }, 
+        {
+            "location": "/Module-Freeday-No-Bunt/", 
+            "text": "Description\n\n\n\n\nIf player has freeday, he can't be a rebel\n\n\n\n\nConfiguration\n\n\n\n\nThis module has no configuration\n\n\n\n\nHow to add to menu\n\n\n\n\nThis module has no menu interface\n\n\n\n\nFiles that corresponding to this module\n\n\n\n\naddons/sourcemod/scripting/jwp_fdnobunt.sp\n \u2014 source file\n\n\naddons/sourcemod/plugins/jwp_fdnobunt.smx\n \u2014 binary file", 
+            "title": "Freeday No Bunt rebel"
+        }, 
+        {
+            "location": "/Module-Freeday-No-Bunt/#description", 
+            "text": "If player has freeday, he can't be a rebel", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/Module-Freeday-No-Bunt/#configuration", 
+            "text": "This module has no configuration", 
+            "title": "Configuration"
+        }, 
+        {
+            "location": "/Module-Freeday-No-Bunt/#how-to-add-to-menu", 
+            "text": "This module has no menu interface", 
+            "title": "How to add to menu"
+        }, 
+        {
+            "location": "/Module-Freeday-No-Bunt/#files-that-corresponding-to-this-module", 
+            "text": "addons/sourcemod/scripting/jwp_fdnobunt.sp  \u2014 source file  addons/sourcemod/plugins/jwp_fdnobunt.smx  \u2014 binary file", 
+            "title": "Files that corresponding to this module"
+        }, 
+        {
+            "location": "/Module-Friendly-Fire/", 
+            "text": "Description\n\n\n\n\nToggle friendly fire\n\n\n\n\nConfiguration\n\n\n\n\nThis module has no configuration\n\n\n\n\nHow to add to menu\n\n\nAdd this section in \nwarden_menu.txt\n. Field \nflag\n supports admin flags.\n\n\nff\n\n{\n    \nflag\n  \n\n}\n\n\n\n\nFiles that corresponding to this module\n\n\n\n\naddons/sourcemod/scripting/jwp_ff.sp\n \u2014 source file\n\n\naddons/sourcemod/plugins/jwp_ff.smx\n \u2014 binary file\n\n\naddons/sourcemod/translations/jwp_modules.phrases.txt\n \u2014 translations file", 
+            "title": "Friendly Fire"
+        }, 
+        {
+            "location": "/Module-Friendly-Fire/#description", 
+            "text": "Toggle friendly fire", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/Module-Friendly-Fire/#configuration", 
+            "text": "This module has no configuration", 
+            "title": "Configuration"
+        }, 
+        {
+            "location": "/Module-Friendly-Fire/#how-to-add-to-menu", 
+            "text": "Add this section in  warden_menu.txt . Field  flag  supports admin flags.  ff \n{\n     flag    \n}", 
+            "title": "How to add to menu"
+        }, 
+        {
+            "location": "/Module-Friendly-Fire/#files-that-corresponding-to-this-module", 
+            "text": "addons/sourcemod/scripting/jwp_ff.sp  \u2014 source file  addons/sourcemod/plugins/jwp_ff.smx  \u2014 binary file  addons/sourcemod/translations/jwp_modules.phrases.txt  \u2014 translations file", 
+            "title": "Files that corresponding to this module"
+        }, 
+        {
+            "location": "/Module-Freeday/", 
+            "text": "Description\n\n\n\n\nGive/Take freeday to/from prisoner\n\n\n\n\nConfiguration\n\n\nConfig file is located by this path:\n\ncfg/jwp/freeday.cfg\n\n\n// Alpha value of freeday in RGBA\n// -\n// Default: \n255\n\n// Minimum: \n0.000000\n\n// Maximum: \n255.000000\n\njwp_freeday_a \n255\n\n\n// Blue value of freeday in RGBA\n// -\n// Default: \n0\n\n// Minimum: \n0.000000\n\n// Maximum: \n255.000000\n\njwp_freeday_b \n0\n\n\n// Green value of freeday in RGBA\n// -\n// Default: \n255\n\n// Minimum: \n0.000000\n\n// Maximum: \n255.000000\n\njwp_freeday_g \n255\n\n\n// Red value of freeday in RGBA\n// -\n// Default: \n0\n\n// Minimum: \n0.000000\n\n// Maximum: \n255.000000\n\njwp_freeday_r \n0\n\n\n\n\n\nHow to add to menu\n\n\nAdd this section in \nwarden_menu.txt\n. Field \nflag\n supports admin flags.\nYou can remove one of them if you need this.\n\n\nfreeday_give\n\n{\n    \nflag\n  \n\n}\n\nfreeday_take\n\n{\n    \nflag\n  \n\n}\n\n\n\n\nFiles that corresponding to this module\n\n\n\n\ncfg/jwp/freeday.cfg\n \u2014 config file\n\n\naddons/sourcemod/scripting/jwp_freeday.sp\n \u2014 source file\n\n\naddons/sourcemod/plugins/jwp_freeday.smx\n \u2014 binary file\n\n\naddons/sourcemod/translations/jwp_modules.phrases.txt\n \u2014 translations file\n\n\n\n\nFor developers\n\n\nNatives that associated with this module\n\n\n/**\n *  Function to check if player has freeday\n *  -\n *  @param client           Client index\n *  -\n *  @return true if player has freeday, false otherwise\n */\nnative bool JWP_PrisonerHasFreeday(int client);\n\n/**\n *  Function to set player freeday\n *  -\n *  @param client           Client index\n *  @param state            True to set freeday, or false to take it\n *  -\n *  @return true if player state has been successfully changed, false otherwise\n */\nnative bool JWP_PrisonerSetFreeday(int client, bool state = true);", 
+            "title": "Freeday"
+        }, 
+        {
+            "location": "/Module-Freeday/#description", 
+            "text": "Give/Take freeday to/from prisoner", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/Module-Freeday/#configuration", 
+            "text": "Config file is located by this path: cfg/jwp/freeday.cfg  // Alpha value of freeday in RGBA\n// -\n// Default:  255 \n// Minimum:  0.000000 \n// Maximum:  255.000000 \njwp_freeday_a  255 \n\n// Blue value of freeday in RGBA\n// -\n// Default:  0 \n// Minimum:  0.000000 \n// Maximum:  255.000000 \njwp_freeday_b  0 \n\n// Green value of freeday in RGBA\n// -\n// Default:  255 \n// Minimum:  0.000000 \n// Maximum:  255.000000 \njwp_freeday_g  255 \n\n// Red value of freeday in RGBA\n// -\n// Default:  0 \n// Minimum:  0.000000 \n// Maximum:  255.000000 \njwp_freeday_r  0", 
+            "title": "Configuration"
+        }, 
+        {
+            "location": "/Module-Freeday/#how-to-add-to-menu", 
+            "text": "Add this section in  warden_menu.txt . Field  flag  supports admin flags.\nYou can remove one of them if you need this.  freeday_give \n{\n     flag    \n} freeday_take \n{\n     flag    \n}", 
+            "title": "How to add to menu"
+        }, 
+        {
+            "location": "/Module-Freeday/#files-that-corresponding-to-this-module", 
+            "text": "cfg/jwp/freeday.cfg  \u2014 config file  addons/sourcemod/scripting/jwp_freeday.sp  \u2014 source file  addons/sourcemod/plugins/jwp_freeday.smx  \u2014 binary file  addons/sourcemod/translations/jwp_modules.phrases.txt  \u2014 translations file", 
+            "title": "Files that corresponding to this module"
+        }, 
+        {
+            "location": "/Module-Freeday/#for-developers", 
+            "text": "Natives that associated with this module  /**\n *  Function to check if player has freeday\n *  -\n *  @param client           Client index\n *  -\n *  @return true if player has freeday, false otherwise\n */\nnative bool JWP_PrisonerHasFreeday(int client);\n\n/**\n *  Function to set player freeday\n *  -\n *  @param client           Client index\n *  @param state            True to set freeday, or false to take it\n *  -\n *  @return true if player state has been successfully changed, false otherwise\n */\nnative bool JWP_PrisonerSetFreeday(int client, bool state = true);", 
+            "title": "For developers"
+        }, 
+        {
+            "location": "/Module-Guns/", 
+            "text": "Description\n\n\n\n\nWarden can use guns from menu\n\n\n\n\nConfiguration\n\n\nConfig file is located by this path:\n\ncfg/jwp/guns.txt\n\n\nHow to add to menu\n\n\nAdd this section in \nwarden_menu.txt\n. Field \nflag\n supports admin flags.\n\n\nguns\n\n{\n    \nflag\n  \n\n}\n\n\n\n\nFiles that corresponding to this module\n\n\n\n\ncfg/jwp/guns.txt\n \u2014 config file\n\n\naddons/sourcemod/scripting/jwp_guns.sp\n \u2014 source file\n\n\naddons/sourcemod/plugins/jwp_guns.smx\n \u2014 binary file\n\n\naddons/sourcemod/translations/jwp_modules.phrases.txt\n \u2014 translations file", 
+            "title": "Guns"
+        }, 
+        {
+            "location": "/Module-Guns/#description", 
+            "text": "Warden can use guns from menu", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/Module-Guns/#configuration", 
+            "text": "Config file is located by this path: cfg/jwp/guns.txt", 
+            "title": "Configuration"
+        }, 
+        {
+            "location": "/Module-Guns/#how-to-add-to-menu", 
+            "text": "Add this section in  warden_menu.txt . Field  flag  supports admin flags.  guns \n{\n     flag    \n}", 
+            "title": "How to add to menu"
+        }, 
+        {
+            "location": "/Module-Guns/#files-that-corresponding-to-this-module", 
+            "text": "cfg/jwp/guns.txt  \u2014 config file  addons/sourcemod/scripting/jwp_guns.sp  \u2014 source file  addons/sourcemod/plugins/jwp_guns.smx  \u2014 binary file  addons/sourcemod/translations/jwp_modules.phrases.txt  \u2014 translations file", 
+            "title": "Files that corresponding to this module"
+        }, 
+        {
+            "location": "/Module-Handcuffs/", 
+            "text": "Description\n\n\n\n\nCounter-Terrorists can use handcuffs to arrest prisoners. Warden can release all terrorists from warden menu.\n\n\n\n\nConfiguration\n\n\n\n\nThis module has no configuration\n\n\n\n\nHow to add to menu\n\n\nAdd this section in \nwarden_menu.txt\n. Field \nflag\n supports admin flags.\n\n\nhandcuffs\n\n{\n    \nflag\n  \n\n}\n\n\n\n\nFiles that corresponding to this module\n\n\n\n\naddons/sourcemod/scripting/jwp_handcuffs.sp\n \u2014 source file\n\n\naddons/sourcemod/plugins/jwp_handcuffs.smx\n \u2014 binary file\n\n\naddons/sourcemod/translations/jwp_modules.phrases.txt\n \u2014 translations file", 
+            "title": "Handcuffs"
+        }, 
+        {
+            "location": "/Module-Handcuffs/#description", 
+            "text": "Counter-Terrorists can use handcuffs to arrest prisoners. Warden can release all terrorists from warden menu.", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/Module-Handcuffs/#configuration", 
+            "text": "This module has no configuration", 
+            "title": "Configuration"
+        }, 
+        {
+            "location": "/Module-Handcuffs/#how-to-add-to-menu", 
+            "text": "Add this section in  warden_menu.txt . Field  flag  supports admin flags.  handcuffs \n{\n     flag    \n}", 
+            "title": "How to add to menu"
+        }, 
+        {
+            "location": "/Module-Handcuffs/#files-that-corresponding-to-this-module", 
+            "text": "addons/sourcemod/scripting/jwp_handcuffs.sp  \u2014 source file  addons/sourcemod/plugins/jwp_handcuffs.smx  \u2014 binary file  addons/sourcemod/translations/jwp_modules.phrases.txt  \u2014 translations file", 
+            "title": "Files that corresponding to this module"
+        }, 
+        {
+            "location": "/Module-Healthkit/", 
+            "text": "Description\n\n\n\n\nWarden can heal everyone/t/ct\n\n\n\n\nConfiguration\n\n\nConfig file is located by this path:\n\ncfg/jwp/healthkit.cfg\n\n\n// How many HP regenerate healthkit\n// -\n// Default: \n50\n\n// Minimum: \n1.000000\n\njwp_healthkit_hp \n50\n\n\n// If healthkit not picked, it will be dissolve in 'x' sec (0 = disable)\n// -\n// Default: \n9\n\n// Minimum: \n0.000000\n\njwp_healthkit_life \n9\n\n\n// How many healthkit warden can place. 0 - unlimited\n// -\n// Default: \n3\n\n// Minimum: \n0.000000\n\njwp_healthkit_limit \n3\n\n\n// Maximum allowed HP (healthkit). 0 = unlimited\n// -\n// Default: \n100\n\n// Minimum: \n0.000000\n\njwp_healthkit_limit_hp \n100\n\n\n// Healthkit model\n// -\n// Default: \nmodels/gibs/hgibs.mdl\n\njwp_healthkit_model \nmodels/gibs/hgibs.mdl\n\n\n// Who can use healthkit: 1 = Everyone; 2 = T; 3 = CT\n// -\n// Default: \n1\n\n// Minimum: \n1.000000\n\n// Maximum: \n3.000000\n\njwp_healthkit_team \n1\n\n\n// Protect from healthkit flooding. Healthkit available 1 per 'x' seconds\n// -\n// Default: \n3\n\n// Minimum: \n0.000000\n\njwp_healthkit_wait \n3\n\n\n\n\n\nHow to add to menu\n\n\nAdd this section in \nwarden_menu.txt\n. Field \nflag\n supports admin flags.\n\n\nhealthkit\n\n{\n    \nflag\n  \n\n}\n\n\n\n\nFiles that corresponding to this module\n\n\n\n\ncfg/jwp/healthkit.cfg\n \u2014 config file\n\n\naddons/sourcemod/scripting/jwp_healthkit.sp\n \u2014 source file\n\n\naddons/sourcemod/plugins/jwp_healthkit.smx\n \u2014 binary file\n\n\naddons/sourcemod/translations/jwp_modules.phrases.txt\n \u2014 translations file", 
+            "title": "Healthkit"
+        }, 
+        {
+            "location": "/Module-Healthkit/#description", 
+            "text": "Warden can heal everyone/t/ct", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/Module-Healthkit/#configuration", 
+            "text": "Config file is located by this path: cfg/jwp/healthkit.cfg  // How many HP regenerate healthkit\n// -\n// Default:  50 \n// Minimum:  1.000000 \njwp_healthkit_hp  50 \n\n// If healthkit not picked, it will be dissolve in 'x' sec (0 = disable)\n// -\n// Default:  9 \n// Minimum:  0.000000 \njwp_healthkit_life  9 \n\n// How many healthkit warden can place. 0 - unlimited\n// -\n// Default:  3 \n// Minimum:  0.000000 \njwp_healthkit_limit  3 \n\n// Maximum allowed HP (healthkit). 0 = unlimited\n// -\n// Default:  100 \n// Minimum:  0.000000 \njwp_healthkit_limit_hp  100 \n\n// Healthkit model\n// -\n// Default:  models/gibs/hgibs.mdl \njwp_healthkit_model  models/gibs/hgibs.mdl \n\n// Who can use healthkit: 1 = Everyone; 2 = T; 3 = CT\n// -\n// Default:  1 \n// Minimum:  1.000000 \n// Maximum:  3.000000 \njwp_healthkit_team  1 \n\n// Protect from healthkit flooding. Healthkit available 1 per 'x' seconds\n// -\n// Default:  3 \n// Minimum:  0.000000 \njwp_healthkit_wait  3", 
+            "title": "Configuration"
+        }, 
+        {
+            "location": "/Module-Healthkit/#how-to-add-to-menu", 
+            "text": "Add this section in  warden_menu.txt . Field  flag  supports admin flags.  healthkit \n{\n     flag    \n}", 
+            "title": "How to add to menu"
+        }, 
+        {
+            "location": "/Module-Healthkit/#files-that-corresponding-to-this-module", 
+            "text": "cfg/jwp/healthkit.cfg  \u2014 config file  addons/sourcemod/scripting/jwp_healthkit.sp  \u2014 source file  addons/sourcemod/plugins/jwp_healthkit.smx  \u2014 binary file  addons/sourcemod/translations/jwp_modules.phrases.txt  \u2014 translations file", 
+            "title": "Files that corresponding to this module"
+        }, 
+        {
+            "location": "/Module-Icon/", 
+            "text": "Description\n\n\n\n\nThis module adds an icon over the warden head\n\n\n\n\nConfiguration\n\n\nConfig file is located by this path:\n\ncfg/jwp/icon.cfg\n\n\n// Path to the warden icon DONT TYPE .vmt or .vft\n// -\n// Default: \ndecals/MyJailbreak/warden\n\njwp_icon_path \ndecals/MyJailbreak/warden\n\n\n\n\n\nHow to add to menu\n\n\n\n\nThis module has no menu interface\n\n\n\n\nFiles that corresponding to this module\n\n\n\n\naddons/sourcemod/scripting/jwp_icon.sp\n \u2014 source file\n\n\naddons/sourcemod/plugins/jwp_icon.smx\n \u2014 binary file", 
+            "title": "Icon"
+        }, 
+        {
+            "location": "/Module-Icon/#description", 
+            "text": "This module adds an icon over the warden head", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/Module-Icon/#configuration", 
+            "text": "Config file is located by this path: cfg/jwp/icon.cfg  // Path to the warden icon DONT TYPE .vmt or .vft\n// -\n// Default:  decals/MyJailbreak/warden \njwp_icon_path  decals/MyJailbreak/warden", 
+            "title": "Configuration"
+        }, 
+        {
+            "location": "/Module-Icon/#how-to-add-to-menu", 
+            "text": "This module has no menu interface", 
+            "title": "How to add to menu"
+        }, 
+        {
+            "location": "/Module-Icon/#files-that-corresponding-to-this-module", 
+            "text": "addons/sourcemod/scripting/jwp_icon.sp  \u2014 source file  addons/sourcemod/plugins/jwp_icon.smx  \u2014 binary file", 
+            "title": "Files that corresponding to this module"
+        }, 
+        {
+            "location": "/Module-Isolator/", 
+            "text": "Description\n\n\n\n\nWarden can push terrorists to isolator\n\n\n\n\nConfiguration\n\n\nConfig file is located by this path:\n\ncfg/jwp/isolator.cfg\n\n\n// Roof model of isolator\n// -\n// Default: \n\njwp_isolator_roof \n\n\n// Distance between floor and roof in units\n// -\n// Default: \n125\n\n// Minimum: \n50\n\n// Maximum: \n500\n\njwp_isolator_roof_dist \n125\n\n\n// Sound in isolator. Make \n for no sound\n// -\n// Default: \nambient/machines/power_transformer_loop_1.wav\n\njwp_isolator_sound \nambient/machines/power_transformer_loop_1.wav\n\n\n// Walls model of isolator\n// -\n// Default: \nmodels/props/de_train/chainlinkgate.mdl\n\njwp_isolator_wall \nmodels/props/de_train/chainlinkgate.mdl\n\n\n// Distance between center and wall\n// -\n// Default: \n80\n\n// Minimum: \n15\n\n// Maximum: \n200\n\njwp_isolator_wall_dist \n80\n\n\n\n\n\nHow to add to menu\n\n\nAdd this section in \nwarden_menu.txt\n. Field \nflag\n supports admin flags.\n\n\nisolator\n\n{\n    \nflag\n  \n\n}\n\n\n\n\nFiles that corresponding to this module\n\n\n\n\naddons/sourcemod/scripting/jwp_isolator.sp\n \u2014 source file\n\n\naddons/sourcemod/plugins/jwp_isolator.smx\n \u2014 binary file\n\n\naddons/sourcemod/translations/jwp_modules.phrases.txt\n \u2014 translations file\n\n\n\n\nFor developers\n\n\nNatives that associated with this module\n\n\n/**\n *  Function to check if player in isolator\n *  -\n *  @param client           Client index\n *  -\n *  @return true if player in isolator, false otherwise\n */\nnative bool JWP_IsPrisonerIsolated(int client);\n\n/**\n *  Function to set player in isolator\n *  -\n *  @param client           Client index\n *  @param state            True to push into isolator, or false to bring him back\n *  -\n *  @return true if player state has been successfully changed, false otherwise\n */\nnative bool JWP_PrisonerIsolated(int client, bool state = true);", 
+            "title": "Isolator"
+        }, 
+        {
+            "location": "/Module-Isolator/#description", 
+            "text": "Warden can push terrorists to isolator", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/Module-Isolator/#configuration", 
+            "text": "Config file is located by this path: cfg/jwp/isolator.cfg  // Roof model of isolator\n// -\n// Default:  \njwp_isolator_roof  \n\n// Distance between floor and roof in units\n// -\n// Default:  125 \n// Minimum:  50 \n// Maximum:  500 \njwp_isolator_roof_dist  125 \n\n// Sound in isolator. Make   for no sound\n// -\n// Default:  ambient/machines/power_transformer_loop_1.wav \njwp_isolator_sound  ambient/machines/power_transformer_loop_1.wav \n\n// Walls model of isolator\n// -\n// Default:  models/props/de_train/chainlinkgate.mdl \njwp_isolator_wall  models/props/de_train/chainlinkgate.mdl \n\n// Distance between center and wall\n// -\n// Default:  80 \n// Minimum:  15 \n// Maximum:  200 \njwp_isolator_wall_dist  80", 
+            "title": "Configuration"
+        }, 
+        {
+            "location": "/Module-Isolator/#how-to-add-to-menu", 
+            "text": "Add this section in  warden_menu.txt . Field  flag  supports admin flags.  isolator \n{\n     flag    \n}", 
+            "title": "How to add to menu"
+        }, 
+        {
+            "location": "/Module-Isolator/#files-that-corresponding-to-this-module", 
+            "text": "addons/sourcemod/scripting/jwp_isolator.sp  \u2014 source file  addons/sourcemod/plugins/jwp_isolator.smx  \u2014 binary file  addons/sourcemod/translations/jwp_modules.phrases.txt  \u2014 translations file", 
+            "title": "Files that corresponding to this module"
+        }, 
+        {
+            "location": "/Module-Isolator/#for-developers", 
+            "text": "Natives that associated with this module  /**\n *  Function to check if player in isolator\n *  -\n *  @param client           Client index\n *  -\n *  @return true if player in isolator, false otherwise\n */\nnative bool JWP_IsPrisonerIsolated(int client);\n\n/**\n *  Function to set player in isolator\n *  -\n *  @param client           Client index\n *  @param state            True to push into isolator, or false to bring him back\n *  -\n *  @return true if player state has been successfully changed, false otherwise\n */\nnative bool JWP_PrisonerIsolated(int client, bool state = true);", 
+            "title": "For developers"
+        }, 
+        {
+            "location": "/Module-Laserbeam/", 
+            "text": "Description\n\n\n\n\nWarden can place following beam for T. He also can grant permission to paint T on walls.\nIf T has access to paint, he can type sm_lpaints to choose color of their paint.\n\n\n\n\nConfiguration\n\n\nConfig file is located by this path:\n\ncfg/jwp/laserbeam.cfg\n\n\n// Warden can give this feature to terrorists\n// -\n// Default: \n1\n\n// Minimum: \n0.000000\n\n// Maximum: \n1.000000\n\njwp_laserbeam_t_feature \n1\n\n\n\n\n\nFile with colors, you can add your own\n\ncfg/jwp/laserbeam/colors.txt\n\n\nHow to add to menu\n\n\nAdd this section in \nwarden_menu.txt\n. Field \nflag\n supports admin flags.\n\n\nlaserbeam\n\n{\n    \nflag\n  \n\n}\n\n\n\n\nFiles that corresponding to this module\n\n\n\n\naddons/sourcemod/scripting/jwp_laserbeam.sp\n \u2014 source file\n\n\naddons/sourcemod/plugins/jwp_laserbeam.smx\n \u2014 binary file\n\n\naddons/sourcemod/translations/jwp_modules.phrases.txt\n \u2014 translations file", 
+            "title": "Laserbeam"
+        }, 
+        {
+            "location": "/Module-Laserbeam/#description", 
+            "text": "Warden can place following beam for T. He also can grant permission to paint T on walls.\nIf T has access to paint, he can type sm_lpaints to choose color of their paint.", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/Module-Laserbeam/#configuration", 
+            "text": "Config file is located by this path: cfg/jwp/laserbeam.cfg  // Warden can give this feature to terrorists\n// -\n// Default:  1 \n// Minimum:  0.000000 \n// Maximum:  1.000000 \njwp_laserbeam_t_feature  1   File with colors, you can add your own cfg/jwp/laserbeam/colors.txt", 
+            "title": "Configuration"
+        }, 
+        {
+            "location": "/Module-Laserbeam/#how-to-add-to-menu", 
+            "text": "Add this section in  warden_menu.txt . Field  flag  supports admin flags.  laserbeam \n{\n     flag    \n}", 
+            "title": "How to add to menu"
+        }, 
+        {
+            "location": "/Module-Laserbeam/#files-that-corresponding-to-this-module", 
+            "text": "addons/sourcemod/scripting/jwp_laserbeam.sp  \u2014 source file  addons/sourcemod/plugins/jwp_laserbeam.smx  \u2014 binary file  addons/sourcemod/translations/jwp_modules.phrases.txt  \u2014 translations file", 
+            "title": "Files that corresponding to this module"
+        }, 
+        {
+            "location": "/Module-ManualColoring/", 
+            "text": "Description\n\n\n\n\nWarden can set the color of T.\n\n\n\n\nConfiguration\n\n\nConfig file is located by this path:\nFile with colors, you can add your own\n\ncfg/jwp/colors/mcolors.txt\n\n\nHow to add to menu\n\n\nAdd this section in \nwarden_menu.txt\n. Field \nflag\n supports admin flags.\n\n\nmcoloring\n\n{\n    \nflag\n  \n\n}\n\n\n\n\nFiles that corresponding to this module\n\n\n\n\naddons/sourcemod/scripting/jwp_mcoloring.sp\n \u2014 source file\n\n\naddons/sourcemod/plugins/jwp_mcoloring.smx\n \u2014 binary file\n\n\naddons/sourcemod/translations/jwp_modules.phrases.txt\n \u2014 translations file", 
+            "title": "Manual Coloring"
+        }, 
+        {
+            "location": "/Module-ManualColoring/#description", 
+            "text": "Warden can set the color of T.", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/Module-ManualColoring/#configuration", 
+            "text": "Config file is located by this path:\nFile with colors, you can add your own cfg/jwp/colors/mcolors.txt", 
+            "title": "Configuration"
+        }, 
+        {
+            "location": "/Module-ManualColoring/#how-to-add-to-menu", 
+            "text": "Add this section in  warden_menu.txt . Field  flag  supports admin flags.  mcoloring \n{\n     flag    \n}", 
+            "title": "How to add to menu"
+        }, 
+        {
+            "location": "/Module-ManualColoring/#files-that-corresponding-to-this-module", 
+            "text": "addons/sourcemod/scripting/jwp_mcoloring.sp  \u2014 source file  addons/sourcemod/plugins/jwp_mcoloring.smx  \u2014 binary file  addons/sourcemod/translations/jwp_modules.phrases.txt  \u2014 translations file", 
+            "title": "Files that corresponding to this module"
+        }, 
+        {
+            "location": "/Module-Mute/", 
+            "text": "Description\n\n\n\n\nWarden can mute/unmute T.\n\n\n\n\nConfiguration\n\n\nConfig file is located by this path:\n\ncfg/jwp/mute.cfg\n\n\n// Mute all terrorists on time. 0 - disable\n// -\n// Default: \n0\n\n// Minimum: \n0\n\n// Maximum: \n600\n\njwp_mute_on_time \n0\n\n\n\n\n\nHow to add to menu\n\n\nAdd this section in \nwarden_menu.txt\n. Field \nflag\n supports admin flags.\nYou can remove one of them if you need this.\n\n\nmute_give\n\n{\n    \nflag\n  \n\n}\n\nmute_take\n\n{\n    \nflag\n  \n\n}\n\n\n\n\nFiles that corresponding to this module\n\n\n\n\naddons/sourcemod/scripting/jwp_mute.sp\n \u2014 source file\n\n\naddons/sourcemod/plugins/jwp_mute.smx\n \u2014 binary file\n\n\naddons/sourcemod/translations/jwp_modules.phrases.txt\n \u2014 translations file", 
+            "title": "Mute"
+        }, 
+        {
+            "location": "/Module-Mute/#description", 
+            "text": "Warden can mute/unmute T.", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/Module-Mute/#configuration", 
+            "text": "Config file is located by this path: cfg/jwp/mute.cfg  // Mute all terrorists on time. 0 - disable\n// -\n// Default:  0 \n// Minimum:  0 \n// Maximum:  600 \njwp_mute_on_time  0", 
+            "title": "Configuration"
+        }, 
+        {
+            "location": "/Module-Mute/#how-to-add-to-menu", 
+            "text": "Add this section in  warden_menu.txt . Field  flag  supports admin flags.\nYou can remove one of them if you need this.  mute_give \n{\n     flag    \n} mute_take \n{\n     flag    \n}", 
+            "title": "How to add to menu"
+        }, 
+        {
+            "location": "/Module-Mute/#files-that-corresponding-to-this-module", 
+            "text": "addons/sourcemod/scripting/jwp_mute.sp  \u2014 source file  addons/sourcemod/plugins/jwp_mute.smx  \u2014 binary file  addons/sourcemod/translations/jwp_modules.phrases.txt  \u2014 translations file", 
+            "title": "Files that corresponding to this module"
+        }, 
+        {
+            "location": "/Module-Noblock/", 
+            "text": "Description\n\n\n\n\nWarden can toggle noblock\n\n\n\n\nConfiguration\n\n\n\n\nThis module has no configuration\n\n\n\n\nHow to add to menu\n\n\nAdd this section in \nwarden_menu.txt\n. Field \nflag\n supports admin flags.\n\n\nnoblock\n\n{\n    \nflag\n  \n\n}\n\n\n\n\nFiles that corresponding to this module\n\n\n\n\naddons/sourcemod/scripting/jwp_noblock.sp\n \u2014 source file\n\n\naddons/sourcemod/plugins/jwp_noblock.smx\n \u2014 binary file\n\n\naddons/sourcemod/translations/jwp_modules.phrases.txt\n \u2014 translations file", 
+            "title": "Noblock"
+        }, 
+        {
+            "location": "/Module-Noblock/#description", 
+            "text": "Warden can toggle noblock", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/Module-Noblock/#configuration", 
+            "text": "This module has no configuration", 
+            "title": "Configuration"
+        }, 
+        {
+            "location": "/Module-Noblock/#how-to-add-to-menu", 
+            "text": "Add this section in  warden_menu.txt . Field  flag  supports admin flags.  noblock \n{\n     flag    \n}", 
+            "title": "How to add to menu"
+        }, 
+        {
+            "location": "/Module-Noblock/#files-that-corresponding-to-this-module", 
+            "text": "addons/sourcemod/scripting/jwp_noblock.sp  \u2014 source file  addons/sourcemod/plugins/jwp_noblock.smx  \u2014 binary file  addons/sourcemod/translations/jwp_modules.phrases.txt  \u2014 translations file", 
+            "title": "Files that corresponding to this module"
+        }, 
+        {
+            "location": "/Module-On-Lr-Started/", 
+            "text": "Description\n\n\n\n\nIf last request started, warden will be resigned automatically\n\n\n\n\nConfiguration\n\n\n\n\nThis module has no configuration\n\n\n\n\nHow to add to menu\n\n\n\n\nThis module has no menu interface\n\n\n\n\nFiles that corresponding to this module\n\n\n\n\naddons/sourcemod/scripting/jwp_onlrstarted.sp\n \u2014 source file\n\n\naddons/sourcemod/plugins/jwp_onlrstarted.smx\n \u2014 binary file", 
+            "title": "On Lr Started"
+        }, 
+        {
+            "location": "/Module-On-Lr-Started/#description", 
+            "text": "If last request started, warden will be resigned automatically", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/Module-On-Lr-Started/#configuration", 
+            "text": "This module has no configuration", 
+            "title": "Configuration"
+        }, 
+        {
+            "location": "/Module-On-Lr-Started/#how-to-add-to-menu", 
+            "text": "This module has no menu interface", 
+            "title": "How to add to menu"
+        }, 
+        {
+            "location": "/Module-On-Lr-Started/#files-that-corresponding-to-this-module", 
+            "text": "addons/sourcemod/scripting/jwp_onlrstarted.sp  \u2014 source file  addons/sourcemod/plugins/jwp_onlrstarted.smx  \u2014 binary file", 
+            "title": "Files that corresponding to this module"
+        }, 
+        {
+            "location": "/Module-Order/", 
+            "text": "Description\n\n\n\n\nWarden can make orders\n\n\n\n\nConfiguration\n\n\nConfig file is located by this path:\n\ncfg/jwp/order.cfg\n\n\n// If 1, each message of warden is an order\n// -\n// Default: \n1\n\njwp_order_always \n1\n\n\n// Message of order\n// -\n// Default: \n{default}({green}{prefix}{default}) {red}{nick}: {default}{text}\n\njwp_order_msg \n{DEFAULT}({GREEN}{prefix}{DEFAULT}) {RED}{nick}: {DEFAULT}{text}\n\n\n// How many seconds panel active\n// -\n// Default: \n20\n\n// Minimum: \n1\n\n// Maximum: \n40\n\njwp_order_panel_time \n20\n\n\n// Enable panel order display\n// -\n// Default: \n0\n\n// Minimum: \n0\n\n// Maximum: \n1\n\njwp_order_panel \n0\n\n\n// Sound if recieved order\n// -\n// Default: \nbuttons/blip2.wav\n\njwp_order_sound \nbuttons/blip2.wav\n\n\n\n\n\nHow to add to menu\n\n\nAdd this section in \nwarden_menu.txt\n. Field \nflag\n supports admin flags.\n\n\norder\n\n{\n    \nflag\n  \n\n}\n\n\n\n\nFiles that corresponding to this module\n\n\n\n\ncfg/jwp/order.cfg\n \u2014 config file\n\n\naddons/sourcemod/scripting/jwp_order.sp\n \u2014 source file\n\n\naddons/sourcemod/plugins/jwp_order.smx\n \u2014 binary file\n\n\naddons/sourcemod/translations/jwp_modules.phrases.txt\n \u2014 translations file", 
+            "title": "Order"
+        }, 
+        {
+            "location": "/Module-Order/#description", 
+            "text": "Warden can make orders", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/Module-Order/#configuration", 
+            "text": "Config file is located by this path: cfg/jwp/order.cfg  // If 1, each message of warden is an order\n// -\n// Default:  1 \njwp_order_always  1 \n\n// Message of order\n// -\n// Default:  {default}({green}{prefix}{default}) {red}{nick}: {default}{text} \njwp_order_msg  {DEFAULT}({GREEN}{prefix}{DEFAULT}) {RED}{nick}: {DEFAULT}{text} \n\n// How many seconds panel active\n// -\n// Default:  20 \n// Minimum:  1 \n// Maximum:  40 \njwp_order_panel_time  20 \n\n// Enable panel order display\n// -\n// Default:  0 \n// Minimum:  0 \n// Maximum:  1 \njwp_order_panel  0 \n\n// Sound if recieved order\n// -\n// Default:  buttons/blip2.wav \njwp_order_sound  buttons/blip2.wav", 
+            "title": "Configuration"
+        }, 
+        {
+            "location": "/Module-Order/#how-to-add-to-menu", 
+            "text": "Add this section in  warden_menu.txt . Field  flag  supports admin flags.  order \n{\n     flag    \n}", 
+            "title": "How to add to menu"
+        }, 
+        {
+            "location": "/Module-Order/#files-that-corresponding-to-this-module", 
+            "text": "cfg/jwp/order.cfg  \u2014 config file  addons/sourcemod/scripting/jwp_order.sp  \u2014 source file  addons/sourcemod/plugins/jwp_order.smx  \u2014 binary file  addons/sourcemod/translations/jwp_modules.phrases.txt  \u2014 translations file", 
+            "title": "Files that corresponding to this module"
+        }, 
+        {
+            "location": "/Module-Otkaz/", 
+            "text": "Description\n\n\n\n\nCan watch Otkaz'es\n\n\n\n\nDependence\n\n\nFor module work, you need to be installed \nOtkaz\n\n\nConfiguration\n\n\n\n\nThis module has no configuration\n\n\n\n\nHow to add to menu\n\n\nAdd this section in \nwarden_menu.txt\n. Field \nflag\n supports admin flags.\n\n\notkaz\n\n{\n    \nflag\n  \n\n}\n\n\n\n\nFiles that corresponding to this module\n\n\n\n\naddons/sourcemod/scripting/jwp_otkaz_m.sp\n \u2014 source file\n\n\naddons/sourcemod/plugins/jwp_otkaz_m.smx\n \u2014 binary file\n\n\naddons/sourcemod/translations/jwp_modules.phrases.txt\n \u2014 translations file", 
+            "title": "Otkaz"
+        }, 
+        {
+            "location": "/Module-Otkaz/#description", 
+            "text": "Can watch Otkaz'es", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/Module-Otkaz/#dependence", 
+            "text": "For module work, you need to be installed  Otkaz", 
+            "title": "Dependence"
+        }, 
+        {
+            "location": "/Module-Otkaz/#configuration", 
+            "text": "This module has no configuration", 
+            "title": "Configuration"
+        }, 
+        {
+            "location": "/Module-Otkaz/#how-to-add-to-menu", 
+            "text": "Add this section in  warden_menu.txt . Field  flag  supports admin flags.  otkaz \n{\n     flag    \n}", 
+            "title": "How to add to menu"
+        }, 
+        {
+            "location": "/Module-Otkaz/#files-that-corresponding-to-this-module", 
+            "text": "addons/sourcemod/scripting/jwp_otkaz_m.sp  \u2014 source file  addons/sourcemod/plugins/jwp_otkaz_m.smx  \u2014 binary file  addons/sourcemod/translations/jwp_modules.phrases.txt  \u2014 translations file", 
+            "title": "Files that corresponding to this module"
+        }, 
+        {
+            "location": "/Module-Playsound/", 
+            "text": "Description\n\n\n\n\nWarden can play sound\n\n\n\n\nConfiguration\n\n\nConfig file is located by this path:\n\ncfg/jwp/playsound.cfg\n\n\n// Sound path without sound dir\n// -\n// Default: \n\njwp_playsound_sound \n\n\n\n\n\nHow to add to menu\n\n\nAdd this section in \nwarden_menu.txt\n. Field \nflag\n supports admin flags.\n\n\nplaysound\n\n{\n    \nflag\n  \n\n}\n\n\n\n\nFiles that corresponding to this module\n\n\n\n\naddons/sourcemod/scripting/jwp_playsound.sp\n \u2014 source file\n\n\naddons/sourcemod/plugins/jwp_playsound.smx\n \u2014 binary file\n\n\naddons/sourcemod/translations/jwp_modules.phrases.txt\n \u2014 translations file", 
+            "title": "Play Sound"
+        }, 
+        {
+            "location": "/Module-Playsound/#description", 
+            "text": "Warden can play sound", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/Module-Playsound/#configuration", 
+            "text": "Config file is located by this path: cfg/jwp/playsound.cfg  // Sound path without sound dir\n// -\n// Default:  \njwp_playsound_sound", 
+            "title": "Configuration"
+        }, 
+        {
+            "location": "/Module-Playsound/#how-to-add-to-menu", 
+            "text": "Add this section in  warden_menu.txt . Field  flag  supports admin flags.  playsound \n{\n     flag    \n}", 
+            "title": "How to add to menu"
+        }, 
+        {
+            "location": "/Module-Playsound/#files-that-corresponding-to-this-module", 
+            "text": "addons/sourcemod/scripting/jwp_playsound.sp  \u2014 source file  addons/sourcemod/plugins/jwp_playsound.smx  \u2014 binary file  addons/sourcemod/translations/jwp_modules.phrases.txt  \u2014 translations file", 
+            "title": "Files that corresponding to this module"
+        }, 
+        {
+            "location": "/Module-Prisoner-Counter/", 
+            "text": "Description\n\n\n\n\nWarden can count prisoners in his Field Of View\n\n\n\n\nConfiguration\n\n\nConfig file is located by this path:\n\ncfg/jwp/pris_counter.cfg\n\n\n// Include freeday players to search?\n// -\n// Default: \n1\n\n// Minimum: \n0.000000\n\n// Maximum: \n1.000000\n\njwp_pris_counter_fd \n1\n\n\n\n\n\nHow to add to menu\n\n\nAdd this section in \nwarden_menu.txt\n. Field \nflag\n supports admin flags.\n\n\npris_counter\n\n{\n    \nflag\n  \n\n}\n\n\n\n\nFiles that corresponding to this module\n\n\n\n\naddons/sourcemod/scripting/jwp_pris_counter.sp\n \u2014 source file\n\n\naddons/sourcemod/plugins/jwp_pris_counter.smx\n \u2014 binary file\n\n\naddons/sourcemod/translations/jwp_modules.phrases.txt\n \u2014 translations file", 
+            "title": "Count prisoners"
+        }, 
+        {
+            "location": "/Module-Prisoner-Counter/#description", 
+            "text": "Warden can count prisoners in his Field Of View", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/Module-Prisoner-Counter/#configuration", 
+            "text": "Config file is located by this path: cfg/jwp/pris_counter.cfg  // Include freeday players to search?\n// -\n// Default:  1 \n// Minimum:  0.000000 \n// Maximum:  1.000000 \njwp_pris_counter_fd  1", 
+            "title": "Configuration"
+        }, 
+        {
+            "location": "/Module-Prisoner-Counter/#how-to-add-to-menu", 
+            "text": "Add this section in  warden_menu.txt . Field  flag  supports admin flags.  pris_counter \n{\n     flag    \n}", 
+            "title": "How to add to menu"
+        }, 
+        {
+            "location": "/Module-Prisoner-Counter/#files-that-corresponding-to-this-module", 
+            "text": "addons/sourcemod/scripting/jwp_pris_counter.sp  \u2014 source file  addons/sourcemod/plugins/jwp_pris_counter.smx  \u2014 binary file  addons/sourcemod/translations/jwp_modules.phrases.txt  \u2014 translations file", 
+            "title": "Files that corresponding to this module"
+        }, 
+        {
+            "location": "/Module-Rebel/", 
+            "text": "Description\n\n\n\n\nWrites in chat chat who rebels\n\n\n\n\nConfiguration\n\n\nConfig file is located by this path:\n\ncfg/jwp/rebel.cfg\n\n\n// Alpha value of rebel in RGBA\n// -\n// Default: \n255\n\n// Minimum: \n0.000000\n\n// Maximum: \n255.000000\n\njwp_rebel_color_a \n255\n\n\n// Blue value of rebel in RGBA\n// -\n// Default: \n0\n\n// Minimum: \n0.000000\n\n// Maximum: \n255.000000\n\njwp_rebel_color_b \n0\n\n\n// Green value of rebel in RGBA\n// -\n// Default: \n0\n\n// Minimum: \n0.000000\n\n// Maximum: \n255.000000\n\njwp_rebel_color_g \n0\n\n\n// Red value of rebel in RGBA\n// -\n// Default: \n120\n\n// Minimum: \n0.000000\n\n// Maximum: \n255.000000\n\njwp_rebel_color_r \n120\n\n\n// Necessary amount of damage, that need to become rebel\n// -\n// Default: \n35\n\n// Minimum: \n1.000000\n\njwp_rebel_damage \n35\n\n\n// If T hurt CT, how many seconds T will be rebel? (0 = disable)\n// -\n// Default: \n5\n\n// Minimum: \n0.000000\n\njwp_rebel_sec \n5\n\n\n\n\n\nHow to add to menu\n\n\n\n\nThis module has no menu interface\n\n\n\n\nFiles that corresponding to this module\n\n\n\n\naddons/sourcemod/scripting/jwp_rebel.sp\n \u2014 source file\n\n\naddons/sourcemod/plugins/jwp_rebel.smx\n \u2014 binary file\n\n\naddons/sourcemod/translations/jwp_modules.phrases.txt\n \u2014 translations file\n\n\n\n\nFor developers\n\n\nNatives that associated with this module\n\n\n/**\n *  Function to check if player rebelling\n *  -\n *  @param client           Client index\n *  -\n *  @return true if player is rebel, false otherwise\n */\nnative bool JWP_IsPrisonerRebel(int client);\n\n/**\n *  Function to set player rebel state\n *  -\n *  @param client           Client index\n *  @param state            True to set player state as rebel, false to remove this state\n *  -\n *  @return true if player state has been successfully changed, false otherwise\n */\nnative bool JWP_PrisonerRebel(int client, bool state = true);", 
+            "title": "Rebel"
+        }, 
+        {
+            "location": "/Module-Rebel/#description", 
+            "text": "Writes in chat chat who rebels", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/Module-Rebel/#configuration", 
+            "text": "Config file is located by this path: cfg/jwp/rebel.cfg  // Alpha value of rebel in RGBA\n// -\n// Default:  255 \n// Minimum:  0.000000 \n// Maximum:  255.000000 \njwp_rebel_color_a  255 \n\n// Blue value of rebel in RGBA\n// -\n// Default:  0 \n// Minimum:  0.000000 \n// Maximum:  255.000000 \njwp_rebel_color_b  0 \n\n// Green value of rebel in RGBA\n// -\n// Default:  0 \n// Minimum:  0.000000 \n// Maximum:  255.000000 \njwp_rebel_color_g  0 \n\n// Red value of rebel in RGBA\n// -\n// Default:  120 \n// Minimum:  0.000000 \n// Maximum:  255.000000 \njwp_rebel_color_r  120 \n\n// Necessary amount of damage, that need to become rebel\n// -\n// Default:  35 \n// Minimum:  1.000000 \njwp_rebel_damage  35 \n\n// If T hurt CT, how many seconds T will be rebel? (0 = disable)\n// -\n// Default:  5 \n// Minimum:  0.000000 \njwp_rebel_sec  5", 
+            "title": "Configuration"
+        }, 
+        {
+            "location": "/Module-Rebel/#how-to-add-to-menu", 
+            "text": "This module has no menu interface", 
+            "title": "How to add to menu"
+        }, 
+        {
+            "location": "/Module-Rebel/#files-that-corresponding-to-this-module", 
+            "text": "addons/sourcemod/scripting/jwp_rebel.sp  \u2014 source file  addons/sourcemod/plugins/jwp_rebel.smx  \u2014 binary file  addons/sourcemod/translations/jwp_modules.phrases.txt  \u2014 translations file", 
+            "title": "Files that corresponding to this module"
+        }, 
+        {
+            "location": "/Module-Rebel/#for-developers", 
+            "text": "Natives that associated with this module  /**\n *  Function to check if player rebelling\n *  -\n *  @param client           Client index\n *  -\n *  @return true if player is rebel, false otherwise\n */\nnative bool JWP_IsPrisonerRebel(int client);\n\n/**\n *  Function to set player rebel state\n *  -\n *  @param client           Client index\n *  @param state            True to set player state as rebel, false to remove this state\n *  -\n *  @return true if player state has been successfully changed, false otherwise\n */\nnative bool JWP_PrisonerRebel(int client, bool state = true);", 
+            "title": "For developers"
+        }, 
+        {
+            "location": "/Module-Respawn/", 
+            "text": "Description\n\n\n\n\nWarden can respawn\n\n\n\n\nConfiguration\n\n\nConfig file is located by this path:\n\ncfg/jwp/respawn.cfg\n\n\n// Amount of respawns available for warden per round\n// -\n// Default: \n2\n\n// Minimum: \n0.000000\n\njwp_respawn_max \n2\n\n\n// Respawn mode: 0 - on spawn position, 1 - on aim position\n// -\n// Default: \n1\n\n// Minimum: \n0\n\n// Maximum: \n1\n\njwp_respawn_method \n1\n\n\n\n\n\nHow to add to menu\n\n\nAdd this section in \nwarden_menu.txt\n. Field \nflag\n supports admin flags.\n\n\nrespawn\n\n{\n    \nflag\n  \n\n}\n\n\n\n\nFiles that corresponding to this module\n\n\n\n\ncfg/jwp/respawn.cfg\n \u2014 config file\n\n\naddons/sourcemod/scripting/jwp_respawn.sp\n \u2014 source file\n\n\naddons/sourcemod/plugins/jwp_respawn.smx\n \u2014 binary file\n\n\naddons/sourcemod/translations/jwp_modules.phrases.txt\n \u2014 translations file", 
+            "title": "Respawn"
+        }, 
+        {
+            "location": "/Module-Respawn/#description", 
+            "text": "Warden can respawn", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/Module-Respawn/#configuration", 
+            "text": "Config file is located by this path: cfg/jwp/respawn.cfg  // Amount of respawns available for warden per round\n// -\n// Default:  2 \n// Minimum:  0.000000 \njwp_respawn_max  2 \n\n// Respawn mode: 0 - on spawn position, 1 - on aim position\n// -\n// Default:  1 \n// Minimum:  0 \n// Maximum:  1 \njwp_respawn_method  1", 
+            "title": "Configuration"
+        }, 
+        {
+            "location": "/Module-Respawn/#how-to-add-to-menu", 
+            "text": "Add this section in  warden_menu.txt . Field  flag  supports admin flags.  respawn \n{\n     flag    \n}", 
+            "title": "How to add to menu"
+        }, 
+        {
+            "location": "/Module-Respawn/#files-that-corresponding-to-this-module", 
+            "text": "cfg/jwp/respawn.cfg  \u2014 config file  addons/sourcemod/scripting/jwp_respawn.sp  \u2014 source file  addons/sourcemod/plugins/jwp_respawn.smx  \u2014 binary file  addons/sourcemod/translations/jwp_modules.phrases.txt  \u2014 translations file", 
+            "title": "Files that corresponding to this module"
+        }, 
+        {
+            "location": "/Module-Round-Extend/", 
+            "text": "Description\n\n\n\n\nWarden can extend round\n\n\n\n\nConfiguration\n\n\nConfig file is located by this path:\n\ncfg/jwp/round_extender.cfg\n\n\n// How many minutes to extend the round\n// -\n// Default: \n5\n\n// Minimum: \n1.000000\n\njwp_re_extend \n5\n\n\n// How many times warden can extend round per round\n// -\n// Default: \n1\n\n// Minimum: \n0.000000\n\njwp_re_limit \n1\n\n\n\n\n\nHow to add to menu\n\n\nAdd this section in \nwarden_menu.txt\n. Field \nflag\n supports admin flags.\n\n\nrextend\n\n{\n    \nflag\n  \n\n}\n\n\n\n\nFiles that corresponding to this module\n\n\n\n\ncfg/jwp/round_extender.cfg\n \u2014 config file\n\n\naddons/sourcemod/scripting/jwp_rextend.sp\n \u2014 source file\n\n\naddons/sourcemod/plugins/jwp_rextend.smx\n \u2014 binary file\n\n\naddons/sourcemod/translations/jwp_modules.phrases.txt\n \u2014 translations file", 
+            "title": "Round Extend"
+        }, 
+        {
+            "location": "/Module-Round-Extend/#description", 
+            "text": "Warden can extend round", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/Module-Round-Extend/#configuration", 
+            "text": "Config file is located by this path: cfg/jwp/round_extender.cfg  // How many minutes to extend the round\n// -\n// Default:  5 \n// Minimum:  1.000000 \njwp_re_extend  5 \n\n// How many times warden can extend round per round\n// -\n// Default:  1 \n// Minimum:  0.000000 \njwp_re_limit  1", 
+            "title": "Configuration"
+        }, 
+        {
+            "location": "/Module-Round-Extend/#how-to-add-to-menu", 
+            "text": "Add this section in  warden_menu.txt . Field  flag  supports admin flags.  rextend \n{\n     flag    \n}", 
+            "title": "How to add to menu"
+        }, 
+        {
+            "location": "/Module-Round-Extend/#files-that-corresponding-to-this-module", 
+            "text": "cfg/jwp/round_extender.cfg  \u2014 config file  addons/sourcemod/scripting/jwp_rextend.sp  \u2014 source file  addons/sourcemod/plugins/jwp_rextend.smx  \u2014 binary file  addons/sourcemod/translations/jwp_modules.phrases.txt  \u2014 translations file", 
+            "title": "Files that corresponding to this module"
+        }, 
+        {
+            "location": "/Module-Shootguns/", 
+            "text": "Description\n\n\n\n\nRemove guns on ground by shoot on them\n\n\n\n\nConfiguration\n\n\nConfig file is located by this path:\n\ncfg/jwp/shootguns.cfg\n\n\n// Who can remove weapons on shoot 1 - warden / 2 - warden \n deputy / 3 - every ct\n// -\n// Default: \n2\n\n// Minimum: \n1.000000\n\n// Maximum: \n3.000000\n\njwp_shootguns_access \n2\n\n\n\n\n\nHow to add to menu\n\n\n\n\nThis module has no menu interface\n\n\n\n\nFiles that corresponding to this module\n\n\n\n\ncfg/jwp/shootguns.cfg\n \u2014 config file\n\n\naddons/sourcemod/scripting/jwp_shootguns.sp\n \u2014 source file\n\n\naddons/sourcemod/plugins/jwp_shootguns.smx\n \u2014 binary file\n\n\naddons/sourcemod/translations/jwp_modules.phrases.txt\n \u2014 translations file", 
+            "title": "Shoot Guns"
+        }, 
+        {
+            "location": "/Module-Shootguns/#description", 
+            "text": "Remove guns on ground by shoot on them", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/Module-Shootguns/#configuration", 
+            "text": "Config file is located by this path: cfg/jwp/shootguns.cfg  // Who can remove weapons on shoot 1 - warden / 2 - warden   deputy / 3 - every ct\n// -\n// Default:  2 \n// Minimum:  1.000000 \n// Maximum:  3.000000 \njwp_shootguns_access  2", 
+            "title": "Configuration"
+        }, 
+        {
+            "location": "/Module-Shootguns/#how-to-add-to-menu", 
+            "text": "This module has no menu interface", 
+            "title": "How to add to menu"
+        }, 
+        {
+            "location": "/Module-Shootguns/#files-that-corresponding-to-this-module", 
+            "text": "cfg/jwp/shootguns.cfg  \u2014 config file  addons/sourcemod/scripting/jwp_shootguns.sp  \u2014 source file  addons/sourcemod/plugins/jwp_shootguns.smx  \u2014 binary file  addons/sourcemod/translations/jwp_modules.phrases.txt  \u2014 translations file", 
+            "title": "Files that corresponding to this module"
+        }, 
+        {
+            "location": "/Module-Skin/", 
+            "text": "Description\n\n\n\n\nThis module sets models(skins) on warden/zam/ct/t\n\n\n\n\nConfiguration\n\n\nConfig file is located by this path:\n\ncfg/jwp/skin.cfg\n\n\n// Set model on warden, leave empty for default model\n// -\n// Default: \n\njwp_warden_skin \n\n\n// Set model on deputy(zam), leave empty for default model\n// -\n// Default: \n\njwp_warden_zam_skin \n\n\n// Enable auto-set model on T team. Needed file t_models.txt\n// -\n// Default: \n0\n\njwp_random_t_skins \n0\n\n\n// Enable auto-set model on CT team. Needed file ct_models.txt\n// -\n// Default: \n0\n\njwp_random_ct_skins \n0\n\n\n\n\n\nFile with models on T/CT teams, you can add your own\n\ncfg/jwp/skin/t_models.txt\n\n\ncfg/jwp/skin/ct_models.txt\n\n\nHow to add to menu\n\n\n\n\nThis module has no menu interface\n\n\n\n\nFiles that corresponding to this module\n\n\n\n\ncfg/jwp/skin.cfg\n \u2014 config file\n\n\ncfg/jwp/skin/t_models.txt\n \u2014 t models\n\n\ncfg/jwp/skin/ct_models.txt\n \u2014 ct models\n\n\naddons/sourcemod/scripting/jwp_skin.sp\n \u2014 source file\n\n\naddons/sourcemod/plugins/jwp_skin.smx\n \u2014 binary file", 
+            "title": "Skin"
+        }, 
+        {
+            "location": "/Module-Skin/#description", 
+            "text": "This module sets models(skins) on warden/zam/ct/t", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/Module-Skin/#configuration", 
+            "text": "Config file is located by this path: cfg/jwp/skin.cfg  // Set model on warden, leave empty for default model\n// -\n// Default:  \njwp_warden_skin  \n\n// Set model on deputy(zam), leave empty for default model\n// -\n// Default:  \njwp_warden_zam_skin  \n\n// Enable auto-set model on T team. Needed file t_models.txt\n// -\n// Default:  0 \njwp_random_t_skins  0 \n\n// Enable auto-set model on CT team. Needed file ct_models.txt\n// -\n// Default:  0 \njwp_random_ct_skins  0   File with models on T/CT teams, you can add your own cfg/jwp/skin/t_models.txt  cfg/jwp/skin/ct_models.txt", 
+            "title": "Configuration"
+        }, 
+        {
+            "location": "/Module-Skin/#how-to-add-to-menu", 
+            "text": "This module has no menu interface", 
+            "title": "How to add to menu"
+        }, 
+        {
+            "location": "/Module-Skin/#files-that-corresponding-to-this-module", 
+            "text": "cfg/jwp/skin.cfg  \u2014 config file  cfg/jwp/skin/t_models.txt  \u2014 t models  cfg/jwp/skin/ct_models.txt  \u2014 ct models  addons/sourcemod/scripting/jwp_skin.sp  \u2014 source file  addons/sourcemod/plugins/jwp_skin.smx  \u2014 binary file", 
+            "title": "Files that corresponding to this module"
+        }, 
+        {
+            "location": "/Module-Slay/", 
+            "text": "Description\n\n\n\n\nWarden can slay prisoners\n\n\n\n\nConfiguration\n\n\n\n\nThis module has no configuration\n\n\n\n\nHow to add to menu\n\n\nAdd this section in \nwarden_menu.txt\n. Field \nflag\n supports admin flags.\n\n\nslay\n\n{\n    \nflag\n  \n\n}\n\n\n\n\nFiles that corresponding to this module\n\n\n\n\naddons/sourcemod/scripting/jwp_slay.sp\n \u2014 source file\n\n\naddons/sourcemod/plugins/jwp_slay.smx\n \u2014 binary file\n\n\naddons/sourcemod/translations/jwp_modules.phrases.txt\n \u2014 translations file", 
+            "title": "Slay"
+        }, 
+        {
+            "location": "/Module-Slay/#description", 
+            "text": "Warden can slay prisoners", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/Module-Slay/#configuration", 
+            "text": "This module has no configuration", 
+            "title": "Configuration"
+        }, 
+        {
+            "location": "/Module-Slay/#how-to-add-to-menu", 
+            "text": "Add this section in  warden_menu.txt . Field  flag  supports admin flags.  slay \n{\n     flag    \n}", 
+            "title": "How to add to menu"
+        }, 
+        {
+            "location": "/Module-Slay/#files-that-corresponding-to-this-module", 
+            "text": "addons/sourcemod/scripting/jwp_slay.sp  \u2014 source file  addons/sourcemod/plugins/jwp_slay.smx  \u2014 binary file  addons/sourcemod/translations/jwp_modules.phrases.txt  \u2014 translations file", 
+            "title": "Files that corresponding to this module"
+        }, 
+        {
+            "location": "/Module-Speed/", 
+            "text": "Description\n\n\n\n\nWarden can toggle speed\n\n\n\n\nConfiguration\n\n\nConfig file is located by this path:\n\ncfg/jwp/speed.cfg\n\n\n// Warden speed\n// -\n// Default: \n1.5\n\n// Minimum: \n1.0\n\n// Maximum: \n3.0\n\njwp_warden_speed \n1.5\n\n\n\n\n\nHow to add to menu\n\n\nAdd this section in \nwarden_menu.txt\n. Field \nflag\n supports admin flags.\n\n\nspeed\n\n{\n    \nflag\n  \n\n}\n\n\n\n\nFiles that corresponding to this module\n\n\n\n\naddons/sourcemod/scripting/jwp_speed.sp\n \u2014 source file\n\n\naddons/sourcemod/plugins/jwp_speed.smx\n \u2014 binary file\n\n\naddons/sourcemod/translations/jwp_modules.phrases.txt\n \u2014 translations file", 
+            "title": "Speed"
+        }, 
+        {
+            "location": "/Module-Speed/#description", 
+            "text": "Warden can toggle speed", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/Module-Speed/#configuration", 
+            "text": "Config file is located by this path: cfg/jwp/speed.cfg  // Warden speed\n// -\n// Default:  1.5 \n// Minimum:  1.0 \n// Maximum:  3.0 \njwp_warden_speed  1.5", 
+            "title": "Configuration"
+        }, 
+        {
+            "location": "/Module-Speed/#how-to-add-to-menu", 
+            "text": "Add this section in  warden_menu.txt . Field  flag  supports admin flags.  speed \n{\n     flag    \n}", 
+            "title": "How to add to menu"
+        }, 
+        {
+            "location": "/Module-Speed/#files-that-corresponding-to-this-module", 
+            "text": "addons/sourcemod/scripting/jwp_speed.sp  \u2014 source file  addons/sourcemod/plugins/jwp_speed.smx  \u2014 binary file  addons/sourcemod/translations/jwp_modules.phrases.txt  \u2014 translations file", 
+            "title": "Files that corresponding to this module"
+        }, 
+        {
+            "location": "/Module-Stoplr/", 
+            "text": "Description\n\n\n\n\nWarden can stop last request\n\n\n\n\nConfiguration\n\n\nConfig file is located by this path:\n\ncfg/jwp/stoplr.cfg\n\n\n// How many times warden can stop Last Request\n// -\n// Default: \n2\n\njwp_stoplr_max \n2\n\n\n\n\n\nHow to add to menu\n\n\nAdd this section in \nwarden_menu.txt\n. Field \nflag\n supports admin flags.\n\n\nstoplr\n\n{\n    \nflag\n  \n\n}\n\n\n\n\nFiles that corresponding to this module\n\n\n\n\ncfg/jwp/stoplr.cfg\n \u2014 config file\n\n\naddons/sourcemod/scripting/jwp_stoplr.sp\n \u2014 source file\n\n\naddons/sourcemod/plugins/jwp_stoplr.smx\n \u2014 binary file\n\n\naddons/sourcemod/translations/jwp_modules.phrases.txt\n \u2014 translations file", 
+            "title": "Stop LR"
+        }, 
+        {
+            "location": "/Module-Stoplr/#description", 
+            "text": "Warden can stop last request", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/Module-Stoplr/#configuration", 
+            "text": "Config file is located by this path: cfg/jwp/stoplr.cfg  // How many times warden can stop Last Request\n// -\n// Default:  2 \njwp_stoplr_max  2", 
+            "title": "Configuration"
+        }, 
+        {
+            "location": "/Module-Stoplr/#how-to-add-to-menu", 
+            "text": "Add this section in  warden_menu.txt . Field  flag  supports admin flags.  stoplr \n{\n     flag    \n}", 
+            "title": "How to add to menu"
+        }, 
+        {
+            "location": "/Module-Stoplr/#files-that-corresponding-to-this-module", 
+            "text": "cfg/jwp/stoplr.cfg  \u2014 config file  addons/sourcemod/scripting/jwp_stoplr.sp  \u2014 source file  addons/sourcemod/plugins/jwp_stoplr.smx  \u2014 binary file  addons/sourcemod/translations/jwp_modules.phrases.txt  \u2014 translations file", 
+            "title": "Files that corresponding to this module"
+        }, 
+        {
+            "location": "/Module-Strip-Knife/", 
+            "text": "Description\n\n\n\n\nWarden can strip knife from terrorist\n\n\n\n\nConfiguration\n\n\n\n\nThis module has no configuration\n\n\n\n\nHow to add to menu\n\n\nAdd this section in \nwarden_menu.txt\n. Field \nflag\n supports admin flags.\n\n\nstripknife\n\n{\n    \nflag\n  \n\n}\n\n\n\n\nFiles that corresponding to this module\n\n\n\n\naddons/sourcemod/scripting/jwp_stripknife.sp\n \u2014 source file\n\n\naddons/sourcemod/plugins/jwp_stripknife.smx\n \u2014 binary file\n\n\naddons/sourcemod/translations/jwp_modules.phrases.txt\n \u2014 translations file", 
+            "title": "Strip Knife"
+        }, 
+        {
+            "location": "/Module-Strip-Knife/#description", 
+            "text": "Warden can strip knife from terrorist", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/Module-Strip-Knife/#configuration", 
+            "text": "This module has no configuration", 
+            "title": "Configuration"
+        }, 
+        {
+            "location": "/Module-Strip-Knife/#how-to-add-to-menu", 
+            "text": "Add this section in  warden_menu.txt . Field  flag  supports admin flags.  stripknife \n{\n     flag    \n}", 
+            "title": "How to add to menu"
+        }, 
+        {
+            "location": "/Module-Strip-Knife/#files-that-corresponding-to-this-module", 
+            "text": "addons/sourcemod/scripting/jwp_stripknife.sp  \u2014 source file  addons/sourcemod/plugins/jwp_stripknife.smx  \u2014 binary file  addons/sourcemod/translations/jwp_modules.phrases.txt  \u2014 translations file", 
+            "title": "Files that corresponding to this module"
+        }, 
+        {
+            "location": "/Module-To-Jail/", 
+            "text": "Description\n\n\n\n\nWarden teleport prisoner back to jail\n\n\n\n\nConfiguration\n\n\n\n\nThis module has no configuration\n\n\n\n\nHow to add to menu\n\n\nAdd this section in \nwarden_menu.txt\n. Field \nflag\n supports admin flags.\n\n\ntojail\n\n{\n    \nflag\n  \n\n}\n\n\n\n\nFiles that corresponding to this module\n\n\n\n\naddons/sourcemod/scripting/jwp_tojail.sp\n \u2014 source file\n\n\naddons/sourcemod/plugins/jwp_tojail.smx\n \u2014 binary file\n\n\naddons/sourcemod/translations/jwp_modules.phrases.txt\n \u2014 translations file", 
+            "title": "TP to Jail"
+        }, 
+        {
+            "location": "/Module-To-Jail/#description", 
+            "text": "Warden teleport prisoner back to jail", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/Module-To-Jail/#configuration", 
+            "text": "This module has no configuration", 
+            "title": "Configuration"
+        }, 
+        {
+            "location": "/Module-To-Jail/#how-to-add-to-menu", 
+            "text": "Add this section in  warden_menu.txt . Field  flag  supports admin flags.  tojail \n{\n     flag    \n}", 
+            "title": "How to add to menu"
+        }, 
+        {
+            "location": "/Module-To-Jail/#files-that-corresponding-to-this-module", 
+            "text": "addons/sourcemod/scripting/jwp_tojail.sp  \u2014 source file  addons/sourcemod/plugins/jwp_tojail.smx  \u2014 binary file  addons/sourcemod/translations/jwp_modules.phrases.txt  \u2014 translations file", 
+            "title": "Files that corresponding to this module"
+        }, 
+        {
+            "location": "/Module-Transfer-Warden/", 
+            "text": "Description\n\n\n\n\nTransfer warden rights to another player\n\n\n\n\nConfiguration\n\n\n\n\nThis module has no configuration\n\n\n\n\nHow to add to menu\n\n\nAdd this section in \nwarden_menu.txt\n. Field \nflag\n supports admin flags.\n\n\ntranswarden\n\n{\n    \nflag\n  \n\n}\n\n\n\n\nFiles that corresponding to this module\n\n\n\n\naddons/sourcemod/scripting/jwp_transwarden.sp\n \u2014 source file\n\n\naddons/sourcemod/plugins/jwp_transwarden.smx\n \u2014 binary file\n\n\naddons/sourcemod/translations/jwp_modules.phrases.txt\n \u2014 translations file", 
+            "title": "Transfer Warden"
+        }, 
+        {
+            "location": "/Module-Transfer-Warden/#description", 
+            "text": "Transfer warden rights to another player", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/Module-Transfer-Warden/#configuration", 
+            "text": "This module has no configuration", 
+            "title": "Configuration"
+        }, 
+        {
+            "location": "/Module-Transfer-Warden/#how-to-add-to-menu", 
+            "text": "Add this section in  warden_menu.txt . Field  flag  supports admin flags.  transwarden \n{\n     flag    \n}", 
+            "title": "How to add to menu"
+        }, 
+        {
+            "location": "/Module-Transfer-Warden/#files-that-corresponding-to-this-module", 
+            "text": "addons/sourcemod/scripting/jwp_transwarden.sp  \u2014 source file  addons/sourcemod/plugins/jwp_transwarden.smx  \u2014 binary file  addons/sourcemod/translations/jwp_modules.phrases.txt  \u2014 translations file", 
+            "title": "Files that corresponding to this module"
+        }, 
+        {
+            "location": "/Module-Warden-Color/", 
+            "text": "Description\n\n\n\n\nColor for warden and him deputy(zam)\n\n\n\n\nConfiguration\n\n\nConfig file is located by this path:\n\ncfg/jwp/wcolor.cfg\n\n\n// Alpha color of warden (rgba)\n// -\n// Default: \n255\n\n// Minimum: \n0\n\n// Maximum: \n255\n\njwp_warden_color_a \n255\n\n\n// Blue color of warden (rgba)\n// -\n// Default: \n0\n\n// Minimum: \n0\n\n// Maximum: \n255\n\njwp_warden_color_b \n0\n\n\n// Green color of warden (rgba)\n// -\n// Default: \n255\n\n// Minimum: \n0\n\n// Maximum: \n255\n\njwp_warden_color_g \n255\n\n\n// Red color of warden (rgba)\n// -\n// Default: \n255\n\n// Minimum: \n0\n\n// Maximum: \n255\n\njwp_warden_color_r \n255\n\n\n// Alpha color of deputy (rgba)\n// -\n// Default: \n255\n\n// Minimum: \n0\n\n// Maximum: \n255\n\njwp_warden_zam_color_a \n255\n\n\n// Blue color of deputy (rgba)\n// -\n// Default: \n255\n\n// Minimum: \n0\n\n// Maximum: \n255\n\njwp_warden_zam_color_b \n255\n\n\n// Green color of deputy (rgba)\n// -\n// Default: \n255\n\n// Minimum: \n0\n\n// Maximum: \n255\n\njwp_warden_zam_color_g \n255\n\n\n// Red color of deputy (rgba)\n// -\n// Default: \n0\n\n// Minimum: \n0\n\n// Maximum: \n255\n\njwp_warden_zam_color_r \n0\n\n\n\n\n\nHow to add to menu\n\n\n\n\nThis module has no menu interface\n\n\n\n\nFiles that corresponding to this module\n\n\n\n\ncfg/jwp/wcolor.cfg\n \u2014 config file\n\n\naddons/sourcemod/scripting/jwp_wcolor.sp\n \u2014 source file\n\n\naddons/sourcemod/plugins/jwp_wcolor.smx\n \u2014 binary file", 
+            "title": "Warden Color"
+        }, 
+        {
+            "location": "/Module-Warden-Color/#description", 
+            "text": "Color for warden and him deputy(zam)", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/Module-Warden-Color/#configuration", 
+            "text": "Config file is located by this path: cfg/jwp/wcolor.cfg  // Alpha color of warden (rgba)\n// -\n// Default:  255 \n// Minimum:  0 \n// Maximum:  255 \njwp_warden_color_a  255 \n\n// Blue color of warden (rgba)\n// -\n// Default:  0 \n// Minimum:  0 \n// Maximum:  255 \njwp_warden_color_b  0 \n\n// Green color of warden (rgba)\n// -\n// Default:  255 \n// Minimum:  0 \n// Maximum:  255 \njwp_warden_color_g  255 \n\n// Red color of warden (rgba)\n// -\n// Default:  255 \n// Minimum:  0 \n// Maximum:  255 \njwp_warden_color_r  255 \n\n// Alpha color of deputy (rgba)\n// -\n// Default:  255 \n// Minimum:  0 \n// Maximum:  255 \njwp_warden_zam_color_a  255 \n\n// Blue color of deputy (rgba)\n// -\n// Default:  255 \n// Minimum:  0 \n// Maximum:  255 \njwp_warden_zam_color_b  255 \n\n// Green color of deputy (rgba)\n// -\n// Default:  255 \n// Minimum:  0 \n// Maximum:  255 \njwp_warden_zam_color_g  255 \n\n// Red color of deputy (rgba)\n// -\n// Default:  0 \n// Minimum:  0 \n// Maximum:  255 \njwp_warden_zam_color_r  0", 
+            "title": "Configuration"
+        }, 
+        {
+            "location": "/Module-Warden-Color/#how-to-add-to-menu", 
+            "text": "This module has no menu interface", 
+            "title": "How to add to menu"
+        }, 
+        {
+            "location": "/Module-Warden-Color/#files-that-corresponding-to-this-module", 
+            "text": "cfg/jwp/wcolor.cfg  \u2014 config file  addons/sourcemod/scripting/jwp_wcolor.sp  \u2014 source file  addons/sourcemod/plugins/jwp_wcolor.smx  \u2014 binary file", 
+            "title": "Files that corresponding to this module"
+        }, 
+        {
+            "location": "/Module-Warden-Health/", 
+            "text": "Description\n\n\n\n\nHealth for warden and him deputy(zam)\n\n\n\n\nConfiguration\n\n\nConfig file is located by this path:\n\ncfg/jwp/whealth.cfg\n\n\n// Warden health\n// -\n// Default: \n150\n\n// Minimum: \n100.000000\n\njwp_warden_hp \n150\n\n\n// Zam warden health\n// -\n// Default: \n140\n\n// Minimum: \n100.000000\n\njwp_warden_zam_hp \n140\n\n\n\n\n\nHow to add to menu\n\n\n\n\nThis module has no menu interface\n\n\n\n\nFiles that corresponding to this module\n\n\n\n\ncfg/jwp/whealth.cfg\n \u2014 config file\n\n\naddons/sourcemod/scripting/jwp_whealth.sp\n \u2014 source file\n\n\naddons/sourcemod/plugins/jwp_whealth.smx\n \u2014 binary file", 
+            "title": "Warden Health"
+        }, 
+        {
+            "location": "/Module-Warden-Health/#description", 
+            "text": "Health for warden and him deputy(zam)", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/Module-Warden-Health/#configuration", 
+            "text": "Config file is located by this path: cfg/jwp/whealth.cfg  // Warden health\n// -\n// Default:  150 \n// Minimum:  100.000000 \njwp_warden_hp  150 \n\n// Zam warden health\n// -\n// Default:  140 \n// Minimum:  100.000000 \njwp_warden_zam_hp  140", 
+            "title": "Configuration"
+        }, 
+        {
+            "location": "/Module-Warden-Health/#how-to-add-to-menu", 
+            "text": "This module has no menu interface", 
+            "title": "How to add to menu"
+        }, 
+        {
+            "location": "/Module-Warden-Health/#files-that-corresponding-to-this-module", 
+            "text": "cfg/jwp/whealth.cfg  \u2014 config file  addons/sourcemod/scripting/jwp_whealth.sp  \u2014 source file  addons/sourcemod/plugins/jwp_whealth.smx  \u2014 binary file", 
+            "title": "Files that corresponding to this module"
+        }, 
+        {
+            "location": "/Module-Timer/", 
+            "text": "Description\n\n\n\n\nWarden can start/stop timer\n\n\n\n\nConfiguration\n\n\nConfig file is located by this path:\n\ncfg/jwp/wtimer.cfg\n\n\n// Maximum allowed time for timer\n// -\n// Default: \n600\n\n// Minimum: \n10.000000\n\n// Maximum: \n600.000000\n\njwp_wtimer_max \n600\n\n\n// Minimum allowed time for timer\n// -\n// Default: \n5\n\n// Minimum: \n5.000000\n\n// Maximum: \n10.000000\n\njwp_wtimer_min \n5\n\n\n\n\n\nHow to add to menu\n\n\nAdd this section in \nwarden_menu.txt\n. Field \nflag\n supports admin flags.\n\n\nwtimer\n\n{\n    \nflag\n  \n\n}\n\n\n\n\nFiles that corresponding to this module\n\n\n\n\ncfg/jwp/wtimer.cfg\n \u2014 config file\n\n\naddons/sourcemod/scripting/jwp_wtimer.sp\n \u2014 source file\n\n\naddons/sourcemod/plugins/jwp_wtimer.smx\n \u2014 binary file\n\n\naddons/sourcemod/translations/jwp_modules.phrases.txt\n \u2014 translations file", 
+            "title": "Timer"
+        }, 
+        {
+            "location": "/Module-Timer/#description", 
+            "text": "Warden can start/stop timer", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/Module-Timer/#configuration", 
+            "text": "Config file is located by this path: cfg/jwp/wtimer.cfg  // Maximum allowed time for timer\n// -\n// Default:  600 \n// Minimum:  10.000000 \n// Maximum:  600.000000 \njwp_wtimer_max  600 \n\n// Minimum allowed time for timer\n// -\n// Default:  5 \n// Minimum:  5.000000 \n// Maximum:  10.000000 \njwp_wtimer_min  5", 
+            "title": "Configuration"
+        }, 
+        {
+            "location": "/Module-Timer/#how-to-add-to-menu", 
+            "text": "Add this section in  warden_menu.txt . Field  flag  supports admin flags.  wtimer \n{\n     flag    \n}", 
+            "title": "How to add to menu"
+        }, 
+        {
+            "location": "/Module-Timer/#files-that-corresponding-to-this-module", 
+            "text": "cfg/jwp/wtimer.cfg  \u2014 config file  addons/sourcemod/scripting/jwp_wtimer.sp  \u2014 source file  addons/sourcemod/plugins/jwp_wtimer.smx  \u2014 binary file  addons/sourcemod/translations/jwp_modules.phrases.txt  \u2014 translations file", 
+            "title": "Files that corresponding to this module"
+        }
+    ]
+}
