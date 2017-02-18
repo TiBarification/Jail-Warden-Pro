@@ -1,0 +1,49 @@
+site_name: Jail Warden Pro
+site_url: https://hlmod.ru
+repo_url: https://github.com/TiBarification/Jail-Warden-Pro
+repo_name: GitHub
+site_author: TiBarification
+theme: readthedocs
+markdown_extensions:
+ - admonition
+ - attr_list
+ - def_list
+pages:
+ - Home: index.md
+ - Installation Guide: Installation-guide.md
+ - List of available modules for Core:
+   - Full list of modules: Modules.md
+   - Admin Control: Module-Admin-Control.md
+   - Be Quiet: Module-Be-Quiet.md
+   - Door Aim Control: Module-Door-Aim-Control.md
+   - Freeday No Bunt rebel: Module-Freeday-No-Bunt.md
+   - Friendly Fire: Module-Friendly-Fire.md
+   - Freeday: Module-Freeday.md
+   - Guns: Module-Guns.md
+   - Handcuffs: Module-Handcuffs.md
+   - Healthkit: Module-Healthkit.md
+   - Icon: Module-Icon.md
+   - Isolator: Module-Isolator.md
+   - Laserbeam: Module-Laserbeam.md
+   - Manual Coloring: Module-ManualColoring.md
+   - Mute: Module-Mute.md
+   - Noblock: Module-Noblock.md
+   - On Lr Started: Module-On-Lr-Started.md
+   - Order: Module-Order.md
+   - Otkaz: Module-Otkaz.md
+   - Play Sound: Module-Playsound.md
+   - Count prisoners: Module-Prisoner-Counter.md
+   - Rebel: Module-Rebel.md
+   - Respawn: Module-Respawn.md
+   - Round Extend: Module-Round-Extend.md
+   - Shoot Guns: Module-Shootguns.md
+   - Skin: Module-Skin.md
+   - Slay: Module-Slay.md
+   - Speed: Module-Speed.md
+   - Stop LR: Module-Stoplr.md
+   - Strip Knife: Module-Strip-Knife.md
+   - TP to Jail: Module-To-Jail.md
+   - Transfer Warden: Module-Transfer-Warden.md
+   - Warden Color: Module-Warden-Color.md
+   - Warden Health: Module-Warden-Health.md
+   - Timer: Module-Timer.md
