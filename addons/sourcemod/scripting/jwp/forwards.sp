@@ -17,7 +17,8 @@ bool Forward_OnWardenChoosing()
 {
 	bool status = true;
 	Call_StartForward(g_fwdOnWardenChoosing);
-	Call_Finish(status);
+	if (Call_Finish(status) != SP_ERROR_NONE)
+		LogToFile(LOG_PATH, "Forward_OnWardenChoosing error");
 	
 	return status;
 }
@@ -26,14 +27,16 @@ void Forward_OnWardenChosen(int client)
 {
 	Call_StartForward(g_fwdOnWardenChosen);
 	Call_PushCell(client);
-	Call_Finish();
+	if (Call_Finish() != SP_ERROR_NONE)
+		LogToFile(LOG_PATH, "Forward_OnWardenChosen error");
 }
 
 void Forward_OnWardenZamChosen(int client)
 {
 	Call_StartForward(g_fwdOnWardenZamChosen);
 	Call_PushCell(client);
-	Call_Finish();
+	if (Call_Finish() != SP_ERROR_NONE)
+		LogToFile(LOG_PATH, "Forward_OnWardenZamChosen error");
 }
 
 bool Forward_OnWardenResign(int client)
@@ -41,7 +44,8 @@ bool Forward_OnWardenResign(int client)
 	bool status = true;
 	Call_StartForward(g_fwdOnWardenResign);
 	Call_PushCell(client);
-	Call_Finish(status);
+	if (Call_Finish(status) != SP_ERROR_NONE)
+		LogToFile(LOG_PATH, "Forward_OnWardenResign error");
 	
 	return status;
 }
@@ -51,5 +55,6 @@ void Forward_OnWardenResigned(int client, bool themself)
 	Call_StartForward(g_fwdOnWardenResigned);
 	Call_PushCell(client);
 	Call_PushCell(themself);
-	Call_Finish();
+	if (Call_Finish() != SP_ERROR_NONE)
+		LogToFile(LOG_PATH, "Forward_OnWardenResigned error");
 }

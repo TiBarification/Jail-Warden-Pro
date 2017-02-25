@@ -2,3 +2,5 @@
 *.zip
 *.jpg
 *.po
+
+site/

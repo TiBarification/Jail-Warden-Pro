@@ -10,7 +10,7 @@
 // Force new syntax
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.1.0"
+#define PLUGIN_VERSION "1.1.1"
 
 #define UPDATE_URL "http://updater.scriptplugs.info/jwp/updatefile.txt"
 #define LOG_PATH "addons/sourcemod/logs/JWP_Log.log"
@@ -119,10 +119,9 @@ public Action Updater_OnPluginChecking()
 	return Plugin_Handled;
 }
 
-public int Updater_OnPluginUpdated()
+public void Updater_OnPluginUpdated()
 {
-	LogToFile(LOG_PATH, "Plugin updated. Old version was %s. Now reloading.", PLUGIN_VERSION);
-	ReloadPlugin();
+	LogToFile(LOG_PATH, "Plugin updated. You need to change map.");
 }
 
 public int Native_IsStarted(Handle plugin, int params)
