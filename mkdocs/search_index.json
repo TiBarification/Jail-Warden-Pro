@@ -152,7 +152,7 @@
         }, 
         {
             "location": "/Module-Friendly-Fire/", 
-            "text": "Description\n\n\n\n\nToggle friendly fire\n\n\n\n\nConfiguration\n\n\n\n\nThis module has no configuration\n\n\n\n\nHow to add to menu\n\n\nAdd this section in \nwarden_menu.txt\n. Field \nflag\n supports admin flags.\n\n\nff\n\n{\n    \nflag\n  \n\n}\n\n\n\n\nFiles that corresponding to this module\n\n\n\n\naddons/sourcemod/scripting/jwp_ff.sp\n \u2014 source file\n\n\naddons/sourcemod/plugins/jwp_ff.smx\n \u2014 binary file\n\n\naddons/sourcemod/translations/jwp_modules.phrases.txt\n \u2014 translations file", 
+            "text": "Description\n\n\n\n\nToggle friendly fire\n\n\n\n\nConfiguration\n\n\n\n\nThis module has no configuration\n\n\n\n\nCS:GO issues\n\n\n\n\nImportant\n\n\nIn some games, like Counter-Strike: Global Offensive some cvars may block damage in friendly fire.\n\n\n\n\nSet this cvars on csgo to something like this for example.\n\n\nff_damage_reduction_bullets                         0.1\nff_damage_reduction_grenade                         0.4\nff_damage_reduction_grenade_self                    0\nff_damage_reduction_other                           0.4\n\n\n\n\nHow to add to menu\n\n\nAdd this section in \nwarden_menu.txt\n. Field \nflag\n supports admin flags.\n\n\nff\n\n{\n    \nflag\n  \n\n}\n\n\n\n\nFiles that corresponding to this module\n\n\n\n\naddons/sourcemod/scripting/jwp_ff.sp\n \u2014 source file\n\n\naddons/sourcemod/plugins/jwp_ff.smx\n \u2014 binary file\n\n\naddons/sourcemod/translations/jwp_modules.phrases.txt\n \u2014 translations file", 
             "title": "Friendly Fire"
         }, 
         {
@@ -164,6 +164,11 @@
             "location": "/Module-Friendly-Fire/#configuration", 
             "text": "This module has no configuration", 
             "title": "Configuration"
+        }, 
+        {
+            "location": "/Module-Friendly-Fire/#csgo-issues", 
+            "text": "Important  In some games, like Counter-Strike: Global Offensive some cvars may block damage in friendly fire.   Set this cvars on csgo to something like this for example.  ff_damage_reduction_bullets                         0.1\nff_damage_reduction_grenade                         0.4\nff_damage_reduction_grenade_self                    0\nff_damage_reduction_other                           0.4", 
+            "title": "CS:GO issues"
         }, 
         {
             "location": "/Module-Friendly-Fire/#how-to-add-to-menu", 
@@ -412,7 +417,7 @@
         }, 
         {
             "location": "/Module-Noblock/", 
-            "text": "Description\n\n\n\n\nWarden can toggle noblock\n\n\n\n\nConfiguration\n\n\n\n\nThis module has no configuration\n\n\n\n\nHow to add to menu\n\n\nAdd this section in \nwarden_menu.txt\n. Field \nflag\n supports admin flags.\n\n\nnoblock\n\n{\n    \nflag\n  \n\n}\n\n\n\n\nFiles that corresponding to this module\n\n\n\n\naddons/sourcemod/scripting/jwp_noblock.sp\n \u2014 source file\n\n\naddons/sourcemod/plugins/jwp_noblock.smx\n \u2014 binary file\n\n\naddons/sourcemod/translations/jwp_modules.phrases.txt\n \u2014 translations file", 
+            "text": "Description\n\n\n\n\nWarden can toggle noblock\n\n\n\n\nConfiguration\n\n\n\n\nThis module has no configuration\n\n\n\n\nCS:GO Issues\n\n\n\n\nNote\n\n\nSome plugins may lock changing of cvar mp_solid_teammates in game\n\n\n\n\nSolution for this is disable collision changes in plugins, that may do it.\nFor example in SM Hosties it can blocked by this cvar:\n\n\n// Enable or disable integrated removing of player vs player collisions (noblock): 0 - disable, 1 - enable\n// -\n// Default: \n1\n\n// Minimum: \n0.000000\n\n// Maximum: \n1.000000\n\nsm_hosties_noblock_enable \n1\n\n\n\n\n\nHow to add to menu\n\n\nAdd this section in \nwarden_menu.txt\n. Field \nflag\n supports admin flags.\n\n\nnoblock\n\n{\n    \nflag\n  \n\n}\n\n\n\n\nFiles that corresponding to this module\n\n\n\n\naddons/sourcemod/scripting/jwp_noblock.sp\n \u2014 source file\n\n\naddons/sourcemod/plugins/jwp_noblock.smx\n \u2014 binary file\n\n\naddons/sourcemod/translations/jwp_modules.phrases.txt\n \u2014 translations file", 
             "title": "Noblock"
         }, 
         {
@@ -424,6 +429,11 @@
             "location": "/Module-Noblock/#configuration", 
             "text": "This module has no configuration", 
             "title": "Configuration"
+        }, 
+        {
+            "location": "/Module-Noblock/#csgo-issues", 
+            "text": "Note  Some plugins may lock changing of cvar mp_solid_teammates in game   Solution for this is disable collision changes in plugins, that may do it.\nFor example in SM Hosties it can blocked by this cvar:  // Enable or disable integrated removing of player vs player collisions (noblock): 0 - disable, 1 - enable\n// -\n// Default:  1 \n// Minimum:  0.000000 \n// Maximum:  1.000000 \nsm_hosties_noblock_enable  1", 
+            "title": "CS:GO Issues"
         }, 
         {
             "location": "/Module-Noblock/#how-to-add-to-menu", 

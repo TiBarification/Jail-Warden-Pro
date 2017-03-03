@@ -118,6 +118,8 @@
             
                 <li class="toctree-l3"><a href="#configuration">Configuration</a></li>
                 
+                    <li><a class="toctree-l4" href="#csgo-issues">CS:GO issues</a></li>
+                
             
                 <li class="toctree-l3"><a href="#how-to-add-to-menu">How to add to menu</a></li>
                 
@@ -382,6 +384,18 @@
 <blockquote>
 <p>This module has no configuration</p>
 </blockquote>
+<h3 id="csgo-issues">CS:GO issues</h3>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>In some games, like Counter-Strike: Global Offensive some cvars may block damage in friendly fire.</p>
+</div>
+<p>Set this cvars on csgo to something like this for example.</p>
+<pre><code class="cfg">ff_damage_reduction_bullets                         0.1
+ff_damage_reduction_grenade                         0.4
+ff_damage_reduction_grenade_self                    0
+ff_damage_reduction_other                           0.4
+</code></pre>
+
 <h2 id="how-to-add-to-menu">How to add to menu</h2>
 <p>Add this section in <code>warden_menu.txt</code>. Field <code>flag</code> supports admin flags.</p>
 <pre><code>&quot;ff&quot;

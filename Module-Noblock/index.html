@@ -188,6 +188,8 @@
             
                 <li class="toctree-l3"><a href="#configuration">Configuration</a></li>
                 
+                    <li><a class="toctree-l4" href="#csgo-issues">CS:GO Issues</a></li>
+                
             
                 <li class="toctree-l3"><a href="#how-to-add-to-menu">How to add to menu</a></li>
                 
@@ -382,6 +384,21 @@
 <blockquote>
 <p>This module has no configuration</p>
 </blockquote>
+<h3 id="csgo-issues">CS:GO Issues</h3>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Some plugins may lock changing of cvar mp_solid_teammates in game</p>
+</div>
+<p>Solution for this is disable collision changes in plugins, that may do it.
+For example in SM Hosties it can blocked by this cvar:</p>
+<pre><code class="cfg">// Enable or disable integrated removing of player vs player collisions (noblock): 0 - disable, 1 - enable
+// -
+// Default: &quot;1&quot;
+// Minimum: &quot;0.000000&quot;
+// Maximum: &quot;1.000000&quot;
+sm_hosties_noblock_enable &quot;1&quot;
+</code></pre>
+
 <h2 id="how-to-add-to-menu">How to add to menu</h2>
 <p>Add this section in <code>warden_menu.txt</code>. Field <code>flag</code> supports admin flags.</p>
 <pre><code>&quot;noblock&quot;
