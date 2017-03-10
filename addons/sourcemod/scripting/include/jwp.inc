@@ -117,9 +117,7 @@ native void JWP_AddToMainMenu(const char[] name, CmdItemDisplay callback_display
 /**
  *	Removes an item from the cmd menu
  *	-
- *	@param unique name				Set the unique name to remove.
- *	@param callback_display			Callback to remove
- *	@param callback_select			Callback to remove
+ *  @noparams
  *	-
  *	@return true on success, false otherwise
  */

@@ -6,7 +6,7 @@
 
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.4"
+#define PLUGIN_VERSION "1.5"
 #define ITEM_DOOR_OPEN "door_open"
 #define ITEM_DOOR_CLOSE "door_close"
 
@@ -48,6 +48,12 @@ public void OnLibraryAdded(const char[] name)
 public void OnLibraryRemoved(const char[] name)
 {
 	g_bSmartDoors = !(StrEqual(name, "smartjaildoors"));
+}
+
+public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
+{
+	MarkNativeAsOptional("SJD_OpenDoors");
+	MarkNativeAsOptional("SJD_CloseDoors");
 }
 
 public void JWP_Started()

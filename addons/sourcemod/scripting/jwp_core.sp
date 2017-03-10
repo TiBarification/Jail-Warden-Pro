@@ -10,7 +10,7 @@
 // Force new syntax
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.1.1"
+#define PLUGIN_VERSION "1.1.2"
 
 #define UPDATE_URL "http://updater.scriptplugs.info/jwp/updatefile.txt"
 #define LOG_PATH "addons/sourcemod/logs/JWP_Log.log"
@@ -252,7 +252,7 @@ public Action Event_OnRoundEnd(Event event, const char[] name, bool dontBroadcas
 
 public Action Command_JwpMenuReload(int args)
 {
-	RehashMenu();
+	RehashMenu(true);
 	PrintToServer("[JWP] %T", "menu_success_reloaded", LANG_SERVER);
 	return Plugin_Handled;
 }
@@ -409,7 +409,7 @@ bool BecomeCmd(int client, bool waswarden = true)
 			RemoveZam();
 		// Show our warden menu
 		if (g_CvarMenuAutoOpen.BoolValue)
-			Cmd_ShowMenu(g_iWarden);
+			Cmd_ShowMenu(g_iWarden, _, true);
 		if (g_bIsCSGO)
 			CGOPrintToChatAll("%T %T", "Core_Prefix", LANG_SERVER, "warden_become", LANG_SERVER, g_iWarden);
 		else

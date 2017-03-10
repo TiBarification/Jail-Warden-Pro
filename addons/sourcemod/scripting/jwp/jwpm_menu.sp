@@ -32,7 +32,7 @@ public int Cmd_AddToMainMenu(Handle plugin, int numParams)
 		LogToFile(LOG_PATH, "[WARNING] Failed to add module %s, already registered? Removing this module to avoid conflicts", key);
 		g_sMainMenuMap.Remove(key);
 		if (g_iWarden > 0)
-			RehashMenu();
+			RehashMenu(false);
 	}
 }
 
@@ -60,7 +60,7 @@ public int Cmd_RemoveFromMainMenu(Handle plugin, int numParams)
 					// LogToFile(LOG_PATH, "[DEBUG] Removed module %s", key);
 					g_sMainMenuMap.Remove(key);
 					if (g_iWarden > 0)
-						RehashMenu();
+						RehashMenu(false);
 					found = true;
 				}
 			}
@@ -93,18 +93,18 @@ public int Cmd_ShowMainMenu(Handle plugin, int numParams)
 		Cmd_ShowMenu(client, g_iLastMenuItemPos);
 }
 
-void Cmd_ShowMenu(int client, int pos = 0)
+void Cmd_ShowMenu(int client, int pos = 0, bool bAutoopen = false)
 {
 	if (CheckClient(client) && IsPlayerAlive(client))
 	{
 		if (g_mMainMenu == null)
-			MenuItemInitialization(client);
+			MenuItemInitialization(client, bAutoopen);
 		else if (IsWarden(client))
 			g_mMainMenu.DisplayAt(client, pos, MENU_TIME_FOREVER);
 	}
 }
 
-void MenuItemInitialization(int client) // Run at first time as client become warden
+void MenuItemInitialization(int client, bool autoopen) // Run at first time as client become warden
 {
 	char id[16], display[64];
 	g_mMainMenu = new Menu(Cmd_ShowMenu_Handler);
@@ -181,6 +181,9 @@ void MenuItemInitialization(int client) // Run at first time as client become wa
 			// LogToFile(LOG_PATH, "[DEBUG] Module code '%s' - display name '%s' - menu style = %d", id, display, menu_style);
 		}
 	}
+	
+	if (autoopen)
+		g_mMainMenu.Display(client, MENU_TIME_FOREVER);
 }
 
 public int Cmd_ShowMenu_Handler(Menu menu, MenuAction action, int client, int slot)
@@ -341,7 +344,7 @@ void EmptyPanel()
 		g_mMainMenu.Cancel();
 }
 
-void RehashMenu()
+void RehashMenu(bool bRedisplay)
 {
 	g_aSortedMenu.Clear();
 	g_aFlags.Clear();
@@ -350,7 +353,7 @@ void RehashMenu()
 	{
 		if (g_mMainMenu != null)
 			delete g_mMainMenu;
-		MenuItemInitialization(g_iWarden);
+		MenuItemInitialization(g_iWarden, bRedisplay);
 	}
 }
 

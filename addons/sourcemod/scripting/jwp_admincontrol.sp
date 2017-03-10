@@ -6,7 +6,7 @@
 // Force 1.7 syntax
 #pragma newdecls required;
 
-#define PLUGIN_VERSION "1.3"
+#define PLUGIN_VERSION "1.4"
 
 Handle hAdminMenu = null;
 Menu g_mAdminControlMain;
@@ -119,7 +119,7 @@ public int mPlayerMenu_Callback(Menu menu, MenuAction action, int param1, int pa
 			menu.GetItem(param2, id, sizeof(id));
 			int target = StringToInt(id);
 			if (JWP_SetWarden(target))
-				ShowActivity2(param1, "[SM] ", "Admin_Control_ChangeActivity", LANG_SERVER, target);
+				ShowActivity2(param1, "[SM] %T", "Admin_Control_ChangeActivity", LANG_SERVER, target);
 			else
 				ReplyToCommand(param1, "[SM] %T", "Admin_Control_ChangeFailed", LANG_SERVER);
 			g_mAdminControlMain.Display(param1, MENU_TIME_FOREVER);

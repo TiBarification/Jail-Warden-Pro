@@ -162,7 +162,7 @@ public int Native_IsPrisonerRebel(Handle plugin, int numParams)
 
 public int Native_RehashMenu(Handle plugin, int numParams)
 {
-	RehashMenu();
+	RehashMenu(true);
 	return 0;
 }
 
