@@ -25,11 +25,14 @@ public void OnPluginStart()
 
 public void Event_OnRoundEnd(Event event, const char[] name, bool dontBroadcast)
 {
+	/* Recommend to set this here, because warden search is begining on round_start event */
 	g_bEnabled = true;
 }
 
 public int OnAvailableLR(int announce)
 {
+	// Disable searching for a new warden
+	g_bEnabled = false;
 	// announce just notify that LR is available and can be disabled
 	// At first we remove zam and after warden
 	JWP_SetZamWarden(0);
@@ -40,7 +43,6 @@ public int OnAvailableLR(int announce)
 		if (IsClientInGame(i) && JWP_PrisonerHasFreeday(i))
 			JWP_PrisonerSetFreeday(i, false);
 	}
-	g_bEnabled = false;
 }
 
 public bool JWP_OnWardenChoosing()
