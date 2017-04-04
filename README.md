@@ -10,3 +10,6 @@ Dev branch status:
 This is Jail Warden Pro original Repositry
 ### РУС: ###
 Это оригинальный репозиторий Jail Warden Pro
+
+### Donate: ###
+[![Donate](http://static.liqpay.com/buttons/d4en.png)](https://www.liqpay.com/api/3/checkout?data=eyJ2ZXJzaW9uIjozLCJhY3Rpb24iOiJwYXlkb25hdGUiLCJwdWJsaWNfa2V5IjoiaTUyNDY2MDk3MTU2IiwiYW1vdW50IjoiMiIsImN1cnJlbmN5IjoiVVNEIiwiZGVzY3JpcHRpb24iOiJKYWlsIFdhcmRlbiBQcm8gc3VwcG9ydCIsInR5cGUiOiJkb25hdGUiLCJsYW5ndWFnZSI6ImVuIn0%3D&signature=W5VFoEOLW6CPO41VXNcrG9pEj3A%3D)
