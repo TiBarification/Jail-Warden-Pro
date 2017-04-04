@@ -67,7 +67,6 @@ public void OnPluginStart()
 	LoadDevControl();
 	
 	RegServerCmd("jwp_menu_reload", Command_JwpMenuReload, "Reload menu list");
-	RegServerCmd("jwp_apidata_reload", Command_JwpApidataReload, "Reload bans/developers");
 	
 	HookEvent("round_start", Event_OnRoundStart, EventHookMode_PostNoCopy);
 	HookEvent("round_freeze_end", Event_OnRoundFreezeEnd, EventHookMode_PostNoCopy);
@@ -254,17 +253,6 @@ public Action Command_JwpMenuReload(int args)
 {
 	RehashMenu(true);
 	PrintToServer("[JWP] %T", "menu_success_reloaded", LANG_SERVER);
-	return Plugin_Handled;
-}
-
-public Action Command_JwpApidataReload(int args)
-{
-	for (int i = 1; i <= MaxClients; ++i)
-	{
-		if (IsClientInGame(i))
-			CheckClientFromAPI(i);
-	}
-	PrintToServer("[JWP-API] Successfully reloaded");
 	return Plugin_Handled;
 }
 

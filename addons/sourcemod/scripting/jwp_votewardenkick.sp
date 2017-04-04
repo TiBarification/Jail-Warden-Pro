@@ -1,7 +1,7 @@
 #include <sourcemod>
-// #include <sdktools>
 #include <cstrike>
 #include <jwp>
+#include <multicolors>
 
 #define PLUGIN_VERSION "1.0"
 #define VOTE_PERCENT 70
@@ -22,6 +22,8 @@ public void OnPluginStart()
 {
 	HookEvent("round_start", Event_OnRoundStart, EventHookMode_PostNoCopy);
 	RegConsoleCmd("sm_wvotekick", Command_WardenVoteKick, "Vote to force warden resign");
+	
+	LoadTranslations("jwp_modules.phrases");
 }
 
 public void Event_OnRoundStart(Event event, const char[] name, bool dontBroadcast)
@@ -42,12 +44,12 @@ public Action Command_WardenVoteKick(int client, int args)
 		if (GetClientTeam(client) == CS_TEAM_T)
 		{
 			if (!g_bAllowedVote)
-				PrintToChat(client, "\x01[\x03JWP\x01] \x04Голосование за изгнание командира доступно лишь раз за раунд");
+				CPrintToChat(client, "%t", "VoteWardenKick_AvailablePerRound");
 			else if (!VoteForPlayer(client))
-				PrintToChat(client, "\x01[\x03JWP\x01] \x04Командира нет");
+				CPrintToChat(client, "%t", "VoteWardenKick_NoWarden");
 		}
 		else
-			PrintToChat(client, "\x01[\x03JWP\x01] \x04Только Т могут голосовать");
+			CPrintToChat(client, "%t", "VoteWardenKick_OnlyT");
 	}
 	
 	return Plugin_Handled;
@@ -93,14 +95,14 @@ bool VoteForPlayer(int client)
 	if (g_bVotes[client])
 	{
 		current_votes = GetVotesCount();
-		PrintToChat(client, "\x01[\x03JWP\x01] \x04Вы уже голосовали за увольнение командира %N. Проголосовало %d/%d человек", victim, current_votes, needed_votes);
+		CPrintToChat(client, "%t", "VoteWardenKick_VoteReplyRepeat", victim, current_votes, needed_votes);
 		return true;
 	}
 	else
 		g_bVotes[client] = true;
 	current_votes = GetVotesCount();
 	
-	PrintToChatAll("\x01[\x03JWP\x01] \x04%N проголосовал за увольнение командира %N (%d/%d голосов)", client, victim, current_votes, needed_votes);
+	CPrintToChatAll("%t", "VoteWardenKick_VoteReply", client, victim, current_votes, needed_votes);
 	
 	if (current_votes >= needed_votes)
 		ForceResign(victim);

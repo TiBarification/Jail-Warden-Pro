@@ -5,7 +5,7 @@
 
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.3"
+#define PLUGIN_VERSION "1.4"
 #define ITEM "speed"
 
 ConVar Cvar_AutoSpeed, Cvar_SpeedValue;
@@ -59,7 +59,7 @@ public void OnPluginEnd()
 
 public bool OnFuncDisplay(int client, char[] buffer, int maxlength, int style)
 {
-	FormatEx(buffer, maxlength, "[%s]%T", (g_bSpeed) ? '-' : '+', "Speed_Menu", LANG_SERVER);
+	FormatEx(buffer, maxlength, "[%c]%T", (g_bSpeed) ? '-' : '+', "Speed_Menu", LANG_SERVER);
 	return true;
 }
 
@@ -70,12 +70,12 @@ public bool OnFuncSelect(int client)
 	SetEntPropFloat(client, Prop_Send, "m_flLaggedMovementValue", (g_bSpeed) ? Cvar_SpeedValue.FloatValue : 1.0);
 	if (g_bSpeed)
 	{
-		Format(langbuffer, sizeof(langbuffer), "[-]%T", "Speed_Menu", LANG_SERVER);
+		FormatEx(langbuffer, sizeof(langbuffer), "[-]%T", "Speed_Menu", LANG_SERVER);
 		JWP_RefreshMenuItem(ITEM, langbuffer);
 	}
 	else
 	{
-		Format(langbuffer, sizeof(langbuffer), "[+]%T", "Speed_Menu", LANG_SERVER);
+		FormatEx(langbuffer, sizeof(langbuffer), "[+]%T", "Speed_Menu", LANG_SERVER);
 		JWP_RefreshMenuItem(ITEM, langbuffer);
 	}
 	JWP_ShowMainMenu(client);

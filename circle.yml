@@ -13,6 +13,10 @@ test:
     - cd addons/sourcemod/scripting/ && sudo wget "https://raw.githubusercontent.com/dataviruset/sm-hosties/master/addons/sourcemod/scripting/include/lastrequest.inc" -O include/lastrequest.inc
     - cd addons/sourcemod/scripting/ && sudo wget "https://raw.githubusercontent.com/KyleSanderson/SteamWorks/master/Pawn/includes/SteamWorks.inc" -O include/SteamWorks.inc
     - cd addons/sourcemod/scripting/ && sudo wget "https://raw.githubusercontent.com/thraaawn/SMJansson/master/pawn/scripting/include/smjansson.inc" -O include/smjansson.inc
+    - cd addons/sourcemod/scripting/ && sudo mkdir include/multicolors
+    - cd addons/sourcemod/scripting/ && sudo wget "https://raw.githubusercontent.com/Bara20/Multi-Colors/master/addons/sourcemod/scripting/include/multicolors/colors.inc" -O include/multicolors/colors.inc
+    - cd addons/sourcemod/scripting/ && sudo wget "https://raw.githubusercontent.com/Bara20/Multi-Colors/master/addons/sourcemod/scripting/include/multicolors/morecolors.inc" -O include/multicolors/morecolors.inc
+    - cd addons/sourcemod/scripting/ && sudo wget "https://raw.githubusercontent.com/Bara20/Multi-Colors/master/addons/sourcemod/scripting/include/multicolors.inc" -O include/multicolors.inc
     - cd addons/sourcemod/scripting/ && sudo chmod +x spcomp
     - cd addons/sourcemod/scripting/ && sudo mkdir compiled
   post:

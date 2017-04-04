@@ -25,7 +25,7 @@ public void OnPluginStart()
 
 public void Event_OnRoundEnd(Event event, const char[] name, bool dontBroadcast)
 {
-	/* Recommend to set this here, because warden search is begining on round_start event */
+	/* Recommended to set this here, because warden search is begining on round_start event */
 	g_bEnabled = true;
 }
 
