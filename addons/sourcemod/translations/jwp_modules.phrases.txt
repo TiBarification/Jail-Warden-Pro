@@ -630,11 +630,11 @@
 	"VoteWardenKick_VoteReplyRepeat"
 	{
 		"#format"	"{1:N},{2:d},{3:d}"
-		"en"		"[{green}JWP{default}] {lightgreen}You have already voted for resign {blue}%N{default}. Votes: {green}%d{default}/{green}%d"
+		"en"		"[{green}JWP{default}] {lightgreen}You have already voted for resign {blue}{1}{default}. Votes: {green}{2}{default}/{green}{3}"
 	}
 	"VoteWardenKick_VoteReply"
 	{
 		"#format"	"{1:N},{2:N},{3:d},{4:d}"
-		"en"		"[{green}JWP{default}] {lightgreen}%N voted for resign {blue}%N {lightgreen}({green}%d{default}/{green}%d{lightgreen})"
+		"en"		"[{green}JWP{default}] {lightgreen}{1} voted for resign {blue}{2} {lightgreen}({green}{3}{default}/{green}{4}{lightgreen})"
 	}
 }
