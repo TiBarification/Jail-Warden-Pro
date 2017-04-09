@@ -614,4 +614,27 @@
 	{
 		"ru"		"Время закончилось"
 	}
+	
+	"VoteWardenKick_AvailablePerRound"
+	{
+		"ru"		"[{green}JWP{default}] {red}Голосование за снятие кмд доступно только 1 раз за раунд"
+	}
+	"VoteWardenKick_NoWarden"
+	{
+		"ru"		"[{green}JWP{default}] {lightgreen}Командира нет"
+	}
+	"VoteWardenKick_OnlyT"
+	{
+		"ru"		"[{green}JWP{default}] {lightgreen}Только Т могут голосовать"
+	}
+	"VoteWardenKick_VoteReplyRepeat"
+	{
+		"#format"	"{1:N},{2:d},{3:d}"
+		"ru"		"[{green}JWP{default}] {lightgreen}Вы уже проголосовали за снятие кмд {blue}%N{default}. Голосов: {green}%d{default}/{green}%d"
+	}
+	"VoteWardenKick_VoteReply"
+	{
+		"#format"	"{1:N},{2:N},{3:d},{4:d}"
+		"ru"		"[{green}JWP{default}] {lightgreen}%N проголосовал за снятие с кмд {blue}%N {lightgreen}({green}%d{default}/{green}%d{lightgreen})"
+	}
 }
