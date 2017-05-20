@@ -32,6 +32,7 @@ before_script:
     - cd addons/sourcemod/scripting/
     - wget "http://www.doctormckay.com/download/scripting/include/morecolors.inc" -O include/morecolors.inc
     - wget "https://raw.githubusercontent.com/Franc1sco/VoiceAnnounceEX/master/scripting/include/voiceannounce_ex.inc" -O include/voiceannounce_ex.inc
+    - wget "https://raw.githubusercontent.com/R1KO/VIP-Core/master/addons/sourcemod/scripting/include/vip_core.inc" -O include/vip_core.inc
     - wget "https://raw.githubusercontent.com/Kailo97/smartjaildoors/master/addons/sourcemod/scripting/include/smartjaildoors.inc" -O include/smartjaildoors.inc
     - wget "https://raw.githubusercontent.com/dataviruset/sm-hosties/master/addons/sourcemod/scripting/include/hosties.inc" -O include/hosties.inc
     - wget "https://raw.githubusercontent.com/dataviruset/sm-hosties/master/addons/sourcemod/scripting/include/lastrequest.inc" -O include/lastrequest.inc
@@ -62,6 +63,7 @@ before_deploy:
     - mv addons/sourcemod/scripting/include/morecolors.inc jwp/addons/sourcemod/scripting/include/
     - mv addons/sourcemod/scripting/include/updater.inc jwp/addons/sourcemod/scripting/include/
     - mv addons/sourcemod/scripting/include/voiceannounce_ex.inc jwp/addons/sourcemod/scripting/include/
+    - mv addons/sourcemod/scripting/include/vip_core.inc jwp/addons/sourcemod/scripting/include/
     - mv addons/sourcemod/scripting/include/smartjaildoors.inc jwp/addons/sourcemod/scripting/include/
     - mv addons/sourcemod/scripting/include/lastrequest.inc jwp/addons/sourcemod/scripting/include/
     - mv addons/sourcemod/scripting/include/SteamWorks.inc jwp/addons/sourcemod/scripting/include/

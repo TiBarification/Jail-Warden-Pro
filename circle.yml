@@ -8,6 +8,7 @@ test:
   override:
     - cd addons/sourcemod/scripting/ && sudo wget "http://www.doctormckay.com/download/scripting/include/morecolors.inc" -O include/morecolors.inc
     - cd addons/sourcemod/scripting/ && sudo wget "https://raw.githubusercontent.com/Franc1sco/VoiceAnnounceEX/master/scripting/include/voiceannounce_ex.inc" -O include/voiceannounce_ex.inc
+    - cd addons/sourcemod/scripting/ && sudo wget "https://raw.githubusercontent.com/R1KO/VIP-Core/master/addons/sourcemod/scripting/include/vip_core.inc" -O include/vip_core.inc
     - cd addons/sourcemod/scripting/ && sudo wget "https://raw.githubusercontent.com/Kailo97/smartjaildoors/master/addons/sourcemod/scripting/include/smartjaildoors.inc" -O include/smartjaildoors.inc
     - cd addons/sourcemod/scripting/ && sudo wget "https://raw.githubusercontent.com/dataviruset/sm-hosties/master/addons/sourcemod/scripting/include/hosties.inc" -O include/hosties.inc
     - cd addons/sourcemod/scripting/ && sudo wget "https://raw.githubusercontent.com/dataviruset/sm-hosties/master/addons/sourcemod/scripting/include/lastrequest.inc" -O include/lastrequest.inc

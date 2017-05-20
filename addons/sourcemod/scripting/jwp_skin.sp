@@ -4,19 +4,23 @@
 #include <jwp>
 #undef REQUIRE_PLUGIN
 #tryinclude <n_arms_fix>
+#tryinclude <vip_core>
 #define REQUIRE_PLUGIN
 
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.4-B"
+#define PLUGIN_VERSION "1.4"
 
-ConVar g_CvarWardenSkin, g_CvarWardenZamSkin, g_CvarTRandomSkins, g_CvarCTRandomSkins;
-char g_cWardenSkin[PLATFORM_MAX_PATH], g_cWardenZamSkin[PLATFORM_MAX_PATH];
+ConVar g_CvarWardenSkin, g_CvarWardenArms, g_CvarWardenZamSkin, g_CvarWardenZamArms, g_CvarTRandomSkins, g_CvarCTRandomSkins;
+char g_cWardenSkin[2][PLATFORM_MAX_PATH], g_cWardenZamSkin[2][PLATFORM_MAX_PATH];
+char g_cSkin[MAXPLAYERS+1][PLATFORM_MAX_PATH], g_cArms[MAXPLAYERS+1][PLATFORM_MAX_PATH];
+int g_iSkinId[MAXPLAYERS+1];
 
 ArrayList tModels_Array, ctModels_Array;
 KeyValues g_KvT, g_KvCT;
 
-bool g_bIsCSGO;
+bool g_bIsCSGO, g_bIsSafeToSetModel[2], g_bVIPExists;
+char g_cVIPFeatureName[] = "Skins";
 
 public Plugin myinfo = 
 {
@@ -29,15 +33,40 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
-	g_CvarWardenSkin = CreateConVar("jwp_warden_skin", "", "Устанавливает скин командиру, оставьте пустым чтобы не использовать");
-	g_CvarWardenZamSkin = CreateConVar("jwp_warden_zam_skin", "", "Устанавливает скин заместителю командира, оставьте пустым чтобы не использовать");
-	g_CvarTRandomSkins = CreateConVar("jwp_random_t_skins", "1", "Включить автоматическую установку скинов для Т. Требуется файл t_models.txt", _, true, 0.0, true, 1.0);
-	g_CvarCTRandomSkins = CreateConVar("jwp_random_ct_skins", "1", "Включить автоматическую установку скинов для CТ. Требуется файл ct_models.txt", _, true, 0.0, true, 1.0);
+	g_CvarWardenSkin = CreateConVar("jwp_warden_skin", "", "Set warden player model, leave empty to disable");
+	g_CvarWardenArms = CreateConVar("jwp_warden_arms", "", "Set warden arms model (ONLY in CS:GO), leave empty to disable");
+	g_CvarWardenZamSkin = CreateConVar("jwp_warden_zam_skin", "", "Set deputy player model (zam of warden), leave empty to disable");
+	g_CvarWardenZamArms = CreateConVar("jwp_warden_zam_arms", "", "Set deputy arms model (ONLY in CS:GO), leave empty to disable");
+	g_CvarTRandomSkins = CreateConVar("jwp_random_t_skins", "1", "Enable auto player model set for T team. Needed file t_models.txt", _, true, 0.0, true, 1.0);
+	g_CvarCTRandomSkins = CreateConVar("jwp_random_ct_skins", "1", "Enable auto player model set for CT team. Needed file ct_models.txt", _, true, 0.0, true, 1.0);
 	
 	g_bIsCSGO = (GetEngineVersion() == Engine_CSGO);
-
+	
+	HookEvent("round_end", Event_OnRoundEnd);
 	HookEvent("player_spawn", Event_OnPlayerSpawn);
 	AutoExecConfig(true, "skin", "jwp");
+}
+
+public void OnAllPluginsLoaded()
+{
+	g_bVIPExists = LibraryExists("vip_core");
+}
+
+public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
+{
+	MarkNativeAsOptional("ArmsFix_SetDefaults");
+	MarkNativeAsOptional("ArmsFix_HasDefaultArms");
+	MarkNativeAsOptional("VIP_IsValidFeature");
+	MarkNativeAsOptional("VIP_GetClientFeatureStatus");
+
+	if (g_bIsCSGO && !LibraryExists("n_arms_fix"))
+		SetFailState("Failed to run plugin, due to requirements. Check if n_arms_fix lib is installed");
+}
+
+public Action Event_OnRoundEnd(Event event, const char[] name, bool dontBroadcast)
+{
+	g_bIsSafeToSetModel[0] = false;
+	g_bIsSafeToSetModel[1] = false;
 }
 
 public Action Event_OnPlayerSpawn(Event event, const char[] name, bool dontBroadcast)
@@ -45,29 +74,47 @@ public Action Event_OnPlayerSpawn(Event event, const char[] name, bool dontBroad
 	int client = GetClientOfUserId(event.GetInt("userid"));
 	if (CheckClient(client))
 	{
-		if (g_bIsCSGO == false)
-			TiB_SetSkin(client)
+		TiB_SetSkin(client);
+		if (!g_bIsCSGO)
+			SetModel(client);
 	}
 	
 	return Plugin_Continue;
 }
 
+public void OnClientPutInServer(int client)
+{
+	g_cSkin[client][0] = NULL_STRING[0];
+	g_cArms[client][0] = NULL_STRING[0];
+	g_iSkinId[client] = 0;
+}
+
 public void OnConfigsExecuted()
 {
-	g_CvarWardenSkin.GetString(g_cWardenSkin, sizeof(g_cWardenSkin));
-	g_CvarWardenZamSkin.GetString(g_cWardenZamSkin, sizeof(g_cWardenZamSkin));
+	g_CvarWardenSkin.GetString(g_cWardenSkin[0], PLATFORM_MAX_PATH);
+	g_CvarWardenZamSkin.GetString(g_cWardenZamSkin[0], PLATFORM_MAX_PATH);
+	if (g_bIsCSGO)
+	{
+		g_CvarWardenArms.GetString(g_cWardenSkin[1], PLATFORM_MAX_PATH);
+		g_CvarWardenZamArms.GetString(g_cWardenZamSkin[1], PLATFORM_MAX_PATH);
+	}
 }
 
 public void OnMapStart()
 {
 	// Standart model for default
 	if (g_bIsCSGO)
+	{
+		CheckMdlPath(g_cWardenSkin[1]); // Precache warden arms
+		CheckMdlPath(g_cWardenZamSkin[1]); // Precache zam warden arms
 		PrecacheModel("models/player/ctm_sas.mdl", true);
+	}
 	else
 		PrecacheModel("models/player/ct_sas.mdl", true);
 	// Other models
-	CheckMdlPath(g_cWardenSkin); // Precache warden skin
-	CheckMdlPath(g_cWardenZamSkin); // Precache zam warden skin
+	CheckMdlPath(g_cWardenSkin[0]); // Precache warden skin
+	CheckMdlPath(g_cWardenZamSkin[0]); // Precache zam warden skin
+	
 	if (g_CvarTRandomSkins.BoolValue)
 		LoadSkinsFromFile("cfg/jwp/skin/t_models.txt", tModels_Array, g_KvT);
 	if (g_CvarCTRandomSkins.BoolValue)
@@ -76,26 +123,53 @@ public void OnMapStart()
 
 public void JWP_OnWardenChosen(int client)
 {
-	if (g_cWardenSkin[0] == 'm')
-		SetEntityModel(client, g_cWardenSkin);
+	if (g_cWardenSkin[0][0] != NULL_STRING[0])
+	{
+		if (g_bIsSafeToSetModel[0] == false && g_bIsCSGO) return; // Do not set model, if model system is not ready, fix it Valve, please!
+		SetEntityModel(client, g_cWardenSkin[0]);
+	}
+	if (g_bIsCSGO && g_cWardenSkin[1][0] != NULL_STRING[0])
+	{
+		if (g_bIsSafeToSetModel[1] == false && g_bIsCSGO) return; // Do not set model, if model system is not ready, fix it Valve, please!
+		char currentmodel[PLATFORM_MAX_PATH];
+		GetEntPropString(client, Prop_Send, "m_szArmsModel", currentmodel, sizeof(currentmodel));
+
+		if (StrEqual(currentmodel, g_cWardenSkin[1])) return;
+		SetEntPropString(client, Prop_Send, "m_szArmsModel", g_cWardenSkin[1]);
+	}
 }
 
 public void JWP_OnWardenZamChosen(int client)
 {
-	if (g_cWardenZamSkin[0] == 'm')
-		SetEntityModel(client, g_cWardenZamSkin);
+	if (g_cWardenZamSkin[0][0] != NULL_STRING[0])
+	{
+		SetEntityModel(client, g_cWardenZamSkin[0]);
+	}
+	if (g_bIsCSGO && g_cWardenZamSkin[1][0] != NULL_STRING[0])
+	{
+		char currentmodel[PLATFORM_MAX_PATH];
+		GetEntPropString(client, Prop_Send, "m_szArmsModel", currentmodel, sizeof(currentmodel));
+
+		if (StrEqual(currentmodel, g_cWardenZamSkin[1])) return;
+		SetEntPropString(client, Prop_Send, "m_szArmsModel", g_cWardenZamSkin[1]);
+	}
 }
 
 public void JWP_OnWardenResigned(int client, bool himself)
 {
 	if (CheckClient(client))
 	{
-		if (!TiB_SetSkin(client))
+		if (!SetModel(client, true))
 		{
-			if (g_bIsCSGO)
-				SetEntityModel(client, "models/player/ctm_sas.mdl");
+			if (g_bIsCSGO && g_bIsSafeToSetModel[0])
+				ArmsFix_SetDefaults(client);
 			else
 				SetEntityModel(client, "models/player/ct_sas.mdl");
+		}
+		if (!SetArms(client))
+		{
+			if (g_bIsCSGO && g_bIsSafeToSetModel[1])
+				ArmsFix_SetDefaults(client);
 		}
 	}
 }
@@ -158,7 +232,6 @@ bool SetRandomSkin(int client, ArrayList& myArray, KeyValues& kv)
 		return false;
 	kv.Rewind();
 	
-	char model[PLATFORM_MAX_PATH];
 	int randomid = GetRandomInt(0, myArray.Length-1);
 	int sec_id = myArray.Get(randomid);
 	if (!kv.JumpToKeySymbol(sec_id))
@@ -166,23 +239,51 @@ bool SetRandomSkin(int client, ArrayList& myArray, KeyValues& kv)
 		LogError("[JWP|Skins] Failed to find section number %d", sec_id);
 		return false;
 	}
-	kv.GetString("path", model, sizeof(model), "");
-	SetEntityModel(client, model);
-	// PrintToChat(client, "Your new player skin: %s", model);
 	
-	kv.GetString("arms_path", model, sizeof(model), "");
-	if (model[0] == 'm')
-		SetEntPropString(client, Prop_Send, "m_szArmsModel", model);
+	kv.GetString("path", g_cSkin[client], PLATFORM_MAX_PATH, "");
+	kv.GetString("arms_path", g_cArms[client], PLATFORM_MAX_PATH, "");
 	
-	int skin_id = kv.GetNum("skin", 0);
-	if (skin_id != 0)
-		SetEntProp(client, Prop_Send, "m_nSkin", skin_id); 
+	g_iSkinId[client] = kv.GetNum("skin", 0);
+	
 	return true;
+}
+
+bool SetModel(int client, bool bSetDefaultModel = false)
+{
+	if (!g_CvarTRandomSkins.BoolValue && !g_CvarCTRandomSkins.BoolValue) return false; // Disable it , if no random skins
+	else if (!bSetDefaultModel && g_bVIPExists && VIP_IsValidFeature(g_cVIPFeatureName) && VIP_GetClientFeatureStatus(client, g_cVIPFeatureName) == ENABLED)
+		return true; // Just exit, so we do not override VIP models
+	else if (g_cSkin[client][0] != NULL_STRING[0])
+	{
+		if (g_bIsCSGO && g_bIsSafeToSetModel[0] == false) return false;
+		SetEntityModel(client, g_cSkin[client]);
+		if (g_iSkinId[client] != 0)
+			SetEntProp(client, Prop_Send, "m_nSkin", g_iSkinId[client]);
+		return true;
+	}
+	
+	return false;
+}
+
+bool SetArms(int client)
+{
+	if (!g_CvarTRandomSkins.BoolValue && !g_CvarCTRandomSkins.BoolValue) return false; // Disable it , if no random skins
+	else if (g_bIsCSGO && g_bIsSafeToSetModel[1] && g_cArms[client][0] != NULL_STRING[0])
+	{
+		char currentmodel[PLATFORM_MAX_PATH];
+		GetEntPropString(client, Prop_Send, "m_szArmsModel", currentmodel, sizeof(currentmodel));
+
+		if (!StrEqual(currentmodel, g_cArms[client]))
+			SetEntPropString(client, Prop_Send, "m_szArmsModel", g_cArms[client]);
+		return true;
+	}
+	
+	return false;
 }
 
 bool CheckClient(int client)
 {
-	return (client && IsClientConnected(client) && IsClientInGame(client) /* && !IsFakeClient(client) */);
+	return (client && IsClientConnected(client) && IsClientInGame(client));
 }
 
 bool CheckMdlPath(const char[] path)
@@ -193,10 +294,39 @@ bool CheckMdlPath(const char[] path)
 	return true;
 }
 
+public void ArmsFix_OnModelSafe(int client)
+{
+	g_bIsSafeToSetModel[0] = true
+	if (CheckClient(client))
+	{
+		if (JWP_IsWarden(client) && g_cWardenSkin[0][0] == 'm')
+			SetEntityModel(client, g_cWardenSkin[0]);
+		else if (JWP_IsZamWarden(client) && g_cWardenZamSkin[0][0] == 'm')
+			SetEntityModel(client, g_cWardenZamSkin[0])
+		else
+			SetModel(client);
+	}
+}
+
 public void ArmsFix_OnArmsSafe(int client)
 {
-	if (g_bIsCSGO && CheckClient(client))
+	g_bIsSafeToSetModel[1] = true;
+	if (CheckClient(client))
 	{
-		TiB_SetSkin(client);
+		char currentmodel[PLATFORM_MAX_PATH];
+		GetEntPropString(client, Prop_Send, "m_szArmsModel", currentmodel, sizeof(currentmodel));
+
+		if (JWP_IsWarden(client) && g_cWardenSkin[1][0] == 'm')
+		{
+			if (StrEqual(currentmodel, g_cWardenSkin[1])) return;
+			SetEntPropString(client, Prop_Send, "m_szArmsModel", g_cWardenSkin[1]);
+		}
+		else if (JWP_IsZamWarden(client) && g_cWardenZamSkin[1][0] == 'm')
+		{
+			if (StrEqual(currentmodel, g_cWardenZamSkin[1])) return;
+			SetEntPropString(client, Prop_Send, "m_szArmsModel", g_cWardenZamSkin[1]);
+		}
+		else
+			SetArms(client);
 	}
 }
