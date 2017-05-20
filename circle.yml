@@ -18,7 +18,7 @@ test:
     - cd addons/sourcemod/scripting/ && sudo wget "https://raw.githubusercontent.com/Bara20/Multi-Colors/master/addons/sourcemod/scripting/include/multicolors/colors.inc" -O include/multicolors/colors.inc
     - cd addons/sourcemod/scripting/ && sudo wget "https://raw.githubusercontent.com/Bara20/Multi-Colors/master/addons/sourcemod/scripting/include/multicolors/morecolors.inc" -O include/multicolors/morecolors.inc
     - cd addons/sourcemod/scripting/ && sudo wget "https://raw.githubusercontent.com/Bara20/Multi-Colors/master/addons/sourcemod/scripting/include/multicolors.inc" -O include/multicolors.inc
-    - cd addons/sourcemod/scripting/ && sudo wget "https://raw.githubusercontent.com/NomisCZ/Arms-Fix/master/addons/sourcemod/scripting/include/n_arm_fix.inc" -O include/n_arm_fix.inc
+    - cd addons/sourcemod/scripting/ && sudo wget "https://raw.githubusercontent.com/NomisCZ/Arms-Fix/master/addons/sourcemod/scripting/include/n_arms_fix.inc" -O include/n_arms_fix.inc
     - cd addons/sourcemod/scripting/ && sudo chmod +x spcomp
     - cd addons/sourcemod/scripting/ && sudo mkdir compiled
   post:
