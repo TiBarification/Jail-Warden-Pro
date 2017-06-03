@@ -10,7 +10,7 @@
 // Force new syntax
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.1.2"
+#define PLUGIN_VERSION "1.1.2-A"
 
 #define UPDATE_URL "http://updater.scriptplugs.info/jwp/updatefile.txt"
 #define LOG_PATH "addons/sourcemod/logs/JWP_Log.log"
@@ -423,8 +423,7 @@ void RemoveCmd(bool themself = true)
 		g_iWarden = 0;
 		delete g_mMainMenu;
 		
-		if (Forward_OnWardenChoosing() == true)
-			JWP_FindNewWarden();
+		JWP_FindNewWarden();
 	}
 }
 
@@ -537,7 +536,7 @@ void JWP_FindNewWarden()
 		BecomeCmd(g_iZamWarden);
 		RemoveZam();
 	}
-	else if (g_CvarChooseMode.IntValue == 1)
+	else if (g_CvarChooseMode.IntValue == 1 || g_CvarChooseMode.IntValue == 3)
 	{
 		if (g_hChooseTimer != null)
 			KillTimer(g_hChooseTimer);
@@ -553,25 +552,6 @@ void JWP_FindNewWarden()
 					CGOPrintToChat(i, "%T %T", "Core_Prefix", LANG_SERVER, "use_warden_cmd", LANG_SERVER);
 				else
 					CPrintToChat(i, "%T %T", "Core_Prefix", LANG_SERVER, "use_warden_cmd", LANG_SERVER);
-			}
-		}
-	}
-	else if (g_CvarChooseMode.IntValue == 3)
-	{
-		int client = JWP_GetRandomTeamClient(CS_TEAM_CT, true, false, false);
-		if (client != -1)
-			BecomeCmd(client);
-		else
-		{
-			int t_count, ct_count;
-			t_count = JWP_GetTeamClient(CS_TEAM_T, true);
-			ct_count = JWP_GetTeamClient(CS_TEAM_CT, true);
-			if (!t_count || !ct_count)
-			{
-				if (g_bIsCSGO)
-					CGOPrintToChatAll("%T %T", "Core_Prefix", LANG_SERVER, "warden_unable_due_to_teamcount", LANG_SERVER, t_count, ct_count);
-				else
-					CPrintToChatAll("%T %T", "Core_Prefix", LANG_SERVER, "warden_unable_due_to_teamcount", LANG_SERVER, t_count, ct_count);
 			}
 		}
 	}
