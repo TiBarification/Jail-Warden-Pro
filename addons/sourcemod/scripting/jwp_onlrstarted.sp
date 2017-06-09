@@ -47,6 +47,5 @@ public int OnAvailableLR(int announce)
 
 public bool JWP_OnWardenChoosing()
 {
-	if (g_bEnabled) return true;
-	return false;
+	return g_bEnabled;
 }
