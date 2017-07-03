@@ -72,7 +72,7 @@ before_deploy:
     - mv addons/sourcemod/scripting/include/csgo_colors.inc jwp/addons/sourcemod/scripting/include/
     - mv addons/sourcemod/scripting/include/emitsoundany.inc jwp/addons/sourcemod/scripting/include/
     - mv addons/sourcemod/scripting/include/multicolors* jwp/addons/sourcemod/scripting/include/
-    - mv addons/sourcemod/scripting/include/n_arm_fix.inc jwp/addons/sourcemod/scripting/include/
+    - mv addons/sourcemod/scripting/include/n_arms_fix.inc jwp/addons/sourcemod/scripting/include/
     - rsync -a --prune-empty-dirs --include '*/' --include 'jwp*' --exclude '*' addons/sourcemod/translations/ jwp/addons/sourcemod/translations/
     - mv cfg/jwp/* jwp/cfg/jwp/
     - mv materials jwp/
