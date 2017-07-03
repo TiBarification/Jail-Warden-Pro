@@ -92,7 +92,7 @@ public Action Command_LPaints(int client, int args)
 {
 	if (!args)
 	{
-		if (client && IsClientInGame(client) && (g_CvarTFeature.BoolValue && GetClientTeam(client) == CS_TEAM_T) || JWP_IsWarden(client)))
+		if (client && IsClientInGame(client) && ((g_CvarTFeature.BoolValue && GetClientTeam(client) == CS_TEAM_T) || JWP_IsWarden(client)))
 		{
 			if (IsPlayerAlive(client))
 			{
