@@ -10,7 +10,7 @@
 // Force new syntax
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.1.2-A"
+#define PLUGIN_VERSION "1.1.3"
 
 #define UPDATE_URL "http://updater.scriptplugs.info/jwp/updatefile.txt"
 #define LOG_PATH "addons/sourcemod/logs/JWP_Log.log"
@@ -237,9 +237,10 @@ public Action Event_OnRoundEnd(Event event, const char[] name, bool dontBroadcas
 	
 	if (g_hChooseTimer != null)
 	{
-		KillTimer(g_hChooseTimer);
+		delete g_hChooseTimer;
 		g_hChooseTimer = null;
 	}
+	
 	if (g_VoteMenu != null)
 	{
 		g_VoteMenu.Close();
@@ -539,8 +540,14 @@ void JWP_FindNewWarden()
 	else if (g_CvarChooseMode.IntValue == 1 || g_CvarChooseMode.IntValue == 3)
 	{
 		if (g_hChooseTimer != null)
-			KillTimer(g_hChooseTimer);
-		g_hChooseTimer = CreateTimer(g_CvarRandomWait.FloatValue, g_ChooseTimer_Callback);
+		{
+			delete g_hChooseTimer;
+			g_hChooseTimer = null;
+		}
+		if (g_CvarChooseMode.IntValue == 1)
+			g_hChooseTimer = CreateTimer(g_CvarRandomWait.FloatValue, g_ChooseTimer_Callback);
+		else
+			g_hChooseTimer = CreateTimer(0.1, g_ChooseTimer_Callback);
 	}
 	else if (g_CvarChooseMode.IntValue == 2)
 	{
