@@ -6,7 +6,7 @@
 // Force 1.7 syntax
 #pragma newdecls required;
 
-#define PLUGIN_VERSION "1.4"
+#define PLUGIN_VERSION "1.5"
 
 Handle hAdminMenu = null;
 Menu g_mAdminControlMain;
@@ -78,7 +78,7 @@ public int AdminControlMain_Callback(Menu menu, MenuAction action, int param1, i
 				mPlayerMenu.SetTitle(lang);
 				for (int i = 1; i <= MaxClients; ++i)
 				{
-					if (IsClientInGame(i) && (GetClientTeam(i) == CS_TEAM_CT) && !JWP_IsWarden(i) && IsPlayerAlive(i))
+					if (IsClientInGame(i) && (GetClientTeam(i) == CS_TEAM_CT) && !JWP_IsWarden(i) && IsPlayerAlive(i) && CanUserTarget(param1, i))
 					{
 						IntToString(i, id, sizeof(id));
 						GetClientName(i, name, sizeof(name));
@@ -91,7 +91,7 @@ public int AdminControlMain_Callback(Menu menu, MenuAction action, int param1, i
 			else if (param2 == 1)
 			{
 				int warden = JWP_GetWarden();
-				if (warden)
+				if (warden && CanUserTarget(param1, warden))
 				{
 					ShowActivity2(param1, "[SM] ", "%T", "Admin_Control_FiredActivity", LANG_SERVER, warden);
 					JWP_SetWarden(0);
@@ -118,7 +118,7 @@ public int mPlayerMenu_Callback(Menu menu, MenuAction action, int param1, int pa
 			char id[4];
 			menu.GetItem(param2, id, sizeof(id));
 			int target = StringToInt(id);
-			if (JWP_SetWarden(target))
+			if (CanUserTarget(param1, target) && JWP_SetWarden(target))
 				ShowActivity2(param1, "[SM] %T", "Admin_Control_ChangeActivity", LANG_SERVER, target);
 			else
 				ReplyToCommand(param1, "[SM] %T", "Admin_Control_ChangeFailed", LANG_SERVER);

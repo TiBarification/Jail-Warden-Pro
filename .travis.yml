@@ -32,14 +32,23 @@ before_script:
     - cd addons/sourcemod/scripting/
     - wget "http://www.doctormckay.com/download/scripting/include/morecolors.inc" -O include/morecolors.inc
     - wget "https://raw.githubusercontent.com/Franc1sco/VoiceAnnounceEX/master/scripting/include/voiceannounce_ex.inc" -O include/voiceannounce_ex.inc
+    - wget "https://raw.githubusercontent.com/R1KO/VIP-Core/master/addons/sourcemod/scripting/include/vip_core.inc" -O include/vip_core.inc
     - wget "https://raw.githubusercontent.com/Kailo97/smartjaildoors/master/addons/sourcemod/scripting/include/smartjaildoors.inc" -O include/smartjaildoors.inc
     - wget "https://raw.githubusercontent.com/dataviruset/sm-hosties/master/addons/sourcemod/scripting/include/hosties.inc" -O include/hosties.inc
     - wget "https://raw.githubusercontent.com/dataviruset/sm-hosties/master/addons/sourcemod/scripting/include/lastrequest.inc" -O include/lastrequest.inc
     - wget "https://raw.githubusercontent.com/KyleSanderson/SteamWorks/master/Pawn/includes/SteamWorks.inc" -O include/SteamWorks.inc
     - wget "https://raw.githubusercontent.com/thraaawn/SMJansson/master/pawn/scripting/include/smjansson.inc" -O include/smjansson.inc
+    - wget "https://raw.githubusercontent.com/thraaawn/SMJansson/master/pawn/scripting/include/smjansson.inc" -O include/smjansson.inc
+# Add multicolors from github repository
+    - mkdir include/multicolors
+    - wget "https://raw.githubusercontent.com/Bara20/Multi-Colors/master/addons/sourcemod/scripting/include/multicolors/colors.inc" -O include/multicolors/colors.inc
+    - wget "https://raw.githubusercontent.com/Bara20/Multi-Colors/master/addons/sourcemod/scripting/include/multicolors/morecolors.inc" -O include/multicolors/morecolors.inc
+    - wget "https://raw.githubusercontent.com/Bara20/Multi-Colors/master/addons/sourcemod/scripting/include/multicolors.inc" -O include/multicolors.inc
+# Added Arms-Fix include for CS:GO
+    - wget "https://raw.githubusercontent.com/NomisCZ/Arms-Fix/master/addons/sourcemod/scripting/include/n_arms_fix.inc" -O include/n_arms_fix.inc
     - chmod +x spcomp
     - mkdir compiled
-script: ./compile.sh jwp_core.sp jwp_admincontrol.sp jwp_bequiet.sp jwp_coloring.sp jwp_dooraimcontrol.sp jwp_doorcontrol.sp jwp_fdnobunt.sp jwp_ff.sp jwp_freeday.sp jwp_guns.sp jwp_handcuffs.sp jwp_healthkit.sp jwp_isolator.sp jwp_laserbeam.sp jwp_mcoloring.sp jwp_mute.sp jwp_noblock.sp jwp_onlrstarted.sp jwp_order.sp jwp_otkaz_m.sp jwp_playsound.sp jwp_pris_counter.sp jwp_rebel.sp jwp_respawn.sp jwp_rextend.sp jwp_skin.sp jwp_slay.sp jwp_speed.sp jwp_stoplr.sp jwp_stripknife.sp jwp_tojail.sp jwp_transwarden.sp jwp_wcolor.sp jwp_whealth.sp jwp_wtimer.sp jwp_icon.sp jwp_shootguns.sp
+script: ./compile.sh jwp_core.sp jwp_admincontrol.sp jwp_bequiet.sp jwp_coloring.sp jwp_dooraimcontrol.sp jwp_doorcontrol.sp jwp_fdnobunt.sp jwp_ff.sp jwp_freeday.sp jwp_guns.sp jwp_handcuffs.sp jwp_healthkit.sp jwp_isolator.sp jwp_laserbeam.sp jwp_mcoloring.sp jwp_mute.sp jwp_noblock.sp jwp_onlrstarted.sp jwp_order.sp jwp_otkaz_m.sp jwp_playsound.sp jwp_pris_counter.sp jwp_rebel.sp jwp_respawn.sp jwp_rextend.sp jwp_skin.sp jwp_slay.sp jwp_speed.sp jwp_stoplr.sp jwp_stripknife.sp jwp_tojail.sp jwp_transwarden.sp jwp_wcolor.sp jwp_whealth.sp jwp_wtimer.sp jwp_icon.sp jwp_shootguns.sp jwp_votewardenkick.sp
 
 #Releases
 before_deploy:
@@ -54,12 +63,16 @@ before_deploy:
     - mv addons/sourcemod/scripting/include/morecolors.inc jwp/addons/sourcemod/scripting/include/
     - mv addons/sourcemod/scripting/include/updater.inc jwp/addons/sourcemod/scripting/include/
     - mv addons/sourcemod/scripting/include/voiceannounce_ex.inc jwp/addons/sourcemod/scripting/include/
+    - mv addons/sourcemod/scripting/include/vip_core.inc jwp/addons/sourcemod/scripting/include/
     - mv addons/sourcemod/scripting/include/smartjaildoors.inc jwp/addons/sourcemod/scripting/include/
     - mv addons/sourcemod/scripting/include/lastrequest.inc jwp/addons/sourcemod/scripting/include/
     - mv addons/sourcemod/scripting/include/SteamWorks.inc jwp/addons/sourcemod/scripting/include/
     - mv addons/sourcemod/scripting/include/smjansson.inc jwp/addons/sourcemod/scripting/include/
+# csgo_colors.inc will be deprecated and removed in the future.
     - mv addons/sourcemod/scripting/include/csgo_colors.inc jwp/addons/sourcemod/scripting/include/
     - mv addons/sourcemod/scripting/include/emitsoundany.inc jwp/addons/sourcemod/scripting/include/
+    - mv addons/sourcemod/scripting/include/multicolors* jwp/addons/sourcemod/scripting/include/
+    - mv addons/sourcemod/scripting/include/n_arm_fix.inc jwp/addons/sourcemod/scripting/include/
     - rsync -a --prune-empty-dirs --include '*/' --include 'jwp*' --exclude '*' addons/sourcemod/translations/ jwp/addons/sourcemod/translations/
     - mv cfg/jwp/* jwp/cfg/jwp/
     - mv materials jwp/

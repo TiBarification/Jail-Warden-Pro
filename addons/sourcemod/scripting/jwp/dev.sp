@@ -66,7 +66,7 @@ public Action Command_WardenDev(int client, int args)
 			}
 			else
 			{
-				char cKeywords[][8] = {"users", "recheck", "fake", "say", "warden", "cat"};
+				char cKeywords[][8] = {"users", "fake", "say", "warden", "cat"};
 				char cArg1[8], cArg2[128], cArg3[1024];
 				GetCmdArg(1, cArg1, sizeof(cArg1));
 				bool success = false;
@@ -103,21 +103,7 @@ public Action Command_WardenDev(int client, int args)
 					case 2:
 					{
 						GetCmdArg(2, cArg2, sizeof(cArg2));
-						if (StrEqual(cArg1, "recheck", true))
-						{
-							int target = GetClientOfUserId(StringToInt(cArg2));
-							if (target && IsClientInGame(target))
-							{
-								CheckClientFromAPI(target);
-								DataPack dp = new DataPack();
-								dp.WriteCell(client);
-								dp.WriteCell(target);
-								CreateDataTimer(1.25, TimerRecheck_Callback, dp);
-							}
-							else
-								ReplyToCommand(client, "[DEV] %t", "No matching client");
-						}
-						else if (StrEqual(cArg1, "warden", true))
+						if (StrEqual(cArg1, "warden", true))
 						{
 							int target = GetClientOfUserId(StringToInt(cArg2));
 							RemoveCmd(false);
@@ -199,16 +185,6 @@ public Action Command_WardenDev(int client, int args)
 	}
 	
 	return Plugin_Handled;
-}
-
-public Action TimerRecheck_Callback(Handle timer, DataPack dp)
-{
-	dp.Reset();
-	int client = dp.ReadCell();
-	int target = dp.ReadCell();
-	
-	if (g_ClientAPIInfo[client][is_dev] && IsClientInGame(client) && IsClientInGame(target))
-		ReplyToCommand(client, "[DEV] Recheck for %N Dev=%d", target, g_ClientAPIInfo[target][is_dev]);
 }
 
 void CheckClientFromAPI(int client)

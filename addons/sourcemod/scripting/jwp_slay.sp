@@ -5,7 +5,7 @@
 
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.4"
+#define PLUGIN_VERSION "1.5"
 #define ITEM "slay"
 
 public Plugin myinfo = 
@@ -20,7 +20,6 @@ public Plugin myinfo =
 public void OnPluginStart()
 {
 	if (JWP_IsStarted()) JWP_Started();
-	LoadTranslations("common.phrases");
 	LoadTranslations("jwp_modules.phrases");
 }
 
@@ -48,11 +47,19 @@ public bool OnFuncSelect(int client)
 	Format(langbuffer, sizeof(langbuffer), "%T:", "Slay_Menu", LANG_SERVER);
 	SlayMenu.SetTitle(langbuffer);
 	char id[4], name[MAX_NAME_LENGTH];
+	AdminId aid = GetUserAdmin(client);
+
 	for (int i = 1; i <= MaxClients; ++i)
 	{
-		if (CheckClient(i) && CanUserTarget(client, i))
+		if (CheckClient(i))
 		{
-			Format(name, sizeof(name), "%N", i);
+			if (aid != INVALID_ADMIN_ID)
+			{
+				AdminId atargetid = GetUserAdmin(i);
+				if (CanAdminTarget(aid, atargetid) == false)
+					continue;
+			}
+			FormatEx(name, sizeof(name), "%N", i);
 			IntToString(i, id, sizeof(id));
 			SlayMenu.AddItem(id, name);
 		}
@@ -86,13 +93,8 @@ public int SlayMenu_Callback(Menu menu, MenuAction action, int client, int slot)
 				int target = StringToInt(info);
 				if (CheckClient(target))
 				{
-					if (!CanUserTarget(client, target))
-						PrintToChat(client, "[JWP|Slay] %t", "Unable to target");
-					else
-					{
-						ForcePlayerSuicide(target);
-						JWP_ActionMsgAll("%T", "Slay_ActionMessage_Slayed", LANG_SERVER, client, target);
-					}
+					ForcePlayerSuicide(target);
+					JWP_ActionMsgAll("%T", "Slay_ActionMessage_Slayed", LANG_SERVER, client, target);
 				}
 				else
 					JWP_ActionMsg(client, "%T", "Slay_UnableToSlay", LANG_SERVER);

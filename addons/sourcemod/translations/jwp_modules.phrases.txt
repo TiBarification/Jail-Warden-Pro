@@ -614,4 +614,27 @@
 	{
 		"en"		"Time has gone"
 	}
+	
+	"VoteWardenKick_AvailablePerRound"
+	{
+		"en"		"[{green}JWP{default}] {red}Voting for resign available only 1 time per round"
+	}
+	"VoteWardenKick_NoWarden"
+	{
+		"en"		"[{green}JWP{default}] {lightgreen}Warden not exist"
+	}
+	"VoteWardenKick_OnlyT"
+	{
+		"en"		"[{green}JWP{default}] {lightgreen}Only T team can vote"
+	}
+	"VoteWardenKick_VoteReplyRepeat"
+	{
+		"#format"	"{1:N},{2:d},{3:d}"
+		"en"		"[{green}JWP{default}] {lightgreen}You have already voted for resign {blue}{1}{default}. Votes: {green}{2}{default}/{green}{3}"
+	}
+	"VoteWardenKick_VoteReply"
+	{
+		"#format"	"{1:N},{2:N},{3:d},{4:d}"
+		"en"		"[{green}JWP{default}] {lightgreen}{1} voted for resign {blue}{2} {lightgreen}({green}{3}{default}/{green}{4}{lightgreen})"
+	}
 }

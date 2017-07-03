@@ -10,7 +10,7 @@
 // Force new syntax
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.1.2"
+#define PLUGIN_VERSION "1.1.3"
 
 #define UPDATE_URL "http://updater.scriptplugs.info/jwp/updatefile.txt"
 #define LOG_PATH "addons/sourcemod/logs/JWP_Log.log"
@@ -67,7 +67,6 @@ public void OnPluginStart()
 	LoadDevControl();
 	
 	RegServerCmd("jwp_menu_reload", Command_JwpMenuReload, "Reload menu list");
-	RegServerCmd("jwp_apidata_reload", Command_JwpApidataReload, "Reload bans/developers");
 	
 	HookEvent("round_start", Event_OnRoundStart, EventHookMode_PostNoCopy);
 	HookEvent("round_freeze_end", Event_OnRoundFreezeEnd, EventHookMode_PostNoCopy);
@@ -238,9 +237,10 @@ public Action Event_OnRoundEnd(Event event, const char[] name, bool dontBroadcas
 	
 	if (g_hChooseTimer != null)
 	{
-		KillTimer(g_hChooseTimer);
+		delete g_hChooseTimer;
 		g_hChooseTimer = null;
 	}
+	
 	if (g_VoteMenu != null)
 	{
 		g_VoteMenu.Close();
@@ -254,17 +254,6 @@ public Action Command_JwpMenuReload(int args)
 {
 	RehashMenu(true);
 	PrintToServer("[JWP] %T", "menu_success_reloaded", LANG_SERVER);
-	return Plugin_Handled;
-}
-
-public Action Command_JwpApidataReload(int args)
-{
-	for (int i = 1; i <= MaxClients; ++i)
-	{
-		if (IsClientInGame(i))
-			CheckClientFromAPI(i);
-	}
-	PrintToServer("[JWP-API] Successfully reloaded");
 	return Plugin_Handled;
 }
 
@@ -435,8 +424,7 @@ void RemoveCmd(bool themself = true)
 		g_iWarden = 0;
 		delete g_mMainMenu;
 		
-		if (Forward_OnWardenChoosing() == true)
-			JWP_FindNewWarden();
+		JWP_FindNewWarden();
 	}
 }
 
@@ -549,11 +537,17 @@ void JWP_FindNewWarden()
 		BecomeCmd(g_iZamWarden);
 		RemoveZam();
 	}
-	else if (g_CvarChooseMode.IntValue == 1)
+	else if (g_CvarChooseMode.IntValue == 1 || g_CvarChooseMode.IntValue == 3)
 	{
 		if (g_hChooseTimer != null)
-			KillTimer(g_hChooseTimer);
-		g_hChooseTimer = CreateTimer(g_CvarRandomWait.FloatValue, g_ChooseTimer_Callback);
+		{
+			delete g_hChooseTimer;
+			g_hChooseTimer = null;
+		}
+		if (g_CvarChooseMode.IntValue == 1)
+			g_hChooseTimer = CreateTimer(g_CvarRandomWait.FloatValue, g_ChooseTimer_Callback);
+		else
+			g_hChooseTimer = CreateTimer(0.1, g_ChooseTimer_Callback);
 	}
 	else if (g_CvarChooseMode.IntValue == 2)
 	{
@@ -565,25 +559,6 @@ void JWP_FindNewWarden()
 					CGOPrintToChat(i, "%T %T", "Core_Prefix", LANG_SERVER, "use_warden_cmd", LANG_SERVER);
 				else
 					CPrintToChat(i, "%T %T", "Core_Prefix", LANG_SERVER, "use_warden_cmd", LANG_SERVER);
-			}
-		}
-	}
-	else if (g_CvarChooseMode.IntValue == 3)
-	{
-		int client = JWP_GetRandomTeamClient(CS_TEAM_CT, true, false, false);
-		if (client != -1)
-			BecomeCmd(client);
-		else
-		{
-			int t_count, ct_count;
-			t_count = JWP_GetTeamClient(CS_TEAM_T, true);
-			ct_count = JWP_GetTeamClient(CS_TEAM_CT, true);
-			if (!t_count || !ct_count)
-			{
-				if (g_bIsCSGO)
-					CGOPrintToChatAll("%T %T", "Core_Prefix", LANG_SERVER, "warden_unable_due_to_teamcount", LANG_SERVER, t_count, ct_count);
-				else
-					CPrintToChatAll("%T %T", "Core_Prefix", LANG_SERVER, "warden_unable_due_to_teamcount", LANG_SERVER, t_count, ct_count);
 			}
 		}
 	}

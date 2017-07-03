@@ -40,7 +40,9 @@ public int Native_GetWarden(Handle plugin, int numParams)
 
 public int Native_SetWarden(Handle plugin, int numParams)
 {
+	if (!g_iWarden) return false;
 	int client = GetNativeCell(1);
+	
 	if (CheckClient(client) == false)
 	{
 		RemoveCmd(false);
@@ -63,7 +65,9 @@ public int Native_GetZamWarden(Handle plugin, int numParams)
 
 public int Native_SetZamWarden(Handle plugin, int numParams)
 {
+	if (!g_iZamWarden) return false;
 	int client = GetNativeCell(1);
+	
 	if (CheckClient(client) == false)
 	{
 		RemoveZam();
