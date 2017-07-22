@@ -4,6 +4,7 @@ sudo: false
 #Install some apt packages needed for spcomp
 addons:
     apt_packages:
+        - lib32z1
         - lib32stdc++6
 
 language: c
