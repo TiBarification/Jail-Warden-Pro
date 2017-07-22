@@ -1,5 +1,7 @@
 #!/bin/bash
+
 set -ev
+
 echo "Compilation of JWP Plugins"
 for file in addons/sourcemod/scripting/jwp_*.sp
 do
