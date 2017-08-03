@@ -3,7 +3,7 @@
 
 	"ratio_tag"
 	{
-		"en"		"[{green}JWP.Ratio{default}]"
+		"en"		"{GREEN}[{RED}JWP{PURPLE}.{BLUE}Ratio{GREEN}]{DEFAULT}"
 	}
 
 	"ratio_auto"
@@ -14,7 +14,7 @@
 	"ratio_fullqueue"
 	{
 		"#format"	"{1:i}"
-		"en"		"Guards team is full. You are {green}#{1}{default} in the queue."
+		"en"		"Guards team is full. You are {GREEN}#{1}{DEFAULT} in the queue."
 	}
 
 	"ratio_info_title"
@@ -24,51 +24,51 @@
 
 	"ratio_empty"
 	{
-		"en"		"The queue is currently {green}empty{default}."
+		"en"		"The queue is currently {GREEN}empty{DEFAULT}."
 	}
 
 	"ratio_noct"
 	{
-		"en"		"You must be a {green}prisoner{default} to join the queue."
+		"en"		"You must be a {GREEN}prisoner{DEFAULT} to join the queue."
 	}
 
 	"ratio_find"
 	{
 		"#format"	"{1:N}"
-		"en"		"Finding the next guard from queue. {green}{1} {default}is the new guard."
+		"en"		"Finding the next guard from queue. {GREEN}{1} {DEFAULT}is the new guard."
 	}
 
 	"ratio_random"
 	{
 		"#format"	"{1:N}"
-		"en"		"Guard queue is currently empty. {green}{1} {default}was picked as a random new guard."
+		"en"		"Guard queue is currently empty. {GREEN}{1} {DEFAULT}was picked as a random new guard."
 	}
 
 	"ratio_novalid"
 	{
-		"en"		"Could not find a{green} valid player{default} to switch to guards. Contact an admin."
+		"en"		"Could not find a{GREEN} valid player{DEFAULT} to switch to guards. Contact an admin."
 	}
 
 	"ratio_number"
 	{
 		"#format"	"{1:i}"
-		"en"		"You are {green}#{1}{default} in the guard queue."
+		"en"		"You are {GREEN}#{1}{DEFAULT} in the guard queue."
 	}
 
 	"ratio_thxvip"
 	{
-		"en"		"Thank you for being a {darkred}VIP{default}! You have been moved to the {green}front of the queue!{default}"
+		"en"		"Thank you for being a {RED}VIP{DEFAULT}! You have been moved to the {GREEN}front of the queue!{DEFAULT}"
 	}
 
 	"ratio_advip"
 	{
-		"en"		"Get a {darkred}VIP{default} to be automatically moved to the front of the queue."
+		"en"		"Get a {RED}VIP{DEFAULT} to be automatically moved to the front of the queue."
 	}
 
 	"ratio_movetot"
 	{
 		"#format"	"{1:N}"
-		"en"		"There are too many Guards. {green}{1}{default} was picked randomly and moved to prisoners."
+		"en"		"There are too many Guards. {GREEN}{1}{DEFAULT} was picked randomly and moved to prisoners."
 	}
 
 	"ratio_removed"
@@ -312,7 +312,7 @@
 
 	"ratio_banned"
 	{
-		"en"		"Cannot play on guards because you are {green}CT{default} banned."
+		"en"		"Cannot play on guards because you are {GREEN}CT{DEFAULT} banned."
 	}
 
 	"ratio_rankme"
