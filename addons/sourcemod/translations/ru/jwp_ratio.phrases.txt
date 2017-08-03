@@ -10,7 +10,7 @@
 
 	"ratio_tag"
 	{
-		"ru"		"{GREEN}[{RED}F{PURPLE}'{BLUE}T{GREEN}]{DEFAULT}"
+		"ru"		"{GREEN}[{RED}JWP{PURPLE}.{BLUE}Ratio{GREEN}]{DEFAULT}"
 	}
 
 	"ratio_auto"
