@@ -5,11 +5,12 @@
 #undef REQUIRE_PLUGIN
 #tryinclude <n_arms_fix>
 #tryinclude <vip_core>
+#tryinclude <shop>
 #define REQUIRE_PLUGIN
 
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.4"
+#define PLUGIN_VERSION "1.5"
 
 ConVar g_CvarWardenSkin, g_CvarWardenArms, g_CvarWardenZamSkin, g_CvarWardenZamArms, g_CvarTRandomSkins, g_CvarCTRandomSkins;
 char g_cWardenSkin[2][PLATFORM_MAX_PATH], g_cWardenZamSkin[2][PLATFORM_MAX_PATH];
@@ -248,11 +249,42 @@ bool SetRandomSkin(int client, ArrayList& myArray, KeyValues& kv)
 	return true;
 }
 
+bool IsClientSkinUse(int iClient)
+{
+    int iSize = 0;
+    ArrayList hArray = Shop_CreateArrayOfItems(iSize);
+    if(iSize)
+    {
+        CategoryId iCatID = Shop_GetCategoryId("skins");
+        ItemId item_id;
+        for(int i = 0; i < iSize; ++i)
+        {
+            item_id = view_as<ItemId>(Shop_GetArrayItem(hArray, i));
+            if(Shop_GetItemCategoryId(item_id) == iCatID && Shop_IsClientItemToggled(iClient, item_id))
+            {
+               CloseHandle(hArray);
+               return true;
+            }
+        }
+    }
+   
+    CloseHandle(hArray);
+
+    return false;
+}
+
+bool IsVipSkinUse(int iClient)
+{
+	return (VIP_IsClientVIP(iClient) && VIP_GetClientFeatureStatus(iClient, g_cVIPFeatureName) == ENABLED);
+}
+
 bool SetModel(int client, bool bSetDefaultModel = false)
 {
 	if (!g_CvarTRandomSkins.BoolValue && !g_CvarCTRandomSkins.BoolValue) return false; // Disable it , if no random skins
-	else if (!bSetDefaultModel && g_bVIPExists && VIP_IsValidFeature(g_cVIPFeatureName) && VIP_GetClientFeatureStatus(client, g_cVIPFeatureName) == ENABLED)
+	else if (!bSetDefaultModel && g_bVIPExists && IsVipSkinUse(client)==true)
 		return true; // Just exit, so we do not override VIP models
+	else if (!bSetDefaultModel && IsClientSkinUse(client)==true)
+		return true; // Just exit, so we do not override Shop models
 	else if (g_cSkin[client][0] != NULL_STRING[0])
 	{
 		if (g_bIsCSGO && g_bIsSafeToSetModel[0] == false) return false;

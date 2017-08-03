@@ -53,7 +53,7 @@ void JWP_StartVote()
 	}
 	
 	for (int i = 0; i < tt_count; i++)
-		g_VoteMenu.Display(tt_list[i], MENU_TIME_FOREVER);
+		g_VoteMenu.Display(tt_list[i], g_CvarVoteTime.IntValue);
 	
 	g_iVoteSec = g_CvarVoteTime.IntValue;
 	g_VoteTimer = CreateTimer(1.0, g_VoteTimer_Callback, _, TIMER_REPEAT);
@@ -75,8 +75,8 @@ public int g_VoteMenu_Callback(Menu menu, MenuAction action, int client, int slo
 				{
 					if (menu.RemoveItem(slot) && menu.ItemCount > 0)
 					{
-						PrintCenterText(client, "%T", "Unable to target", LANG_SERVER);
-						g_VoteMenu.Display(client, MENU_TIME_FOREVER);
+						PrintHintText(client, "%T", "Unable to target", LANG_SERVER);
+						g_VoteMenu.Display(client, g_CvarVoteTime.IntValue);
 					}
 					else
 						PrintHintText(client, "%T", "Player no longer available", LANG_SERVER);
@@ -123,15 +123,19 @@ public Action g_VoteTimer_Callback(Handle timer)
 		{
 			char best3ct[152];
 			if (JWP_LastBest3Ct(best3ct))
-				PrintHintTextToAll("%T\n%d\n \n%s", "vote_who_will_be_warden", LANG_SERVER, g_iVoteSec, best3ct);
+				PrintHintTextToAll("%T  [%d]\n%s", "vote_who_will_be_warden", LANG_SERVER, g_iVoteSec, best3ct);
 			else
 			{
 				g_iVots = 0;
-				PrintHintTextToAll("%T\n%d", "vote_who_will_be_warden", LANG_SERVER, g_iVoteSec);
+				PrintHintTextToAll("%T\nОсталось %d сек.", "vote_who_will_be_warden", LANG_SERVER, g_iVoteSec);
 			}
 		}
 		else
-			PrintHintTextToAll("%T\n%d", "vote_who_will_be_warden", LANG_SERVER, g_iVoteSec);
+		{
+			char best3ct[152];
+			JWP_LastBest3Ct(best3ct);
+			PrintHintTextToAll("%T\nОсталось %d сек.", "vote_who_will_be_warden", LANG_SERVER, g_iVoteSec);
+		}
 		return Plugin_Continue;
 	}
 	CheckVoteWinner();
@@ -153,7 +157,7 @@ bool JWP_LastBest3Ct(char Info[152])
 			int ct3 = JWP_GetBestCt(ct1, ct2);
 			if (ct3 > 0)
 			{
-				Format(Info, sizeof(Info), "%s\n3. %N (%d)", Info, ct3, g_iVoteResult[ct3]);
+				Format(Info, sizeof(Info), "%s  3. %N (%d)", Info, ct3, g_iVoteResult[ct3]);
 			}
 		}
 	}
