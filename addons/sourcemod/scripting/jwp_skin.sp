@@ -252,14 +252,14 @@ bool SetRandomSkin(int client, ArrayList& myArray, KeyValues& kv)
 bool IsClientSkinUse(int iClient)
 {
     int iSize = 0;
-    Handle hArray = Shop_CreateArrayOfItems(iSize);
+    ArrayList hArray = Shop_CreateArrayOfItems(iSize);
     if(iSize)
     {
         CategoryId iCatID = Shop_GetCategoryId("skins");
         ItemId item_id;
         for(int i = 0; i < iSize; ++i)
         {
-            item_id = Shop_GetArrayItem(hArray, i);
+            item_id = view_as<ItemId>(Shop_GetArrayItem(hArray, i));
             if(Shop_GetItemCategoryId(item_id) == iCatID && Shop_IsClientItemToggled(iClient, item_id))
             {
                CloseHandle(hArray);
