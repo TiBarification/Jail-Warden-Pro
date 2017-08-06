@@ -87,7 +87,7 @@ public Action Timer_CheckEyePosition(Handle timer)
 	return Plugin_Continue;
 }
 
-public void CheckEyePosition(iTeam)
+public void CheckEyePosition(int iTeam)
 {
 	float fEyePosition[3];
 	for (int i = 1; i <= MaxClients; i++)
