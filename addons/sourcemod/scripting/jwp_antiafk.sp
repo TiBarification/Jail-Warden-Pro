@@ -6,11 +6,17 @@
 #include <sdktools_functions>
 #include <jwp>
 
+#pragma newdecls required
+
+#define PLUGIN_VERSION "1.4.1"
+
 public Plugin:myinfo = 
 {
 	name	= "[JWP] Anti-AFK",
+	description = "Kills a player who did not show signs of life for a certain time",
 	author	= "Bristwex,BaFeR",
-	version	= "1.4.1"
+	version	= PLUGIN_VERSION,
+	url = "https://github.com/mrkos9i4ok/Jail-Warden-Pro"
 };
 
 new Float:g_fEyePosition[MAXPLAYERS + 1][3];
