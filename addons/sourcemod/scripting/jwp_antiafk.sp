@@ -10,7 +10,7 @@
 
 #define PLUGIN_VERSION "1.4.1"
 
-public Plugin:myinfo = 
+public Plugin myinfo = 
 {
 	name	= "[JWP] Anti-AFK",
 	description = "Kills a player who did not show signs of life for a certain time",
@@ -19,12 +19,12 @@ public Plugin:myinfo =
 	url = "https://github.com/mrkos9i4ok/Jail-Warden-Pro"
 };
 
-new Float:g_fEyePosition[MAXPLAYERS + 1][3];
-new bool:g_bChangeTeam[MAXPLAYERS + 1];
-new Handle:g_hTimer;
-new g_iCheck;
+Float g_fEyePosition[MAXPLAYERS + 1][3];
+bool g_bChangeTeam[MAXPLAYERS + 1];
+Handle g_hTimer;
+int g_iCheck;
 
-public OnPluginStart()
+public void OnPluginStart()
 {
 	HookEvent("player_spawn", Event_PlayerSpawn);
 	HookEvent("round_start", Event_RoundStart);
@@ -34,14 +34,14 @@ public OnPluginStart()
 	if (JWP_IsStarted()) JWP_Started();
 }
 
-public Event_PlayerSpawn(Handle:event, const String:name[], bool:dontBroadcast)
+public void Event_PlayerSpawn(Handle:event, const String:name[], bool:dontBroadcast)
 {
 	CreateTimer(1.5, Timer_GetEyePosition, GetEventInt(event, "userid"), TIMER_FLAG_NO_MAPCHANGE);
 }
 
-public Action:Timer_GetEyePosition(Handle:timer, any:iUserId)
+public Action Timer_GetEyePosition(Handle:timer, any:iUserId)
 {
-	new client = GetClientOfUserId(iUserId);
+	int client = GetClientOfUserId(iUserId);
 	if (client > 0 && IsClientInGame(client) && IsPlayerAlive(client) && GetClientTeam(client) > CS_TEAM_SPECTATOR)
 	{
 		GetClientAbsOrigin(client, g_fEyePosition[client]);
@@ -50,7 +50,7 @@ public Action:Timer_GetEyePosition(Handle:timer, any:iUserId)
 	return Plugin_Stop;
 }
 
-public Event_RoundStart(Handle:event, const String:name[], bool:dontBroadcast)
+public void Event_RoundStart(Handle:event, const String:name[], bool:dontBroadcast)
 {
 	if (g_hTimer != INVALID_HANDLE)
 	{
@@ -61,7 +61,7 @@ public Event_RoundStart(Handle:event, const String:name[], bool:dontBroadcast)
 	g_hTimer = CreateTimer(5.0, Timer_CheckEyePosition, _, TIMER_REPEAT);
 }
 
-public Event_RoundEnd(Handle:event, const String:name[], bool:dontBroadcast)
+public void Event_RoundEnd(Handle event, const String name[], bool dontBroadcast)
 {
 	if (g_hTimer != INVALID_HANDLE)
 	{
@@ -70,7 +70,7 @@ public Event_RoundEnd(Handle:event, const String:name[], bool:dontBroadcast)
 	}
 }
 
-public Action:Timer_CheckEyePosition(Handle:timer)
+public Action Timer_CheckEyePosition(Handle:timer)
 {
 	if (++g_iCheck == 3)  //15 sec after round start
 	{
@@ -89,8 +89,8 @@ public Action:Timer_CheckEyePosition(Handle:timer)
 
 CheckEyePosition(iTeam)
 {
-	new Float:fEyePosition[3];
-	for (new i = 1; i <= MaxClients; i++)
+	new Float fEyePosition[3];
+	for (int i = 1; i <= MaxClients; i++)
 	{
 		if (IsClientInGame(i) && IsPlayerAlive(i) && GetClientTeam(i) == iTeam)
 		{
