@@ -19,7 +19,7 @@ public Plugin myinfo =
 	url = "https://github.com/mrkos9i4ok/Jail-Warden-Pro"
 };
 
-Float g_fEyePosition[MAXPLAYERS + 1][3];
+float g_fEyePosition[MAXPLAYERS + 1][3];
 bool g_bChangeTeam[MAXPLAYERS + 1];
 Handle g_hTimer;
 int g_iCheck;
@@ -34,12 +34,12 @@ public void OnPluginStart()
 	if (JWP_IsStarted()) JWP_Started();
 }
 
-public void Event_PlayerSpawn(Handle:event, const String:name[], bool:dontBroadcast)
+public void Event_PlayerSpawn(Handle event, const char name[], bool dontBroadcast)
 {
 	CreateTimer(1.5, Timer_GetEyePosition, GetEventInt(event, "userid"), TIMER_FLAG_NO_MAPCHANGE);
 }
 
-public Action Timer_GetEyePosition(Handle:timer, any:iUserId)
+public Action Timer_GetEyePosition(Handle timer, any iUserId)
 {
 	int client = GetClientOfUserId(iUserId);
 	if (client > 0 && IsClientInGame(client) && IsPlayerAlive(client) && GetClientTeam(client) > CS_TEAM_SPECTATOR)
@@ -50,7 +50,7 @@ public Action Timer_GetEyePosition(Handle:timer, any:iUserId)
 	return Plugin_Stop;
 }
 
-public void Event_RoundStart(Handle:event, const String:name[], bool:dontBroadcast)
+public void Event_RoundStart(Handle event, const char name[], bool dontBroadcast)
 {
 	if (g_hTimer != INVALID_HANDLE)
 	{
@@ -61,7 +61,7 @@ public void Event_RoundStart(Handle:event, const String:name[], bool:dontBroadca
 	g_hTimer = CreateTimer(5.0, Timer_CheckEyePosition, _, TIMER_REPEAT);
 }
 
-public void Event_RoundEnd(Handle event, const String name[], bool dontBroadcast)
+public void Event_RoundEnd(Handle event, const char name[], bool dontBroadcast)
 {
 	if (g_hTimer != INVALID_HANDLE)
 	{
@@ -70,7 +70,7 @@ public void Event_RoundEnd(Handle event, const String name[], bool dontBroadcast
 	}
 }
 
-public Action Timer_CheckEyePosition(Handle:timer)
+public Action Timer_CheckEyePosition(Handle timer)
 {
 	if (++g_iCheck == 3)  //15 sec after round start
 	{
@@ -87,9 +87,9 @@ public Action Timer_CheckEyePosition(Handle:timer)
 	return Plugin_Continue;
 }
 
-CheckEyePosition(iTeam)
+void CheckEyePosition(iTeam)
 {
-	new Float fEyePosition[3];
+	float fEyePosition[3];
 	for (int i = 1; i <= MaxClients; i++)
 	{
 		if (IsClientInGame(i) && IsPlayerAlive(i) && GetClientTeam(i) == iTeam)
