@@ -10,7 +10,7 @@ public Plugin:myinfo =
 {
 	name	= "[JB] Anti-AFK",
 	author	= "Bristwex,BaFeR",
-	version	= "1.4.1[PRIVATE]"
+	version	= "1.4.1"
 };
 
 new Float:g_fEyePosition[MAXPLAYERS + 1][3];
@@ -63,13 +63,13 @@ public Event_RoundEnd(Handle:event, const String:name[], bool:dontBroadcast)
 
 public Action:Timer_CheckEyePosition(Handle:timer)
 {
-	if (++g_iCheck == 3)
+	if (++g_iCheck == 3)  //15 sec after round start
 	{
-		CheckEyePosition(CS_TEAM_CT);
+		CheckEyePosition(CS_TEAM_CT);  //guards
 	}
-	else if (g_iCheck == 12)
+	else if (g_iCheck == 12) //60 sec after round start
 	{
-		CheckEyePosition(CS_TEAM_T);
+		CheckEyePosition(CS_TEAM_T);  //prisoners
 		
 		g_hTimer = INVALID_HANDLE;
 		return Plugin_Stop;
@@ -91,7 +91,7 @@ CheckEyePosition(iTeam)
 			&& fEyePosition[2] == g_fEyePosition[i][2])
 			{
 				ForcePlayerSuicide(i);
-				CGOPrintToChatAll("{GREEN}[{RED}F{PURPLE}'{BLUE}T{GREEN}] {RED}%N{DEFAULT}<--AFK-Игрок Убит!",i);
+				CGOPrintToChatAll("{GREEN}[{RED}JWP{PURPLE}.{BLUE}AFK{GREEN}] {RED}%N{DEFAULT}<--AFK-Игрок Убит!",i);
 				if (iTeam == CS_TEAM_CT)
 				{
 					if (g_bChangeTeam[i])
@@ -99,8 +99,7 @@ CheckEyePosition(iTeam)
 						ChangeClientTeam(i, CS_TEAM_T);
 					}
 					else
-						//PrintToChat(i, " \x02Вас перекинет за Т, если Вы будете в следующий раз AFK!");
-						CGOPrintToChatAll("{GREEN}[{RED}F{PURPLE}'{BLUE}T{GREEN}] {BLUE}%N {DEFAULT}получает  1/2 предупреждений",i);
+						CGOPrintToChatAll("{GREEN}[{RED}JWP{PURPLE}.{BLUE}AFK{GREEN}] {BLUE}%N {DEFAULT}получает  1/2 предупреждений",i);
 					
 					g_bChangeTeam[i] = !g_bChangeTeam[i];
 				}
