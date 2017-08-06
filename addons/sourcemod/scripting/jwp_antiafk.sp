@@ -30,11 +30,11 @@ public void OnPluginStart()
 	HookEvent("round_start", Event_RoundStart);
 	HookEvent("round_end", Event_RoundEnd);
 	
-	LoadTranslations("jwp_modules.phrases");
-	if (JWP_IsStarted()) JWP_Started();
+	//LoadTranslations("jwp_modules.phrases");
+	//if (JWP_IsStarted()) JWP_Started();
 }
 
-public void Event_PlayerSpawn(Handle event, const char name[], bool dontBroadcast)
+public void Event_PlayerSpawn(Handle event, const char[] name, bool dontBroadcast)
 {
 	CreateTimer(1.5, Timer_GetEyePosition, GetEventInt(event, "userid"), TIMER_FLAG_NO_MAPCHANGE);
 }
@@ -50,7 +50,7 @@ public Action Timer_GetEyePosition(Handle timer, any iUserId)
 	return Plugin_Stop;
 }
 
-public void Event_RoundStart(Handle event, const char name[], bool dontBroadcast)
+public void Event_RoundStart(Handle event, const char[] name, bool dontBroadcast)
 {
 	if (g_hTimer != INVALID_HANDLE)
 	{
@@ -61,7 +61,7 @@ public void Event_RoundStart(Handle event, const char name[], bool dontBroadcast
 	g_hTimer = CreateTimer(5.0, Timer_CheckEyePosition, _, TIMER_REPEAT);
 }
 
-public void Event_RoundEnd(Handle event, const char name[], bool dontBroadcast)
+public void Event_RoundEnd(Handle event, const char[] name, bool dontBroadcast)
 {
 	if (g_hTimer != INVALID_HANDLE)
 	{
@@ -87,7 +87,7 @@ public Action Timer_CheckEyePosition(Handle timer)
 	return Plugin_Continue;
 }
 
-void CheckEyePosition(iTeam)
+public void CheckEyePosition(iTeam)
 {
 	float fEyePosition[3];
 	for (int i = 1; i <= MaxClients; i++)
