@@ -4,11 +4,11 @@
 #include <cstrike>
 #include <sdktools_engine>
 #include <sdktools_functions>
-#include <csgo_colors>
+#include <jwp>
 
 public Plugin:myinfo = 
 {
-	name	= "[JB] Anti-AFK",
+	name	= "[JWP] Anti-AFK",
 	author	= "Bristwex,BaFeR",
 	version	= "1.4.1"
 };
@@ -23,6 +23,9 @@ public OnPluginStart()
 	HookEvent("player_spawn", Event_PlayerSpawn);
 	HookEvent("round_start", Event_RoundStart);
 	HookEvent("round_end", Event_RoundEnd);
+	
+	LoadTranslations("jwp_modules.phrases");
+	if (JWP_IsStarted()) JWP_Started();
 }
 
 public Event_PlayerSpawn(Handle:event, const String:name[], bool:dontBroadcast)
@@ -91,7 +94,7 @@ CheckEyePosition(iTeam)
 			&& fEyePosition[2] == g_fEyePosition[i][2])
 			{
 				ForcePlayerSuicide(i);
-				CGOPrintToChatAll("{GREEN}[{RED}JWP{PURPLE}.{BLUE}AFK{GREEN}] {RED}%N{DEFAULT}<--AFK-Игрок Убит!",i);
+				JWP_ActionMsgAll("{GREEN}[{RED}JWP{PURPLE}.{BLUE}AFK{GREEN}] {RED}%N{DEFAULT}<--AFK-Игрок Убит!",i);
 				if (iTeam == CS_TEAM_CT)
 				{
 					if (g_bChangeTeam[i])
@@ -99,7 +102,7 @@ CheckEyePosition(iTeam)
 						ChangeClientTeam(i, CS_TEAM_T);
 					}
 					else
-						CGOPrintToChatAll("{GREEN}[{RED}JWP{PURPLE}.{BLUE}AFK{GREEN}] {BLUE}%N {DEFAULT}получает  1/2 предупреждений",i);
+						JWP_ActionMsgAll("{GREEN}[{RED}JWP{PURPLE}.{BLUE}AFK{GREEN}] {BLUE}%N {DEFAULT}получает  1/2 предупреждений",i);
 					
 					g_bChangeTeam[i] = !g_bChangeTeam[i];
 				}
