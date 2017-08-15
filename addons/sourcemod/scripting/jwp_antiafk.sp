@@ -20,12 +20,13 @@ public Plugin myinfo =
 };
 
 float g_fEyePosition[MAXPLAYERS + 1][3];
-bool g_bChangeTeam[MAXPLAYERS + 1];
 Handle g_hTimer;
 int g_iCheck;
 
 public void OnPluginStart()
 {
+	LoadTranslations("jwp_antiafk.phrases");
+
 	HookEvent("player_spawn", Event_PlayerSpawn);
 	HookEvent("round_start", Event_RoundStart);
 	HookEvent("round_end", Event_RoundEnd);
@@ -100,7 +101,7 @@ public void CheckEyePosition(int iTeam)
 			&& fEyePosition[2] == g_fEyePosition[i][2])
 			{
 				ForcePlayerSuicide(i);
-				JWP_ActionMsgAll("{GREEN}[{RED}JWP{PURPLE}.{BLUE}AFK{GREEN}] {RED}%N{DEFAULT}<--AFK-Игрок Убит!",i);
+				JWP_ActionMsgAll("%T %T ", "antiafk_tag", "antiafk_kill", i);
 				if (iTeam == CS_TEAM_CT)
 				{
 					
