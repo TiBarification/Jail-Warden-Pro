@@ -103,14 +103,8 @@ public void CheckEyePosition(int iTeam)
 				JWP_ActionMsgAll("{GREEN}[{RED}JWP{PURPLE}.{BLUE}AFK{GREEN}] {RED}%N{DEFAULT}<--AFK-Игрок Убит!",i);
 				if (iTeam == CS_TEAM_CT)
 				{
-					if (g_bChangeTeam[i])
-					{
-						ChangeClientTeam(i, CS_TEAM_T);
-					}
-					else
-						JWP_ActionMsgAll("{GREEN}[{RED}JWP{PURPLE}.{BLUE}AFK{GREEN}] {BLUE}%N {DEFAULT}получает  1/2 предупреждений",i);
 					
-					g_bChangeTeam[i] = !g_bChangeTeam[i];
+					ChangeClientTeam(i, CS_TEAM_T);
 				}
 			}
 		}
