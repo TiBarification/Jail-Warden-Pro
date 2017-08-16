@@ -1,0 +1,15 @@
+﻿"Phrases"
+{
+	"antiafk_tag"
+	{
+		"en"		"{GREEN}[{RED}AntiAfk{GREEN}]"
+		"ru"		"{GREEN}[{RED}AntiAfk{GREEN}]"
+	}
+  
+	"antiafk_kill"
+	{
+		"#format"	"{1:N}"
+		"en"		"{PURPLE}{1} {DEFAULT}<-- was killed"
+		"ru"		"{PURPLE}{1} {DEFAULT}<-- был убит"
+	}
+}
