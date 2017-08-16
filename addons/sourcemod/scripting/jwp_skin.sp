@@ -10,7 +10,7 @@
 
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.5"
+#define PLUGIN_VERSION "1.6"
 
 ConVar g_CvarWardenSkin, g_CvarWardenArms, g_CvarWardenZamSkin, g_CvarWardenZamArms, g_CvarTRandomSkins, g_CvarCTRandomSkins;
 char g_cWardenSkin[2][PLATFORM_MAX_PATH], g_cWardenZamSkin[2][PLATFORM_MAX_PATH];
@@ -281,13 +281,13 @@ bool IsVipSkinUse(int iClient)
 bool SetModel(int client, bool bSetDefaultModel = false)
 {
 	if (!g_CvarTRandomSkins.BoolValue && !g_CvarCTRandomSkins.BoolValue) return false; // Disable it , if no random skins
-	else if (!bSetDefaultModel && g_bVIPExists && IsVipSkinUse(client)==true)
+	else if (!bSetDefaultModel && g_bVIPExists && IsVipSkinUse(client))
 		return true; // Just exit, so we do not override VIP models
-	else if (!bSetDefaultModel && IsClientSkinUse(client)==true)
+	else if (!bSetDefaultModel && IsClientSkinUse(client))
 		return true; // Just exit, so we do not override Shop models
 	else if (g_cSkin[client][0] != NULL_STRING[0])
 	{
-		if (g_bIsCSGO && g_bIsSafeToSetModel[0] == false) return false;
+		if (g_bIsCSGO && !g_bIsSafeToSetModel[0]) return false;
 		SetEntityModel(client, g_cSkin[client]);
 		if (g_iSkinId[client] != 0)
 			SetEntProp(client, Prop_Send, "m_nSkin", g_iSkinId[client]);
