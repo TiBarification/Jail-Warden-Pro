@@ -101,10 +101,9 @@ public void CheckEyePosition(int iTeam)
 			&& fEyePosition[2] == g_fEyePosition[i][2])
 			{
 				ForcePlayerSuicide(i);
-				JWP_ActionMsgAll("%T %T ", "antiafk_tag", "antiafk_kill", i);
+				JWP_ActionMsgAll("%T %T", "antiafk_tag", "antiafk_kill", i);
 				if (iTeam == CS_TEAM_CT)
 				{
-					
 					ChangeClientTeam(i, CS_TEAM_T);
 				}
 			}

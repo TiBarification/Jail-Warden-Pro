@@ -2,13 +2,14 @@
 {
 	"antiafk_tag"
 	{
-	"en"		"{GREEN}[{RED}AntiAfk{GREEN}]"
-    "ru"		"{GREEN}[{RED}AntiAfk{GREEN}]"
+		"en"		"{GREEN}[{RED}AntiAfk{GREEN}]"
+		"ru"		"{GREEN}[{RED}AntiAfk{GREEN}]"
 	}
   
-  "antiafk_kill"
+	"antiafk_kill"
 	{
-	"en"		"{PURPLE}#%i {DEFAULT}<-- was killed"
-    "ru"		"{PURPLE}#%i {DEFAULT}<-- был убит"
+		"#format"	"{1:N}"
+		"en"		"{PURPLE}{1} {DEFAULT}<-- was killed"
+		"ru"		"{PURPLE}{1} {DEFAULT}<-- был убит"
 	}
 }
