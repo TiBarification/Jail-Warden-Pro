@@ -39,8 +39,6 @@ install:
     - wget "https://raw.githubusercontent.com/dataviruset/sm-hosties/master/addons/sourcemod/scripting/include/lastrequest.inc" -O $INCLUDE/lastrequest.inc
     - wget "https://raw.githubusercontent.com/KyleSanderson/SteamWorks/master/Pawn/includes/SteamWorks.inc" -O $INCLUDE/SteamWorks.inc
     - wget "https://raw.githubusercontent.com/thraaawn/SMJansson/master/pawn/scripting/include/smjansson.inc" -O $INCLUDE/smjansson.inc
-    - wget "https://raw.githubusercontent.com/Impact123/AutoExecConfig/development/autoexecconfig.inc" -O $INCLUDE/autoexecconfig.inc
-    - wget "https://raw.githubusercontent.com/shanapu/MyJailbreak/master/addons/sourcemod/scripting/include/mystocks.inc" -O $INCLUDE/mystocks.inc
     - wget "https://raw.githubusercontent.com/NomisCZ/Arms-Fix/master/addons/sourcemod/scripting/include/n_arms_fix.inc" -O $INCLUDE/n_arms_fix.inc
     # Add multicolors from github repository
     - mkdir $INCLUDE/multicolors

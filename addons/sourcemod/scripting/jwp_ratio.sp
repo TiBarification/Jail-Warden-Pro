@@ -3,8 +3,6 @@
 #include <sdkhooks>
 #include <cstrike>
 #include <csgo_colors>
-#include <autoexecconfig>
-#include <mystocks>
 
 // Optional Plugins
 #undef REQUIRE_PLUGIN
@@ -87,35 +85,31 @@ public void OnPluginStart()
 	RegAdminCmd("sm_clearqueue", AdminCommand_ClearQueue, ADMFLAG_GENERIC, "Allows the admin clear the CT queue");
 
 	// AutoExecConfig
-	AutoExecConfig_SetFile("ratio", "jwp");
-	AutoExecConfig_SetCreateFile(true);
+	AutoExecConfig(true, "ratio", "jwp");
 
-	AutoExecConfig_CreateConVar("sm_ratio_version", "1.2", "The version of this jwp SourceMod plugin", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
-	gc_sCustomCommandGuard = AutoExecConfig_CreateConVar("sm_ratio_cmds_guard", "g, ct, guards", "Set your custom chat command for become guard(!guard (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
-	gc_sCustomCommandQueue = AutoExecConfig_CreateConVar("sm_ratio_cmds_queue", "vq, queue", "Set your custom chat command for view guard queue (!viewqueue (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
-	gc_sCustomCommandLeave = AutoExecConfig_CreateConVar("sm_ratio_cmds_leave", "lq, stay", "Set your custom chat command for view leave queue (!leavequeue (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
-	gc_sCustomCommandRatio = AutoExecConfig_CreateConVar("sm_ratio_cmds_ratio", "balance", "Set your custom chat command for view/toggle ratio (!ratio (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
-	gc_sCustomCommandRemove = AutoExecConfig_CreateConVar("sm_ratio_cmds_remove", "rq", "Set your custom chat command for admins to remove a player from guard queue (!removequeue (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
-	gc_sCustomCommandClear = AutoExecConfig_CreateConVar("sm_ratio_cmds_clear", "cq", "Set your custom chat command for admins to clear the guard queue (!clearqueue (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
-	gc_sCustomCommandPrisoner = AutoExecConfig_CreateConVar("sm_ratio_cmds_prisoner", "t,terror", "Set your custom chat command for player to move to prisoner (!prisoner (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
-	gc_sCustomCommandSpec = AutoExecConfig_CreateConVar("sm_ratio_cmds_spec", "spec", "Set your custom chat command for player to move to spectator (!spectator (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
-	gc_fPrisonerPerGuard = AutoExecConfig_CreateConVar("sm_ratio_T_per_CT", "2", "How many prisoners for each guard.", _, true, 1.0);
-	gc_bVIPQueue = AutoExecConfig_CreateConVar("sm_ratio_flag", "1", "0 - disabled, 1 - enable VIPs moved to front of queue", _, true, 0.0, true, 1.0);
-	gc_bForceTConnect = AutoExecConfig_CreateConVar("sm_ratio_force_t", "1", "0 - disabled, 1 - force player on connect to join T side", _, true, 0.0, true, 1.0);
-	gc_sAdminFlag = AutoExecConfig_CreateConVar("sm_ratio_vipflag", "a", "Set the flag for VIP");
-	gc_bToggle = AutoExecConfig_CreateConVar("sm_ratio_disable", "0", "Allow the admin to toggle 'ratio check & autoswap' on/off with !ratio", _, true, 0.0, true, 1.0);
-	gc_bToggleAnnounce = AutoExecConfig_CreateConVar("sm_ratio_disable_announce", "0", "Announce in a chatmessage on roundend when ratio is disabled", _, true, 0.0, true, 1.0);
-	gc_bAdsVIP = AutoExecConfig_CreateConVar("sm_ratio_adsvip", "1", "0 - disabled, 1 - enable adverstiment for 'VIPs moved to front of queue' when player types !guard ", _, true, 0.0, true, 1.0);
-	gc_iJoinMode = AutoExecConfig_CreateConVar("sm_ratio_join_mode", "1", "0 - instandly join ct/queue, no confirmation / 1 - confirm rules / 2 - Qualification questions", _, true, 0.0, true, 2.0);
-	gc_iQuestionTimes = AutoExecConfig_CreateConVar("sm_ratio_questions", "3", "How many question a player have to answer before join ct/queue. need sm_ratio_join_mode 2", _, true, 1.0, true, 5.0);
-	gc_bAdminBypass = AutoExecConfig_CreateConVar("sm_ratio_vip_bypass", "1", "Bypass Admin/VIP though agreement / question", _, true, 0.0, true, 1.0);
-	gc_bBalanceTerror = AutoExecConfig_CreateConVar("sm_ratio_balance_terror", "1", "0 = Could result in unbalanced teams. 1 = Switch a random T, when nobody is in guardqueue to balance the teams.", _, true, 0.0, true, 1.0);
-	gc_bBalanceGuards = AutoExecConfig_CreateConVar("sm_ratio_balance_guard", "1", "Mode to choose a guard to be switch to T on balance the teams. 1 = Last In First Out / 0 = Random Guard", _, true, 0.0, true, 1.0);
-	gc_bBalanceWarden = AutoExecConfig_CreateConVar("sm_ratio_balance_warden", "1", "Prevent warden & deputy to be switch to T on balance the teams. Could result in unbalanced teams", _, true, 0.0, true, 1.0);
-	gc_bRespawn = AutoExecConfig_CreateConVar("sm_ratio_respawn", "1", "0 - Move player on next round to CT / 1 - Move player immediately to CT and respawn", _, true, 0.0, true, 1.0);
-
-	AutoExecConfig_ExecuteFile();
-	AutoExecConfig_CleanFile();
+	CreateConVar("sm_ratio_version", "1.2", "The version of this SourceMod plugin", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
+	gc_sCustomCommandGuard = CreateConVar("sm_ratio_cmds_guard", "g, ct, guards", "Set your custom chat command for become guard(!guard (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
+	gc_sCustomCommandQueue = CreateConVar("sm_ratio_cmds_queue", "vq, queue", "Set your custom chat command for view guard queue (!viewqueue (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
+	gc_sCustomCommandLeave = CreateConVar("sm_ratio_cmds_leave", "lq, stay", "Set your custom chat command for view leave queue (!leavequeue (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
+	gc_sCustomCommandRatio = CreateConVar("sm_ratio_cmds_ratio", "balance", "Set your custom chat command for view/toggle ratio (!ratio (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
+	gc_sCustomCommandRemove = CreateConVar("sm_ratio_cmds_remove", "rq", "Set your custom chat command for admins to remove a player from guard queue (!removequeue (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
+	gc_sCustomCommandClear = CreateConVar("sm_ratio_cmds_clear", "cq", "Set your custom chat command for admins to clear the guard queue (!clearqueue (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
+	gc_sCustomCommandPrisoner = CreateConVar("sm_ratio_cmds_prisoner", "t,terror", "Set your custom chat command for player to move to prisoner (!prisoner (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
+	gc_sCustomCommandSpec = CreateConVar("sm_ratio_cmds_spec", "spec", "Set your custom chat command for player to move to spectator (!spectator (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
+	gc_fPrisonerPerGuard = CreateConVar("sm_ratio_T_per_CT", "2", "How many prisoners for each guard.", _, true, 1.0);
+	gc_bVIPQueue = CreateConVar("sm_ratio_flag", "1", "0 - disabled, 1 - enable VIPs moved to front of queue", _, true, 0.0, true, 1.0);
+	gc_bForceTConnect = CreateConVar("sm_ratio_force_t", "1", "0 - disabled, 1 - force player on connect to join T side", _, true, 0.0, true, 1.0);
+	gc_sAdminFlag = CreateConVar("sm_ratio_vipflag", "a", "Set the flag for VIP");
+	gc_bToggle = CreateConVar("sm_ratio_disable", "0", "Allow the admin to toggle 'ratio check & autoswap' on/off with !ratio", _, true, 0.0, true, 1.0);
+	gc_bToggleAnnounce = CreateConVar("sm_ratio_disable_announce", "0", "Announce in a chatmessage on roundend when ratio is disabled", _, true, 0.0, true, 1.0);
+	gc_bAdsVIP = CreateConVar("sm_ratio_adsvip", "1", "0 - disabled, 1 - enable adverstiment for 'VIPs moved to front of queue' when player types !guard ", _, true, 0.0, true, 1.0);
+	gc_iJoinMode = CreateConVar("sm_ratio_join_mode", "1", "0 - instandly join ct/queue, no confirmation / 1 - confirm rules / 2 - Qualification questions", _, true, 0.0, true, 2.0);
+	gc_iQuestionTimes = CreateConVar("sm_ratio_questions", "3", "How many question a player have to answer before join ct/queue. need sm_ratio_join_mode 2", _, true, 1.0, true, 5.0);
+	gc_bAdminBypass = CreateConVar("sm_ratio_vip_bypass", "1", "Bypass Admin/VIP though agreement / question", _, true, 0.0, true, 1.0);
+	gc_bBalanceTerror = CreateConVar("sm_ratio_balance_terror", "1", "0 = Could result in unbalanced teams. 1 = Switch a random T, when nobody is in guardqueue to balance the teams.", _, true, 0.0, true, 1.0);
+	gc_bBalanceGuards = CreateConVar("sm_ratio_balance_guard", "1", "Mode to choose a guard to be switch to T on balance the teams. 1 = Last In First Out / 0 = Random Guard", _, true, 0.0, true, 1.0);
+	gc_bBalanceWarden = CreateConVar("sm_ratio_balance_warden", "1", "Prevent warden & deputy to be switch to T on balance the teams. Could result in unbalanced teams", _, true, 0.0, true, 1.0);
+	gc_bRespawn = CreateConVar("sm_ratio_respawn", "1", "0 - Move player on next round to CT / 1 - Move player immediately to CT and respawn", _, true, 0.0, true, 1.0);
 
 	// Hooks
 	AddCommandListener(Event_OnJoinTeam, "jointeam");
@@ -1332,4 +1326,42 @@ public int ChangeMenu(Menu menu, MenuAction action, int client, int selection)
 	{
 		delete menu;
 	}
+}
+
+// Check for valid clients with bool for bots & dead player 
+bool IsValidClient(int client, bool bAllowBots = false, bool bAllowDead = true)
+{
+	if (!(1 <= client <= MaxClients) || !IsClientInGame(client) || (IsFakeClient(client) && !bAllowBots) || IsClientSourceTV(client) || IsClientReplay(client) || (!bAllowDead && !IsPlayerAlive(client)))
+	{
+		return false;
+	}
+	return true;
+}
+
+// Menu Handler for Panels
+stock int Handler_NullCancel(Handle menu, MenuAction action, int param1, int param2)
+{
+	if (action == MenuAction_Select) 
+	{
+		switch (param2) 
+		{
+			default: // cancel
+			{
+				return 0;
+			}
+		}
+	}
+
+	return 0;
+}
+	
+// Get a player for a certain admin flag
+bool CheckVipFlag(int client, const char[] flagsNeed)
+{
+	if ((GetUserFlagBits(client) & ReadFlagString(flagsNeed) == ReadFlagString(flagsNeed)) || (GetUserFlagBits(client) & ADMFLAG_ROOT))
+	{
+		return true;
+	}
+
+	return false;
 }

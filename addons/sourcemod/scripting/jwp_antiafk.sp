@@ -8,7 +8,7 @@
 
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.4.1"
+#define PLUGIN_VERSION "1.4.2"
 
 public Plugin myinfo = 
 {
@@ -25,7 +25,7 @@ int g_iCheck;
 
 public void OnPluginStart()
 {
-	LoadTranslations("jwp_antiafk.phrases");
+	LoadTranslations("jwp_modules.phrases");
 
 	HookEvent("player_spawn", Event_PlayerSpawn);
 	HookEvent("round_start", Event_RoundStart);
