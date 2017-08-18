@@ -91,12 +91,12 @@ public Action Event_OnPlayerSpawn(Event event, const char[] name, bool dontBroad
 
 			if (JWP_IsWarden(client) && g_cWardenSkin[1][0] == 'm')
 			{
-				if (StrEqual(currentmodel, g_cWardenSkin[1])) return;
+				if (StrEqual(currentmodel, g_cWardenSkin[1])) return Plugin_Handled;
 				SetEntPropString(client, Prop_Send, "m_szArmsModel", g_cWardenSkin[1]);
 			}
 			else if (JWP_IsZamWarden(client) && g_cWardenZamSkin[1][0] == 'm')
 			{
-				if (StrEqual(currentmodel, g_cWardenZamSkin[1])) return;
+				if (StrEqual(currentmodel, g_cWardenZamSkin[1])) return Plugin_Handled;
 				SetEntPropString(client, Prop_Send, "m_szArmsModel", g_cWardenZamSkin[1]);
 			}
 			else
