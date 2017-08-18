@@ -289,7 +289,7 @@ bool SetRandomSkin(int client, ArrayList& myArray, KeyValues& kv)
 bool IsClientSkinUse(int iClient)
 {
     int iSize = 0;
-    ArrayList hArray = Shop_CreateArrayOfItems(iSize);
+    ArrayList hArray = view_as<ArrayList>(Shop_CreateArrayOfItems(iSize));
     if(iSize)
     {
         CategoryId iCatID = Shop_GetCategoryId("skins");
