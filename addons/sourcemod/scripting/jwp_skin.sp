@@ -10,7 +10,7 @@
 
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.6"
+#define PLUGIN_VERSION "1.6.1"
 
 ConVar g_CvarWardenSkin, g_CvarWardenArms, g_CvarWardenZamSkin, g_CvarWardenZamArms, g_CvarTRandomSkins, g_CvarCTRandomSkins;
 char g_cWardenSkin[2][PLATFORM_MAX_PATH], g_cWardenZamSkin[2][PLATFORM_MAX_PATH];
@@ -57,6 +57,8 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 {
 	MarkNativeAsOptional("ArmsFix_SetDefaults");
 	MarkNativeAsOptional("ArmsFix_HasDefaultArms");
+	MarkNativeAsOptional("ArmsFix_SetDefaultArms");
+	MarkNativeAsOptional("ArmsFix_RefreshView");
 	MarkNativeAsOptional("VIP_IsValidFeature");
 	MarkNativeAsOptional("VIP_GetClientFeatureStatus");
 
@@ -77,7 +79,38 @@ public Action Event_OnPlayerSpawn(Event event, const char[] name, bool dontBroad
 	{
 		TiB_SetSkin(client);
 		if (!g_bIsCSGO)
+		{
 			SetModel(client);
+		}
+		else
+		{
+			g_bIsSafeToSetModel[0] = true
+			g_bIsSafeToSetModel[1] = true;
+			char currentmodel[PLATFORM_MAX_PATH];
+			GetEntPropString(client, Prop_Send, "m_szArmsModel", currentmodel, sizeof(currentmodel));
+
+			if (JWP_IsWarden(client) && g_cWardenSkin[1][0] == 'm')
+			{
+				if (StrEqual(currentmodel, g_cWardenSkin[1])) return Plugin_Handled;
+				ArmsFix_SetDefaults(client);
+				SetEntPropString(client, Prop_Send, "m_szArmsModel", g_cWardenSkin[1]);
+			}
+			else if (JWP_IsZamWarden(client) && g_cWardenZamSkin[1][0] == 'm')
+			{
+				if (StrEqual(currentmodel, g_cWardenZamSkin[1])) return Plugin_Handled;
+				ArmsFix_SetDefaults(client);
+				SetEntPropString(client, Prop_Send, "m_szArmsModel", g_cWardenZamSkin[1]);
+			}
+			else
+				SetArms(client);
+
+			if (JWP_IsWarden(client) && g_cWardenSkin[0][0] == 'm')
+				SetEntityModel(client, g_cWardenSkin[0]);
+			else if (JWP_IsZamWarden(client) && g_cWardenZamSkin[0][0] == 'm')
+				SetEntityModel(client, g_cWardenZamSkin[0])
+			else
+				SetModel(client);
+		}
 	}
 	
 	return Plugin_Continue;
@@ -136,7 +169,9 @@ public void JWP_OnWardenChosen(int client)
 		GetEntPropString(client, Prop_Send, "m_szArmsModel", currentmodel, sizeof(currentmodel));
 
 		if (StrEqual(currentmodel, g_cWardenSkin[1])) return;
+		ArmsFix_SetDefaults(client);
 		SetEntPropString(client, Prop_Send, "m_szArmsModel", g_cWardenSkin[1]);
+		ArmsFix_RefreshView(client);
 	}
 }
 
@@ -152,7 +187,9 @@ public void JWP_OnWardenZamChosen(int client)
 		GetEntPropString(client, Prop_Send, "m_szArmsModel", currentmodel, sizeof(currentmodel));
 
 		if (StrEqual(currentmodel, g_cWardenZamSkin[1])) return;
+		ArmsFix_SetDefaults(client);
 		SetEntPropString(client, Prop_Send, "m_szArmsModel", g_cWardenZamSkin[1]);
+		ArmsFix_RefreshView(client);
 	}
 }
 
@@ -252,7 +289,7 @@ bool SetRandomSkin(int client, ArrayList& myArray, KeyValues& kv)
 bool IsClientSkinUse(int iClient)
 {
     int iSize = 0;
-    ArrayList hArray = Shop_CreateArrayOfItems(iSize);
+    ArrayList hArray = view_as<ArrayList>(Shop_CreateArrayOfItems(iSize));
     if(iSize)
     {
         CategoryId iCatID = Shop_GetCategoryId("skins");
@@ -306,7 +343,10 @@ bool SetArms(int client)
 		GetEntPropString(client, Prop_Send, "m_szArmsModel", currentmodel, sizeof(currentmodel));
 
 		if (!StrEqual(currentmodel, g_cArms[client]))
+		{
+			ArmsFix_SetDefaults(client);
 			SetEntPropString(client, Prop_Send, "m_szArmsModel", g_cArms[client]);
+		}
 		return true;
 	}
 	
@@ -324,41 +364,4 @@ bool CheckMdlPath(const char[] path)
 		return false;
 	if(strlen(path) > 3 && FileExists(path) && !IsModelPrecached(path)) PrecacheModel(path, true);
 	return true;
-}
-
-public void ArmsFix_OnModelSafe(int client)
-{
-	g_bIsSafeToSetModel[0] = true
-	if (CheckClient(client))
-	{
-		if (JWP_IsWarden(client) && g_cWardenSkin[0][0] == 'm')
-			SetEntityModel(client, g_cWardenSkin[0]);
-		else if (JWP_IsZamWarden(client) && g_cWardenZamSkin[0][0] == 'm')
-			SetEntityModel(client, g_cWardenZamSkin[0])
-		else
-			SetModel(client);
-	}
-}
-
-public void ArmsFix_OnArmsSafe(int client)
-{
-	g_bIsSafeToSetModel[1] = true;
-	if (CheckClient(client))
-	{
-		char currentmodel[PLATFORM_MAX_PATH];
-		GetEntPropString(client, Prop_Send, "m_szArmsModel", currentmodel, sizeof(currentmodel));
-
-		if (JWP_IsWarden(client) && g_cWardenSkin[1][0] == 'm')
-		{
-			if (StrEqual(currentmodel, g_cWardenSkin[1])) return;
-			SetEntPropString(client, Prop_Send, "m_szArmsModel", g_cWardenSkin[1]);
-		}
-		else if (JWP_IsZamWarden(client) && g_cWardenZamSkin[1][0] == 'm')
-		{
-			if (StrEqual(currentmodel, g_cWardenZamSkin[1])) return;
-			SetEntPropString(client, Prop_Send, "m_szArmsModel", g_cWardenZamSkin[1]);
-		}
-		else
-			SetArms(client);
-	}
 }
