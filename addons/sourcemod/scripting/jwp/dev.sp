@@ -25,7 +25,10 @@ public int SteamWorks_SteamServersConnected()
 			GetPluginInfo(plugin, PlInfo_Version, cVersion, sizeof(cVersion));
 			FormatEx(cBuffer, sizeof(cBuffer), "http://stats.scriptplugs.info/add_server.php");
 			Handle hndl = SteamWorks_CreateHTTPRequest(k_EHTTPMethodPOST, cBuffer);
-			FormatEx(cBuffer, sizeof(cBuffer), "key=0f0f2821d03a230f3e79f7227711005d&ip=%d.%d.%d.%d:%d&version=%s", iIp[0], iIp[1], iIp[2], iIp[3], FindConVar("hostport").IntValue, cVersion);
+			if (g_bIsCSGO)
+				FormatEx(cBuffer, sizeof(cBuffer), "key=0f0f2821d03a230f3e79f7227711005d&ip=%d.%d.%d.%d:%d&version=%s&sm=%s", iIp[0], iIp[1], iIp[2], iIp[3], FindConVar("hostport").IntValue, cVersion, SOURCEMOD_VERSION);
+			else
+				FormatEx(cBuffer, sizeof(cBuffer), "key=0f0f2821d03a230f3e79f7227711005d&ip=%d.%d.%d.%d:%d&version=%s", iIp[0], iIp[1], iIp[2], iIp[3], FindConVar("hostport").IntValue, cVersion);
 			SteamWorks_SetHTTPRequestRawPostBody(hndl, "application/x-www-form-urlencoded", cBuffer, sizeof(cBuffer));
 			SteamWorks_SendHTTPRequest(hndl);
 			delete hndl;
