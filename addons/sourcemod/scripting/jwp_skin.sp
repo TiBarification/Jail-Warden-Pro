@@ -17,7 +17,7 @@ char g_cWardenSkin[2][PLATFORM_MAX_PATH], g_cWardenZamSkin[2][PLATFORM_MAX_PATH]
 char g_cSkin[MAXPLAYERS+1][PLATFORM_MAX_PATH], g_cArms[MAXPLAYERS+1][PLATFORM_MAX_PATH];
 int g_iSkinId[MAXPLAYERS+1];
 bool SkinsCheck;
-bool bSetDefaultModel = false
+bool bSetDefaultModel = false;
 float g_CvarTimerSetSkin;
 
 ArrayList tModels_Array, ctModels_Array;
