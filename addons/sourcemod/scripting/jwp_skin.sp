@@ -10,7 +10,7 @@
 
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.6.1"
+#define PLUGIN_VERSION "1.7"
 
 ConVar g_CvarWardenSkin, g_CvarWardenArms, g_CvarWardenZamSkin, g_CvarWardenZamArms, g_CvarTRandomSkins, g_CvarCTRandomSkins;
 char g_cWardenSkin[2][PLATFORM_MAX_PATH], g_cWardenZamSkin[2][PLATFORM_MAX_PATH];
@@ -357,7 +357,7 @@ bool SetArms(int client)
 {
 	if (!g_CvarTRandomSkins.BoolValue && !g_CvarCTRandomSkins.BoolValue) return false; // Disable it , if no random skins
 	else if (IsClientSkinUse(client))
-		SkinsCheck = true; // Just exit, so we do not override Shop models
+		return true;
 	else if (g_bIsCSGO && g_bIsSafeToSetModel[1] && g_cArms[client][0] != NULL_STRING[0])
 	{
 		char currentmodel[PLATFORM_MAX_PATH];
