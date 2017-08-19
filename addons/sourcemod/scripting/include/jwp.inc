@@ -3,7 +3,7 @@
 	Author: White Wolf
 	www.hlmod.ru
 	
-	|Version by Core: 1.0.7+ /) 
+	|Version by Core: 1.1.5b+ /) 
 */
 
 #if defined _jwp_included
@@ -56,7 +56,7 @@ forward void JWP_OnWardenChosen(int client);
 forward void JWP_OnWardenZamChosen(int client);
 
 /**
- *	Called when client is going to resign
+ *	Called when warden client is going to resign
  *	-
  *	@param client			Client index
  *	-
@@ -72,6 +72,14 @@ forward bool JWP_OnWardenResign(int client);
  *	@noreturn
  */
 forward void JWP_OnWardenResigned(int client, bool himself);
+
+/**
+ *	Warden Deputy (zam) Resigned
+ *	If he died or disconnected or removed by native.
+ *	-
+ *	@noreturn
+ */
+forward void JWP_OnWardenZamResigned(int client);
 
 /**
  *	Checks whether the jail warden pro has been started

@@ -10,7 +10,7 @@
 // Force new syntax
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.1.5a"
+#define PLUGIN_VERSION "1.1.5b"
 
 #define UPDATE_URL "http://updater.scriptplugs.info/jwp/updatefile.txt"
 #define LOG_PATH "addons/sourcemod/logs/JWP_Log.log"
@@ -163,8 +163,9 @@ public void Event_OnRoundStart(Event event, const char[] name, bool dontBroadcas
 	{
 		EmptyPanel();
 		delete g_mMainMenu;
+		int iOldWarden = g_iWarden;
 		g_iWarden = 0;
-		Forward_OnWardenResigned(g_iWarden, false);
+		Forward_OnWardenResigned(iOldWarden, false);
 	}
 	
 	g_iZamWarden = 0;
@@ -441,7 +442,12 @@ void RemoveCmd(bool themself = true)
 
 void RemoveZam()
 {
-	if (g_iZamWarden) g_iZamWarden = 0;
+	if (g_iZamWarden)
+	{
+		int iOldZam = g_iZamWarden;
+		g_iZamWarden = 0;
+		Forward_OnWardenZamResigned(iOldZam);
+	}
 }
 
 bool SetZam(int client)

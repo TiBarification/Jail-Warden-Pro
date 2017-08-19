@@ -10,7 +10,7 @@
 
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.7.1"
+#define PLUGIN_VERSION "1.7.2"
 
 ConVar g_CvarWardenSkin, g_CvarWardenArms, g_CvarWardenZamSkin, g_CvarWardenZamArms, g_CvarTRandomSkins, g_CvarCTRandomSkins, g_CvarTimerSetSkin;
 char g_cWardenSkin[2][PLATFORM_MAX_PATH], g_cWardenZamSkin[2][PLATFORM_MAX_PATH];
@@ -20,7 +20,7 @@ int g_iSkinId[MAXPLAYERS+1];
 ArrayList tModels_Array, ctModels_Array;
 KeyValues g_KvT, g_KvCT;
 
-bool g_bIsCSGO, g_bVIPExists;
+bool g_bIsCSGO, g_bVIPExists, g_bShopExists;
 char g_cVIPFeatureName[] = "Skins";
 
 public Plugin myinfo = 
@@ -42,6 +42,8 @@ public void OnPluginStart()
 	g_CvarTRandomSkins = CreateConVar("jwp_random_t_skins", "1", "Enable auto player model set for T team. Needed file t_models.txt", _, true, 0.0, true, 1.0);
 	g_CvarCTRandomSkins = CreateConVar("jwp_random_ct_skins", "1", "Enable auto player model set for CT team. Needed file ct_models.txt", _, true, 0.0, true, 1.0);
 	
+	RegServerCmd("sm_jwp_skin_reload", Command_SkinReload, "Reload skins on server");
+	
 	g_bIsCSGO = (GetEngineVersion() == Engine_CSGO);
 	
 	HookEvent("player_spawn", Event_OnPlayerSpawn);
@@ -51,6 +53,7 @@ public void OnPluginStart()
 public void OnAllPluginsLoaded()
 {
 	g_bVIPExists = LibraryExists("vip_core");
+	g_bShopExists = LibraryExists("shop");
 }
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
@@ -75,7 +78,7 @@ public Action Event_OnPlayerSpawn(Event event, const char[] name, bool dontBroad
 		if (g_bIsCSGO)
 		{
 			ArmsFix_SetDefaults(client);
-			SetArms(client);
+			SetArms(client, false);
 		}
 		CreateTimer(g_CvarTimerSetSkin.FloatValue, SetModel, client);
 	}
@@ -99,6 +102,17 @@ public void OnConfigsExecuted()
 		g_CvarWardenArms.GetString(g_cWardenSkin[1], PLATFORM_MAX_PATH);
 		g_CvarWardenZamArms.GetString(g_cWardenZamSkin[1], PLATFORM_MAX_PATH);
 	}
+}
+
+public Action Command_SkinReload(int args)
+{
+	if (!args)
+	{
+		OnMapStart();
+		PrintToServer("[JWP-Skins] Module all skin configs succesfully reloaded.");
+	}
+	
+	return Plugin_Handled;
 }
 
 public void OnMapStart()
@@ -155,20 +169,12 @@ public void JWP_OnWardenZamChosen(int client)
 
 public void JWP_OnWardenResigned(int client, bool himself)
 {
-	if (CheckClient(client))
-	{
-		if (SetArms(client))
-		{
-			CreateTimer(0.1, SetModel, client);
-		}
-		else
-		{
-			if (g_bIsCSGO)
-				ArmsFix_SetDefaults(client);
-			else
-				SetEntityModel(client, "models/player/ct_sas.mdl");
-		}
-	}
+	OnResign(client);
+}
+
+public void JWP_OnWardenZamResigned(int client)
+{
+	OnResign(client);
 }
 
 void LoadSkinsFromFile(char[] path, ArrayList& myArray, KeyValues& kv)
@@ -278,13 +284,24 @@ bool IsVipSkinUse(int iClient)
 
 public Action SetModel(Handle timer, int client)
 {
+	// Exit if no random skins found
 	if (!g_CvarTRandomSkins.BoolValue && !g_CvarCTRandomSkins.BoolValue)
 		return Plugin_Continue;
-	else if (g_bVIPExists && IsVipSkinUse(client) || Shop_IsClientSkinUse(client))
+	// Skip VIP or shop player skin set
+	if (g_bVIPExists && IsVipSkinUse(client) || Shop_IsClientSkinUse(client))
 		return Plugin_Continue;
-	else if ((JWP_IsWarden(client) && g_cWardenSkin[0][0] != NULL_STRING[0]) || (JWP_IsZamWarden(client) && g_cWardenZamSkin[0][0] != NULL_STRING[0]))
+	// Skip warden skin set
+	if ((JWP_IsWarden(client) && g_cWardenSkin[0][0] != NULL_STRING[0]) || (JWP_IsZamWarden(client) && g_cWardenZamSkin[0][0] != NULL_STRING[0]))
 		return Plugin_Continue;
-	else if (g_cSkin[client][0] != NULL_STRING[0])
+	
+	SetActualModel(client);
+	
+	return Plugin_Continue;
+}
+
+void SetActualModel(int client)
+{
+	if (g_cSkin[client][0] != NULL_STRING[0])
 	{
 		SetEntityModel(client, g_cSkin[client]);
 		if (g_iSkinId[client] != 0)
@@ -292,15 +309,13 @@ public Action SetModel(Handle timer, int client)
 		if (g_bIsCSGO)
 			ArmsFix_RefreshView(client);
 	}
-	
-	return Plugin_Continue;
 }
 
-bool SetArms(int client)
+bool SetArms(int client, bool forceset)
 {
 	if (!g_bIsCSGO) return false;
 	if (!g_CvarTRandomSkins.BoolValue && !g_CvarCTRandomSkins.BoolValue) return false; // Disable it , if no random skins
-	else if (Shop_IsClientSkinUse(client))
+	else if (g_bShopExists && Shop_IsClientSkinUse(client) && !forceset)
 		return true;
 	else if (g_bIsCSGO && g_cArms[client][0] != NULL_STRING[0])
 	{
@@ -326,4 +341,22 @@ bool CheckMdlPath(const char[] path)
 		return false;
 	if(strlen(path) > 3 && FileExists(path) && !IsModelPrecached(path)) PrecacheModel(path, true);
 	return true;
+}
+
+void OnResign(int client)
+{
+	if (CheckClient(client))
+	{
+		if (SetArms(client, true))
+		{
+			SetActualModel(client);
+		}
+		else
+		{
+			if (g_bIsCSGO)
+				ArmsFix_SetDefaults(client);
+			else
+				SetEntityModel(client, "models/player/ct_sas.mdl");
+		}
+	}
 }

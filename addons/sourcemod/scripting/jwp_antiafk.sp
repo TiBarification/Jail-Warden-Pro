@@ -5,10 +5,12 @@
 #include <sdktools_engine>
 #include <sdktools_functions>
 #include <jwp>
+#tryinclude <csgo_colors>
+#tryinclude <morecolors>
 
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.4.2"
+#define PLUGIN_VERSION "1.4.3"
 
 public Plugin myinfo = 
 {
@@ -101,7 +103,10 @@ public void CheckEyePosition(int iTeam)
 			&& fEyePosition[2] == g_fEyePosition[i][2])
 			{
 				ForcePlayerSuicide(i);
-				JWP_ActionMsgAll("%T %T", "antiafk_tag", "antiafk_kill", i);
+				if (GetEngineVersion() == Engine_CSGO)
+					CGOPrintToChatAll("%T %T", "antiafk_tag", LANG_SERVER, "antiafk_kill", LANG_SERVER, i);
+				else
+					CPrintToChatAll("%T %T", "antiafk_tag", LANG_SERVER, "antiafk_kill", LANG_SERVER, i);
 				if (iTeam == CS_TEAM_CT)
 				{
 					ChangeClientTeam(i, CS_TEAM_T);
