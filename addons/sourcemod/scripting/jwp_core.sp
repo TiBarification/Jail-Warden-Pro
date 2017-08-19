@@ -10,7 +10,7 @@
 // Force new syntax
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.1.5"
+#define PLUGIN_VERSION "1.1.5a"
 
 #define UPDATE_URL "http://updater.scriptplugs.info/jwp/updatefile.txt"
 #define LOG_PATH "addons/sourcemod/logs/JWP_Log.log"
@@ -155,11 +155,18 @@ public void Event_OnRoundStart(Event event, const char[] name, bool dontBroadcas
 		g_ClientAPIInfo[i][has_freeday] = false;
 		g_ClientAPIInfo[i][is_isolated] = false;
 	}
+	bool bAllowResign = true;
 	if (g_iWarden > 0)
+		bAllowResign = Forward_OnWardenResign(g_iWarden);
+	
+	if (bAllowResign)
+	{
+		EmptyPanel();
+		delete g_mMainMenu;
+		g_iWarden = 0;
 		Forward_OnWardenResigned(g_iWarden, false);
-	EmptyPanel();
-	delete g_mMainMenu;
-	g_iWarden = 0;
+	}
+	
 	g_iZamWarden = 0;
 	g_bVoteFinished = false;
 }
@@ -228,11 +235,11 @@ public void Event_OnRoundFreezeEnd(Event event, const char[] name, bool dontBroa
 public Action Event_OnRoundEnd(Event event, const char[] name, bool dontBroadcast)
 {
 	g_bRoundEnd = true;
-	if (g_iWarden > 0)
-		Forward_OnWardenResigned(g_iWarden, false);
 	EmptyPanel();
 	delete g_mMainMenu;
 	g_iWarden = 0;
+	Forward_OnWardenResigned(g_iWarden, false);
+	
 	RemoveZam();
 	
 	if (g_hChooseTimer != null)
@@ -412,19 +419,23 @@ void RemoveCmd(bool themself = true)
 {
 	if (g_iWarden)
 	{
-		Forward_OnWardenResigned(g_iWarden, themself);
-		if (themself)
+		if (Forward_OnWardenResign(g_iWarden))
 		{
-			if (g_bIsCSGO)
-				CGOPrintToChatAll("%T %T", "Core_Prefix", LANG_SERVER, "warden_resign", LANG_SERVER, g_iWarden);
-			else
-				CPrintToChatAll("%T %T", "Core_Prefix", LANG_SERVER, "warden_resign", LANG_SERVER, g_iWarden);
+			if (themself)
+			{
+				if (g_bIsCSGO)
+					CGOPrintToChatAll("%T %T", "Core_Prefix", LANG_SERVER, "warden_resign", LANG_SERVER, g_iWarden);
+				else
+					CPrintToChatAll("%T %T", "Core_Prefix", LANG_SERVER, "warden_resign", LANG_SERVER, g_iWarden);
+			}
+			EmptyPanel();
+			int iOldWarden = g_iWarden;
+			g_iWarden = 0;
+			delete g_mMainMenu;
+			
+			JWP_FindNewWarden();
+			Forward_OnWardenResigned(iOldWarden, themself);
 		}
-		EmptyPanel();
-		g_iWarden = 0;
-		delete g_mMainMenu;
-		
-		JWP_FindNewWarden();
 	}
 }
 
