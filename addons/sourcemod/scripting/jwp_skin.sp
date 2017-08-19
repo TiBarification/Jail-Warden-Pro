@@ -18,6 +18,7 @@ char g_cSkin[MAXPLAYERS+1][PLATFORM_MAX_PATH], g_cArms[MAXPLAYERS+1][PLATFORM_MA
 int g_iSkinId[MAXPLAYERS+1];
 bool SkinsCheck;
 bool bSetDefaultModel = false
+float g_CvarTimerSetSkin
 
 ArrayList tModels_Array, ctModels_Array;
 KeyValues g_KvT, g_KvCT;
@@ -36,6 +37,7 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
+	g_CvarTimerSetSkin = CreateConVar("jwp_timer_setskin", "0.5", "The timer time to install the skins");
 	g_CvarWardenSkin = CreateConVar("jwp_warden_skin", "", "Set warden player model, leave empty to disable");
 	g_CvarWardenArms = CreateConVar("jwp_warden_arms", "", "Set warden arms model (ONLY in CS:GO), leave empty to disable");
 	g_CvarWardenZamSkin = CreateConVar("jwp_warden_zam_skin", "", "Set deputy player model (zam of warden), leave empty to disable");
@@ -82,7 +84,7 @@ public Action Event_OnPlayerSpawn(Event event, const char[] name, bool dontBroad
 		TiB_SetSkin(client);
 		if (!g_bIsCSGO)
 		{
-			CreateTimer(0.5, SetModel, client);
+			CreateTimer(g_CvarTimerSetSkin, SetModel, client);
 		}
 		else
 		{
@@ -111,7 +113,7 @@ public Action Event_OnPlayerSpawn(Event event, const char[] name, bool dontBroad
 			else if (JWP_IsZamWarden(client) && g_cWardenZamSkin[0][0] == 'm')
 				SetEntityModel(client, g_cWardenZamSkin[0])
 			else
-				CreateTimer(0.5, SetModel, client);
+				CreateTimer(g_CvarTimerSetSkin, SetModel, client);
 		}
 	}
 	
