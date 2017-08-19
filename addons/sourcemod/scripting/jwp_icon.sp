@@ -43,7 +43,7 @@ public void OnMapStart()
 	char path[PLATFORM_MAX_PATH];
 	if (path[0] && !IsModelPrecached(path))
 	{
-		PrecacheModel(path);
+		PrecacheModel(path, true);
 		FormatEx(path, sizeof(path), "materials/%s.vmt", g_cPath);
 		AddFileToDownloadsTable(path);
 		FormatEx(path, sizeof(path), "materials/%s.vtf", g_cPath);
