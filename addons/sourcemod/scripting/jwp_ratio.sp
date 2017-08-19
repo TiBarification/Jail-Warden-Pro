@@ -608,7 +608,8 @@ public Action Event_OnFullConnect(Event event, const char[] name, bool dontBroad
 {
 	int client = GetClientOfUserId(event.GetInt("userid"));
 
-	if (gc_bForceTConnect.BoolValue && g_bRatioEnable && ((gc_bAdminBypass.BoolValue && !CheckVipFlag(client, g_sAdminFlag)) || !gc_bAdminBypass.BoolValue)) CreateTimer(1.0, Timer_ForceTSide, client);
+	if (gc_bForceTConnect.BoolValue && g_bRatioEnable && ((gc_bAdminBypass.BoolValue && !CheckVipFlag(client, g_sAdminFlag)) || !gc_bAdminBypass.BoolValue) && GetTeamClientCount(CS_TEAM_CT) == 0) CreateTimer(1.0, Timer_ForceCTSide, client);
+	else if (gc_bForceTConnect.BoolValue && g_bRatioEnable && ((gc_bAdminBypass.BoolValue && !CheckVipFlag(client, g_sAdminFlag)) || !gc_bAdminBypass.BoolValue)) CreateTimer(1.0, Timer_ForceTSide, client);
 
 	return Plugin_Continue;
 }
@@ -1010,6 +1011,12 @@ public int ViewQueueMenuHandle(Menu hMenu, MenuAction action, int client, int op
 /******************************************************************************
                    TIMER
 ******************************************************************************/
+
+public Action Timer_ForceCTSide(Handle timer, any client)
+{
+	if (IsValidClient(client, true, true))
+		ChangeClientTeam(client, CS_TEAM_CT);
+}
 
 public Action Timer_ForceTSide(Handle timer, any client)
 {
