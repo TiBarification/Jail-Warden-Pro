@@ -433,8 +433,8 @@ void RemoveCmd(bool themself = true)
 			g_iWarden = 0;
 			delete g_mMainMenu;
 			
-			JWP_FindNewWarden();
 			Forward_OnWardenResigned(iOldWarden, themself);
+			JWP_FindNewWarden();
 		}
 	}
 }
