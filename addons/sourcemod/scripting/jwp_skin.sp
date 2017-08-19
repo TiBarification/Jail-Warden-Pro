@@ -17,6 +17,7 @@ char g_cWardenSkin[2][PLATFORM_MAX_PATH], g_cWardenZamSkin[2][PLATFORM_MAX_PATH]
 char g_cSkin[MAXPLAYERS+1][PLATFORM_MAX_PATH], g_cArms[MAXPLAYERS+1][PLATFORM_MAX_PATH];
 int g_iSkinId[MAXPLAYERS+1];
 bool SkinsCheck;
+bool bSetDefaultModel = false
 
 ArrayList tModels_Array, ctModels_Array;
 KeyValues g_KvT, g_KvCT;
@@ -198,7 +199,7 @@ public void JWP_OnWardenResigned(int client, bool himself)
 {
 	if (CheckClient(client))
 	{
-		if (SkinsCheck == true)
+		if (SkinsCheck)
 		{
 			if (g_bIsCSGO && g_bIsSafeToSetModel[0])
 				ArmsFix_SetDefaults(client);
@@ -318,8 +319,6 @@ bool IsVipSkinUse(int iClient)
 
 public Action SetModel(Handle timer, int client)
 {
-	bool bSetDefaultModel = false
-
 	if (!g_CvarTRandomSkins.BoolValue && !g_CvarCTRandomSkins.BoolValue)
 	{
 		SkinsCheck = false; // Disable it , if no random skins
