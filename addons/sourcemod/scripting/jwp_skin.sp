@@ -247,27 +247,28 @@ bool SetRandomSkin(int client, ArrayList& myArray, KeyValues& kv)
 
 bool Shop_IsClientSkinUse(int iClient)
 {
-	if (IsFakeClient(iClient)) return false;
-    int iSize = 0;
-    ArrayList hArray = view_as<ArrayList>(Shop_CreateArrayOfItems(iSize));
-    if(iSize)
-    {
-        CategoryId iCatID = Shop_GetCategoryId("skins");
-        ItemId item_id;
-        for(int i = 0; i < iSize; ++i)
-        {
-            item_id = view_as<ItemId>(Shop_GetArrayItem(hArray, i));
-            if(Shop_GetItemCategoryId(item_id) == iCatID && Shop_IsClientItemToggled(iClient, item_id))
-            {
-               delete hArray;
-               return true;
-            }
-        }
-    }
-   
-    delete hArray;
+	if (IsFakeClient(iClient))
+		return false;
+	int iSize = 0;
+	ArrayList hArray = view_as<ArrayList>(Shop_CreateArrayOfItems(iSize));
+	if(iSize)
+	{
+		CategoryId iCatID = Shop_GetCategoryId("skins");
+		ItemId item_id;
+		for(int i = 0; i < iSize; ++i)
+		{
+			item_id = view_as<ItemId>(Shop_GetArrayItem(hArray, i));
+			if(Shop_GetItemCategoryId(item_id) == iCatID && Shop_IsClientItemToggled(iClient, item_id))
+			{
+			delete hArray;
+			return true;
+			}
+		}
+	}
 
-    return false;
+	delete hArray;
+
+	return false;
 }
 
 bool IsVipSkinUse(int iClient)
