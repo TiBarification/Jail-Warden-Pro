@@ -1,3 +1,4 @@
+// Includes
 #include <sourcemod>
 #include <sdktools>
 #include <sdkhooks>
@@ -8,6 +9,8 @@
 #undef REQUIRE_PLUGIN
 #include <jwp>
 #define REQUIRE_PLUGIN
+
+#define PLUGIN_VERSION "1.3"
 
 // Compiler Options
 #pragma semicolon 1
@@ -23,6 +26,7 @@ ConVar gc_sCustomCommandRemove;
 ConVar gc_sCustomCommandClear;
 ConVar gc_sCustomCommandPrisoner;
 ConVar gc_sCustomCommandSpec;
+ConVar gc_sCustomCommandNoCT;
 ConVar gc_sAdminFlag;
 ConVar gc_bToggle;
 ConVar gc_bToggleAnnounce;
@@ -40,6 +44,7 @@ ConVar gc_bRespawn;
 // Booleans
 bool g_bRatioEnable = true;
 bool g_bQueueCooldown[MAXPLAYERS+1] = {false, ...};
+bool g_bEnableGuard[MAXPLAYERS+1] = {true, ...};
 bool gp_bWarden = false;
 
 // Handles
@@ -62,7 +67,7 @@ public Plugin myinfo = {
 	name = "JWP - Ratio(Original MyJailbreak)",
 	author = "shanapu, Addicted, BaFeR",
 	description = "Jailbreak team balance / ratio plugin",
-	version = "1.2",
+	version = PLUGIN_VERSION,
 	url = ""
 };
 
@@ -79,6 +84,7 @@ public void OnPluginStart()
 	RegConsoleCmd("sm_viewqueue", Command_ViewGuardQueue, "Allows a player to show queue to CT");
 	RegConsoleCmd("sm_leavequeue", Command_LeaveQueue, "Allows a player to leave queue to CT");
 	RegConsoleCmd("sm_ratio", Command_ToggleRatio, "Allows the admin toggle the ratio check and player to see if ratio is enabled");
+	RegConsoleCmd("sm_noguard", Command_NoGuard, "Allows a player to choose to become a random guard when guard queue is empty");
 
 	// Admin commands
 	RegAdminCmd("sm_removequeue", AdminCommand_RemoveFromQueue, ADMFLAG_GENERIC, "Allows the admin to remove player from queue to CT");
@@ -87,7 +93,7 @@ public void OnPluginStart()
 	// AutoExecConfig
 	AutoExecConfig(true, "ratio", "jwp");
 
-	CreateConVar("sm_ratio_version", "1.2", "The version of this SourceMod plugin", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
+	CreateConVar("sm_ratio_version", PLUGIN_VERSION, "The version of this JWP SourceMod plugin", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	gc_sCustomCommandGuard = CreateConVar("sm_ratio_cmds_guard", "g, ct, guards", "Set your custom chat command for become guard(!guard (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
 	gc_sCustomCommandQueue = CreateConVar("sm_ratio_cmds_queue", "vq, queue", "Set your custom chat command for view guard queue (!viewqueue (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
 	gc_sCustomCommandLeave = CreateConVar("sm_ratio_cmds_leave", "lq, stay", "Set your custom chat command for view leave queue (!leavequeue (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
@@ -96,6 +102,7 @@ public void OnPluginStart()
 	gc_sCustomCommandClear = CreateConVar("sm_ratio_cmds_clear", "cq", "Set your custom chat command for admins to clear the guard queue (!clearqueue (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
 	gc_sCustomCommandPrisoner = CreateConVar("sm_ratio_cmds_prisoner", "t,terror", "Set your custom chat command for player to move to prisoner (!prisoner (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
 	gc_sCustomCommandSpec = CreateConVar("sm_ratio_cmds_spec", "spec", "Set your custom chat command for player to move to spectator (!spectator (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
+	gc_sCustomCommandNoCT = CreateConVar("sm_ratio_cmds_noct", "noct", "Set your custom chat command for player to move to spectator (!noguard (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
 	gc_fPrisonerPerGuard = CreateConVar("sm_ratio_T_per_CT", "2", "How many prisoners for each guard.", _, true, 1.0);
 	gc_bVIPQueue = CreateConVar("sm_ratio_flag", "1", "0 - disabled, 1 - enable VIPs moved to front of queue", _, true, 0.0, true, 1.0);
 	gc_bForceTConnect = CreateConVar("sm_ratio_force_t", "1", "0 - disabled, 1 - force player on connect to join T side", _, true, 0.0, true, 1.0);
@@ -137,7 +144,7 @@ public void OnSettingChanged(Handle convar, const char[] oldValue, const char[] 
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
-	gF_OnClientJoinGuards = CreateGlobalForward("jwp_OnJoinGuardQueue", ET_Event, Param_Cell);
+	gF_OnClientJoinGuards = CreateGlobalForward("JWP_OnJoinGuardQueue", ET_Event, Param_Cell);
 	
 	RegPluginLibrary("myratio");
 	return APLRes_Success;
@@ -230,6 +237,20 @@ public void OnConfigsExecuted()
 		}
 	}
 
+	// toggle enable ct
+	gc_sCustomCommandNoCT.GetString(sCommands, sizeof(sCommands));
+	ReplaceString(sCommands, sizeof(sCommands), " ", "");
+	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
+
+	for (int i = 0; i < iCount; i++)
+	{
+		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
+		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
+		{
+			RegConsoleCmd(sCommand, Command_NoGuard, "Allows a player to choose to become a random guard when guard queue is empty");
+		}
+	}
+
 	// Admin remove player from queue
 	gc_sCustomCommandRemove.GetString(sCommands, sizeof(sCommands));
 	ReplaceString(sCommands, sizeof(sCommands), " ", "");
@@ -282,19 +303,19 @@ public Action Command_LeaveQueue(int client, int iArgNum)
 
 	if (!g_bRatioEnable)
 	{
-		ReplyToCommand(client, "%t %t", "ratio_tag", "ratio_disabled");
+		CGOPrintToChat(client, "%t %t", "ratio_tag", "ratio_disabled");
 		return Plugin_Handled;
 	}
 
 	if (iIndex == -1)
 	{
-		ReplyToCommand(client, "%t %t", "ratio_tag", "ratio_notonqueue");
+		CGOPrintToChat(client, "%t %t", "ratio_tag", "ratio_notonqueue");
 		return Plugin_Handled;
 	}
 	else
 	{
 		RemovePlayerFromGuardQueue(client);
-		ReplyToCommand(client, "%t %t", "ratio_tag", "ratio_leavedqueue");
+		CGOPrintToChat(client, "%t %t", "ratio_tag", "ratio_leavedqueue");
 		return Plugin_Handled;
 	}
 }
@@ -306,13 +327,13 @@ public Action Command_ViewGuardQueue(int client, int args)
 
 	if (!g_bRatioEnable)
 	{
-		ReplyToCommand(client, "%t %t", "ratio_tag", "ratio_disabled");
+		CGOPrintToChat(client, "%t %t", "ratio_tag", "ratio_disabled");
 		return Plugin_Handled;
 	}
 
 	if (GetArraySize(g_aGuardQueue) < 1)
 	{
-		ReplyToCommand(client, "%t %t", "ratio_tag", "ratio_empty");
+		CGOPrintToChat(client, "%t %t", "ratio_tag", "ratio_empty");
 		return Plugin_Handled;
 	}
 	char info[64];
@@ -353,7 +374,7 @@ public Action Command_JoinGuardQueue(int client, int iArgNum)
 
 	if (!g_bRatioEnable)
 	{
-		ReplyToCommand(client, "%t %t", "ratio_tag", "ratio_disabled");
+		CGOPrintToChat(client, "%t %t", "ratio_tag", "ratio_disabled");
 		return Plugin_Handled;
 	}
 
@@ -361,14 +382,14 @@ public Action Command_JoinGuardQueue(int client, int iArgNum)
 	if (GetClientTeam(client) != CS_TEAM_T)
 	{
 		ClientCommand(client, "play %s", g_sRestrictedSound);
-		ReplyToCommand(client, "%t %t", "ratio_tag", "ratio_noct");
+		CGOPrintToChat(client, "%t %t", "ratio_tag", "ratio_noct");
 		return Plugin_Handled;
 	}
 */
 
 	if (g_bQueueCooldown[client])
 	{
-		ReplyToCommand(client, "%t %t", "ratio_tag", "ratio_cooldown");
+		CGOPrintToChat(client, "%t %t", "ratio_tag", "ratio_cooldown");
 		return Plugin_Handled;
 	}
 
@@ -381,6 +402,12 @@ public Action Command_JoinGuardQueue(int client, int iArgNum)
 	{
 		ClientCommand(client, "play %s", g_sRestrictedSound);
 		return Plugin_Handled;
+	}
+
+	if (!g_bEnableGuard[client])
+	{
+		g_bEnableGuard[client] = true;
+		CGOPrintToChat(client, "%t %t", "ratio_tag", "ratio_guard_enable");
 	}
 
 	if (!CanClientJoinGuards(client))
@@ -396,8 +423,8 @@ public Action Command_JoinGuardQueue(int client, int iArgNum)
 		}
 		else
 		{
-			ReplyToCommand(client, "%t %t", "ratio_tag", "ratio_number", iIndex + 1);
-			if (gc_bAdsVIP.BoolValue && gc_bVIPQueue.BoolValue && !CheckVipFlag(client, g_sAdminFlag)) ReplyToCommand(client, "%t %t", "ratio_tag", "ratio_advip");
+			CGOPrintToChat(client, "%t %t", "ratio_tag", "ratio_number", iIndex + 1);
+			if (gc_bAdsVIP.BoolValue && gc_bVIPQueue.BoolValue && !CheckVipFlag(client, g_sAdminFlag)) CGOPrintToChat(client, "%t %t", "ratio_tag", "ratio_advip");
 		}
 
 		return Plugin_Handled;
@@ -427,21 +454,21 @@ public Action Command_JoinGuardQueue(int client, int iArgNum)
 						ShiftArrayUp(g_aGuardQueue, 0);
 						SetArrayCell(g_aGuardQueue, 0, client);
 					}
-					ReplyToCommand(client, "%t %t", "ratio_tag", "ratio_thxvip");
-					ReplyToCommand(client, "%t %t", "ratio_tag", "ratio_number", iIndex + 1);
+					CGOPrintToChat(client, "%t %t", "ratio_tag", "ratio_thxvip");
+					CGOPrintToChat(client, "%t %t", "ratio_tag", "ratio_number", iIndex + 1);
 				}
 				else
 				{
 					iIndex = PushArrayCell(g_aGuardQueue, client);
 					
-					ReplyToCommand(client, "%t %t", "ratio_tag", "ratio_number", iIndex + 1);
-					if (gc_bAdsVIP.BoolValue && gc_bVIPQueue.BoolValue) ReplyToCommand(client, "%t %t", "ratio_tag", "ratio_advip");
+					CGOPrintToChat(client, "%t %t", "ratio_tag", "ratio_number", iIndex + 1);
+					if (gc_bAdsVIP.BoolValue && gc_bVIPQueue.BoolValue) CGOPrintToChat(client, "%t %t", "ratio_tag", "ratio_advip");
 				}
 			}
 			else
 			{
-				ReplyToCommand(client, "%t %t", "ratio_tag", "ratio_number", iIndex + 1);
-				if (gc_bAdsVIP.BoolValue && gc_bVIPQueue.BoolValue && !CheckVipFlag(client, g_sAdminFlag)) ReplyToCommand(client, "%t %t", "ratio_tag", "ratio_advip");
+				CGOPrintToChat(client, "%t %t", "ratio_tag", "ratio_number", iIndex + 1);
+				if (gc_bAdsVIP.BoolValue && gc_bVIPQueue.BoolValue && !CheckVipFlag(client, g_sAdminFlag)) CGOPrintToChat(client, "%t %t", "ratio_tag", "ratio_advip");
 			}
 		}
 	}
@@ -460,13 +487,13 @@ public Action AdminCommand_RemoveFromQueue(int client, int args)
 
 	if (!g_bRatioEnable)
 	{
-		ReplyToCommand(client, "%t %t", "ratio_tag", "ratio_disabled");
+		CGOPrintToChat(client, "%t %t", "ratio_tag", "ratio_disabled");
 		return Plugin_Handled;
 	}
 
 	if (GetArraySize(g_aGuardQueue) < 1)
 	{
-		ReplyToCommand(client, "%t %t", "ratio_tag", "ratio_empty");
+		CGOPrintToChat(client, "%t %t", "ratio_tag", "ratio_empty");
 		return Plugin_Handled;
 	}
 
@@ -519,12 +546,28 @@ public Action Command_ToggleRatio(int client, int args)
 	{
 		if (g_bRatioEnable)
 		{
-			ReplyToCommand(client, "%t %t", "ratio_tag", "ratio_active", gc_fPrisonerPerGuard.FloatValue);
+			CGOPrintToChat(client, "%t %t", "ratio_tag", "ratio_active", gc_fPrisonerPerGuard.FloatValue);
 		}
 		else
 		{
-			ReplyToCommand(client, "%t %t", "ratio_tag", "ratio_disabled");
+			CGOPrintToChat(client, "%t %t", "ratio_tag", "ratio_disabled");
 		}
+	}
+
+	return Plugin_Handled;
+}
+
+public Action Command_NoGuard(int client, int args)
+{
+	if (!g_bEnableGuard[client])
+	{
+		g_bEnableGuard[client] = true;
+		CGOPrintToChat(client, "%t %t", "ratio_tag", "ratio_guard_enable");
+	}
+	else
+	{
+		g_bEnableGuard[client] = false;
+		CGOPrintToChat(client, "%t %t", "ratio_tag", "ratio_guard_disable");
 	}
 
 	return Plugin_Handled;
@@ -565,15 +608,8 @@ public Action Event_OnFullConnect(Event event, const char[] name, bool dontBroad
 {
 	int client = GetClientOfUserId(event.GetInt("userid"));
 
-	if (gc_bForceTConnect.BoolValue && g_bRatioEnable && ((gc_bAdminBypass.BoolValue && !CheckVipFlag(client, g_sAdminFlag)) || !gc_bAdminBypass.BoolValue)&&(GetTeamClientCount(CS_TEAM_CT)==0))
-	{
-		CreateTimer(1.0, Timer_ForceCTSide, client);
-	}
-	else if (gc_bForceTConnect.BoolValue && g_bRatioEnable && ((gc_bAdminBypass.BoolValue && !CheckVipFlag(client, g_sAdminFlag)) || !gc_bAdminBypass.BoolValue))
-	{
-		CreateTimer(1.0, Timer_ForceTSide, client);
-	}
-	
+	if (gc_bForceTConnect.BoolValue && g_bRatioEnable && ((gc_bAdminBypass.BoolValue && !CheckVipFlag(client, g_sAdminFlag)) || !gc_bAdminBypass.BoolValue)) CreateTimer(1.0, Timer_ForceTSide, client);
+
 	return Plugin_Continue;
 }
 
@@ -604,7 +640,7 @@ public Action Event_OnJoinTeam(int client, const char[] szCommand, int iArgCount
 
 	if (g_bQueueCooldown[client])
 	{
-		ReplyToCommand(client, "%t %t", "ratio_tag", "ratio_cooldown");
+		CGOPrintToChat(client, "%t %t", "ratio_tag", "ratio_cooldown");
 		return Plugin_Handled;
 	}
 
@@ -617,6 +653,12 @@ public Action Event_OnJoinTeam(int client, const char[] szCommand, int iArgCount
 	{
 		ClientCommand(client, "play %s", g_sRestrictedSound);
 		return Plugin_Handled;
+	}
+
+	if (!g_bEnableGuard[client])
+	{
+		g_bEnableGuard[client] = true;
+		CGOPrintToChat(client, "%t %t", "ratio_tag", "ratio_guard_enable");
 	}
 
 	if (!CanClientJoinGuards(client))
@@ -786,7 +828,7 @@ public int Handler_AcceptGuardRules(Handle menu, MenuAction action, int param1, 
 
 void Menu_GuardQuestions(int client)
 {
-	char info[256], random[64];
+	char info[64], random[64];
 	Panel InfoPanel = new Panel();
 	int randomquestion = GetRandomInt(1, 5);
 	g_iRandomAnswer[client] = GetRandomInt(1, 3);
@@ -975,12 +1017,6 @@ public Action Timer_ForceTSide(Handle timer, any client)
 		ChangeClientTeam(client, CS_TEAM_T);
 }
 
-public Action Timer_ForceCTSide(Handle timer, any client)
-{
-	if (IsValidClient(client, true, true))
-		ChangeClientTeam(client, CS_TEAM_CT);
-}
-
 /******************************************************************************
                    STOCKS
 ******************************************************************************/
@@ -1062,12 +1098,17 @@ void FixTeamRatio()
 		{
 			client = GetArrayCell(g_aGuardQueue, 0);
 			RemovePlayerFromGuardQueue(client);
-			
+
 			CGOPrintToChatAll("%t %t", "ratio_tag", "ratio_find", client);
 		}
 		else if (gc_bBalanceTerror.BoolValue)
 		{
 			client = GetRandomClientFromTeam(CS_TEAM_T);
+			while (!g_bEnableGuard[client])
+			{
+				client = GetRandomClientFromTeam(CS_TEAM_T);
+			}
+
 			CGOPrintToChatAll("%t %t", "ratio_tag", "ratio_random", client);
 		}
 		else
@@ -1078,10 +1119,11 @@ void FixTeamRatio()
 		if (!IsValidClient(client, true, true))
 		{
 			CGOPrintToChatAll("%t %t", "ratio_tag", "ratio_novalid");
+
 			break;
 		}
-		
-		ChangeClientTeam(client, CS_TEAM_CT);
+
+		SetClientPendingTeam(client, CS_TEAM_CT);
 		SetClientListeningFlags(client, VOICE_NORMAL); // unmute if sm_hosties or admin has muted prisoners on round start
 		MinusDeath(client);
 		bMovedPlayers = true;
@@ -1106,12 +1148,18 @@ void FixTeamRatio()
 				if (gp_bWarden) if ((JWP_IsWarden(client) || JWP_IsZamWarden(client)) && gc_bBalanceWarden.BoolValue)
 				{
 					iListNum--;
+					if (iListNum == -1)
+						break;
+					
 					client = GetArrayCell(g_aGuardList, iListNum);
 					
 					if (JWP_IsWarden(client) || JWP_IsZamWarden(client))
 					{
 						iListNum--;
-						if (iListNum != -1) client = GetArrayCell(g_aGuardList, iListNum);
+						if (iListNum == -1)
+							break;
+						
+						client = GetArrayCell(g_aGuardList, iListNum);
 					}
 				}
 			}
@@ -1125,7 +1173,7 @@ void FixTeamRatio()
 			break;
 		
 		CGOPrintToChatAll("%t %t", "ratio_tag", "ratio_movetot", client);
-		ChangeClientTeam(client, CS_TEAM_T);
+		SetClientPendingTeam(client, CS_TEAM_T);
 		MinusDeath(client);
 		RemovePlayerFromGuardList(client);
 	}
@@ -1209,15 +1257,12 @@ int GetClientPendingTeam(int client)
 {
 	return GetEntProp(client, Prop_Send, "m_iPendingTeamNum");
 }
-//
-//void ChangeClientTeam(int client, int team)
-//{
-//	SetEntProp(client, Prop_Send, "m_iPendingTeamNum", team);
-//	// MinusDeath(client);
-//}
 
-
-
+void SetClientPendingTeam(int client, int team)
+{
+	SetEntProp(client, Prop_Send, "m_iPendingTeamNum", team);
+	// MinusDeath(client);
+}
 
 public Action Command_JoinTerror(int client, int args)
 {
@@ -1246,6 +1291,9 @@ void ChangeTeam(int client, int team)
 	Format(info, sizeof(info), "%T", "ratio_sure", client);
 	menu1.SetTitle(info);
 
+	menu1.AddItem("1", "0", ITEMDRAW_SPACER);
+	menu1.AddItem("1", "0", ITEMDRAW_SPACER);
+
 	Format(info, sizeof(info), "%T", "ratio_no", client);
 	menu1.AddItem("1", info);
 	Format(info, sizeof(info), "%T", "ratio_yes", client);
@@ -1256,6 +1304,7 @@ void ChangeTeam(int client, int team)
 	menu1.Display(client, MENU_TIME_FOREVER);
 }
 
+// Switch Team Handler
 public int ChangeMenu(Menu menu, MenuAction action, int client, int selection)
 {
 	if (action == MenuAction_Select)
@@ -1277,36 +1326,39 @@ public int ChangeMenu(Menu menu, MenuAction action, int client, int selection)
 			{
 				ForcePlayerSuicide(client);
 			}
-			if((GetClientTeam(client) == CS_TEAM_CT)&&(GetTeamClientCount(CS_TEAM_CT)==1)&&(GetTeamClientCount(CS_TEAM_T)>=1))
+
+			if ((GetClientTeam(client) == CS_TEAM_CT) && (GetTeamClientCount(CS_TEAM_CT) == 1) && (GetTeamClientCount(CS_TEAM_T) >= 1))
 			{
 				ChangeClientTeam(client, team);
-				if(GetTeamClientCount(CS_TEAM_CT)==0)
+
+				if (GetTeamClientCount(CS_TEAM_CT) == 0)
 				{
-						int randomClient;
-						if (GetArraySize(g_aGuardQueue))
-						{
-							randomClient = GetArrayCell(g_aGuardQueue, 0);
-							RemovePlayerFromGuardQueue(randomClient);
-							CGOPrintToChatAll("%t %t", "ratio_tag", "ratio_find", randomClient);
-						}
-						else if (gc_bBalanceTerror.BoolValue)
-						{
-							randomClient = GetRandomClientFromTeam(CS_TEAM_T);
-							CGOPrintToChatAll("%t %t", "ratio_tag", "ratio_random", randomClient);
-						}
-						else
-						{
-							return;
-						}
-						
-						if (!IsValidClient(randomClient, true, true))
-						{
-							CGOPrintToChatAll("%t %t", "ratio_tag", "ratio_novalid");
-						}
-						
-						ChangeClientTeam(randomClient, CS_TEAM_CT);
-						SetClientListeningFlags(randomClient, VOICE_NORMAL); // unmute if sm_hosties or admin has muted prisoners on round start
-						MinusDeath(randomClient);
+					int newGuard;
+
+					if (GetArraySize(g_aGuardQueue))
+					{
+						newGuard = GetArrayCell(g_aGuardQueue, 0);
+						RemovePlayerFromGuardQueue(newGuard);
+						CGOPrintToChatAll("%t %t", "ratio_tag", "ratio_find", newGuard);
+					}
+					else if (gc_bBalanceTerror.BoolValue)
+					{
+						newGuard = GetRandomClientFromTeam(CS_TEAM_T);
+						CGOPrintToChatAll("%t %t", "ratio_tag", "ratio_random", newGuard);
+					}
+					else
+					{
+						return;
+					}
+
+					if (!IsValidClient(newGuard, true, true))
+					{
+						CGOPrintToChatAll("%t %t", "ratio_tag", "ratio_novalid");
+					}
+
+					ChangeClientTeam(newGuard, CS_TEAM_CT);
+					SetClientListeningFlags(newGuard, VOICE_NORMAL);
+					MinusDeath(newGuard);
 				}
 			}
 			else
@@ -1328,7 +1380,6 @@ public int ChangeMenu(Menu menu, MenuAction action, int client, int selection)
 	}
 }
 
-// Check for valid clients with bool for bots & dead player 
 bool IsValidClient(int client, bool bAllowBots = false, bool bAllowDead = true)
 {
 	if (!(1 <= client <= MaxClients) || !IsClientInGame(client) || (IsFakeClient(client) && !bAllowBots) || IsClientSourceTV(client) || IsClientReplay(client) || (!bAllowDead && !IsPlayerAlive(client)))
@@ -1364,4 +1415,4 @@ bool CheckVipFlag(int client, const char[] flagsNeed)
 	}
 
 	return false;
-}
+} 
