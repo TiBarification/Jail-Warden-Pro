@@ -247,6 +247,7 @@ bool SetRandomSkin(int client, ArrayList& myArray, KeyValues& kv)
 
 bool Shop_IsClientSkinUse(int iClient)
 {
+	if (IsFakeClient(iClient)) return false;
     int iSize = 0;
     ArrayList hArray = view_as<ArrayList>(Shop_CreateArrayOfItems(iSize));
     if(iSize)
@@ -315,7 +316,7 @@ bool SetArms(int client)
 
 bool CheckClient(int client)
 {
-	return (client && IsClientConnected(client) && IsClientInGame(client));
+	return (client && IsClientConnected(client) && IsClientInGame(client) && !IsFakeClient(client));
 }
 
 bool CheckMdlPath(const char[] path)
