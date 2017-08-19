@@ -315,7 +315,7 @@ bool SetArms(int client)
 
 bool CheckClient(int client)
 {
-	return (client && IsClientConnected(client) && IsClientInGame(client));
+	return (client && IsClientConnected(client) && IsClientInGame(client) && !IsFakeClient(client));
 }
 
 bool CheckMdlPath(const char[] path)
