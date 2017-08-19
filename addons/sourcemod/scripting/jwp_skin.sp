@@ -16,6 +16,7 @@ ConVar g_CvarWardenSkin, g_CvarWardenArms, g_CvarWardenZamSkin, g_CvarWardenZamA
 char g_cWardenSkin[2][PLATFORM_MAX_PATH], g_cWardenZamSkin[2][PLATFORM_MAX_PATH];
 char g_cSkin[MAXPLAYERS+1][PLATFORM_MAX_PATH], g_cArms[MAXPLAYERS+1][PLATFORM_MAX_PATH];
 int g_iSkinId[MAXPLAYERS+1];
+bool SkinsCheck;
 
 ArrayList tModels_Array, ctModels_Array;
 KeyValues g_KvT, g_KvCT;
@@ -80,11 +81,11 @@ public Action Event_OnPlayerSpawn(Event event, const char[] name, bool dontBroad
 		TiB_SetSkin(client);
 		if (!g_bIsCSGO)
 		{
-			SetModel(client);
+			CreateTimer(0.5, SetModel, client);
 		}
 		else
 		{
-			g_bIsSafeToSetModel[0] = true
+			g_bIsSafeToSetModel[0] = true;
 			g_bIsSafeToSetModel[1] = true;
 			char currentmodel[PLATFORM_MAX_PATH];
 			GetEntPropString(client, Prop_Send, "m_szArmsModel", currentmodel, sizeof(currentmodel));
@@ -109,7 +110,7 @@ public Action Event_OnPlayerSpawn(Event event, const char[] name, bool dontBroad
 			else if (JWP_IsZamWarden(client) && g_cWardenZamSkin[0][0] == 'm')
 				SetEntityModel(client, g_cWardenZamSkin[0])
 			else
-				SetModel(client);
+				CreateTimer(0.5, SetModel, client);
 		}
 	}
 	
@@ -197,7 +198,7 @@ public void JWP_OnWardenResigned(int client, bool himself)
 {
 	if (CheckClient(client))
 	{
-		if (!SetModel(client, true))
+		if (SkinsCheck == true)
 		{
 			if (g_bIsCSGO && g_bIsSafeToSetModel[0])
 				ArmsFix_SetDefaults(client);
@@ -315,28 +316,48 @@ bool IsVipSkinUse(int iClient)
 	return (VIP_IsClientVIP(iClient) && VIP_GetClientFeatureStatus(iClient, g_cVIPFeatureName) == ENABLED);
 }
 
-bool SetModel(int client, bool bSetDefaultModel = false)
+public Action SetModel(Handle timer, int client)
 {
-	if (!g_CvarTRandomSkins.BoolValue && !g_CvarCTRandomSkins.BoolValue) return false; // Disable it , if no random skins
+	bool bSetDefaultModel = false
+
+	if (!g_CvarTRandomSkins.BoolValue && !g_CvarCTRandomSkins.BoolValue)
+	{
+		SkinsCheck = false; // Disable it , if no random skins
+		return Plugin_Handled;
+	}
 	else if (!bSetDefaultModel && g_bVIPExists && IsVipSkinUse(client))
-		return true; // Just exit, so we do not override VIP models
+	{
+		SkinsCheck = true; // Just exit, so we do not override VIP models
+		return Plugin_Continue;
+	}
 	else if (!bSetDefaultModel && IsClientSkinUse(client))
-		return true; // Just exit, so we do not override Shop models
+	{
+		SkinsCheck = true; // Just exit, so we do not override Shop models
+		return Plugin_Continue;
+	}
 	else if (g_cSkin[client][0] != NULL_STRING[0])
 	{
-		if (g_bIsCSGO && !g_bIsSafeToSetModel[0]) return false;
+		if (g_bIsCSGO && !g_bIsSafeToSetModel[0]) 
+		{
+			SkinsCheck = false;
+			return Plugin_Handled;
+		}
 		SetEntityModel(client, g_cSkin[client]);
 		if (g_iSkinId[client] != 0)
 			SetEntProp(client, Prop_Send, "m_nSkin", g_iSkinId[client]);
-		return true;
+		SkinsCheck = true;
+		return Plugin_Continue;
 	}
 	
-	return false;
+	SkinsCheck = false;
+	return Plugin_Handled;
 }
 
 bool SetArms(int client)
 {
 	if (!g_CvarTRandomSkins.BoolValue && !g_CvarCTRandomSkins.BoolValue) return false; // Disable it , if no random skins
+	else if (IsClientSkinUse(client))
+		SkinsCheck = true; // Just exit, so we do not override Shop models
 	else if (g_bIsCSGO && g_bIsSafeToSetModel[1] && g_cArms[client][0] != NULL_STRING[0])
 	{
 		char currentmodel[PLATFORM_MAX_PATH];
