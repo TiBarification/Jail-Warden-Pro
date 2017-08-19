@@ -10,6 +10,8 @@
 #include <jwp>
 #define REQUIRE_PLUGIN
 
+#define PLUGIN_VERSION "1.3"
+
 // Compiler Options
 #pragma semicolon 1
 #pragma newdecls required
@@ -65,7 +67,7 @@ public Plugin myinfo = {
 	name = "JWP - Ratio(Original MyJailbreak)",
 	author = "shanapu, Addicted, BaFeR",
 	description = "Jailbreak team balance / ratio plugin",
-	version = "1.3",
+	version = PLUGIN_VERSION,
 	url = ""
 };
 
@@ -91,7 +93,7 @@ public void OnPluginStart()
 	// AutoExecConfig
 	AutoExecConfig(true, "ratio", "jwp");
 
-	CreateConVar("sm_ratio_version", "1.3", "The version of this JWP SourceMod plugin", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
+	CreateConVar("sm_ratio_version", PLUGIN_VERSION, "The version of this JWP SourceMod plugin", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	gc_sCustomCommandGuard = CreateConVar("sm_ratio_cmds_guard", "g, ct, guards", "Set your custom chat command for become guard(!guard (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
 	gc_sCustomCommandQueue = CreateConVar("sm_ratio_cmds_queue", "vq, queue", "Set your custom chat command for view guard queue (!viewqueue (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
 	gc_sCustomCommandLeave = CreateConVar("sm_ratio_cmds_leave", "lq, stay", "Set your custom chat command for view leave queue (!leavequeue (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
