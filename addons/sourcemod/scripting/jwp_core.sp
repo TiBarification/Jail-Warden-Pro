@@ -165,6 +165,7 @@ public void Event_OnRoundStart(Event event, const char[] name, bool dontBroadcas
 		delete g_mMainMenu;
 		int iOldWarden = g_iWarden;
 		g_iWarden = 0;
+		if (iOldWarden > 0)
 		Forward_OnWardenResigned(iOldWarden, false);
 	}
 	
