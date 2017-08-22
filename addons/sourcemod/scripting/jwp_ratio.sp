@@ -1130,7 +1130,7 @@ void FixTeamRatio()
 			break;
 		}
 
-		SetClientPendingTeam(client, CS_TEAM_CT);
+		ChangeClientTeam(client, CS_TEAM_CT);
 		SetClientListeningFlags(client, VOICE_NORMAL); // unmute if sm_hosties or admin has muted prisoners on round start
 		MinusDeath(client);
 		bMovedPlayers = true;
@@ -1180,7 +1180,7 @@ void FixTeamRatio()
 			break;
 		
 		CGOPrintToChatAll("%t %t", "ratio_tag", "ratio_movetot", client);
-		SetClientPendingTeam(client, CS_TEAM_T);
+		ChangeClientTeam(client, CS_TEAM_T);
 		MinusDeath(client);
 		RemovePlayerFromGuardList(client);
 	}
@@ -1265,7 +1265,7 @@ int GetClientPendingTeam(int client)
 	return GetEntProp(client, Prop_Send, "m_iPendingTeamNum");
 }
 
-void SetClientPendingTeam(int client, int team)
+void ChangeClientTeam(int client, int team)
 {
 	SetEntProp(client, Prop_Send, "m_iPendingTeamNum", team);
 	// MinusDeath(client);

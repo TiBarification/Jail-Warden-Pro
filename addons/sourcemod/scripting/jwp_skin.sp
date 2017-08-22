@@ -161,10 +161,6 @@ public void JWP_OnWardenZamChosen(int client)
 	// Then setup model
 	if (g_cWardenZamSkin[0][0] != NULL_STRING[0])
 		SetEntityModel(client, g_cWardenZamSkin[0]);
-	
-	// And then refresh view
-	if (g_bIsCSGO)
-		ArmsFix_RefreshView(client);
 }
 
 public void JWP_OnWardenResigned(int client, bool himself)
@@ -350,6 +346,10 @@ void OnResign(int client)
 		if (SetArms(client, true))
 		{
 			SetActualModel(client);
+				
+			// And then refresh view
+			if (g_bIsCSGO)
+				ArmsFix_RefreshView(client);
 		}
 		else
 		{
