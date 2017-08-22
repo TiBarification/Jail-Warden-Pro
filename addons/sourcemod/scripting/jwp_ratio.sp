@@ -1048,11 +1048,6 @@ bool RemovePlayerFromGuardList(int client)
 	RemoveFromArray(g_aGuardList, iIndex);
 }
 
-stock int GetClientPendingTeam(int client)
-{
-    return GetEntProp(client, Prop_Send, "m_iPendingTeamNum");
-}
-
 bool ShouldMoveGuardToPrisoner()
 {
 	int iNumGuards, iNumPrisoners;
@@ -1262,6 +1257,11 @@ bool CanClientJoinGuards(int client)
 	}
 
 	return false;
+}
+
+int GetClientPendingTeam(int client)
+{
+    return GetEntProp(client, Prop_Send, "m_iPendingTeamNum");
 }
 
 public Action Command_JoinTerror(int client, int args)
