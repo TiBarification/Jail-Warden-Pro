@@ -161,10 +161,6 @@ public void JWP_OnWardenZamChosen(int client)
 	// Then setup model
 	if (g_cWardenZamSkin[0][0] != NULL_STRING[0])
 		SetEntityModel(client, g_cWardenZamSkin[0]);
-	
-	// And then refresh view
-	if (g_bIsCSGO)
-		ArmsFix_RefreshView(client);
 }
 
 public void JWP_OnWardenResigned(int client, bool himself)
@@ -279,7 +275,7 @@ bool Shop_IsClientSkinUse(int iClient)
 
 bool IsVipSkinUse(int iClient)
 {
-	return (VIP_IsClientVIP(iClient) && VIP_GetClientFeatureStatus(iClient, g_cVIPFeatureName) == ENABLED);
+	return (IsClientConnected(iClient) && VIP_IsClientVIP(iClient) && VIP_GetClientFeatureStatus(iClient, g_cVIPFeatureName) == ENABLED);
 }
 
 public Action SetModel(Handle timer, int client)
@@ -288,7 +284,7 @@ public Action SetModel(Handle timer, int client)
 	if (!g_CvarTRandomSkins.BoolValue && !g_CvarCTRandomSkins.BoolValue)
 		return Plugin_Continue;
 	// Skip VIP or shop player skin set
-	if (g_bVIPExists && IsVipSkinUse(client) || Shop_IsClientSkinUse(client))
+	if ((g_bVIPExists && IsVipSkinUse(client)) || (Shop_IsClientSkinUse(client) && g_bShopExists))
 		return Plugin_Continue;
 	// Skip warden skin set
 	if ((JWP_IsWarden(client) && g_cWardenSkin[0][0] != NULL_STRING[0]) || (JWP_IsZamWarden(client) && g_cWardenZamSkin[0][0] != NULL_STRING[0]))
@@ -306,8 +302,6 @@ void SetActualModel(int client)
 		SetEntityModel(client, g_cSkin[client]);
 		if (g_iSkinId[client] != 0)
 			SetEntProp(client, Prop_Send, "m_nSkin", g_iSkinId[client]);
-		if (g_bIsCSGO)
-			ArmsFix_RefreshView(client);
 	}
 }
 
@@ -350,6 +344,10 @@ void OnResign(int client)
 		if (SetArms(client, true))
 		{
 			SetActualModel(client);
+				
+			// And then refresh view
+			if (g_bIsCSGO)
+				ArmsFix_RefreshView(client);
 		}
 		else
 		{
