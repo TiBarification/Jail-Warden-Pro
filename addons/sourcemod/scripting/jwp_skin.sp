@@ -302,8 +302,6 @@ void SetActualModel(int client)
 		SetEntityModel(client, g_cSkin[client]);
 		if (g_iSkinId[client] != 0)
 			SetEntProp(client, Prop_Send, "m_nSkin", g_iSkinId[client]);
-		if (g_bIsCSGO)
-			ArmsFix_RefreshView(client);
 	}
 }
 
