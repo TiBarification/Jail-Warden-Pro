@@ -8,8 +8,7 @@
 
 #define ITEM "bequiet"
 
-ConVar Cvar_AdminFlagMute;
-ConVar Cvar_AutoBequiet;
+ConVar Cvar_AdminFlagMute, Cvar_AutoBequiet, Cvar_WardenMuteAlive;
 bool g_bBequiet;
 char g_sAdminFlagMute[64];
 
@@ -25,6 +24,7 @@ public void OnPluginStart()
 {
 	Cvar_AutoBequiet = CreateConVar("jwp_warden_autobequiet", "1", "Enable bequiet of warden by default", _, true, 0.0, true, 1.0);
 	Cvar_AdminFlagMute = CreateConVar("jwp_admin_mute_immuntiy", "z", "Set flag for admin Mute immunity. No flag immunity for all. so don't leave blank!");
+	Cvar_WardenMuteAlive = CreateConVar("jwp_warden_mute_alive", "1", "Enable warden mute only alive", _, true, 0.0, true, 1.0);
 
 	// Hooks
 	HookConVarChange(Cvar_AdminFlagMute, Mute_OnSettingChanged);
@@ -100,11 +100,25 @@ public void OnClientSpeakingEx(client)
 				{
 					if (GetClientTeam(i) == CS_TEAM_T)
 					{
-						PrintCenterText(i, "%T", "BeQuiet_Listen", LANG_SERVER);
-						if (!CheckVipFlag(i, g_sAdminFlagMute))
-							SetClientListeningFlags(i, VOICE_NORMAL);
+						if(Cvar_WardenMuteAlive)
+						{
+							if(IsPlayerAlive(i))
+							{
+								PrintCenterText(i, "%T", "BeQuiet_Listen", LANG_SERVER);
+								if (!CheckVipFlag(i, g_sAdminFlagMute))
+									SetClientListeningFlags(i, VOICE_NORMAL);
+								else
+									SetClientListeningFlags(i, VOICE_MUTED);
+							}
+						}
 						else
-							SetClientListeningFlags(i, VOICE_MUTED);
+						{
+							PrintCenterText(i, "%T", "BeQuiet_Listen", LANG_SERVER);
+							if (!CheckVipFlag(i, g_sAdminFlagMute))
+								SetClientListeningFlags(i, VOICE_NORMAL);
+							else
+								SetClientListeningFlags(i, VOICE_MUTED);
+						}
 					}
 				}
 			}
