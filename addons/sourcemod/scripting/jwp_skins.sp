@@ -3,7 +3,6 @@
 #include <cstrike>
 #include <jwp>
 #undef REQUIRE_PLUGIN
-#tryinclude <n_arms_fix>
 #tryinclude <vip_core>
 #tryinclude <shop>
 #define REQUIRE_PLUGIN
@@ -15,7 +14,6 @@
 ConVar g_CvarWardenSkin, g_CvarWardenArms, g_CvarWardenZamSkin, g_CvarWardenZamArms, g_CvarTRandomSkins, g_CvarCTRandomSkins, g_CvarTimerSetSkin;
 char g_cWardenSkin[2][PLATFORM_MAX_PATH], g_cWardenZamSkin[2][PLATFORM_MAX_PATH];
 char g_cSkin[MAXPLAYERS+1][PLATFORM_MAX_PATH], g_cArms[MAXPLAYERS+1][PLATFORM_MAX_PATH];
-int g_iSkinId[MAXPLAYERS+1];
 
 ArrayList tModels_Array, ctModels_Array;
 KeyValues g_KvT, g_KvCT;
@@ -58,15 +56,8 @@ public void OnAllPluginsLoaded()
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
-	MarkNativeAsOptional("ArmsFix_SetDefaults");
-	MarkNativeAsOptional("ArmsFix_HasDefaultArms");
-	MarkNativeAsOptional("ArmsFix_SetDefaultArms");
-	MarkNativeAsOptional("ArmsFix_RefreshView");
 	MarkNativeAsOptional("VIP_IsValidFeature");
 	MarkNativeAsOptional("VIP_GetClientFeatureStatus");
-
-	if (g_bIsCSGO && !LibraryExists("n_arms_fix"))
-		SetFailState("Failed to run plugin, due to requirements. Check if n_arms_fix lib is installed");
 }
 
 public Action Event_OnPlayerSpawn(Event event, const char[] name, bool dontBroadcast)
@@ -76,10 +67,7 @@ public Action Event_OnPlayerSpawn(Event event, const char[] name, bool dontBroad
 	{
 		TiB_SetSkin(client);
 		if (g_bIsCSGO)
-		{
-			ArmsFix_SetDefaults(client);
 			SetArms(client, false);
-		}
 		CreateTimer(g_CvarTimerSetSkin.FloatValue, SetModel, client);
 	}
 	
@@ -90,7 +78,6 @@ public void OnClientPutInServer(int client)
 {
 	g_cSkin[client][0] = NULL_STRING[0];
 	g_cArms[client][0] = NULL_STRING[0];
-	g_iSkinId[client] = 0;
 }
 
 public void OnConfigsExecuted()
@@ -146,10 +133,6 @@ public void JWP_OnWardenChosen(int client)
 	// Then setup model
 	if (g_cWardenSkin[0][0] != NULL_STRING[0])
 		SetEntityModel(client, g_cWardenSkin[0]);
-	
-	// And then refresh view
-	if (g_bIsCSGO)
-		ArmsFix_RefreshView(client);
 }
 
 public void JWP_OnWardenZamChosen(int client)
@@ -242,14 +225,12 @@ bool SetRandomSkin(int client, ArrayList& myArray, KeyValues& kv)
 	kv.GetString("path", g_cSkin[client], PLATFORM_MAX_PATH, "");
 	kv.GetString("arms_path", g_cArms[client], PLATFORM_MAX_PATH, "");
 	
-	g_iSkinId[client] = kv.GetNum("skin", 0);
-	
 	return true;
 }
 
 bool Shop_IsClientSkinUse(int iClient)
 {
-	if (IsFakeClient(iClient))
+	if (IsFakeClient(iClient) && IsClientConnected(iClient))
 		return false;
 	int iSize = 0;
 	ArrayList hArray = view_as<ArrayList>(Shop_CreateArrayOfItems(iSize));
@@ -262,8 +243,8 @@ bool Shop_IsClientSkinUse(int iClient)
 			item_id = view_as<ItemId>(Shop_GetArrayItem(hArray, i));
 			if(Shop_GetItemCategoryId(item_id) == iCatID && Shop_IsClientItemToggled(iClient, item_id))
 			{
-			delete hArray;
-			return true;
+				delete hArray;
+				return true;
 			}
 		}
 	}
@@ -298,11 +279,7 @@ public Action SetModel(Handle timer, int client)
 void SetActualModel(int client)
 {
 	if (g_cSkin[client][0] != NULL_STRING[0])
-	{
 		SetEntityModel(client, g_cSkin[client]);
-		if (g_iSkinId[client] != 0)
-			SetEntProp(client, Prop_Send, "m_nSkin", g_iSkinId[client]);
-	}
 }
 
 bool SetArms(int client, bool forceset)
@@ -311,6 +288,8 @@ bool SetArms(int client, bool forceset)
 	if (!g_CvarTRandomSkins.BoolValue && !g_CvarCTRandomSkins.BoolValue) return false; // Disable it , if no random skins
 	else if (g_bShopExists && Shop_IsClientSkinUse(client) && !forceset)
 		return true;
+	else if (g_bVIPExists && IsVipSkinUse(client))
+		return true;
 	else if (g_bIsCSGO && g_cArms[client][0] != NULL_STRING[0])
 	{
 		char currentmodel[PLATFORM_MAX_PATH];
@@ -318,6 +297,7 @@ bool SetArms(int client, bool forceset)
 
 		if (!StrEqual(currentmodel, g_cArms[client]))
 			SetEntPropString(client, Prop_Send, "m_szArmsModel", g_cArms[client]);
+
 		return true;
 	}
 	
@@ -334,6 +314,7 @@ bool CheckMdlPath(const char[] path)
 	if (path[0] != 'm' || StrContains(path, ".mdl", false) == -1)
 		return false;
 	if(strlen(path) > 3 && FileExists(path) && !IsModelPrecached(path)) PrecacheModel(path, true);
+
 	return true;
 }
 
@@ -341,20 +322,8 @@ void OnResign(int client)
 {
 	if (CheckClient(client))
 	{
-		if (SetArms(client, true))
-		{
-			SetActualModel(client);
-				
-			// And then refresh view
-			if (g_bIsCSGO)
-				ArmsFix_RefreshView(client);
-		}
-		else
-		{
-			if (g_bIsCSGO)
-				ArmsFix_SetDefaults(client);
-			else
-				SetEntityModel(client, "models/player/ct_sas.mdl");
-		}
+		SetActualModel(client);
+		if (g_bIsCSGO)
+			SetArms(client, false);
 	}
 }
