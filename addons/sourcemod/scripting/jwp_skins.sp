@@ -230,7 +230,7 @@ bool SetRandomSkin(int client, ArrayList& myArray, KeyValues& kv)
 
 bool Shop_IsClientSkinUse(int iClient)
 {
-	if (IsFakeClient(iClient) && IsClientConnected(iClient))
+	if (IsClientConnected(iClient) && IsFakeClient(iClient))
 		return false;
 	int iSize = 0;
 	ArrayList hArray = view_as<ArrayList>(Shop_CreateArrayOfItems(iSize));
