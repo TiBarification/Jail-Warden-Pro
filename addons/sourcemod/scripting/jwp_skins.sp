@@ -280,17 +280,11 @@ void SetActualModel(int client)
 {
 	if (g_cSkin[client][0] != NULL_STRING[0])
 		SetEntityModel(client, g_cSkin[client]);
-<<<<<<< HEAD:addons/sourcemod/scripting/jwp_skin.sp
 		if (g_iSkinId[client] != 0)
 			SetEntProp(client, Prop_Send, "m_nSkin", g_iSkinId[client]);
-<<<<<<< HEAD:addons/sourcemod/scripting/jwp_skin.sp
 		if (g_bIsCSGO)
 			ArmsFix_RefreshView(client);
-=======
->>>>>>> parent of b8a6b78... remove n_arms_fix and "skin":addons/sourcemod/scripting/jwp_skins.sp
 	}
-=======
->>>>>>> dev:addons/sourcemod/scripting/jwp_skins.sp
 }
 
 bool SetArms(int client, bool forceset)
@@ -333,17 +327,13 @@ void OnResign(int client)
 {
 	if (CheckClient(client))
 	{
-<<<<<<< HEAD:addons/sourcemod/scripting/jwp_skin.sp
 		if (SetArms(client, true))
 		{
 			SetActualModel(client);
-<<<<<<< HEAD:addons/sourcemod/scripting/jwp_skin.sp
-=======
 				
 			// And then refresh view
 			if (g_bIsCSGO)
 				ArmsFix_RefreshView(client);
->>>>>>> parent of b8a6b78... remove n_arms_fix and "skin":addons/sourcemod/scripting/jwp_skins.sp
 		}
 		else
 		{
@@ -352,10 +342,8 @@ void OnResign(int client)
 			else
 				SetEntityModel(client, "models/player/ct_sas.mdl");
 		}
-=======
 		SetActualModel(client);
 		if (g_bIsCSGO)
 			SetArms(client, false);
->>>>>>> dev:addons/sourcemod/scripting/jwp_skins.sp
 	}
 }
