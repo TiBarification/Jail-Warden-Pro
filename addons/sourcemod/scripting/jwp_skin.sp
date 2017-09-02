@@ -306,8 +306,11 @@ void SetActualModel(int client)
 		SetEntityModel(client, g_cSkin[client]);
 		if (g_iSkinId[client] != 0)
 			SetEntProp(client, Prop_Send, "m_nSkin", g_iSkinId[client]);
+<<<<<<< HEAD:addons/sourcemod/scripting/jwp_skin.sp
 		if (g_bIsCSGO)
 			ArmsFix_RefreshView(client);
+=======
+>>>>>>> parent of b8a6b78... remove n_arms_fix and "skin":addons/sourcemod/scripting/jwp_skins.sp
 	}
 }
 
@@ -350,6 +353,13 @@ void OnResign(int client)
 		if (SetArms(client, true))
 		{
 			SetActualModel(client);
+<<<<<<< HEAD:addons/sourcemod/scripting/jwp_skin.sp
+=======
+				
+			// And then refresh view
+			if (g_bIsCSGO)
+				ArmsFix_RefreshView(client);
+>>>>>>> parent of b8a6b78... remove n_arms_fix and "skin":addons/sourcemod/scripting/jwp_skins.sp
 		}
 		else
 		{
