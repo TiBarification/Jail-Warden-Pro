@@ -10,7 +10,7 @@
 // Force new syntax
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.1.5b"
+#define PLUGIN_VERSION "1.1.5c"
 
 #define UPDATE_URL "http://updater.scriptplugs.info/jwp/updatefile.txt"
 #define LOG_PATH "addons/sourcemod/logs/JWP_Log.log"
@@ -552,8 +552,8 @@ void JWP_FindNewWarden()
 	
 	if (g_iZamWarden)
 	{
-		BecomeCmd(g_iZamWarden);
 		RemoveZam();
+		BecomeCmd(g_iZamWarden);
 	}
 	else if (g_CvarChooseMode.IntValue == 1 || g_CvarChooseMode.IntValue == 3)
 	{

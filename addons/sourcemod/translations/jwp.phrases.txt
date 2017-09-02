@@ -2,7 +2,7 @@
 {
 	"Core_Prefix"
 	{
-		"en"		"{DEFAULT}[{GREEN}WARDEN{DEFAULT}]"	
+		"en"		"[{GREEN}WARDEN{DEFAULT}]"	
 	}
 	"warden_death"
 	{

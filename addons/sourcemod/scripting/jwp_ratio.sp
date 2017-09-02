@@ -1048,7 +1048,6 @@ bool RemovePlayerFromGuardList(int client)
 	RemoveFromArray(g_aGuardList, iIndex);
 }
 
-
 bool ShouldMoveGuardToPrisoner()
 {
 	int iNumGuards, iNumPrisoners;
@@ -1130,7 +1129,7 @@ void FixTeamRatio()
 			break;
 		}
 
-		SetClientPendingTeam(client, CS_TEAM_CT);
+		ChangeClientTeam(client, CS_TEAM_CT);
 		SetClientListeningFlags(client, VOICE_NORMAL); // unmute if sm_hosties or admin has muted prisoners on round start
 		MinusDeath(client);
 		bMovedPlayers = true;
@@ -1180,7 +1179,7 @@ void FixTeamRatio()
 			break;
 		
 		CGOPrintToChatAll("%t %t", "ratio_tag", "ratio_movetot", client);
-		SetClientPendingTeam(client, CS_TEAM_T);
+		ChangeClientTeam(client, CS_TEAM_T);
 		MinusDeath(client);
 		RemovePlayerFromGuardList(client);
 	}
@@ -1262,13 +1261,7 @@ bool CanClientJoinGuards(int client)
 
 int GetClientPendingTeam(int client)
 {
-	return GetEntProp(client, Prop_Send, "m_iPendingTeamNum");
-}
-
-void SetClientPendingTeam(int client, int team)
-{
-	SetEntProp(client, Prop_Send, "m_iPendingTeamNum", team);
-	// MinusDeath(client);
+    return GetEntProp(client, Prop_Send, "m_iPendingTeamNum");
 }
 
 public Action Command_JoinTerror(int client, int args)
