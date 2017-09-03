@@ -5,9 +5,6 @@ echo "Compilation of JWP Plugins"
 for file in addons/sourcemod/scripting/jwp_*.sp
 do
   echo "Compile $file"
-  addons/sourcemod/scripting/spcomp -E -v0 $file
+  filename = basename -s .sp $file # Get file name and save it to `filename` var
+  addons/sourcemod/scripting/spcomp -E -o"addons/sourcemod/plugins/$filename" -v0 $file
 done
-
-echo ""
-echo "Moving compiled plugins to `plugins` directory"
-mv addons/sourcemod/scripting/jwp_*.smx addons/sourcemod/plugins
