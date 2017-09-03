@@ -103,7 +103,7 @@ public void OnClientDisconnect(int client)
 		g_bArrested[client] = false;
 }
 
-public int OnAvailableLR(int announced)
+public void OnAvailableLR(int announced)
 {
 	UnArrestAll();
 	for (int i = 1; i <= MaxClients; ++i)

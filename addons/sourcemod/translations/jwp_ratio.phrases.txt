@@ -1,6 +1,5 @@
 "Phrases"
 {
-
 	"ratio_tag"
 	{
 		"en"		"{GREEN}[{RED}JWP{PURPLE}.{BLUE}Ratio{GREEN}]{DEFAULT}"
