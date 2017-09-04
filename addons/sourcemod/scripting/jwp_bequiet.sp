@@ -23,7 +23,7 @@ public Plugin:myinfo = {
 public void OnPluginStart()
 {
 	Cvar_AutoBequiet = CreateConVar("jwp_warden_autobequiet", "1", "Enable bequiet of warden by default", _, true, 0.0, true, 1.0);
-	Cvar_AdminFlagMute = CreateConVar("jwp_admin_mute_immuntiy", "z", "Set flag for admin Mute immunity. No flag immunity for all. so don't leave blank!");
+	Cvar_AdminFlagMute = CreateConVar("jwp_admin_mute_immunity", "z", "Set flag for admin Mute immunity. No flag immunity for all. so don't leave blank!");
 	Cvar_WardenMuteAlive = CreateConVar("jwp_warden_mute_alive", "1", "Enable warden mute only alive", _, true, 0.0, true, 1.0);
 	Cvar_WardenMuteT = CreateConVar("jwp_warden_mute_onlyt", "1", "Enable warden mute only T command", _, true, 0.0, true, 1.0);
 
@@ -57,7 +57,7 @@ public void JWP_OnWardenChosen(int client)
 		g_bBequiet = false;
 }
 
-public void Mute_OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
+public void Mute_OnSettingChanged(ConVar convar, const char[] oldValue, const char[] newValue)
 {
 	if (convar == Cvar_AdminFlagMute)
 	{
@@ -74,17 +74,10 @@ public bool OnFuncDisplay(int client, char[] buffer, int maxlength, int style)
 public bool OnFuncSelect(int client)
 {
 	char langbuffer[24];
-	if (g_bBequiet)
-	{
-		FormatEx(langbuffer, sizeof(langbuffer), "[-]%T", "BeQuiet_Menu", LANG_SERVER);
-		JWP_RefreshMenuItem(ITEM, langbuffer);
-	}
-	else
-	{
-		FormatEx(langbuffer, sizeof(langbuffer), "[+]%T", "BeQuiet_Menu", LANG_SERVER);
-		JWP_RefreshMenuItem(ITEM, langbuffer);
-	}
+	FormatEx(langbuffer, sizeof(langbuffer), "[%с]%T", (g_bBequiet) ? '-' : '+', "BeQuiet_Menu", LANG_SERVER);
+	JWP_RefreshMenuItem(ITEM, langbuffer);
 	JWP_ShowMainMenu(client);
+	
 	return true;
 }
 
@@ -106,7 +99,7 @@ public void OnClientSpeakingEx(client)
 							if(IsPlayerAlive(i))
 							{
 								PrintCenterText(i, "%T", "BeQuiet_Listen", LANG_SERVER);
-								if (!CheckVipFlag(i, g_sAdminFlagMute))
+								if (!CheckFlag(i, g_sAdminFlagMute))
 									SetClientListeningFlags(i, VOICE_NORMAL);
 								else
 									SetClientListeningFlags(i, VOICE_MUTED);
@@ -115,7 +108,7 @@ public void OnClientSpeakingEx(client)
 						else
 						{
 							PrintCenterText(i, "%T", "BeQuiet_Listen", LANG_SERVER);
-							if (!CheckVipFlag(i, g_sAdminFlagMute))
+							if (!CheckFlag(i, g_sAdminFlagMute))
 								SetClientListeningFlags(i, VOICE_NORMAL);
 							else
 								SetClientListeningFlags(i, VOICE_MUTED);
@@ -128,7 +121,7 @@ public void OnClientSpeakingEx(client)
 							if(IsPlayerAlive(i))
 							{
 								PrintCenterText(i, "%T", "BeQuiet_Listen", LANG_SERVER);
-								if (!CheckVipFlag(i, g_sAdminFlagMute))
+								if (!CheckFlag(i, g_sAdminFlagMute))
 									SetClientListeningFlags(i, VOICE_NORMAL);
 								else
 									SetClientListeningFlags(i, VOICE_MUTED);
@@ -137,7 +130,7 @@ public void OnClientSpeakingEx(client)
 						else
 						{
 							PrintCenterText(i, "%T", "BeQuiet_Listen", LANG_SERVER);
-							if (!CheckVipFlag(i, g_sAdminFlagMute))
+							if (!CheckFlag(i, g_sAdminFlagMute))
 								SetClientListeningFlags(i, VOICE_NORMAL);
 							else
 								SetClientListeningFlags(i, VOICE_MUTED);
@@ -165,11 +158,10 @@ public void OnClientSpeakingEnd(client)
 }
 
 // Get a player for a certain admin flag
-bool CheckVipFlag(int client, char [] flagsNeed)
+bool CheckFlag(int client, char [] flagsNeed)
 {
 	int iCount = 0;
 	char sflagNeed[22][8], sflagFormat[64];
-	bool bEntitled = false;
 
 	Format(sflagFormat, sizeof(sflagFormat), flagsNeed);
 	ReplaceString(sflagFormat, sizeof(sflagFormat), " ", "");
@@ -179,10 +171,9 @@ bool CheckVipFlag(int client, char [] flagsNeed)
 	{
 		if ((GetUserFlagBits(client) & ReadFlagString(sflagNeed[i]) == ReadFlagString(sflagNeed[i])) || (GetUserFlagBits(client) & ADMFLAG_ROOT))
 		{
-			bEntitled = true;
-			break;
+			return true;
 		}
 	}
 
-	return bEntitled;
+	return false;
 }
