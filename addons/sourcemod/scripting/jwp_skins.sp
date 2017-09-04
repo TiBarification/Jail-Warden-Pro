@@ -252,14 +252,13 @@ bool Shop_IsClientSkinUse(int iClient)
 			item_id = view_as<ItemId>(Shop_GetArrayItem(hArray, i));
 			if(Shop_GetItemCategoryId(item_id) == iCatID && Shop_IsClientItemToggled(iClient, item_id))
 			{
-			delete hArray;
-			return true;
+				delete hArray;
+				return true;
 			}
 		}
 	}
 
 	delete hArray;
-
 	return false;
 }
 
@@ -299,7 +298,7 @@ bool SetArms(int client)
 {
 	if (!g_bIsCSGO) return false;
 	if (!g_CvarTRandomSkins.BoolValue && !g_CvarCTRandomSkins.BoolValue) return false; // Disable it , if no random skins
-	else if (g_bShopExists && Shop_IsClientSkinUse(client))
+	else if ((g_bShopExists && Shop_IsClientSkinUse(client) && !forceset) || (g_bVIPExists && IsVipSkinUse(client)))
 		return true;
 	else if (g_bIsCSGO && g_cArms[client][0] != NULL_STRING[0])
 	{
