@@ -10,7 +10,7 @@
 
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.7.2"
+#define PLUGIN_VERSION "1.7.3"
 
 ConVar g_CvarWardenSkin, g_CvarWardenArms, g_CvarWardenZamSkin, g_CvarWardenZamArms, g_CvarTRandomSkins, g_CvarCTRandomSkins, g_CvarTimerSetSkin;
 char g_cWardenSkin[2][PLATFORM_MAX_PATH], g_cWardenZamSkin[2][PLATFORM_MAX_PATH];
@@ -64,6 +64,11 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	MarkNativeAsOptional("ArmsFix_RefreshView");
 	MarkNativeAsOptional("VIP_IsValidFeature");
 	MarkNativeAsOptional("VIP_GetClientFeatureStatus");
+	MarkNativeAsOptional("Shop_GetItemCategoryId");
+	MarkNativeAsOptional("Shop_CreateArrayOfItems");
+	MarkNativeAsOptional("Shop_GetCategoryId");
+	MarkNativeAsOptional("Shop_GetArrayItem");
+	MarkNativeAsOptional("Shop_IsClientItemToggled");
 
 	if (g_bIsCSGO && !LibraryExists("n_arms_fix"))
 		SetFailState("Failed to run plugin, due to requirements. Check if n_arms_fix lib is installed");
@@ -262,14 +267,13 @@ bool Shop_IsClientSkinUse(int iClient)
 			item_id = view_as<ItemId>(Shop_GetArrayItem(hArray, i));
 			if(Shop_GetItemCategoryId(item_id) == iCatID && Shop_IsClientItemToggled(iClient, item_id))
 			{
-			delete hArray;
-			return true;
+				delete hArray;
+				return true;
 			}
 		}
 	}
 
 	delete hArray;
-
 	return false;
 }
 
@@ -284,7 +288,7 @@ public Action SetModel(Handle timer, int client)
 	if (!g_CvarTRandomSkins.BoolValue && !g_CvarCTRandomSkins.BoolValue)
 		return Plugin_Continue;
 	// Skip VIP or shop player skin set
-	if ((g_bVIPExists && IsVipSkinUse(client)) || (Shop_IsClientSkinUse(client) && g_bShopExists))
+	if ((g_bVIPExists && IsVipSkinUse(client)) || (g_bShopExists && Shop_IsClientSkinUse(client)))
 		return Plugin_Continue;
 	// Skip warden skin set
 	if ((JWP_IsWarden(client) && g_cWardenSkin[0][0] != NULL_STRING[0]) || (JWP_IsZamWarden(client) && g_cWardenZamSkin[0][0] != NULL_STRING[0]))
@@ -309,7 +313,7 @@ bool SetArms(int client, bool forceset)
 {
 	if (!g_bIsCSGO) return false;
 	if (!g_CvarTRandomSkins.BoolValue && !g_CvarCTRandomSkins.BoolValue) return false; // Disable it , if no random skins
-	else if (g_bShopExists && Shop_IsClientSkinUse(client) && !forceset)
+	else if ((g_bShopExists && Shop_IsClientSkinUse(client) && !forceset) || (g_bVIPExists && IsVipSkinUse(client)))
 		return true;
 	else if (g_bIsCSGO && g_cArms[client][0] != NULL_STRING[0])
 	{
