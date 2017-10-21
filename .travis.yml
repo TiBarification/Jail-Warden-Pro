@@ -29,8 +29,6 @@ install:
     - tar -xzf $STEAMWORKS_VERS-linux.tar.gz $EXTENSIONS/SteamWorks.ext.so $INCLUDE/SteamWorks.inc
     - unzip -j $STEAMWORKS_VERS-windows.zip $EXTENSIONS/SteamWorks.ext.dll -d $EXTENSIONS
     # Import other modules for successful compilation
-    - wget "https://raw.githubusercontent.com/thraaawn/SMJansson/master/bin/smjansson.ext.so" -O $EXTENSIONS/smjansson.ext.so
-    - wget "https://raw.githubusercontent.com/thraaawn/SMJansson/master/bin/smjansson.ext.dll" -O $EXTENSIONS/smjansson.ext.dll
     - wget "http://www.doctormckay.com/download/scripting/include/morecolors.inc" -O $INCLUDE/morecolors.inc
     - wget "https://raw.githubusercontent.com/Franc1sco/VoiceAnnounceEX/master/scripting/include/voiceannounce_ex.inc" -O $INCLUDE/voiceannounce_ex.inc
     - wget "https://raw.githubusercontent.com/R1KO/VIP-Core/master/addons/sourcemod/scripting/include/vip_core.inc" -O $INCLUDE/vip_core.inc
@@ -38,7 +36,6 @@ install:
     - wget "https://raw.githubusercontent.com/dataviruset/sm-hosties/beta/addons/sourcemod/scripting/include/hosties.inc" -O $INCLUDE/hosties.inc
     - wget "https://raw.githubusercontent.com/dataviruset/sm-hosties/beta/addons/sourcemod/scripting/include/lastrequest.inc" -O $INCLUDE/lastrequest.inc
     - wget "https://raw.githubusercontent.com/KyleSanderson/SteamWorks/master/Pawn/includes/SteamWorks.inc" -O $INCLUDE/SteamWorks.inc
-    - wget "https://raw.githubusercontent.com/thraaawn/SMJansson/master/pawn/scripting/include/smjansson.inc" -O $INCLUDE/smjansson.inc
     - wget "https://raw.githubusercontent.com/NomisCZ/Arms-Fix/master/addons/sourcemod/scripting/include/n_arms_fix.inc" -O $INCLUDE/n_arms_fix.inc
     # Add multicolors from github repository
     - mkdir $INCLUDE/multicolors
@@ -66,7 +63,6 @@ script:
 #Releases
 before_deploy:
     - mkdir jwp jwp/cfg jwp/cfg/jwp jwp/addons jwp/addons/sourcemod jwp/addons/sourcemod/extensions jwp/addons/sourcemod/scripting jwp/addons/sourcemod/scripting/jwp jwp/addons/sourcemod/scripting/include jwp/addons/sourcemod/translations
-    - mv $EXTENSIONS/smjansson* jwp/$EXTENSIONS
     - mv $EXTENSIONS/SteamWorks.ext* jwp/$EXTENSIONS
     - mv $SCRIPTING/jwp_*.sp jwp/$SCRIPTING
     - mv $SCRIPTING/jwp/* jwp/$SCRIPTING/jwp/
@@ -79,7 +75,6 @@ before_deploy:
     - mv $INCLUDE/smartjaildoors.inc jwp/$INCLUDE
     - mv $INCLUDE/lastrequest.inc jwp/$INCLUDE
     - mv $INCLUDE/SteamWorks.inc jwp/$INCLUDE
-    - mv $INCLUDE/smjansson.inc jwp/$INCLUDE
     # csgo_colors.inc will be deprecated and removed in the future.
     - mv $INCLUDE/csgo_colors.inc jwp/$INCLUDE
     - mv $INCLUDE/emitsoundany.inc jwp/$INCLUDE
