@@ -139,7 +139,7 @@ void MenuItemInitialization(int client, bool autoopen) // Run at first time as c
 					Format(display, sizeof(display), "%T", "warden_menu_resign", LANG_SERVER);
 					g_mMainMenu.AddItem(id, display);
 			}
-			if (g_ClientAPIInfo[client][is_dev] || g_ClientAPIInfo[client][is_dev] || JWPM_HasFlag(client, bitflag))
+			if (JWPM_HasFlag(client, bitflag))
 			{
 				if (!strcmp("zam", id, true))
 				{

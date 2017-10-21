@@ -1,7 +1,6 @@
 #include <sourcemod>
 #include <cstrike>
 #include <SteamWorks>
-#include <smjansson>
 #undef REQUIRE_PLUGIN
 #tryinclude <csgo_colors>
 #tryinclude <morecolors>
@@ -10,7 +9,7 @@
 // Force new syntax
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.1.5c"
+#define PLUGIN_VERSION "1.1.6"
 
 #define UPDATE_URL "http://updater.scriptplugs.info/jwp/updatefile.txt"
 #define LOG_PATH "addons/sourcemod/logs/JWP_Log.log"
@@ -24,6 +23,16 @@ bool g_bIsCSGO;
 ArrayList g_aSortedMenu;
 ArrayList g_aFlags;
 
+enum APITarget
+{
+	bool:has_freeday,
+	bool:is_isolated,
+	bool:is_rebel,
+	bool:was_warden,
+}
+
+int g_ClientAPIInfo[MAXPLAYERS+1][APITarget];
+
 ConVar	g_CvarChooseMode,
 		g_CvarRandomWait,
 		g_CvarVoteTime,
@@ -34,7 +43,6 @@ ConVar	g_CvarChooseMode,
 Handle g_hChooseTimer;
 
 #include "jwp/kv_reader.sp"
-#include "jwp/dev.sp"
 #include "jwp/jwpm_menu.sp"
 #include "jwp/forwards.sp"
 #include "jwp/natives.sp"
@@ -64,7 +72,6 @@ public void OnPluginStart()
 	RegConsoleCmd("sm_warden", Command_BecomeWarden, "Warden menu");
 	RegConsoleCmd("sm_control", Command_BecomeWarden, "Warden menu");
 	RegConsoleCmd("sm_c", Command_BecomeWarden, "Warden menu");
-	LoadDevControl();
 	
 	RegServerCmd("jwp_menu_reload", Command_JwpMenuReload, "Reload menu list");
 	
@@ -131,6 +138,11 @@ public int Native_IsStarted(Handle plugin, int params)
 public void OnConfigsExecuted()
 {
 	OnReadyToStart();
+}
+
+public void OnClientPostAdminCheck(int client)
+{
+	g_ClientAPIInfo[client][was_warden] = false;
 }
 
 public void OnClientDisconnect_Post(int client)
@@ -630,4 +642,30 @@ stock int JWP_GetRandomTeamClient(int team, bool alive, bool ignore_resign, bool
 		}
 	}
 	return (!count) ? -1 : Players[GetRandomInt(0, count-1)];
+}
+
+/* Stats pusher */
+public int SteamWorks_SteamServersConnected()
+{
+	int iIp[4];
+	
+	// Get ip
+	if (SteamWorks_GetPublicIP(iIp))
+	{
+		Handle plugin = GetMyHandle();
+		if (GetPluginStatus(plugin) == Plugin_Running)
+		{
+			char cBuffer[256], cVersion[12];
+			GetPluginInfo(plugin, PlInfo_Version, cVersion, sizeof(cVersion));
+			FormatEx(cBuffer, sizeof(cBuffer), "http://stats.tibari.ru/add_server.php");
+			Handle hndl = SteamWorks_CreateHTTPRequest(k_EHTTPMethodPOST, cBuffer);
+			if (g_bIsCSGO)
+				FormatEx(cBuffer, sizeof(cBuffer), "key=0f0f2821d03a230f3e79f7227711005d&ip=%d.%d.%d.%d:%d&version=%s&sm=%s", iIp[0], iIp[1], iIp[2], iIp[3], FindConVar("hostport").IntValue, cVersion, SOURCEMOD_VERSION);
+			else
+				FormatEx(cBuffer, sizeof(cBuffer), "key=0f0f2821d03a230f3e79f7227711005d&ip=%d.%d.%d.%d:%d&version=%s", iIp[0], iIp[1], iIp[2], iIp[3], FindConVar("hostport").IntValue, cVersion);
+			SteamWorks_SetHTTPRequestRawPostBody(hndl, "application/x-www-form-urlencoded", cBuffer, sizeof(cBuffer));
+			SteamWorks_SendHTTPRequest(hndl);
+			delete hndl;
+		}
+	}
 }
