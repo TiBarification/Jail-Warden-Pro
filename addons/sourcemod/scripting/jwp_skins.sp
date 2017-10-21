@@ -3,6 +3,7 @@
 #include <cstrike>
 #include <jwp>
 #undef REQUIRE_PLUGIN
+#tryinclude <n_arms_fix>
 #tryinclude <vip_core>
 #tryinclude <shop>
 #define REQUIRE_PLUGIN
@@ -57,6 +58,10 @@ public void OnAllPluginsLoaded()
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
+	MarkNativeAsOptional("ArmsFix_SetDefaults");
+	MarkNativeAsOptional("ArmsFix_HasDefaultArms");
+	MarkNativeAsOptional("ArmsFix_SetDefaultArms");
+	MarkNativeAsOptional("ArmsFix_RefreshView");
 	MarkNativeAsOptional("VIP_IsValidFeature");
 	MarkNativeAsOptional("VIP_GetClientFeatureStatus");
 	MarkNativeAsOptional("Shop_GetItemCategoryId");
@@ -64,6 +69,9 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	MarkNativeAsOptional("Shop_GetCategoryId");
 	MarkNativeAsOptional("Shop_GetArrayItem");
 	MarkNativeAsOptional("Shop_IsClientItemToggled");
+
+	if (g_bIsCSGO && !LibraryExists("n_arms_fix"))
+		SetFailState("Failed to run plugin, due to requirements. Check if n_arms_fix lib is installed");
 }
 
 public Action Event_OnPlayerSpawn(Event event, const char[] name, bool dontBroadcast)
@@ -73,7 +81,10 @@ public Action Event_OnPlayerSpawn(Event event, const char[] name, bool dontBroad
 	{
 		TiB_SetSkin(client);
 		if (g_bIsCSGO)
-			SetArms(client);
+		{
+			ArmsFix_SetDefaults(client);
+			SetArms(client, false);
+		}
 		CreateTimer(g_CvarTimerSetSkin.FloatValue, SetModel, client);
 	}
 	
@@ -140,6 +151,10 @@ public void JWP_OnWardenChosen(int client)
 	// Then setup model
 	if (g_cWardenSkin[0][0] != NULL_STRING[0])
 		SetEntityModel(client, g_cWardenSkin[0]);
+	
+	// And then refresh view
+	if (g_bIsCSGO)
+		ArmsFix_RefreshView(client);
 }
 
 public void JWP_OnWardenZamChosen(int client)
@@ -239,7 +254,7 @@ bool SetRandomSkin(int client, ArrayList& myArray, KeyValues& kv)
 
 bool Shop_IsClientSkinUse(int iClient)
 {
-	if (IsClientConnected(iClient) && IsFakeClient(iClient))
+	if (IsFakeClient(iClient))
 		return false;
 	int iSize = 0;
 	ArrayList hArray = view_as<ArrayList>(Shop_CreateArrayOfItems(iSize));
@@ -294,7 +309,7 @@ void SetActualModel(int client)
 	}
 }
 
-bool SetArms(int client)
+bool SetArms(int client, bool forceset)
 {
 	if (!g_bIsCSGO) return false;
 	if (!g_CvarTRandomSkins.BoolValue && !g_CvarCTRandomSkins.BoolValue) return false; // Disable it , if no random skins
@@ -330,8 +345,20 @@ void OnResign(int client)
 {
 	if (CheckClient(client))
 	{
-		SetActualModel(client);
-		if (g_bIsCSGO)
-			SetArms(client);
+		if (SetArms(client, true))
+		{
+			SetActualModel(client);
+				
+			// And then refresh view
+			if (g_bIsCSGO)
+				ArmsFix_RefreshView(client);
+		}
+		else
+		{
+			if (g_bIsCSGO)
+				ArmsFix_SetDefaults(client);
+			else
+				SetEntityModel(client, "models/player/ct_sas.mdl");
+		}
 	}
 }
