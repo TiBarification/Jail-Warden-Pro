@@ -17,8 +17,8 @@ char g_cWardenSkin[2][PLATFORM_MAX_PATH], g_cWardenZamSkin[2][PLATFORM_MAX_PATH]
 char g_cSkin[MAXPLAYERS+1][PLATFORM_MAX_PATH], g_cArms[MAXPLAYERS+1][PLATFORM_MAX_PATH];
 int g_iSkinId[MAXPLAYERS+1];
 
-ArrayList tModels_Array, ctModels_Array;
-KeyValues g_KvT, g_KvCT;
+ArrayList g_hArrayModels[2];
+KeyValues g_hKvModels[2];
 
 bool g_bIsCSGO, g_bVIPExists, g_bShopExists;
 char g_cVIPFeatureName[] = "Skins";
@@ -136,9 +136,9 @@ public void OnMapStart()
 	CheckMdlPath(g_cWardenZamSkin[0]); // Precache zam warden skin
 	
 	if (g_CvarTRandomSkins.BoolValue)
-		LoadSkinsFromFile("cfg/jwp/skin/t_models.txt", tModels_Array, g_KvT);
+		LoadSkinsFromFile("cfg/jwp/skin/t_models.txt", 0);
 	if (g_CvarCTRandomSkins.BoolValue)
-		LoadSkinsFromFile("cfg/jwp/skin/ct_models.txt", ctModels_Array, g_KvCT);
+		LoadSkinsFromFile("cfg/jwp/skin/ct_models.txt", 1);
 }
 
 // Runs after default arms and model has been setted
@@ -178,39 +178,44 @@ public void JWP_OnWardenZamResigned(int client)
 	OnResign(client);
 }
 
-void LoadSkinsFromFile(char[] path, ArrayList& myArray, KeyValues& kv)
+void LoadSkinsFromFile(char[] path, int index)
 {
-	if (kv != null) delete kv;
-	kv = new KeyValues("Models");
-	if (kv.ImportFromFile(path))
+	if (g_hArrayModels[index] != null)
 	{
-		if (myArray != null)
-		{
-			delete myArray;
-		}
+		delete g_hArrayModels[index];
+		g_hArrayModels[index] = null;
+	}
+
+	if (g_hKvModels[index] != null)
+	{
+		delete g_hKvModels[index];
+	}
+
+	g_hKvModels[index] = new KeyValues("Models");
+	if (g_hKvModels[index].ImportFromFile(path))
+	{
 		char model[PLATFORM_MAX_PATH];
-		myArray = new ArrayList(1);
+		g_hArrayModels[index] = new ArrayList(1);
 		int sec_id;
-		
-		if (kv.GotoFirstSubKey(true))
+		if (g_hKvModels[index].GotoFirstSubKey(true))
 		{
 			do
 			{
-				if (kv.GetSectionSymbol(sec_id))
+				if (g_hKvModels[index].GetSectionSymbol(sec_id))
 				{
-					kv.GetString("path", model, sizeof(model), "");
+					g_hKvModels[index].GetString("path", model, sizeof(model), "");
 					if (CheckMdlPath(model))
 					{
-						myArray.Push(sec_id);
-						kv.GetString("arms_path", model, sizeof(model), "");
+						g_hArrayModels[index].Push(sec_id);
+						g_hKvModels[index].GetString("arms_path", model, sizeof(model), "");
 						CheckMdlPath(model);
 					}
 					else
 						LogError("[JWP|Skins] Failed to find model path '%s'", model);
 				}
-			} while (kv.GotoNextKey(true));
+			} while (g_hKvModels[index].GotoNextKey(true));
 		}
-		kv.Rewind();
+		g_hKvModels[index].Rewind();
 	}
 	else
 		SetFailState("[JWP|Skins] Unable to load config file %s", path);
@@ -222,31 +227,31 @@ bool TiB_SetSkin(int client)
 	if (team >= 2)
 	{
 		if (team == CS_TEAM_T && g_CvarTRandomSkins.BoolValue)
-			return SetRandomSkin(client, tModels_Array, g_KvT);
+			return SetRandomSkin(client, 0);
 		else if (team == CS_TEAM_CT && g_CvarCTRandomSkins.BoolValue)
-			return SetRandomSkin(client, ctModels_Array, g_KvCT);
+			return SetRandomSkin(client, 1);
 	}
 	return false;
 }
 
-bool SetRandomSkin(int client, ArrayList& myArray, KeyValues& kv)
+bool SetRandomSkin(int client, int index)
 {
-	if (myArray == null || !myArray.Length)
+	if (!g_hArrayModels[index] || !g_hArrayModels[index].Length)
 		return false;
-	kv.Rewind();
-	
-	int randomid = GetRandomInt(0, myArray.Length-1);
-	int sec_id = myArray.Get(randomid);
-	if (!kv.JumpToKeySymbol(sec_id))
+
+	int randomid = GetRandomInt(0, g_hArrayModels[index].Length-1);
+	int sec_id = g_hArrayModels[index].Get(randomid);
+	g_hKvModels[index].Rewind();
+	if (!g_hKvModels[index].JumpToKeySymbol(sec_id))
 	{
 		LogError("[JWP|Skins] Failed to find section number %d", sec_id);
 		return false;
 	}
 	
-	kv.GetString("path", g_cSkin[client], PLATFORM_MAX_PATH, "");
-	kv.GetString("arms_path", g_cArms[client], PLATFORM_MAX_PATH, "");
+	g_hKvModels[index].GetString("path", g_cSkin[client], PLATFORM_MAX_PATH, "");
+	g_hKvModels[index].GetString("arms_path", g_cArms[client], PLATFORM_MAX_PATH, "");
 	
-	g_iSkinId[client] = kv.GetNum("skin", 0);
+	g_iSkinId[client] = g_hKvModels[index].GetNum("skin", 0);
 	
 	return true;
 }
