@@ -186,8 +186,7 @@ void LoadSkinsFromFile(char[] path, ArrayList& myArray, KeyValues& kv)
 	{
 		if (myArray != null)
 		{
-			myArray.Clear();
-			myArray = null;
+			delete myArray;
 		}
 		char model[PLATFORM_MAX_PATH];
 		myArray = new ArrayList(1);
