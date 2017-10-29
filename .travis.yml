@@ -62,7 +62,7 @@ script:
 
 #Releases
 before_deploy:
-    - mkdir jwp jwp/cfg jwp/cfg/jwp jwp/addons jwp/addons/sourcemod jwp/addons/sourcemod/extensions jwp/addons/sourcemod/scripting jwp/addons/sourcemod/scripting/jwp jwp/addons/sourcemod/scripting/include jwp/addons/sourcemod/translations
+    - mkdir jwp jwp/cfg jwp/cfg/jwp jwp/addons jwp/addons/sourcemod jwp/addons/sourcemod/extensions jwp/addons/sourcemod/plugins jwp/addons/sourcemod/scripting jwp/addons/sourcemod/scripting/jwp jwp/addons/sourcemod/scripting/include jwp/addons/sourcemod/translations
     - mv $EXTENSIONS/SteamWorks.ext* jwp/$EXTENSIONS
     - mv $SCRIPTING/jwp_*.sp jwp/$SCRIPTING
     - mv $SCRIPTING/jwp/* jwp/$SCRIPTING/jwp/

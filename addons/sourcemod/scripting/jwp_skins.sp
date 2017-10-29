@@ -10,9 +10,9 @@
 
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.7.3"
+#define PLUGIN_VERSION "1.7.4"
 
-ConVar g_CvarWardenSkin, g_CvarWardenArms, g_CvarWardenZamSkin, g_CvarWardenZamArms, g_CvarTRandomSkins, g_CvarCTRandomSkins, g_CvarTimerSetSkin;
+ConVar g_CvarEnable, g_CvarWardenSkin, g_CvarWardenArms, g_CvarWardenZamSkin, g_CvarWardenZamArms, g_CvarTRandomSkins, g_CvarCTRandomSkins, g_CvarTimerSetSkin;
 char g_cWardenSkin[2][PLATFORM_MAX_PATH], g_cWardenZamSkin[2][PLATFORM_MAX_PATH];
 char g_cSkin[MAXPLAYERS+1][PLATFORM_MAX_PATH], g_cArms[MAXPLAYERS+1][PLATFORM_MAX_PATH];
 int g_iSkinId[MAXPLAYERS+1];
@@ -34,6 +34,7 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
+	g_CvarEnable = CreateConVar("jwp_skins_enable", "1", "Enable or disable plugin work", _, true, 0.0, true, 1.0);
 	g_CvarTimerSetSkin = CreateConVar("jwp_timer_setskin", "0.5", "The timer time to install the skins", _, true, 0.5, true, 5.0);
 	g_CvarWardenSkin = CreateConVar("jwp_warden_skin", "", "Set warden player model, leave empty to disable");
 	g_CvarWardenArms = CreateConVar("jwp_warden_arms", "", "Set warden arms model (ONLY in CS:GO), leave empty to disable");
@@ -76,18 +77,20 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 public Action Event_OnPlayerSpawn(Event event, const char[] name, bool dontBroadcast)
 {
-	int client = GetClientOfUserId(event.GetInt("userid"));
-	if (CheckClient(client))
+	if (g_CvarEnable.BoolValue)
 	{
-		TiB_SetSkin(client);
-		if (g_bIsCSGO)
+		int client = GetClientOfUserId(event.GetInt("userid"));
+		if (CheckClient(client))
 		{
-			ArmsFix_SetDefaults(client);
-			SetArms(client, false);
+			TiB_SetSkin(client);
+			if (g_bIsCSGO)
+			{
+				ArmsFix_SetDefaults(client);
+				SetArms(client, false);
+			}
+			CreateTimer(g_CvarTimerSetSkin.FloatValue, SetModel, client);
 		}
-		CreateTimer(g_CvarTimerSetSkin.FloatValue, SetModel, client);
 	}
-	
 	return Plugin_Continue;
 }
 
@@ -144,6 +147,7 @@ public void OnMapStart()
 // Runs after default arms and model has been setted
 public void JWP_OnWardenChosen(int client)
 {
+	if (!g_CvarEnable.BoolValue) return;
 	// First setup arms
 	if (g_bIsCSGO && g_cWardenSkin[1][0] != NULL_STRING[0])
 		SetEntPropString(client, Prop_Send, "m_szArmsModel", g_cWardenSkin[1]);
@@ -159,6 +163,7 @@ public void JWP_OnWardenChosen(int client)
 
 public void JWP_OnWardenZamChosen(int client)
 {
+	if (!g_CvarEnable.BoolValue) return;
 	// First setup arms
 	if (g_bIsCSGO && g_cWardenZamSkin[1][0] != NULL_STRING[0])
 		SetEntPropString(client, Prop_Send, "m_szArmsModel", g_cWardenZamSkin[1]);	
@@ -289,7 +294,7 @@ bool IsVipSkinUse(int iClient)
 public Action SetModel(Handle timer, int client)
 {
 	// Exit if no random skins found
-	if (!g_CvarTRandomSkins.BoolValue && !g_CvarCTRandomSkins.BoolValue)
+	if (!g_CvarEnable.BoolValue || (!g_CvarTRandomSkins.BoolValue && !g_CvarCTRandomSkins.BoolValue))
 		return Plugin_Continue;
 	// Skip VIP or shop player skin set
 	if ((g_bVIPExists && IsVipSkinUse(client)) || (g_bShopExists && Shop_IsClientSkinUse(client)))
@@ -315,7 +320,7 @@ void SetActualModel(int client)
 
 bool SetArms(int client, bool forceset)
 {
-	if (!g_bIsCSGO) return false;
+	if (!g_bIsCSGO || !g_CvarEnable.BoolValue) return false;
 	if (!g_CvarTRandomSkins.BoolValue && !g_CvarCTRandomSkins.BoolValue) return false; // Disable it , if no random skins
 	else if ((g_bShopExists && Shop_IsClientSkinUse(client) && !forceset) || (g_bVIPExists && IsVipSkinUse(client)))
 		return true;
@@ -347,6 +352,7 @@ bool CheckMdlPath(const char[] path)
 
 void OnResign(int client)
 {
+	if (!g_CvarEnable.BoolValue) return;
 	if (CheckClient(client))
 	{
 		if (SetArms(client, true))

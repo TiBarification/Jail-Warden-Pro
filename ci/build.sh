@@ -1,8 +1,10 @@
 #!/bin/bash
 set -ev
+
 echo "Compilation of JWP Plugins"
 for file in addons/sourcemod/scripting/jwp_*.sp
 do
-  addons/sourcemod/scripting/spcomp -E -v0 $file
-  echo ""
+  echo "Compile $file"
+  filename=$(basename "$file")
+  addons/sourcemod/scripting/spcomp -E -o'addons/sourcemod/plugins/'$filename -v0 $file
 done
