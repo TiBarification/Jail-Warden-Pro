@@ -15,6 +15,7 @@ env:
     - INCLUDE=addons/sourcemod/scripting/include
     - SCRIPTING=addons/sourcemod/scripting
     - EXTENSIONS=addons/sourcemod/extensions
+    - PLUGINS=addons/sourcemod/plugins
   matrix:
     - SMVERSION=1.8
     - SMVERSION=1.9
@@ -66,7 +67,7 @@ before_deploy:
     - mv $EXTENSIONS/SteamWorks.ext* jwp/$EXTENSIONS
     - mv $SCRIPTING/jwp_*.sp jwp/$SCRIPTING
     - mv $SCRIPTING/jwp/* jwp/$SCRIPTING/jwp/
-    - mv $SCRIPTING/compiled jwp/addons/sourcemod/plugins
+    - mv $PLUGINS/jwp_*.smx jwp/addons/sourcemod/plugins
     - mv $INCLUDE/jwp* jwp/$INCLUDE
     - mv $INCLUDE/morecolors.inc jwp/$INCLUDE
     - mv $INCLUDE/updater.inc jwp/$INCLUDE
