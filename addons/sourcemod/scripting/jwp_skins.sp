@@ -40,8 +40,8 @@ public void OnPluginStart()
 	g_CvarWardenArms = CreateConVar("jwp_warden_arms", "", "Set warden arms model (ONLY in CS:GO), leave empty to disable");
 	g_CvarWardenZamSkin = CreateConVar("jwp_warden_zam_skin", "", "Set deputy player model (zam of warden), leave empty to disable");
 	g_CvarWardenZamArms = CreateConVar("jwp_warden_zam_arms", "", "Set deputy arms model (ONLY in CS:GO), leave empty to disable");
-	g_CvarTRandomSkins = CreateConVar("jwp_random_t_skins", "1", "Enable auto player model set for T team. Needed file t_models.txt", _, true, 0.0, true, 1.0);
-	g_CvarCTRandomSkins = CreateConVar("jwp_random_ct_skins", "1", "Enable auto player model set for CT team. Needed file ct_models.txt", _, true, 0.0, true, 1.0);
+	g_CvarTRandomSkins = CreateConVar("jwp_random_t_skins", "0", "Enable auto player model set for T team. Needed file t_models.txt", _, true, 0.0, true, 1.0);
+	g_CvarCTRandomSkins = CreateConVar("jwp_random_ct_skins", "0", "Enable auto player model set for CT team. Needed file ct_models.txt", _, true, 0.0, true, 1.0);
 	
 	RegServerCmd("sm_jwp_skin_reload", Command_SkinReload, "Reload skins on server");
 	
