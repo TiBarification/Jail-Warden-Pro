@@ -37,7 +37,6 @@ install:
     - wget "https://raw.githubusercontent.com/dataviruset/sm-hosties/beta/addons/sourcemod/scripting/include/hosties.inc" -O $INCLUDE/hosties.inc
     - wget "https://raw.githubusercontent.com/dataviruset/sm-hosties/beta/addons/sourcemod/scripting/include/lastrequest.inc" -O $INCLUDE/lastrequest.inc
     - wget "https://raw.githubusercontent.com/KyleSanderson/SteamWorks/master/Pawn/includes/SteamWorks.inc" -O $INCLUDE/SteamWorks.inc
-    - wget "https://raw.githubusercontent.com/NomisCZ/Arms-Fix/master/addons/sourcemod/scripting/include/n_arms_fix.inc" -O $INCLUDE/n_arms_fix.inc
     # Add multicolors from github repository
     - mkdir $INCLUDE/multicolors
     - wget "https://raw.githubusercontent.com/Bara20/Multi-Colors/master/addons/sourcemod/scripting/include/multicolors/colors.inc" -O $INCLUDE/multicolors/colors.inc
@@ -80,7 +79,6 @@ before_deploy:
     - mv $INCLUDE/csgo_colors.inc jwp/$INCLUDE
     - mv $INCLUDE/emitsoundany.inc jwp/$INCLUDE
     - mv $INCLUDE/multicolors* jwp/$INCLUDE
-    - mv $INCLUDE/n_arms_fix.inc jwp/$INCLUDE
     - mv $INCLUDE/shop* jwp/$INCLUDE
     - rsync -a --prune-empty-dirs --include '*/' --include 'jwp*' --exclude '*' addons/sourcemod/translations/ jwp/addons/sourcemod/translations/
     - mv cfg/jwp/* jwp/cfg/jwp/

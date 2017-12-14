@@ -4,12 +4,10 @@
 	{
 		"path"			"models/player/tm_separatist.mdl"
 		"skin"			"0"
-		"arms_path"		"" // Working only in CS:GO
 	}
 	"t2"
 	{
 		"path"			"models/player/tm_pirate.mdl"
 		"skin"			"0"
-		"arms_path"		"" // Working only in CS:GO
 	}
 }

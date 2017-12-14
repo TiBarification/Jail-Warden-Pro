@@ -4,12 +4,10 @@
 	{
 		"path"			"models/player/ctm_sas.mdl"
 		"skin"			"0"
-		"arms_path"		"" // Working only in CS:GO
 	}
 	"ct2"
 	{
 		"path"			"models/player/ctm_gign_varianta.mdl"
 		"skin"			"0"
-		"arms_path"		"" // Working only in CS:GO
 	}
 }
