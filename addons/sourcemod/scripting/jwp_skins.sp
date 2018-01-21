@@ -7,6 +7,8 @@
 #tryinclude <shop>
 #define REQUIRE_PLUGIN
 
+#define DEBUG 0
+
 #pragma newdecls required
 
 #define PLUGIN_VERSION "1.7.5"
@@ -45,13 +47,14 @@ public void OnPluginStart()
 	g_bIsCSGO = (GetEngineVersion() == Engine_CSGO);
 	
 	HookEvent("player_spawn", Event_OnPlayerSpawn);
+	HookEvent("player_team", Event_OnPlayerTeam);
 	AutoExecConfig(true, "skin", "jwp");
 }
 
 public void OnAllPluginsLoaded()
 {
-	g_bVIPExists = (GetFeatureStatus(FeatureType_Native, "VIP_IsVIPLoaded") == FeatureStatus_Available);
-	g_bShopExists = (GetFeatureStatus(FeatureType_Native, "Shop_IsStarted") == FeatureStatus_Available);
+	g_bVIPExists = (CanTestFeatures() && GetFeatureStatus(FeatureType_Native, "VIP_IsVIPLoaded") == FeatureStatus_Available);
+	g_bShopExists = (CanTestFeatures() && GetFeatureStatus(FeatureType_Native, "Shop_IsStarted") == FeatureStatus_Available);
 }
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
@@ -65,7 +68,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	MarkNativeAsOptional("Shop_IsClientItemToggled");
 }
 
-public Action Event_OnPlayerSpawn(Event event, const char[] name, bool dontBroadcast)
+public void Event_OnPlayerSpawn(Event event, const char[] name, bool dontBroadcast)
 {
 	if (g_CvarEnable.BoolValue)
 	{
@@ -76,12 +79,24 @@ public Action Event_OnPlayerSpawn(Event event, const char[] name, bool dontBroad
 			CreateTimer(g_CvarTimerSetSkin.FloatValue, SetModel, client);
 		}
 	}
-	return Plugin_Continue;
+}
+
+public void Event_OnPlayerTeam(Event event, const char[] name, bool dontBroadcast)
+{
+	if (g_CvarEnable.BoolValue && event.GetInt("team") > CS_TEAM_SPECTATOR)
+	{
+		int client = GetClientOfUserId(event.GetInt("userid"));
+		if (CheckClient(client))
+		{
+			TiB_SetSkin(client);
+			CreateTimer(g_CvarTimerSetSkin.FloatValue, SetModel, client);
+		}
+	}
 }
 
 public void OnClientPutInServer(int client)
 {
-	g_cSkin[client][0] = NULL_STRING[0];
+	g_cSkin[client][0] = 0;
 	g_iSkinId[client] = 0;
 }
 
@@ -254,13 +269,28 @@ public Action SetModel(Handle timer, int client)
 {
 	// Exit if no random skins found
 	if (!g_CvarEnable.BoolValue || (!g_CvarTRandomSkins.BoolValue && !g_CvarCTRandomSkins.BoolValue))
+	{
+		#if DEBUG
+			LogError("Plugin is disabled or t_models and ct_models are not available");
+		#endif
 		return Plugin_Continue;
+	}
 	// Skip VIP or shop player skin set
 	if ((g_bVIPExists && IsVipSkinUse(client)) || (g_bShopExists && Shop_IsClientSkinUse(client)))
+	{
+		#if DEBUG
+			LogError("Vip/shop plugin activated and maybe used by client %N", client);
+		#endif
 		return Plugin_Continue;
+	}
 	// Skip warden skin set
 	if ((JWP_IsWarden(client) && g_cWardenSkin[0] != NULL_STRING[0]) || (JWP_IsZamWarden(client) && g_cWardenZamSkin[0] != NULL_STRING[0]))
+	{
+		#if DEBUG
+			LogError("Skins has not been setted, because player is warden or zam of him");
+		#endif
 		return Plugin_Continue;
+	}
 	
 	SetActualModel(client);
 	return Plugin_Continue;
@@ -268,8 +298,14 @@ public Action SetModel(Handle timer, int client)
 
 bool SetActualModel(int client)
 {
-	if (g_cSkin[client][0] != NULL_STRING[0])
+	if (g_cSkin[client][0])
 	{
+		if (IsModelPrecached(g_cSkin[client]))
+		{
+			LogError("Skin setted to client %N IS NOT Precached (malitious CRASH), it's value is: %s", client, g_cSkin[client]);
+			return false;
+		}
+		
 		SetEntityModel(client, g_cSkin[client]);
 		if (g_iSkinId[client] != 0)
 			SetEntProp(client, Prop_Send, "m_nSkin", g_iSkinId[client]);
