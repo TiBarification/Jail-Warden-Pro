@@ -658,7 +658,7 @@ stock int JWP_GetRandomTeamClient(int team, bool alive, bool ignore_resign, bool
 }
 
 /* Stats pusher */
-public void SteamWorks_SteamServersConnected()
+public int SteamWorks_SteamServersConnected()
 {
 	int iIp[4];
 	
