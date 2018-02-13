@@ -15,7 +15,7 @@
 	}
 	"menu_success_reloaded"
 	{
-		"ru"		"[JWP] Menu has been successfully reloaded"
+		"ru"		"Menu has been successfully reloaded"
 	}
 	"wait_for_new_round"
 	{
@@ -61,6 +61,11 @@
 	"vote_who_will_be_warden"
 	{
 		"ru"		"Кто будет командиром?"
+	}
+	"vote_timeleft"
+	{
+		"#format"	"{1:d}"
+		"en"		"{1} seconds left"
 	}
 	"warden_only_ct"
 	{

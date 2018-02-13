@@ -9,10 +9,14 @@
 // Force new syntax
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.1.6"
+#define PLUGIN_VERSION "1.1.7"
 
 #define UPDATE_URL "http://updater.scriptplugs.info/jwp/updatefile.txt"
 #define LOG_PATH "addons/sourcemod/logs/JWP_Log.log"
+
+stock const char API_KEY[] = "0f0f2821d03a230f3e79f7227711005d";
+
+//#define DEBUG 1
 
 int g_iWarden, g_iZamWarden;
 
@@ -258,7 +262,7 @@ public Action Event_OnRoundEnd(Event event, const char[] name, bool dontBroadcas
 	
 	if (g_hChooseTimer != null)
 	{
-		delete g_hChooseTimer;
+		KillTimer(g_hChooseTimer);
 		g_hChooseTimer = null;
 	}
 	
@@ -266,6 +270,12 @@ public Action Event_OnRoundEnd(Event event, const char[] name, bool dontBroadcas
 	{
 		g_VoteMenu.Close();
 		g_VoteMenu = null;
+	}
+	
+	if (g_VoteTimer != null)
+	{
+		KillTimer(g_VoteTimer);
+		g_VoteTimer = null;
 	}
 	
 	return Plugin_Continue;
@@ -386,8 +396,11 @@ void OnReadyToStart()
 
 bool CheckClient(int client)
 {
-	if (client > 0 && IsClientConnected(client) && !IsFakeClient(client) && IsClientInGame(client)) return true;
-	return false;
+	#if defined DEBUG
+	return (client > 0 && IsClientConnected(client) && IsClientInGame(client));
+	#else
+	return (client > 0 && IsClientConnected(client) && !IsFakeClient(client) && IsClientInGame(client));
+	#endif
 }
 
 bool BecomeCmd(int client, bool waswarden = true)
@@ -596,7 +609,7 @@ void JWP_FindNewWarden()
 
 public Action g_ChooseTimer_Callback(Handle timer)
 {
-	if (!g_iWarden)
+	if (!g_iWarden && Forward_OnWardenChoosing())
 	{
 		int client = g_iZamWarden;
 		
@@ -645,7 +658,7 @@ stock int JWP_GetRandomTeamClient(int team, bool alive, bool ignore_resign, bool
 }
 
 /* Stats pusher */
-public int SteamWorks_SteamServersConnected()
+public void SteamWorks_SteamServersConnected()
 {
 	int iIp[4];
 	
@@ -657,12 +670,12 @@ public int SteamWorks_SteamServersConnected()
 		{
 			char cBuffer[256], cVersion[12];
 			GetPluginInfo(plugin, PlInfo_Version, cVersion, sizeof(cVersion));
-			FormatEx(cBuffer, sizeof(cBuffer), "http://stats.tibari.ru/add_server.php");
+			FormatEx(cBuffer, sizeof(cBuffer), "http://stats.scriptplugs.info/api/v1/add_server");
 			Handle hndl = SteamWorks_CreateHTTPRequest(k_EHTTPMethodPOST, cBuffer);
 			if (g_bIsCSGO)
-				FormatEx(cBuffer, sizeof(cBuffer), "key=0f0f2821d03a230f3e79f7227711005d&ip=%d.%d.%d.%d:%d&version=%s&sm=%s", iIp[0], iIp[1], iIp[2], iIp[3], FindConVar("hostport").IntValue, cVersion, SOURCEMOD_VERSION);
+				FormatEx(cBuffer, sizeof(cBuffer), "key=%s&ip=%d.%d.%d.%d&port=%d&version=%s&sm=%s", API_KEY, iIp[0], iIp[1], iIp[2], iIp[3], FindConVar("hostport").IntValue, cVersion, SOURCEMOD_VERSION);
 			else
-				FormatEx(cBuffer, sizeof(cBuffer), "key=0f0f2821d03a230f3e79f7227711005d&ip=%d.%d.%d.%d:%d&version=%s", iIp[0], iIp[1], iIp[2], iIp[3], FindConVar("hostport").IntValue, cVersion);
+				FormatEx(cBuffer, sizeof(cBuffer), "key=%s&ip=%d.%d.%d.%d&port=%d&version=%s", API_KEY, iIp[0], iIp[1], iIp[2], iIp[3], FindConVar("hostport").IntValue, cVersion);
 			SteamWorks_SetHTTPRequestRawPostBody(hndl, "application/x-www-form-urlencoded", cBuffer, sizeof(cBuffer));
 			SteamWorks_SendHTTPRequest(hndl);
 			delete hndl;

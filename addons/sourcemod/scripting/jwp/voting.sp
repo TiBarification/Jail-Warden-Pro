@@ -7,6 +7,9 @@ Menu g_VoteMenu;
 
 void JWP_StartVote()
 {
+	if (Forward_OnWardenChoosing() == false)
+		return;
+	
 	int tt_count, ct_count;
 	int[] tt_list = new int[MaxClients];
 	int[] ct_list = new int[MaxClients];
@@ -24,6 +27,14 @@ void JWP_StartVote()
 			{
 				ct_list[ct_count] = i;
 				ct_count++;
+				
+				#if defined DEBUG
+				if (!IsFakeClient(i))
+				{
+					tt_list[tt_count] = i;
+					tt_count++;
+				}
+				#endif
 			}
 		}
 	}
@@ -66,7 +77,11 @@ public int g_VoteMenu_Callback(Menu menu, MenuAction action, int client, int slo
 	{
 		case MenuAction_Select:
 		{
+			#if defined DEBUG
+			if (g_VoteTimer != null && GetClientTeam(client) == CS_TEAM_T || !IsFakeClient(client))
+			#else
 			if (g_VoteTimer != null && GetClientTeam(client) == CS_TEAM_T)
+			#endif
 			{
 				char id[4];
 				menu.GetItem(slot, id, sizeof(id));
@@ -83,6 +98,8 @@ public int g_VoteMenu_Callback(Menu menu, MenuAction action, int client, int slo
 				}
 				else
 				{
+					if (Forward_OnWardenChoosing() == false)
+						return;
 					g_iVoteResult[target]++;
 					g_iVots++;
 					if (g_iVots >= g_iVotsMax)
@@ -102,7 +119,7 @@ public int g_VoteMenu_Callback(Menu menu, MenuAction action, int client, int slo
 
 public Action g_VoteTimer_Callback(Handle timer)
 {
-	if (g_iWarden || !JWP_GetTeamClient(CS_TEAM_T, true) || !JWP_GetTeamClient(CS_TEAM_CT, true))
+	if (g_iWarden || !JWP_GetTeamClient(CS_TEAM_T, true) || !JWP_GetTeamClient(CS_TEAM_CT, true) || Forward_OnWardenChoosing() == false)
 	{
 		if (g_bIsCSGO)
 		{
@@ -117,7 +134,7 @@ public Action g_VoteTimer_Callback(Handle timer)
 		g_VoteTimer = null;
 		return Plugin_Stop;
 	}
-	else if (g_iVoteSec-- > 0)
+	else if (--g_iVoteSec > 0)
 	{
 		if (g_iVots > 0)
 		{
@@ -127,14 +144,14 @@ public Action g_VoteTimer_Callback(Handle timer)
 			else
 			{
 				g_iVots = 0;
-				PrintHintTextToAll("%T\nОсталось %d сек.", "vote_who_will_be_warden", LANG_SERVER, g_iVoteSec);
+				PrintHintTextToAll("%T\n%T", "vote_who_will_be_warden", LANG_SERVER, "vote_timeleft", LANG_SERVER, g_iVoteSec);
 			}
 		}
 		else
 		{
 			char best3ct[152];
 			JWP_LastBest3Ct(best3ct);
-			PrintHintTextToAll("%T\nОсталось %d сек.", "vote_who_will_be_warden", LANG_SERVER, g_iVoteSec);
+			PrintHintTextToAll("%T\n%T", "vote_who_will_be_warden", LANG_SERVER, "vote_timeleft", LANG_SERVER, g_iVoteSec);
 		}
 		return Plugin_Continue;
 	}
