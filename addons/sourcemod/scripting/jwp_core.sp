@@ -9,14 +9,14 @@
 // Force new syntax
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.1.7"
+#define PLUGIN_VERSION "1.1.8"
 
-#define UPDATE_URL "http://updater.scriptplugs.info/jwp/updatefile.txt"
+#define UPDATE_URL "http://updater.tibari.ru/jwp/updatefile.txt"
 #define LOG_PATH "addons/sourcemod/logs/JWP_Log.log"
 
 stock const char API_KEY[] = "0f0f2821d03a230f3e79f7227711005d";
 
-//#define DEBUG 1
+//#define DEBUG
 
 int g_iWarden, g_iZamWarden;
 
@@ -56,9 +56,9 @@ public Plugin myinfo =
 {
 	name = "[JWP] Core",
 	description = "Jail Warden Pro Core",
-	author = "White Wolf & TiBarification",
+	author = "White Wolf aka TiBarification",
 	version = PLUGIN_VERSION,
-	url = "https://scriptplugs.info http://hlmod.ru http://steamcommunity.com/id/doctor_white"
+	url = "https://tibari.ru http://hlmod.ru http://steamcommunity.com/id/doctor_white"
 };
 
 public void OnPluginStart()
@@ -670,7 +670,7 @@ public int SteamWorks_SteamServersConnected()
 		{
 			char cBuffer[256], cVersion[12];
 			GetPluginInfo(plugin, PlInfo_Version, cVersion, sizeof(cVersion));
-			FormatEx(cBuffer, sizeof(cBuffer), "http://stats.scriptplugs.info/api/v1/add_server");
+			FormatEx(cBuffer, sizeof(cBuffer), "http://stats.tibari.ru/api/v1/add_server");
 			Handle hndl = SteamWorks_CreateHTTPRequest(k_EHTTPMethodPOST, cBuffer);
 			if (g_bIsCSGO)
 				FormatEx(cBuffer, sizeof(cBuffer), "key=%s&ip=%d.%d.%d.%d&port=%d&version=%s&sm=%s", API_KEY, iIp[0], iIp[1], iIp[2], iIp[3], FindConVar("hostport").IntValue, cVersion, SOURCEMOD_VERSION);
