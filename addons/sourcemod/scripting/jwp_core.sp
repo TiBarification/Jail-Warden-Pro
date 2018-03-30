@@ -9,7 +9,7 @@
 // Force new syntax
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.1.8"
+#define PLUGIN_VERSION "1.1.9"
 
 #define UPDATE_URL "http://updater.tibari.ru/jwp/updatefile.txt"
 #define LOG_PATH "addons/sourcemod/logs/JWP_Log.log"

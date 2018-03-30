@@ -98,7 +98,7 @@ native bool JWP_IsStarted();
  *	@param maxlength		Max length of the buffer
  *	@param style			Parameter to change style of item. Has 2 values: ITEMDRAW_DEFAULT or ITEMDRAW_DISABLED. By default ITEMDRAW_DEFAULT
  *	-
- *	@noreturn
+ *	@return true to allow displaying and false to block
  */
 typedef CmdItemDisplay = function bool (int client, char[] buffer, int maxlength, int style);
 
