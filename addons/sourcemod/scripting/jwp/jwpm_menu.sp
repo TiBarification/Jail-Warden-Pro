@@ -155,11 +155,12 @@ void MenuItemInitialization(int client, bool autoopen) // Run at first time as c
 						if (GetPluginStatus(plugin) == Plugin_Running)
 						{
 							bool result = true;
+							menu_style = ITEMDRAW_DEFAULT;
 							Call_StartFunction(plugin, dp.ReadFunction());
 							Call_PushCell(client);
 							Call_PushStringEx(display, sizeof(display), SM_PARAM_STRING_UTF8|SM_PARAM_STRING_COPY, SM_PARAM_COPYBACK);
 							Call_PushCell(sizeof(display));
-							Call_PushCell(menu_style);
+							Call_PushCellRef(menu_style);
 							Call_Finish(result);
 							
 							if (!display[0] || !result) continue;
