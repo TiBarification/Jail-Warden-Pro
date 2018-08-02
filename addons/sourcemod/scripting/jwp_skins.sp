@@ -11,7 +11,7 @@
 
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.7.5"
+#define PLUGIN_VERSION "1.7.6"
 
 ConVar g_CvarEnable, g_CvarWardenSkin, g_CvarWardenZamSkin, g_CvarTRandomSkins, g_CvarCTRandomSkins, g_CvarTimerSetSkin;
 char g_cWardenSkin[PLATFORM_MAX_PATH], g_cWardenZamSkin[PLATFORM_MAX_PATH];
@@ -300,7 +300,7 @@ bool SetActualModel(int client)
 {
 	if (g_cSkin[client][0])
 	{
-		if (IsModelPrecached(g_cSkin[client]))
+		if (!IsModelPrecached(g_cSkin[client]))
 		{
 			LogError("Skin setted to client %N IS NOT Precached (malitious CRASH), it's value is: %s", client, g_cSkin[client]);
 			return false;
