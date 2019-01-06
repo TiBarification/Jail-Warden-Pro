@@ -34,8 +34,8 @@ install:
     - wget "https://raw.githubusercontent.com/Franc1sco/VoiceAnnounceEX/master/scripting/include/voiceannounce_ex.inc" -O $INCLUDE/voiceannounce_ex.inc
     - wget "https://raw.githubusercontent.com/R1KO/VIP-Core/master/addons/sourcemod/scripting/include/vip_core.inc" -O $INCLUDE/vip_core.inc
     - wget "https://raw.githubusercontent.com/Kailo97/smartjaildoors/master/addons/sourcemod/scripting/include/smartjaildoors.inc" -O $INCLUDE/smartjaildoors.inc
-    - wget "https://raw.githubusercontent.com/dataviruset/sm-hosties/beta/addons/sourcemod/scripting/include/hosties.inc" -O $INCLUDE/hosties.inc
-    - wget "https://raw.githubusercontent.com/dataviruset/sm-hosties/beta/addons/sourcemod/scripting/include/lastrequest.inc" -O $INCLUDE/lastrequest.inc
+    - wget "https://raw.githubusercontent.com/Headline/sm-hosties/patch-1/addons/sourcemod/scripting/include/hosties.inc" -O $INCLUDE/hosties.inc
+    - wget "https://raw.githubusercontent.com/Headline/sm-hosties/patch-1/addons/sourcemod/scripting/include/lastrequest.inc" -O $INCLUDE/lastrequest.inc
     - wget "https://raw.githubusercontent.com/KyleSanderson/SteamWorks/master/Pawn/includes/SteamWorks.inc" -O $INCLUDE/SteamWorks.inc
     # Add multicolors from github repository
     - mkdir $INCLUDE/multicolors
