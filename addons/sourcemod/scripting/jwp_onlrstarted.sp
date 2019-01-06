@@ -1,5 +1,6 @@
 #include <sourcemod>
 #include <sdktools>
+#include <cstrike>
 #include <hosties>
 #include <lastrequest>
 #include <jwp>
