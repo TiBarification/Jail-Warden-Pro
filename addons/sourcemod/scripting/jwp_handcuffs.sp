@@ -9,7 +9,7 @@
 #include <lastrequest>
 
 #define ITEM "handcuffs"
-#define PLUGIN_VERSION "1.4"
+#define PLUGIN_VERSION "1.5"
 
 int g_iClipOffset, g_iActiveWeaponOffset;
 bool g_bArrested[MAXPLAYERS+1];
@@ -103,7 +103,7 @@ public void OnClientDisconnect(int client)
 		g_bArrested[client] = false;
 }
 
-public void OnAvailableLR(int announced)
+public int OnAvailableLR(int announced)
 {
 	UnArrestAll();
 	for (int i = 1; i <= MaxClients; ++i)
