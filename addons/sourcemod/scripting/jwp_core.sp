@@ -9,7 +9,7 @@
 // Force new syntax
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.1.9"
+#define PLUGIN_VERSION "1.2.0"
 
 #define UPDATE_URL "http://updater.tibari.ru/jwp/updatefile.txt"
 #define LOG_PATH "addons/sourcemod/logs/JWP_Log.log"
@@ -466,14 +466,16 @@ void RemoveCmd(bool themself = true)
 	}
 }
 
-void RemoveZam()
+int RemoveZam()
 {
 	if (g_iZamWarden)
 	{
 		int iOldZam = g_iZamWarden;
 		g_iZamWarden = 0;
 		Forward_OnWardenZamResigned(iOldZam);
+		return iOldZam;
 	}
+	return 0;
 }
 
 bool SetZam(int client)
@@ -577,8 +579,11 @@ void JWP_FindNewWarden()
 	
 	if (g_iZamWarden)
 	{
-		RemoveZam();
-		BecomeCmd(g_iZamWarden);
+		int prevZam = RemoveZam();
+		if (prevZam > 0)
+		{
+			BecomeCmd(prevZam);
+		}
 	}
 	else if (g_CvarChooseMode.IntValue == 1 || g_CvarChooseMode.IntValue == 3)
 	{
