@@ -17,8 +17,8 @@ env:
     - EXTENSIONS=addons/sourcemod/extensions
     - PLUGINS=addons/sourcemod/plugins
   matrix:
-    - SMVERSION=1.8
     - SMVERSION=1.9
+    - SMVERSION=1.10
     
 install:
     # Sourcemod download
