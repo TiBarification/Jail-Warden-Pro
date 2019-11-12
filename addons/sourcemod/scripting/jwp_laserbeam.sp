@@ -15,23 +15,23 @@
 #define DEFAULT_BEAM_WIDTH 2.0
 #define DEFAULT_BEAM_LIFE 25.0
 
-enum Target
+enum struct Target
 {
-	bool:lightActive, // Is light active for client (global)
-	bool:paintActive, // Is paint active for client (on press +E)
-	r_color, // Color for client (global)
-	g_color,
-	b_color,
-	alpha,
-	Float:laser_life, // Life of laser beam
-	Float:laser_width, // Width of laser beam
-	Float:lastAimPos[3], // last aim position of client beam
-	Float:lastLaserPos[3], // last laser position of client beam
-	lastButtons // last buttons that client pressed
+	bool lightActive; // Is light active for client (global)
+	bool paintActive; // Is paint active for client (on press +E)
+	int r_color; // Color for client (global)
+	int g_color;
+	int b_color;
+	int alpha;
+	float laser_life; // Life of laser beam
+	float laser_width; // Width of laser beam
+	float lastAimPos[3]; // last aim position of client beam
+	float lastLaserPos[3]; // last laser position of client beam
+	int lastButtons; // last buttons that client pressed
 }
 
 bool g_bTCanUse;
-int g_iClientData[MAXPLAYERS+1][Target];
+Target g_iClientData[MAXPLAYERS+1];
 int g_iGlowEnt, g_iHaloSprite;
 Menu g_mMainMenu, g_mColorMenu;
 ConVar g_CvarTFeature;
@@ -73,7 +73,7 @@ public void OnMapStart()
 public Action Event_OnPlayerDeath(Event event, const char[] name, bool dontBroadcast)
 {
 	int client = GetClientOfUserId(event.GetInt("userid"));
-	if (client && IsClientInGame(client) && g_iClientData[client][lightActive])
+	if (client && IsClientInGame(client) && g_iClientData[client].lightActive)
 		DisableAllForClient(client);
 }
 
@@ -96,7 +96,7 @@ public Action Command_LPaints(int client, int args)
 		{
 			if (IsPlayerAlive(client))
 			{
-				if (g_iClientData[client][lightActive])
+				if (g_iClientData[client].lightActive)
 					g_mColorMenu.Display(client, MENU_TIME_FOREVER);
 				else
 					JWP_ActionMsg(client, "%T", "LaserBeam_WardenMustGiveAccess", LANG_SERVER);
@@ -121,14 +121,14 @@ public void OnPluginEnd()
 
 public void JWP_OnWardenChosen(int client)
 {
-	g_iClientData[client][lightActive] = false;
+	g_iClientData[client].lightActive = false;
 }
 
 public void JWP_OnWardenResigned(int client, bool himself)
 {
-	g_iClientData[client][paintActive] = false;
-	g_iClientData[client][lightActive] = false;
-	g_iClientData[client][lastButtons] = 0;
+	g_iClientData[client].paintActive = false;
+	g_iClientData[client].lightActive = false;
+	g_iClientData[client].lastButtons = 0;
 }
 
 public bool OnFuncDisplay(int client, char[] buffer, int maxlength, int style)
@@ -149,7 +149,7 @@ public bool OnFuncSelect(int client)
 
 public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon, int &subtype, int &cmdnum, int &tickcount, int &seed, int mouse[2])
 {
-	if (client && IsClientInGame(client) && IsPlayerAlive(client) && g_iClientData[client][lightActive])
+	if (client && IsClientInGame(client) && IsPlayerAlive(client) && g_iClientData[client].lightActive)
 	{
 		if (buttons & IN_USE) // Runs many times per sec
 		{
@@ -168,17 +168,17 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 			
 			if ((buttons & button))
 			{
-				if (!(g_iClientData[client][lastButtons] & button))
+				if (!(g_iClientData[client].lastButtons & button))
 				{
 					OnButtonPress(client, button);
 				}
 			}
-			else if ((g_iClientData[client][lastButtons] & button))
+			else if ((g_iClientData[client].lastButtons & button))
 			{
 				OnButtonRelease(client, button);
 			}
 		}
-		g_iClientData[client][lastButtons] = buttons;
+		g_iClientData[client].lastButtons = buttons;
 	}
 	return Plugin_Continue;
 }
@@ -195,10 +195,10 @@ void TraceEye(int client, float pos[3])
 void Laser(int client, float start[3], float end[3], bool mode)
 {
 	int color[4]; 
-	color[0] = g_iClientData[client][r_color];
-	color[1] = g_iClientData[client][g_color];
-	color[2] = g_iClientData[client][b_color];
-	color[3] = g_iClientData[client][alpha];
+	color[0] = g_iClientData[client].r_color;
+	color[1] = g_iClientData[client].g_color;
+	color[2] = g_iClientData[client].b_color;
+	color[3] = g_iClientData[client].alpha;
 	
 	// Make it RAINBOOM aka Rainbow
 	if (color[0] == 0 && color[1] == 0 && color[2] == 0 && color[3] == 0)
@@ -218,7 +218,7 @@ void Laser(int client, float start[3], float end[3], bool mode)
 		TE_SetupBeamPoints(start, end, g_iGlowEnt, 0, 0, 0, 0.1, 0.12, 0.0, 1, 0.0, color, 0);
 	}
 	else
-		TE_SetupBeamPoints(start, end, g_iGlowEnt, 0, 0, 0, g_iClientData[client][laser_life], g_iClientData[client][laser_width], g_iClientData[client][laser_width], 10, 0.0, color, 0);
+		TE_SetupBeamPoints(start, end, g_iGlowEnt, 0, 0, 0, g_iClientData[client].laser_life, g_iClientData[client].laser_width, g_iClientData[client].laser_width, 10, 0.0, color, 0);
 	TE_SendToAll();
 }
 
@@ -235,10 +235,10 @@ stock void OnButtonPress(int client,int button)
 		// Draw from g_fLastAimPos to new pos
 		TraceEye(client, aimpos);
 		
-		g_iClientData[client][lastAimPos][0] = aimpos[0];
-		g_iClientData[client][lastAimPos][1] = aimpos[1];
-		g_iClientData[client][lastAimPos][2] = aimpos[2];
-		g_iClientData[client][paintActive] = true;
+		g_iClientData[client].lastAimPos[0] = aimpos[0];
+		g_iClientData[client].lastAimPos[1] = aimpos[1];
+		g_iClientData[client].lastAimPos[2] = aimpos[2];
+		g_iClientData[client].paintActive = true;
 	}
 }
 
@@ -247,10 +247,10 @@ stock void OnButtonRelease(int client,int button)
 {
 	if(button == IN_USE)
 	{
-		g_iClientData[client][lastAimPos][0] = 0.0;
-		g_iClientData[client][lastAimPos][1] = 0.0;
-		g_iClientData[client][lastAimPos][2] = 0.0;
-		g_iClientData[client][paintActive] = false;
+		g_iClientData[client].lastAimPos[0] = 0.0;
+		g_iClientData[client].lastAimPos[1] = 0.0;
+		g_iClientData[client].lastAimPos[2] = 0.0;
+		g_iClientData[client].paintActive = false;
 	}
 }
 
@@ -258,22 +258,22 @@ public Action PrintLaser(Handle timer)
 {
 	for (int i = 1; i <= MaxClients; ++i)
 	{
-		if (IsClientInGame(i) && IsPlayerAlive(i) && g_iClientData[i][paintActive])
+		if (IsClientInGame(i) && IsPlayerAlive(i) && g_iClientData[i].paintActive)
 		{
 			float fLaserPos[3], fAimPos[3];
 			TraceEye(i, fLaserPos);
-			g_iClientData[i][lastLaserPos][0] = fLaserPos[0];
-			g_iClientData[i][lastLaserPos][1] = fLaserPos[1];
-			g_iClientData[i][lastLaserPos][2] = fLaserPos[2];
-			fAimPos[0] = g_iClientData[i][lastAimPos][0];
-			fAimPos[1] = g_iClientData[i][lastAimPos][1];
-			fAimPos[2] = g_iClientData[i][lastAimPos][2];
+			g_iClientData[i].lastLaserPos[0] = fLaserPos[0];
+			g_iClientData[i].lastLaserPos[1] = fLaserPos[1];
+			g_iClientData[i].lastLaserPos[2] = fLaserPos[2];
+			fAimPos[0] = g_iClientData[i].lastAimPos[0];
+			fAimPos[1] = g_iClientData[i].lastAimPos[1];
+			fAimPos[2] = g_iClientData[i].lastAimPos[2];
 			if (GetVectorDistance(fLaserPos, fAimPos) > 6.0)
 			{
 				Laser(i, fAimPos, fLaserPos, false);
-				g_iClientData[i][lastAimPos][0] = g_iClientData[i][lastLaserPos][0];
-				g_iClientData[i][lastAimPos][1] = g_iClientData[i][lastLaserPos][1];
-				g_iClientData[i][lastAimPos][2] = g_iClientData[i][lastLaserPos][2];
+				g_iClientData[i].lastAimPos[0] = g_iClientData[i].lastLaserPos[0];
+				g_iClientData[i].lastAimPos[1] = g_iClientData[i].lastLaserPos[1];
+				g_iClientData[i].lastAimPos[2] = g_iClientData[i].lastLaserPos[2];
 			}
 		}
 	}
@@ -281,21 +281,21 @@ public Action PrintLaser(Handle timer)
 
 void DisableAllForClient(int client)
 {
-	g_iClientData[client][lightActive] = false;
-	g_iClientData[client][paintActive] = false;
-	g_iClientData[client][laser_life] = DEFAULT_BEAM_LIFE;
-	g_iClientData[client][laser_width] = DEFAULT_BEAM_WIDTH;
-	g_iClientData[client][r_color] = DEFAULT_RED_COLOR;
-	g_iClientData[client][g_color] = DEFAULT_GREEN_COLOR;
-	g_iClientData[client][b_color] = DEFAULT_BLUE_COLOR;
-	g_iClientData[client][alpha] = DEFAULT_ALPHA_COLOR;
-	g_iClientData[client][lastAimPos][0] = 0.0;
-	g_iClientData[client][lastAimPos][1] = 0.0;
-	g_iClientData[client][lastAimPos][2] = 0.0;
-	g_iClientData[client][lastLaserPos][0] = 0.0;
-	g_iClientData[client][lastLaserPos][1] = 0.0;
-	g_iClientData[client][lastLaserPos][2] = 0.0;
-	g_iClientData[client][lastButtons] = 0;
+	g_iClientData[client].lightActive = false;
+	g_iClientData[client].paintActive = false;
+	g_iClientData[client].laser_life = DEFAULT_BEAM_LIFE;
+	g_iClientData[client].laser_width = DEFAULT_BEAM_WIDTH;
+	g_iClientData[client].r_color = DEFAULT_RED_COLOR;
+	g_iClientData[client].g_color = DEFAULT_GREEN_COLOR;
+	g_iClientData[client].b_color = DEFAULT_BLUE_COLOR;
+	g_iClientData[client].alpha = DEFAULT_ALPHA_COLOR;
+	g_iClientData[client].lastAimPos[0] = 0.0;
+	g_iClientData[client].lastAimPos[1] = 0.0;
+	g_iClientData[client].lastAimPos[2] = 0.0;
+	g_iClientData[client].lastLaserPos[0] = 0.0;
+	g_iClientData[client].lastLaserPos[1] = 0.0;
+	g_iClientData[client].lastLaserPos[2] = 0.0;
+	g_iClientData[client].lastButtons = 0;
 	g_mColorMenu.Cancel();
 }
 
@@ -368,7 +368,7 @@ public int MainMenu_Callback(Menu menu, MenuAction action, int param1, int param
 			char lang[128];
 			if (param2 == 0)
 			{
-				FormatEx(lang, sizeof(lang), "[%s] %T", (g_iClientData[param1][lightActive]) ? '-' : '+', "LaserBeam_ToggleSelfStatus", LANG_SERVER);
+				FormatEx(lang, sizeof(lang), "[%s] %T", (g_iClientData[param1].lightActive) ? '-' : '+', "LaserBeam_ToggleSelfStatus", LANG_SERVER);
 				return RedrawMenuItem(lang);
 			}
 			else if (g_CvarTFeature.BoolValue && param2 == 1) // Update item on 1 position
@@ -384,7 +384,7 @@ public int MainMenu_Callback(Menu menu, MenuAction action, int param1, int param
 			{
 				if (param2 == 0)
 				{
-					if (g_iClientData[param1][lightActive])
+					if (g_iClientData[param1].lightActive)
 					{
 						if (g_bTCanUse)
 						{
@@ -397,17 +397,17 @@ public int MainMenu_Callback(Menu menu, MenuAction action, int param1, int param
 							}
 						}
 						else
-							g_iClientData[param1][lightActive] = false;
+							g_iClientData[param1].lightActive = false;
 					}
 					else
 					{
 						DisableAllForClient(param1);
-						g_iClientData[param1][lightActive] = true;
+						g_iClientData[param1].lightActive = true;
 					}
 				}
 				else // if param2 == 1
 				{
-					if (g_iClientData[param1][lightActive])
+					if (g_iClientData[param1].lightActive)
 					{
 						g_bTCanUse = !g_bTCanUse;
 						for (int i = 1; i <=MaxClients; ++i)
@@ -417,7 +417,7 @@ public int MainMenu_Callback(Menu menu, MenuAction action, int param1, int param
 								DisableAllForClient(i);
 								if (g_bTCanUse)
 								{
-									g_iClientData[i][lightActive] = true;
+									g_iClientData[i].lightActive = true;
 									JWP_ActionMsg(i, "\x03%T", "LaserBeam_GrantAction", LANG_SERVER, param1);
 								}
 								else
@@ -428,7 +428,7 @@ public int MainMenu_Callback(Menu menu, MenuAction action, int param1, int param
 				}
 				g_mMainMenu.Display(param1, MENU_TIME_FOREVER);
 			}
-			else if (g_iClientData[param1][lightActive])
+			else if (g_iClientData[param1].lightActive)
 				g_mColorMenu.Display(param1, MENU_TIME_FOREVER);
 			else
 				g_mMainMenu.Display(param1, MENU_TIME_FOREVER);
@@ -451,7 +451,7 @@ public int ColorMenu_Callback(Menu menu, MenuAction action, int param1, int para
 		}
 		case MenuAction_Select:
 		{
-			if (!g_iClientData[param1][lightActive]) return;
+			if (!g_iClientData[param1].lightActive) return;
 			char info[64], name[48];
 			menu.GetItem(param2, info, sizeof(info), _, name, sizeof(name));
 			char expl_str[6][18]; // 6 how many arguments to get from `info`
@@ -466,12 +466,12 @@ public int ColorMenu_Callback(Menu menu, MenuAction action, int param1, int para
 					other[j++] = StringToFloat(expl_str[i]);
 			}
 			
-			g_iClientData[param1][r_color] = color[0];
-			g_iClientData[param1][g_color] = color[1];
-			g_iClientData[param1][b_color] = color[2];
-			g_iClientData[param1][alpha] = color[3];
-			g_iClientData[param1][laser_life] = other[0];
-			g_iClientData[param1][laser_width] = other[1];
+			g_iClientData[param1].r_color = color[0];
+			g_iClientData[param1].g_color = color[1];
+			g_iClientData[param1].b_color = color[2];
+			g_iClientData[param1].alpha = color[3];
+			g_iClientData[param1].laser_life = other[0];
+			g_iClientData[param1].laser_width = other[1];
 			
 			g_mColorMenu.Display(param1, MENU_TIME_FOREVER);
 		}

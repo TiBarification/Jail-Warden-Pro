@@ -6,7 +6,7 @@
 
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.3"
+#define PLUGIN_VERSION "1.4"
 #define MGIVE "mute_give"
 #define MTAKE "mute_take"
 
@@ -44,6 +44,7 @@ public Action Event_OnRoundEnd(Event event, const char[] name, bool dontBroadcas
 		{
 			g_bMuted[i] = false;
 			BaseComm_SetClientMute(i, false);
+			SetClientListeningFlags(i, VOICE_NORMAL);
 		}
 	}
 }

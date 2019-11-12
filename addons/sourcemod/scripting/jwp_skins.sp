@@ -11,7 +11,7 @@
 
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.7.6"
+#define PLUGIN_VERSION "1.7.7"
 
 ConVar g_CvarEnable, g_CvarWardenSkin, g_CvarWardenZamSkin, g_CvarTRandomSkins, g_CvarCTRandomSkins, g_CvarTimerSetSkin;
 char g_cWardenSkin[PLATFORM_MAX_PATH], g_cWardenZamSkin[PLATFORM_MAX_PATH];
@@ -275,24 +275,27 @@ public Action SetModel(Handle timer, int client)
 		#endif
 		return Plugin_Continue;
 	}
-	// Skip VIP or shop player skin set
-	if ((g_bVIPExists && IsVipSkinUse(client)) || (g_bShopExists && Shop_IsClientSkinUse(client)))
+	if (IsClientInGame(client))
 	{
-		#if DEBUG
-			LogError("Vip/shop plugin activated and maybe used by client %N", client);
-		#endif
-		return Plugin_Continue;
+		// Skip VIP or shop player skin set
+		if ((g_bVIPExists && IsVipSkinUse(client)) || (g_bShopExists && Shop_IsClientSkinUse(client)))
+		{
+			#if DEBUG
+				LogError("Vip/shop plugin activated and maybe used by client %N", client);
+			#endif
+			return Plugin_Continue;
+		}
+		// Skip warden skin set
+		if ((JWP_IsWarden(client) && g_cWardenSkin[0] != NULL_STRING[0]) || (JWP_IsZamWarden(client) && g_cWardenZamSkin[0] != NULL_STRING[0]))
+		{
+			#if DEBUG
+				LogError("Skins has not been setted, because player is warden or zam of him");
+			#endif
+			return Plugin_Continue;
+		}
+
+		SetActualModel(client);
 	}
-	// Skip warden skin set
-	if ((JWP_IsWarden(client) && g_cWardenSkin[0] != NULL_STRING[0]) || (JWP_IsZamWarden(client) && g_cWardenZamSkin[0] != NULL_STRING[0]))
-	{
-		#if DEBUG
-			LogError("Skins has not been setted, because player is warden or zam of him");
-		#endif
-		return Plugin_Continue;
-	}
-	
-	SetActualModel(client);
 	return Plugin_Continue;
 }
 
@@ -306,6 +309,10 @@ bool SetActualModel(int client)
 			return false;
 		}
 		
+		if (!IsClientInGame(client))
+		{
+			return false;
+		}
 		SetEntityModel(client, g_cSkin[client]);
 		if (g_iSkinId[client] != 0)
 			SetEntProp(client, Prop_Send, "m_nSkin", g_iSkinId[client]);

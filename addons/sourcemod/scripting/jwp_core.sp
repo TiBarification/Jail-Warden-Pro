@@ -9,7 +9,7 @@
 // Force new syntax
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.2.0"
+#define PLUGIN_VERSION "1.3.0"
 
 #define UPDATE_URL "http://updater.tibari.ru/jwp/updatefile.txt"
 #define LOG_PATH "addons/sourcemod/logs/JWP_Log.log"
@@ -27,15 +27,22 @@ bool g_bIsCSGO;
 ArrayList g_aSortedMenu;
 ArrayList g_aFlags;
 
-enum APITarget
+enum struct APITarget
 {
-	bool:has_freeday,
-	bool:is_isolated,
-	bool:is_rebel,
-	bool:was_warden,
+	bool has_freeday;
+	bool is_isolated;
+	bool is_rebel;
+	bool was_warden;
+	
+	void Reset() {
+		this.has_freeday = false;
+		this.is_isolated = false;
+		this.is_rebel = false;
+		this.was_warden = false;
+	}
 }
 
-int g_ClientAPIInfo[MAXPLAYERS+1][APITarget];
+APITarget g_ClientAPIInfo[MAXPLAYERS+1];
 
 ConVar	g_CvarChooseMode,
 		g_CvarRandomWait,
@@ -146,7 +153,7 @@ public void OnConfigsExecuted()
 
 public void OnClientPostAdminCheck(int client)
 {
-	g_ClientAPIInfo[client][was_warden] = false;
+	g_ClientAPIInfo[client].Reset();
 }
 
 public void OnClientDisconnect_Post(int client)
@@ -156,11 +163,6 @@ public void OnClientDisconnect_Post(int client)
 	else if (IsZamWarden(client))
 		RemoveZam();
 	g_iVoteResult[client] = 0;
-	
-	// Modules client reset
-	g_ClientAPIInfo[client][has_freeday] = false;
-	g_ClientAPIInfo[client][is_isolated] = false;
-	g_ClientAPIInfo[client][is_rebel] = false;
 }
 
 public void Event_OnRoundStart(Event event, const char[] name, bool dontBroadcast)
@@ -168,8 +170,8 @@ public void Event_OnRoundStart(Event event, const char[] name, bool dontBroadcas
 	for (int i = 1; i <= MaxClients; i++)
 	{
 		// Modules client reset
-		g_ClientAPIInfo[i][has_freeday] = false;
-		g_ClientAPIInfo[i][is_isolated] = false;
+		g_ClientAPIInfo[i].has_freeday = false;
+		g_ClientAPIInfo[i].is_isolated = false;
 	}
 	bool bAllowResign = true;
 	if (g_iWarden > 0)
@@ -205,9 +207,9 @@ public void Event_OnPlayerDeath(Event event, const char[] name, bool dontBroadca
 		else if (IsZamWarden(client)) RemoveZam();
 		
 		// Module client reset
-		g_ClientAPIInfo[client][has_freeday] = false;
-		g_ClientAPIInfo[client][is_isolated] = false;
-		g_ClientAPIInfo[client][is_rebel] = false;
+		g_ClientAPIInfo[client].has_freeday = false;
+		g_ClientAPIInfo[client].is_isolated = false;
+		g_ClientAPIInfo[client].is_rebel = false;
 	}
 }
 
@@ -219,15 +221,15 @@ public void Event_OnPlayerTeam(Event event, const char[] name, bool dontBroadcas
 	else if (IsZamWarden(client)) RemoveZam();
 	
 	// Module client reset
-	g_ClientAPIInfo[client][has_freeday] = false;
-	g_ClientAPIInfo[client][is_isolated] = false;
-	g_ClientAPIInfo[client][is_rebel] = false;
+	g_ClientAPIInfo[client].has_freeday = false;
+	g_ClientAPIInfo[client].is_isolated = false;
+	g_ClientAPIInfo[client].is_rebel = false;
 }
 
 public void Event_OnRoundFreezeEnd(Event event, const char[] name, bool dontBroadcast)
 {
 	for (int i = 1; i <= MaxClients; ++i)
-		g_ClientAPIInfo[i][was_warden] = false;
+		g_ClientAPIInfo[i].was_warden = false;
 	g_bRoundEnd = false;
 	if (Forward_OnWardenChoosing() == false)
 		return;
@@ -415,7 +417,7 @@ bool BecomeCmd(int client, bool waswarden = true)
 		else
 			CPrintToChat(client, "%T %T", "Core_Prefix", LANG_SERVER, "warden_must_be_alive", LANG_SERVER);
 	}
-	else if (g_ClientAPIInfo[client][was_warden] && waswarden)
+	else if (g_ClientAPIInfo[client].was_warden && waswarden)
 	{
 		if (g_bIsCSGO)
 			CGOPrintToChat(client, "%T %T", "Core_Prefix", LANG_SERVER, "already_was_warden", LANG_SERVER);
@@ -426,7 +428,7 @@ bool BecomeCmd(int client, bool waswarden = true)
 	{
 		g_iWarden = client;
 		Forward_OnWardenChosen(g_iWarden);
-		g_ClientAPIInfo[g_iWarden][was_warden] = true;
+		g_ClientAPIInfo[g_iWarden].was_warden = true;
 		// Remove if new warden is previous zam of warden
 		if (g_iZamWarden == g_iWarden)
 			RemoveZam();
@@ -485,7 +487,7 @@ bool SetZam(int client)
 		g_iZamWarden = client;
 		Forward_OnWardenZamChosen(client);
 		// Give user ability to be warden if no warden
-		if (g_ClientAPIInfo[client][was_warden]) g_ClientAPIInfo[client][was_warden] = false;
+		if (g_ClientAPIInfo[client].was_warden) g_ClientAPIInfo[client].was_warden = false;
 		return true;
 	}
 	return false;
@@ -504,7 +506,7 @@ bool IsZamWarden(int client)
 bool PrisonerHasFreeday(int client)
 {
 	if (client <= MaxClients && CheckClient(client))
-		return g_ClientAPIInfo[client][has_freeday];
+		return g_ClientAPIInfo[client].has_freeday;
 	return false;
 }
 
@@ -512,7 +514,7 @@ bool PrisonerSetFreeday(int client, bool state = true)
 {
 	if (client <= MaxClients && CheckClient(client))
 	{
-		g_ClientAPIInfo[client][has_freeday] = state;
+		g_ClientAPIInfo[client].has_freeday = state;
 		return true;
 	}
 	return false;
@@ -521,7 +523,7 @@ bool PrisonerSetFreeday(int client, bool state = true)
 bool IsPrisonerIsolated(int client)
 {
 	if (client <= MaxClients && CheckClient(client))
-		return g_ClientAPIInfo[client][is_isolated];
+		return g_ClientAPIInfo[client].is_isolated;
 	return false;
 }
 
@@ -529,7 +531,7 @@ bool PrisonerIsolated(int client, bool state = true)
 {
 	if (client <= MaxClients && CheckClient(client))
 	{
-		g_ClientAPIInfo[client][is_isolated] = state;
+		g_ClientAPIInfo[client].is_isolated = state;
 		return true;
 	}
 	return false;
@@ -539,7 +541,7 @@ bool PrisonerRebel(int client, bool state = true)
 {
 	if (client <= MaxClients && CheckClient(client))
 	{
-		g_ClientAPIInfo[client][is_rebel] = state;
+		g_ClientAPIInfo[client].is_rebel = state;
 		return true;
 	}
 	return false;
@@ -548,7 +550,7 @@ bool PrisonerRebel(int client, bool state = true)
 bool IsPrisonerRebel(int client)
 {
 	if (client <= MaxClients && CheckClient(client))
-		return g_ClientAPIInfo[client][is_rebel];
+		return g_ClientAPIInfo[client].is_rebel;
 	return false;
 }
 
@@ -651,7 +653,7 @@ stock int JWP_GetRandomTeamClient(int team, bool alive, bool ignore_resign, bool
 			if (alive == true && IsPlayerAlive(i) == false)
 				continue;
 			
-			if (ignore_resign == false && g_ClientAPIInfo[i][was_warden] == true) continue;
+			if (ignore_resign == false && g_ClientAPIInfo[i].was_warden == true) continue;
 			
 			if (team != -1 && GetClientTeam(i) == team)
 				Players[count++] = i;

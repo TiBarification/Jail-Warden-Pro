@@ -7,7 +7,7 @@
 
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.3"
+#define PLUGIN_VERSION "1.4"
 
 bool g_bEnabled = true;
 
@@ -31,7 +31,7 @@ public void Event_OnRoundEnd(Event event, const char[] name, bool dontBroadcast)
 	g_bEnabled = true;
 }
 
-public int OnAvailableLR(int announce)
+public void OnAvailableLR(int announce)
 {
 	// Disable searching for a new warden
 	g_bEnabled = false;
