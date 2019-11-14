@@ -331,7 +331,7 @@ bool CheckMdlPath(const char[] path)
 {
 	if (path[0] != 'm' || StrContains(path, ".mdl", false) == -1)
 		return false;
-	if(strlen(path) > 3 && FileExists(path) && !IsModelPrecached(path)) PrecacheModel(path, true);
+	if(strlen(path) > 3 && FileExists(path, true) && !IsModelPrecached(path)) PrecacheModel(path, true);
 	return true;
 }
 

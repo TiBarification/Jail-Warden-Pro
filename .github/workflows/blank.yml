@@ -1,0 +1,66 @@
+name: CI
+
+on: [push]
+env:
+  STEAMWORKS_VERS: SteamWorks-git121
+  INCLUDE: addons/sourcemod/scripting/include
+  SCRIPTING: addons/sourcemod/scripting
+  EXTENSIONS: addons/sourcemod/extensions
+  PLUGINS: addons/sourcemod/plugins
+
+jobs:
+  build:
+    name: Test building this plugin on ${{ matrix.sm_version }}
+    runs-on: [ubuntu-18.04]
+    strategy:
+      matrix:
+        sm_version: ["1.10", "1.11"]
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@master
+    - name: Download SourceMod ${{ matrix.sm_version }}
+      run: |
+        wget --input-file=http://sourcemod.net/smdrop/${{ matrix.sm_version }}/sourcemod-latest-linux
+        tar -xzf $(cat sourcemod-latest-linux)
+    - name: Download & install ${{ env.STEAMWORKS_VERS }}
+      run: |
+        wget http://users.alliedmods.net/~kyles/builds/SteamWorks/${{ env.STEAMWORKS_VERS }}-linux.tar.gz
+        wget http://users.alliedmods.net/~kyles/builds/SteamWorks/${{ env.STEAMWORKS_VERS }}-windows.zip
+        tar -xzf ${{ env.STEAMWORKS_VERS }}-linux.tar.gz ${{ env.EXTENSIONS }}/SteamWorks.ext.so ${{ env.INCLUDE }}/SteamWorks.inc
+        unzip -j ${{ env.STEAMWORKS_VERS }}-windows.zip ${{ env.EXTENSIONS }}/SteamWorks.ext.dll -d ${{ env.EXTENSIONS }}
+        wget "https://raw.githubusercontent.com/KyleSanderson/SteamWorks/master/Pawn/includes/SteamWorks.inc" -O ${{ env.INCLUDE }}/SteamWorks.inc
+    - name: Download & install Morecolors
+      run: wget "http://www.doctormckay.com/download/scripting/include/morecolors.inc" -O ${{ env.INCLUDE }}/morecolors.inc
+    - name: Download & install VoiceAnnounceEX
+      run: wget "https://raw.githubusercontent.com/Franc1sco/VoiceAnnounceEX/master/scripting/include/voiceannounce_ex.inc" -O ${{ env.INCLUDE }}/voiceannounce_ex.inc
+    - name: Download & install VIP Core include
+      run: wget "https://raw.githubusercontent.com/R1KO/VIP-Core/master/addons/sourcemod/scripting/include/vip_core.inc" -O ${{ env.INCLUDE }}/vip_core.inc
+    - name: Kailo97 smart doors
+      run: wget "https://raw.githubusercontent.com/Kailo97/smartjaildoors/master/addons/sourcemod/scripting/include/smartjaildoors.inc" -O ${{ env.INCLUDE }}/smartjaildoors.inc
+    - name: SM Hosties required includes
+      run: |
+        wget "https://raw.githubusercontent.com/Bara/sm-hosties/beta/addons/sourcemod/scripting/include/hosties.inc" -O ${{ env.INCLUDE }}/hosties.inc
+        wget "https://raw.githubusercontent.com/Bara/sm-hosties/beta/addons/sourcemod/scripting/include/lastrequest.inc" -O ${{ env.INCLUDE }}/lastrequest.inc
+    - name: Add multicolors from github repository
+      run: |
+        mkdir ${{ env.INCLUDE }}/multicolors
+        wget "https://raw.githubusercontent.com/Bara/Multi-Colors/master/addons/sourcemod/scripting/include/multicolors/colors.inc" -O ${{ env.INCLUDE }}/multicolors/colors.inc
+        wget "https://raw.githubusercontent.com/Bara/Multi-Colors/master/addons/sourcemod/scripting/include/multicolors/morecolors.inc" -O ${{ env.INCLUDE }}/multicolors/morecolors.inc
+        wget "https://raw.githubusercontent.com/Bara/Multi-Colors/master/addons/sourcemod/scripting/include/multicolors.inc" -O ${{ env.INCLUDE }}/multicolors.inc
+    - name: Shop support
+      run: |
+        mkdir ${{ env.INCLUDE }}/shop
+        wget "https://raw.githubusercontent.com/FD-Forks/Shop-Core/master/addons/sourcemod/scripting/include/shop.inc" -O ${{ env.INCLUDE }}/shop.inc
+        wget "https://raw.githubusercontent.com/FD-Forks/Shop-Core/master/addons/sourcemod/scripting/include/shop/admin.inc" -O ${{ env.INCLUDE }}/shop/admin.inc
+        wget "https://raw.githubusercontent.com/FD-Forks/Shop-Core/master/addons/sourcemod/scripting/include/shop/db.inc" -O ${{ env.INCLUDE }}/shop/db.inc
+        wget "https://raw.githubusercontent.com/FD-Forks/Shop-Core/master/addons/sourcemod/scripting/include/shop/functions.inc" -O ${{ env.INCLUDE }}/shop/functions.inc
+        wget "https://raw.githubusercontent.com/FD-Forks/Shop-Core/master/addons/sourcemod/scripting/include/shop/items.inc" -O ${{ env.INCLUDE }}/shop/items.inc
+        wget "https://raw.githubusercontent.com/FD-Forks/Shop-Core/master/addons/sourcemod/scripting/include/shop/players.inc" -O ${{ env.INCLUDE }}/shop/players.inc
+        wget "https://raw.githubusercontent.com/FD-Forks/Shop-Core/master/addons/sourcemod/scripting/include/shop/register.inc" -O ${{ env.INCLUDE }}/shop/register.inc
+    
+    - name: Build plugins on SM ${{ matrix.sm_version }}
+      run: |
+        chmod +x ${{ env.SCRIPTING }}/spcomp
+        mkdir ${{ env.SCRIPTING }}/compiled
+        bash ci/test.sh
