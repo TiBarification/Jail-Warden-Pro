@@ -5,7 +5,7 @@
 
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.8"
+#define PLUGIN_VERSION "1.9"
 #define ITEM "laserbeam"
 
 #define DEFAULT_RED_COLOR 255
@@ -92,7 +92,7 @@ public Action Command_LPaints(int client, int args)
 {
 	if (!args)
 	{
-		if (client && IsClientInGame(client) && ((g_CvarTFeature.BoolValue && GetClientTeam(client) == CS_TEAM_T) || JWP_IsWarden(client)))
+		if (client && IsClientInGame(client) && ((g_CvarTFeature.BoolValue && GetClientTeam(client) == CS_TEAM_T && g_bTCanUse) || JWP_IsWarden(client)))
 		{
 			if (IsPlayerAlive(client))
 			{
@@ -214,7 +214,6 @@ void Laser(int client, float start[3], float end[3], bool mode)
 		if (JWP_IsWarden(client))
 		{
 			TE_SetupGlowSprite(end, g_iHaloSprite, 0.1, 0.25, 255);
-			TE_SendToAll();
 		}
 		TE_SetupBeamPoints(start, end, g_iGlowEnt, 0, 0, 0, 0.1, 0.12, 0.0, 1, 0.0, color, 0);
 	}
