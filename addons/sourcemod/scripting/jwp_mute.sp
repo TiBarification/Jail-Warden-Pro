@@ -6,7 +6,7 @@
 
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.4"
+#define PLUGIN_VERSION "1.5"
 #define MGIVE "mute_give"
 #define MTAKE "mute_take"
 
@@ -40,11 +40,13 @@ public Action Event_OnRoundEnd(Event event, const char[] name, bool dontBroadcas
 {
 	for (int i = 1; i <= MaxClients; ++i)
 	{
-		if (IsClientInGame(i) && BaseComm_IsClientMuted(i) && g_bMuted[i])
+		if (IsClientInGame(i) && g_bMuted[i])
 		{
 			g_bMuted[i] = false;
-			BaseComm_SetClientMute(i, false);
-			SetClientListeningFlags(i, VOICE_NORMAL);
+			if (!BaseComm_IsClientMuted(i))
+			{
+				SetClientListeningFlags(i, VOICE_NORMAL);
+			}
 		}
 	}
 }
@@ -130,15 +132,26 @@ void ShowPlayerListMenu(int client, bool muted_pl)
 			if (muted_pl && g_bMuted[i])
 			{
 				IntToString(i, id, sizeof(id));
-				PList.AddItem(id, name);
+				if (BaseComm_IsClientMuted(i))
+				{
+					PList.AddItem(id, name, ITEMDRAW_DISABLED);
+				}
+				else
+				{
+					PList.AddItem(id, name);
+				}
 			}
 			else if (!muted_pl && !g_bMuted[i])
 			{
 				IntToString(i, id, sizeof(id));
 				if (BaseComm_IsClientMuted(i))
+				{
 					PList.AddItem(id, name, ITEMDRAW_DISABLED);
+				}
 				else
+				{
 					PList.AddItem(id, name);
+				}
 			}
 		}
 	}
@@ -165,28 +178,23 @@ public int PList_Callback(Menu menu, MenuAction action, int client, int slot)
 		{
 			if (JWP_IsWarden(client))
 			{
-				if (g_CvarMuteOnTime.FloatValue && !slot)
+				if (g_CvarMuteOnTime.FloatValue && slot == 0)
 				{
 					for (int i = 1; i <= MaxClients; ++i)
 					{
 						if (CheckClient(i))
 						{
-							if (BaseComm_IsClientMuted(i))
+							if (!BaseComm_IsClientMuted(i)) // Mute isn't granted by admin
 							{
-								if (g_bMuted[i]) // Если мут есть и поставлен не админом, тогда снимаем
+								if (g_bMuted[i])
 								{
-									g_bMuted[i] = !g_bMuted[i];
-									BaseComm_SetClientMute(i, g_bMuted[i]);
 									SetClientListeningFlags(i, VOICE_NORMAL);
 								}
 								else
-									JWP_ActionMsg(client, "%T", "Mute_Dont_Have_Permission", LANG_SERVER, i);
-							}
-							else if (!g_bMuted[i]) // Если мута нет, тогда ставим
-							{
+								{
+									SetClientListeningFlags(i, VOICE_MUTED);
+								}
 								g_bMuted[i] = !g_bMuted[i];
-								BaseComm_SetClientMute(i, g_bMuted[i]);
-								SetClientListeningFlags(i, VOICE_MUTED);
 							}
 						}
 					}
@@ -202,7 +210,7 @@ public int PList_Callback(Menu menu, MenuAction action, int client, int slot)
 						TempMute_Timer = CreateTimer(g_CvarMuteOnTime.FloatValue, TempMute_Timer_Callback);
 						JWP_ActionMsgAll("%T", "Mute_ActionMessage_Muted_All", LANG_SERVER, client, g_CvarMuteOnTime.FloatValue);
 					}
-					ShowPlayerListMenu(client, (TempMute_Timer == null) ? true : false);
+					ShowPlayerListMenu(client, TempMute_Timer == null);
 				}
 				else
 				{
@@ -211,25 +219,22 @@ public int PList_Callback(Menu menu, MenuAction action, int client, int slot)
 					int target = StringToInt(info);
 					if (target && CheckClient(target))
 					{
-						if (BaseComm_IsClientMuted(target))
+						if (!BaseComm_IsClientMuted(target))
 						{
 							if (g_bMuted[target])
 							{
-								g_bMuted[target] = !g_bMuted[target];
-								BaseComm_SetClientMute(target, g_bMuted[target]);
 								SetClientListeningFlags(target, VOICE_NORMAL);
 							}
 							else
 							{
-								JWP_ActionMsg(client, "%T", "Mute_Dont_Have_Permission", LANG_SERVER, target);
-								return;
+								SetClientListeningFlags(target, VOICE_MUTED);
 							}
-						}
-						else if (!g_bMuted[target])
-						{
 							g_bMuted[target] = !g_bMuted[target];
-							BaseComm_SetClientMute(target, g_bMuted[target]);
-							SetClientListeningFlags(target, VOICE_MUTED);
+						}
+						else
+						{
+							JWP_ActionMsg(client, "%T", "Mute_Dont_Have_Permission", LANG_SERVER, target);
+							return;
 						}
 						
 						JWP_ActionMsgAll("%T", (g_bMuted[target]) ? "Mute_ActionMessage_Muted" : "Mute_ActionMessage_UnMuted", LANG_SERVER, client, target);
@@ -247,22 +252,23 @@ public Action TempMute_Timer_Callback(Handle timer)
 	{
 		for (int i = 1; i <= MaxClients; ++i)
 		{
-			if (CheckClient(i) && g_bMuted[i] && BaseComm_IsClientMuted(i))
+			if (CheckClient(i) && g_bMuted[i] && !BaseComm_IsClientMuted(i))
 			{
 				g_bMuted[i] = false;
-				BaseComm_SetClientMute(i, false);
 				SetClientListeningFlags(i, VOICE_NORMAL);
 			}
 		}
 		JWP_ActionMsgAll("%T", "Mute_ActionMessage_MicroAvailable", LANG_SERVER);
+		TempMute_Timer = null;
 	}
-	TempMute_Timer = null;
 }
 
 bool CheckClient(int client)
 {
 	AdminId admin_id;
 	if (IsClientConnected(client))
-		 admin_id = GetUserAdmin(client);
+	{
+		admin_id = GetUserAdmin(client);
+	}
 	return (IsClientInGame(client) && !IsFakeClient(client) && GetClientTeam(client) == CS_TEAM_T && IsPlayerAlive(client) && (admin_id == INVALID_ADMIN_ID));
 }
