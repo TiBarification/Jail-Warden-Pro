@@ -9,7 +9,7 @@
 // Force new syntax
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.3.0"
+#define PLUGIN_VERSION "1.4.0"
 
 #define UPDATE_URL "http://updater.tibari.ru/jwp/updatefile.txt"
 #define LOG_PATH "addons/sourcemod/logs/JWP_Log.log"
@@ -74,8 +74,8 @@ public void OnPluginStart()
 	g_CvarChooseMode = CreateConVar("jwp_choose_mode", "2", "How to choose warden 1:random 2:command 3:voting", FCVAR_SPONLY, true, 1.0, true, 3.0);
 	g_CvarRandomWait = CreateConVar("jwp_random_wait", "5", "Time before warden randomly picked if choose mode = 1", FCVAR_SPONLY, true, 1.0, true, 30.0);
 	g_CvarVoteTime = CreateConVar("jwp_vote_time", "30", "Time for voting if choose mode = 3", FCVAR_SPONLY, true, 10.0, true, 60.0);
-	g_CvarDisableAntiFlood = CreateConVar("jwp_disable_antiflood", "1", "Protect menu from random selecting", FCVAR_SPONLY, true, 0.0, true, 1.0);
-	g_CvarAutoUpdate = CreateConVar("jwp_autoupdate", "0", "Enable (1) or disable (0) auto update. Need Updater!", FCVAR_SPONLY, true, 0.0, true, 1.0);
+	g_CvarDisableAntiFlood = CreateConVar("jwp_disable_antiflood", "0", "Disable menu protection from spam-clicking", FCVAR_SPONLY, true, 0.0, true, 1.0);
+	g_CvarAutoUpdate = CreateConVar("jwp_autoupdate", "1", "Enable (1) or disable (0) auto update. Need Updater!", FCVAR_SPONLY, true, 0.0, true, 1.0);
 	g_CvarMenuAutoOpen = CreateConVar("jwp_menuautoopen", "1", "Enable (1) or disable (0) warden menu auto open after warden chosen!", FCVAR_SPONLY, true, 0.0, true, 1.0);
 	
 	RegConsoleCmd("sm_com", Command_BecomeWarden, "Warden menu");
@@ -120,13 +120,13 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 public void OnAllPluginsLoaded()
 {
-	if (g_CvarAutoUpdate.BoolValue && LibraryExists("updater"))
+	if (g_CvarAutoUpdate.BoolValue && LibraryExists("updater") && GetFeatureStatus(FeatureType_Native, "Updater_AddPlugin") == FeatureStatus_Available)
 		Updater_AddPlugin(UPDATE_URL);
 }
 
 public void OnLibraryAdded(const char[] name)
 {
-	if (g_CvarAutoUpdate.BoolValue && strcmp(name, "updater", true) == 0)
+	if (g_CvarAutoUpdate.BoolValue && !strcmp(name, "updater", true) && GetFeatureStatus(FeatureType_Native, "Updater_AddPlugin") == FeatureStatus_Available)
 		Updater_AddPlugin(UPDATE_URL);
 }
 

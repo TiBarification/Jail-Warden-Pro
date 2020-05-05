@@ -198,10 +198,16 @@ public int Cmd_ShowMenu_Handler(Menu menu, MenuAction action, int client, int sl
 			menu.GetItem(slot, info, sizeof(info));
 			// Get and save last position of element
 			g_iLastMenuItemPos = menu.Selection;
+			bool isFlood = false;
 			
-			if (!g_CvarDisableAntiFlood.BoolValue && Flood(client, 1)) return;		
-			else if (!strcmp("resign", info, true)) Resign_Confirm(client);
-			else if (!strcmp("zam", info, true))
+			if (!g_CvarDisableAntiFlood.BoolValue) {
+				if (!strcmp("resign", info, true) || !strcmp("zam", info, true))
+				{
+					isFlood = Flood(client, 1);
+				}
+			}
+			if (!strcmp("resign", info, true) && !isFlood) Resign_Confirm(client);
+			else if (!strcmp("zam", info, true) && !isFlood)
 			{
 				if (!g_iZamWarden)
 				{
@@ -367,9 +373,11 @@ bool JWPM_HasFlag(int client, int bitflag)
 }
 
 //ANTI-FLOOD
+static int last_time[MAXPLAYERS+1];
 bool Flood(int client, int delay)
 {
-	static int last_time[MAXPLAYERS+1]; static int curr_time; static int time;
+	static int curr_time;
+	static int time;
 	curr_time = GetTime();
 	time = curr_time - last_time[client];
 	if (time < delay)
@@ -378,6 +386,7 @@ bool Flood(int client, int delay)
 			ReplyToCommand(client, "%T", "anti_flood", LANG_SERVER, delay - time);
 		else
 			CReplyToCommand(client, "%T %T", "Core_Prefix", LANG_SERVER, "anti_flood", LANG_SERVER, delay - time);
+		
 		return true;
 	}
 	last_time[client] = curr_time;

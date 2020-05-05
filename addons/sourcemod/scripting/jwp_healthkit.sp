@@ -33,7 +33,7 @@ public void OnPluginStart()
 	g_CvarHK_Team = CreateConVar("jwp_healthkit_team", "1", "Кому аптечка добавляет HP: 1 = Всем; 2 = T; 3 = CT", _, true, 1.0, true, 3.0);
 	g_CvarHK_LimitHp = CreateConVar("jwp_healthkit_limit_hp", "100", "Лимит HP (аптечка). 0 = без лимита.", _, true, 0.0);
 	g_CvarHK_Hp = CreateConVar("jwp_healthkit_hp", "50", "Сколько HP добавляет аптечка", _, true, 1.0);
-	g_CvarHK_Model = CreateConVar("jwp_healthkit_model", "models/gibs/hgibs.mdl", "Модель аптечки", _);
+	g_CvarHK_Model = CreateConVar("jwp_healthkit_model", "models/props_c17/metalpot001a.mdl", "Модель аптечки", _);
 	
 	
 	HookEvent("round_start", Event_OnRoundStart, EventHookMode_PostNoCopy);

@@ -82,7 +82,6 @@ void LoadGunsFile()
 		if (kv.GetSectionName(buffer, sizeof(buffer)))
 		{
 			kv.GetString("text", text, sizeof(text), buffer);
-			// Format(buffer, sizeof(buffer), "weapon_%s", buffer);
 			g_WeaponMenu.AddItem(buffer, text);
 			
 			// Get slot for item
