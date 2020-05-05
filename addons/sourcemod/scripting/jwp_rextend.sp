@@ -5,7 +5,7 @@
 // Force 1.7 syntax
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.3"
+#define PLUGIN_VERSION "1.4"
 #define ITEM "rextend"
 
 ConVar g_CvarRE_Limit, g_CvarRE_Extend;
@@ -69,6 +69,10 @@ public bool OnRextendSelect(int client)
 {
 	if (!JWP_IsFlood(client))
 	{
+		if (g_CvarRE_Limit.IntValue && g_iExtends >= g_CvarRE_Limit.IntValue)
+		{
+			return false;
+		}
 		int extend = g_CvarRE_Extend.IntValue;
 		
 		// Set new time (oldtime + extend) . This property don't saved on new round
