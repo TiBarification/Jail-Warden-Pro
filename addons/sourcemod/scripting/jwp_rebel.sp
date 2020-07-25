@@ -7,7 +7,7 @@
 // Force 1.7 syntax
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.7"
+#define PLUGIN_VERSION "1.8"
 
 ConVar	g_CvarRebelColor_r,
 		g_CvarRebelColor_g,
@@ -62,7 +62,7 @@ public void OnClientDisconnect(int client)
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-	if (attacker &&
+	if (attacker > 0 &&
 		(attacker <= MaxClients) &&
 		attacker != victim &&
 		IsClientInGame(attacker) &&
