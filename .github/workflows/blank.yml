@@ -2,7 +2,7 @@ name: CI
 
 on: [push]
 env:
-  STEAMWORKS_VERS: SteamWorks-git121
+  STEAMWORKS_VERS: SteamWorks-git132
   INCLUDE: addons/sourcemod/scripting/include
   SCRIPTING: addons/sourcemod/scripting
   EXTENSIONS: addons/sourcemod/extensions
