@@ -26,7 +26,7 @@ public void OnClientPutInServer(int client)
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-	if (attacker && (attacker <= MaxClients) && IsClientInGame(attacker) && JWP_PrisonerHasFreeday(attacker))
+	if (attacker > 0 && (attacker <= MaxClients) && IsClientInGame(attacker) && JWP_PrisonerHasFreeday(attacker))
 		return Plugin_Handled;
 	return Plugin_Continue;
 }

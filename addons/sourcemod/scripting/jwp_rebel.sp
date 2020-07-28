@@ -64,6 +64,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 {
 	if (attacker > 0 &&
 		(attacker <= MaxClients) &&
+		victim > 0 && victim <= MaxClients &&
 		attacker != victim &&
 		IsClientInGame(attacker) &&
 		IsClientInGame(victim) &&

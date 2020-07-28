@@ -4,7 +4,7 @@
 #include <multicolors>
 
 #define PLUGIN_VERSION "1.0"
-#define VOTE_PERCENT 70
+#define VOTE_PERCENT 60
 
 bool g_bVotes[MAXPLAYERS+1];
 bool g_bAllowedVote;
