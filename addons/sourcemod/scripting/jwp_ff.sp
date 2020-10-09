@@ -3,7 +3,7 @@
 
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.2"
+#define PLUGIN_VERSION "1.3"
 #define ITEM "ff"
 
 bool g_bTurnOn = false;
@@ -21,6 +21,7 @@ public Plugin myinfo =
 public void OnPluginStart()
 {
 	Cvar_FF = FindConVar("mp_friendlyfire");
+	Cvar_FF.Flags &= ~FCVAR_NOTIFY;
 	g_bTurnOn = Cvar_FF.BoolValue;
 	
 	HookEvent("round_start", Event_OnRoundStart, EventHookMode_PostNoCopy);
@@ -60,7 +61,7 @@ public bool OnFuncDisplay(int client, char[] buffer, int maxlength, int style)
 public bool OnFuncSelect(int client)
 {
 	g_bTurnOn = !g_bTurnOn;
-	Cvar_FF.SetBool(g_bTurnOn, false, false);
+	Cvar_FF.SetBool(g_bTurnOn, true, false);
 	JWP_ActionMsgAll("%T\x02%T", "FF_ActionMessage_FriendlyFire", LANG_SERVER, (g_bTurnOn) ? "FF_State_On":"FF_State_Off", LANG_SERVER);
 	char menuitem[48];
 	if (g_bTurnOn)

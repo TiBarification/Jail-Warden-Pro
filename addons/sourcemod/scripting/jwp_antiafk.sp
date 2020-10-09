@@ -32,9 +32,6 @@ public void OnPluginStart()
 	HookEvent("player_spawn", Event_PlayerSpawn);
 	HookEvent("round_start", Event_RoundStart);
 	HookEvent("round_end", Event_RoundEnd);
-	
-	//LoadTranslations("jwp_modules.phrases");
-	//if (JWP_IsStarted()) JWP_Started();
 }
 
 public void Event_PlayerSpawn(Handle event, const char[] name, bool dontBroadcast)
