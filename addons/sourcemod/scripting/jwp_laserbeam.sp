@@ -130,6 +130,12 @@ public void JWP_OnWardenResigned(int client, bool himself)
 	g_iClientData[client].paintActive = false;
 	g_iClientData[client].lightActive = false;
 	g_iClientData[client].lastButtons = 0;
+
+	// Disable painting for everyone T
+	for (int i = 1; i <= MaxClients; ++i) {
+		DisableAllForClient(i);
+	}
+	g_bTCanUse = false;
 }
 
 public bool OnFuncDisplay(int client, char[] buffer, int maxlength, int style)
