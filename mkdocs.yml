@@ -3,7 +3,7 @@ site_url: https://hlmod.ru
 repo_url: https://github.com/TiBarification/Jail-Warden-Pro
 repo_name: GitHub
 site_author: TiBarification
-theme: readthedocs
+theme: material
 markdown_extensions:
  - admonition
  - attr_list
@@ -11,7 +11,7 @@ markdown_extensions:
 pages:
  - Home: index.md
  - Installation Guide: Installation-guide.md
- - List of available modules for Core:
+ - List of available modules:
    - Full list of modules: Modules.md
    - Admin Control: Module-Admin-Control.md
    - Be Quiet: Module-Be-Quiet.md
