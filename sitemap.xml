@@ -1,240 +1,159 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-
-    
-    <url>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url>
      <loc>https://hlmod.ru/</loc>
-     <lastmod>2017-03-03</lastmod>
+     <lastmod>2020-10-10</lastmod>
      <changefreq>daily</changefreq>
-    </url>
-    
-
-    
-    <url>
+    </url><url>
      <loc>https://hlmod.ru/Installation-guide/</loc>
-     <lastmod>2017-03-03</lastmod>
+     <lastmod>2020-10-10</lastmod>
      <changefreq>daily</changefreq>
-    </url>
-    
-
-    
-        
-    <url>
+    </url><url>
      <loc>https://hlmod.ru/Modules/</loc>
-     <lastmod>2017-03-03</lastmod>
+     <lastmod>2020-10-10</lastmod>
      <changefreq>daily</changefreq>
-    </url>
-        
-    <url>
+    </url><url>
      <loc>https://hlmod.ru/Module-Admin-Control/</loc>
-     <lastmod>2017-03-03</lastmod>
+     <lastmod>2020-10-10</lastmod>
      <changefreq>daily</changefreq>
-    </url>
-        
-    <url>
+    </url><url>
      <loc>https://hlmod.ru/Module-Be-Quiet/</loc>
-     <lastmod>2017-03-03</lastmod>
+     <lastmod>2020-10-10</lastmod>
      <changefreq>daily</changefreq>
-    </url>
-        
-    <url>
+    </url><url>
      <loc>https://hlmod.ru/Module-Door-Control/</loc>
-     <lastmod>2017-03-03</lastmod>
+     <lastmod>2020-10-10</lastmod>
      <changefreq>daily</changefreq>
-    </url>
-        
-    <url>
+    </url><url>
      <loc>https://hlmod.ru/Module-Door-Aim-Control/</loc>
-     <lastmod>2017-03-03</lastmod>
+     <lastmod>2020-10-10</lastmod>
      <changefreq>daily</changefreq>
-    </url>
-        
-    <url>
+    </url><url>
      <loc>https://hlmod.ru/Module-Freeday-No-Bunt/</loc>
-     <lastmod>2017-03-03</lastmod>
+     <lastmod>2020-10-10</lastmod>
      <changefreq>daily</changefreq>
-    </url>
-        
-    <url>
+    </url><url>
      <loc>https://hlmod.ru/Module-Friendly-Fire/</loc>
-     <lastmod>2017-03-03</lastmod>
+     <lastmod>2020-10-10</lastmod>
      <changefreq>daily</changefreq>
-    </url>
-        
-    <url>
+    </url><url>
      <loc>https://hlmod.ru/Module-Freeday/</loc>
-     <lastmod>2017-03-03</lastmod>
+     <lastmod>2020-10-10</lastmod>
      <changefreq>daily</changefreq>
-    </url>
-        
-    <url>
+    </url><url>
      <loc>https://hlmod.ru/Module-Guns/</loc>
-     <lastmod>2017-03-03</lastmod>
+     <lastmod>2020-10-10</lastmod>
      <changefreq>daily</changefreq>
-    </url>
-        
-    <url>
+    </url><url>
      <loc>https://hlmod.ru/Module-Handcuffs/</loc>
-     <lastmod>2017-03-03</lastmod>
+     <lastmod>2020-10-10</lastmod>
      <changefreq>daily</changefreq>
-    </url>
-        
-    <url>
+    </url><url>
      <loc>https://hlmod.ru/Module-Healthkit/</loc>
-     <lastmod>2017-03-03</lastmod>
+     <lastmod>2020-10-10</lastmod>
      <changefreq>daily</changefreq>
-    </url>
-        
-    <url>
+    </url><url>
      <loc>https://hlmod.ru/Module-Icon/</loc>
-     <lastmod>2017-03-03</lastmod>
+     <lastmod>2020-10-10</lastmod>
      <changefreq>daily</changefreq>
-    </url>
-        
-    <url>
+    </url><url>
      <loc>https://hlmod.ru/Module-Isolator/</loc>
-     <lastmod>2017-03-03</lastmod>
+     <lastmod>2020-10-10</lastmod>
      <changefreq>daily</changefreq>
-    </url>
-        
-    <url>
+    </url><url>
      <loc>https://hlmod.ru/Module-Laserbeam/</loc>
-     <lastmod>2017-03-03</lastmod>
+     <lastmod>2020-10-10</lastmod>
      <changefreq>daily</changefreq>
-    </url>
-        
-    <url>
+    </url><url>
      <loc>https://hlmod.ru/Module-ManualColoring/</loc>
-     <lastmod>2017-03-03</lastmod>
+     <lastmod>2020-10-10</lastmod>
      <changefreq>daily</changefreq>
-    </url>
-        
-    <url>
+    </url><url>
      <loc>https://hlmod.ru/Module-Mute/</loc>
-     <lastmod>2017-03-03</lastmod>
+     <lastmod>2020-10-10</lastmod>
      <changefreq>daily</changefreq>
-    </url>
-        
-    <url>
+    </url><url>
      <loc>https://hlmod.ru/Module-Noblock/</loc>
-     <lastmod>2017-03-03</lastmod>
+     <lastmod>2020-10-10</lastmod>
      <changefreq>daily</changefreq>
-    </url>
-        
-    <url>
+    </url><url>
      <loc>https://hlmod.ru/Module-On-Lr-Started/</loc>
-     <lastmod>2017-03-03</lastmod>
+     <lastmod>2020-10-10</lastmod>
      <changefreq>daily</changefreq>
-    </url>
-        
-    <url>
+    </url><url>
      <loc>https://hlmod.ru/Module-Order/</loc>
-     <lastmod>2017-03-03</lastmod>
+     <lastmod>2020-10-10</lastmod>
      <changefreq>daily</changefreq>
-    </url>
-        
-    <url>
+    </url><url>
      <loc>https://hlmod.ru/Module-Otkaz/</loc>
-     <lastmod>2017-03-03</lastmod>
+     <lastmod>2020-10-10</lastmod>
      <changefreq>daily</changefreq>
-    </url>
-        
-    <url>
+    </url><url>
      <loc>https://hlmod.ru/Module-Playsound/</loc>
-     <lastmod>2017-03-03</lastmod>
+     <lastmod>2020-10-10</lastmod>
      <changefreq>daily</changefreq>
-    </url>
-        
-    <url>
+    </url><url>
      <loc>https://hlmod.ru/Module-Prisoner-Counter/</loc>
-     <lastmod>2017-03-03</lastmod>
+     <lastmod>2020-10-10</lastmod>
      <changefreq>daily</changefreq>
-    </url>
-        
-    <url>
+    </url><url>
      <loc>https://hlmod.ru/Module-Rebel/</loc>
-     <lastmod>2017-03-03</lastmod>
+     <lastmod>2020-10-10</lastmod>
      <changefreq>daily</changefreq>
-    </url>
-        
-    <url>
+    </url><url>
      <loc>https://hlmod.ru/Module-Respawn/</loc>
-     <lastmod>2017-03-03</lastmod>
+     <lastmod>2020-10-10</lastmod>
      <changefreq>daily</changefreq>
-    </url>
-        
-    <url>
+    </url><url>
      <loc>https://hlmod.ru/Module-Round-Extend/</loc>
-     <lastmod>2017-03-03</lastmod>
+     <lastmod>2020-10-10</lastmod>
      <changefreq>daily</changefreq>
-    </url>
-        
-    <url>
+    </url><url>
      <loc>https://hlmod.ru/Module-Shootguns/</loc>
-     <lastmod>2017-03-03</lastmod>
+     <lastmod>2020-10-10</lastmod>
      <changefreq>daily</changefreq>
-    </url>
-        
-    <url>
+    </url><url>
      <loc>https://hlmod.ru/Module-Skin/</loc>
-     <lastmod>2017-03-03</lastmod>
+     <lastmod>2020-10-10</lastmod>
      <changefreq>daily</changefreq>
-    </url>
-        
-    <url>
+    </url><url>
      <loc>https://hlmod.ru/Module-Slay/</loc>
-     <lastmod>2017-03-03</lastmod>
+     <lastmod>2020-10-10</lastmod>
      <changefreq>daily</changefreq>
-    </url>
-        
-    <url>
+    </url><url>
      <loc>https://hlmod.ru/Module-Speed/</loc>
-     <lastmod>2017-03-03</lastmod>
+     <lastmod>2020-10-10</lastmod>
      <changefreq>daily</changefreq>
-    </url>
-        
-    <url>
+    </url><url>
      <loc>https://hlmod.ru/Module-Stoplr/</loc>
-     <lastmod>2017-03-03</lastmod>
+     <lastmod>2020-10-10</lastmod>
      <changefreq>daily</changefreq>
-    </url>
-        
-    <url>
+    </url><url>
      <loc>https://hlmod.ru/Module-Strip-Knife/</loc>
-     <lastmod>2017-03-03</lastmod>
+     <lastmod>2020-10-10</lastmod>
      <changefreq>daily</changefreq>
-    </url>
-        
-    <url>
+    </url><url>
      <loc>https://hlmod.ru/Module-To-Jail/</loc>
-     <lastmod>2017-03-03</lastmod>
+     <lastmod>2020-10-10</lastmod>
      <changefreq>daily</changefreq>
-    </url>
-        
-    <url>
+    </url><url>
      <loc>https://hlmod.ru/Module-Transfer-Warden/</loc>
-     <lastmod>2017-03-03</lastmod>
+     <lastmod>2020-10-10</lastmod>
      <changefreq>daily</changefreq>
-    </url>
-        
-    <url>
+    </url><url>
      <loc>https://hlmod.ru/Module-Warden-Color/</loc>
-     <lastmod>2017-03-03</lastmod>
+     <lastmod>2020-10-10</lastmod>
      <changefreq>daily</changefreq>
-    </url>
-        
-    <url>
+    </url><url>
      <loc>https://hlmod.ru/Module-Warden-Health/</loc>
-     <lastmod>2017-03-03</lastmod>
+     <lastmod>2020-10-10</lastmod>
      <changefreq>daily</changefreq>
-    </url>
-        
-    <url>
+    </url><url>
      <loc>https://hlmod.ru/Module-Timer/</loc>
-     <lastmod>2017-03-03</lastmod>
+     <lastmod>2020-10-10</lastmod>
+     <changefreq>daily</changefreq>
+    </url><url>
+     <loc>https://hlmod.ru/Module-WardenVoteKick/</loc>
+     <lastmod>2020-10-10</lastmod>
      <changefreq>daily</changefreq>
     </url>
-        
-    
-
 </urlset>
