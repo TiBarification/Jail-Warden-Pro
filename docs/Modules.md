@@ -34,3 +34,4 @@
 * [Warden Color](Module-Warden-Color)
 * [Warden Health](Module-Warden-Health)
 * [Timer](Module-Timer)
+* [Timer](Module-WardenVoteKick)
