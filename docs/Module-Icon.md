@@ -8,7 +8,7 @@ Config file is located by this path:
 // Path to the warden icon DONT TYPE .vmt or .vft
 // -
 // Default: "decals/MyJailbreak/warden"
-jwp_icon_path "decals/MyJailbreak/warden"
+jwp_icon_warden_path "decals/MyJailbreak/warden"
 ```
 
 ## How to add to menu

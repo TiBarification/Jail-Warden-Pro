@@ -12,6 +12,13 @@ Config file is located by this path:
 // Minimum: "0.000000"
 // Maximum: "1.000000"
 jwp_laserbeam_t_feature "1"
+
+// Warden laserbeam is turned on by default
+// -
+// Default: "1"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+jwp_laserbeam_default_on "1"
 ```
 !!! note
     File with colors, you can add your own [`cfg/jwp/laserbeam/colors.txt`](https://github.com/TiBarification/Jail-Warden-Pro/blob/master/cfg/jwp/laserbeam/colors.txt)
