@@ -32,6 +32,8 @@ public void OnPluginStart()
 	g_hVoteLimitPerRound.AddChangeHook(OnCvarChange);
 	
 	LoadTranslations("jwp_modules.phrases");
+
+	AutoExecConfig(true, "wvotekick", "jwp");
 }
 
 public void OnCvarChange(ConVar cvar, const char[] oldValue, const char[] newValue)
