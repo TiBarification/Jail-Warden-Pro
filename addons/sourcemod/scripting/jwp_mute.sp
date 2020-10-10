@@ -6,7 +6,7 @@
 
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.5"
+#define PLUGIN_VERSION "1.6"
 #define MGIVE "mute_give"
 #define MTAKE "mute_take"
 
@@ -31,6 +31,7 @@ public void OnPluginStart()
 	if (JWP_IsStarted()) JWP_Started();
 	
 	HookEvent("round_end", Event_OnRoundEnd, EventHookMode_Post);
+	HookEvent("player_death", Event_OnPlayerDeath);
 	AutoExecConfig(true, "mute", "jwp");
 	
 	LoadTranslations("jwp_modules.phrases");
@@ -47,6 +48,19 @@ public Action Event_OnRoundEnd(Event event, const char[] name, bool dontBroadcas
 			{
 				SetClientListeningFlags(i, VOICE_NORMAL);
 			}
+		}
+	}
+}
+
+public void Event_OnPlayerDeath(Event event, const char[] name, bool dontBroadcast)
+{
+	int client = GetClientOfUserId(event.GetInt("userid"));
+	if (IsClientInGame(client))
+	{
+		if (g_bMuted[client] && !BaseComm_IsClientMuted(client))
+		{
+			SetClientListeningFlags(client, VOICE_NORMAL);
+			g_bMuted[client] = false;
 		}
 	}
 }
