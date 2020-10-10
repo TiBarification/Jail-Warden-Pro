@@ -5,7 +5,7 @@
 
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.9"
+#define PLUGIN_VERSION "2.0"
 #define ITEM "laserbeam"
 
 #define DEFAULT_RED_COLOR 255
@@ -34,7 +34,7 @@ bool g_bTCanUse;
 Target g_iClientData[MAXPLAYERS+1];
 int g_iGlowEnt, g_iHaloSprite;
 Menu g_mMainMenu, g_mColorMenu;
-ConVar g_CvarTFeature;
+ConVar g_CvarTFeature, g_hTurnOnByDefault;
 
 public Plugin myinfo = 
 {
@@ -47,7 +47,8 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
-	g_CvarTFeature = CreateConVar("jwp_laserbeam_t_feature", "1", "Warden can give this feature to terrorists", _, true, 0.0, true, 1.0);
+	g_CvarTFeature = CreateConVar("jwp_laserbeam_t_feature", "1", "Warden can give this feature to terrorists", FCVAR_NONE, true, 0.0, true, 1.0);
+	g_hTurnOnByDefault = CreateConVar("jwp_laserbeam_default_on", "1", "Warden laserbeam is turned on by default", FCVAR_NONE, true, 0.0, true, 1.0);
 	RegConsoleCmd("sm_lpaints", Command_LPaints, "Ability to paint via laserbeam like warden");
 	
 	if (JWP_IsStarted()) JWP_Started();
@@ -121,7 +122,7 @@ public void OnPluginEnd()
 
 public void JWP_OnWardenChosen(int client)
 {
-	g_iClientData[client].lightActive = false;
+	g_iClientData[client].lightActive = g_hTurnOnByDefault.BoolValue;
 }
 
 public void JWP_OnWardenResigned(int client, bool himself)
@@ -308,7 +309,7 @@ void LoadMenus()
 	g_mMainMenu.SetTitle(lang);
 	FormatEx(lang, sizeof(lang), "[+] %T", "LaserBeam_ToggleSelfStatus", LANG_SERVER);
 	g_mMainMenu.AddItem("status", lang);
-	FormatEx(lang, sizeof(lang), "[+] %T", "LaserBeam_AccessForT", LANG_SERVER);
+	FormatEx(lang, sizeof(lang), "[%c] %T", (g_bTCanUse ? '-' : '+'), "LaserBeam_AccessForT", LANG_SERVER);
 	g_mMainMenu.AddItem("Taccess", lang, (g_CvarTFeature.BoolValue) ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED);
 	FormatEx(lang, sizeof(lang), "%T", "LaserBeam_PickUpColor", LANG_SERVER);
 	g_mMainMenu.AddItem("color", lang);
@@ -368,12 +369,12 @@ public int MainMenu_Callback(Menu menu, MenuAction action, int param1, int param
 			char lang[128];
 			if (param2 == 0)
 			{
-				FormatEx(lang, sizeof(lang), "[%s] %T", (g_iClientData[param1].lightActive) ? '-' : '+', "LaserBeam_ToggleSelfStatus", LANG_SERVER);
+				FormatEx(lang, sizeof(lang), "[%c] %T", (g_iClientData[param1].lightActive) ? '-' : '+', "LaserBeam_ToggleSelfStatus", param1);
 				return RedrawMenuItem(lang);
 			}
 			else if (g_CvarTFeature.BoolValue && param2 == 1) // Update item on 1 position
 			{
-				FormatEx(lang, sizeof(lang), "[%s] %T", (g_bTCanUse) ? '-' : '+', "LaserBeam_AccessForT", LANG_SERVER);
+				FormatEx(lang, sizeof(lang), "[%c] %T", (g_bTCanUse) ? '-' : '+', "LaserBeam_AccessForT", param1);
 				return RedrawMenuItem(lang);
 			}
 		}
