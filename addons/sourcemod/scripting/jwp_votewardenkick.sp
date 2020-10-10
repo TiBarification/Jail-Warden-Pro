@@ -3,11 +3,14 @@
 #include <jwp>
 #include <multicolors>
 
-#define PLUGIN_VERSION "1.0"
-#define VOTE_PERCENT 60
+#define PLUGIN_VERSION "1.1"
+#define CHECK_IS_T(%1) (IsClientInGame(%1) && !IsFakeClient(%1) && GetClientTeam(%1) == CS_TEAM_T)
 
 bool g_bVotes[MAXPLAYERS+1];
-bool g_bAllowedVote;
+int g_iUses;
+
+ConVar g_hVotePercent, g_hVoteLimitPerRound;
+int g_iVotePercent, g_iLimitPerRound;
 
 public Plugin myinfo =
 {
@@ -23,12 +26,27 @@ public void OnPluginStart()
 	HookEvent("round_start", Event_OnRoundStart, EventHookMode_PostNoCopy);
 	RegConsoleCmd("sm_wvotekick", Command_WardenVoteKick, "Vote to force warden resign");
 	
+	g_hVotePercent = CreateConVar("sm_jwp_votewardenkick_percent", "60", "Percent of T votes need to kick warden", FCVAR_NONE, true, 1.0, true, 100.0);
+	g_hVotePercent.AddChangeHook(OnCvarChange);
+	g_hVoteLimitPerRound = CreateConVar("sm_jwp_votewardenkick_per_round", "1", "Limit of kicks per round", FCVAR_NONE, true, 1.0, true, 100.0);
+	g_hVoteLimitPerRound.AddChangeHook(OnCvarChange);
+	
 	LoadTranslations("jwp_modules.phrases");
+}
+
+public void OnCvarChange(ConVar cvar, const char[] oldValue, const char[] newValue)
+{
+	if (cvar == g_hVotePercent) {
+		g_iVotePercent = StringToInt(newValue);
+	}
+	else if (cvar == g_hVoteLimitPerRound) {
+		g_iLimitPerRound = StringToInt(newValue);
+	}
 }
 
 public void Event_OnRoundStart(Event event, const char[] name, bool dontBroadcast)
 {
-	g_bAllowedVote = true;
+	g_iUses = 0;
 	ResetVotes();
 }
 
@@ -43,7 +61,7 @@ public Action Command_WardenVoteKick(int client, int args)
 	{
 		if (GetClientTeam(client) == CS_TEAM_T)
 		{
-			if (!g_bAllowedVote)
+			if (g_iUses >= g_iLimitPerRound)
 				CPrintToChat(client, "%t", "VoteWardenKick_AvailablePerRound");
 			else if (!VoteForPlayer(client))
 				CPrintToChat(client, "%t", "VoteWardenKick_NoWarden");
@@ -60,19 +78,19 @@ stock int GetTerroristCount()
 	int count = 0;
 	for (int i = 1; i <= MaxClients; ++i)
 	{
-		if (IsClientInGame(i) && !IsFakeClient(i) && GetClientTeam(i) == CS_TEAM_T)
+		if (CHECK_IS_T(i))
 			count++;
 	}
 	
 	return count;
 }
 
-stock int GetVotesCount()
+int GetVotesCount()
 {
 	int count = 0;
 	for (int i = 1; i <= MaxClients; ++i)
 	{
-		if (IsClientInGame(i) && !IsFakeClient(i) && GetClientTeam(i) == CS_TEAM_T && g_bVotes[i])
+		if (CHECK_IS_T(i) && g_bVotes[i])
 			count++;
 	}
 	
@@ -81,7 +99,7 @@ stock int GetVotesCount()
 
 stock int NeedVotes()
 {
-	return (VOTE_PERCENT * GetTerroristCount()) / 100;
+	return (g_iVotePercent * GetTerroristCount()) / 100;
 }
 
 bool VoteForPlayer(int client)
@@ -115,7 +133,7 @@ void ResetVotes()
 		g_bVotes[i] = false;
 }
 
-stock bool CheckClient(int client)
+bool CheckClient(int client)
 {
 	return (client > 0 && IsClientInGame(client) && !IsFakeClient(client));
 }
@@ -125,7 +143,7 @@ stock void ForceResign(int client)
 	if (!CheckClient(client) || !JWP_IsWarden(client)) return;
 	
 	JWP_SetWarden(0);
-	g_bAllowedVote = false;
+	g_iUses++;
 }
 
 public void JWP_OnWardenResigned(int client, bool himself)
