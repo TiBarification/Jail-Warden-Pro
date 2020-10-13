@@ -1,5 +1,5 @@
 ## Description
->Health for warden and him deputy(zam)
+>Allows T team to vote for warden resign
 
 ## Configuration
 Config file is located by this path:
