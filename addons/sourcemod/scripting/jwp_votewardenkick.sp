@@ -3,7 +3,7 @@
 #include <jwp>
 #include <multicolors>
 
-#define PLUGIN_VERSION "1.1"
+#define PLUGIN_VERSION "1.2"
 #define CHECK_IS_T(%1) (IsClientInGame(%1) && !IsFakeClient(%1) && GetClientTeam(%1) == CS_TEAM_T)
 
 bool g_bVotes[MAXPLAYERS+1];
@@ -27,8 +27,10 @@ public void OnPluginStart()
 	RegConsoleCmd("sm_wvotekick", Command_WardenVoteKick, "Vote to force warden resign");
 	
 	g_hVotePercent = CreateConVar("sm_jwp_votewardenkick_percent", "60", "Percent of T votes need to kick warden", FCVAR_NONE, true, 1.0, true, 100.0);
+	g_iLimitPerRound = g_hVotePercent.IntValue;
 	g_hVotePercent.AddChangeHook(OnCvarChange);
-	g_hVoteLimitPerRound = CreateConVar("sm_jwp_votewardenkick_per_round", "1", "Limit of kicks per round", FCVAR_NONE, true, 1.0, true, 100.0);
+	g_hVoteLimitPerRound = CreateConVar("sm_jwp_votewardenkick_per_round", "3", "Limit of kicks per round", FCVAR_NONE, true, 0.0, true, 100.0);
+	g_iLimitPerRound = g_hVoteLimitPerRound.IntValue;
 	g_hVoteLimitPerRound.AddChangeHook(OnCvarChange);
 	
 	LoadTranslations("jwp_modules.phrases");
@@ -63,7 +65,7 @@ public Action Command_WardenVoteKick(int client, int args)
 	{
 		if (GetClientTeam(client) == CS_TEAM_T)
 		{
-			if (g_iUses >= g_iLimitPerRound)
+			if (g_iLimitPerRound > 0 && g_iUses >= g_iLimitPerRound)
 				CPrintToChat(client, "%t", "VoteWardenKick_AvailablePerRound");
 			else if (!VoteForPlayer(client))
 				CPrintToChat(client, "%t", "VoteWardenKick_NoWarden");
