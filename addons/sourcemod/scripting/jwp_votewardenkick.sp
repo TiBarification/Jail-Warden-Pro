@@ -27,7 +27,7 @@ public void OnPluginStart()
 	RegConsoleCmd("sm_wvotekick", Command_WardenVoteKick, "Vote to force warden resign");
 	
 	g_hVotePercent = CreateConVar("sm_jwp_votewardenkick_percent", "60", "Percent of T votes need to kick warden", FCVAR_NONE, true, 1.0, true, 100.0);
-	g_iLimitPerRound = g_hVotePercent.IntValue;
+	g_iVotePercent = g_hVotePercent.IntValue;
 	g_hVotePercent.AddChangeHook(OnCvarChange);
 	g_hVoteLimitPerRound = CreateConVar("sm_jwp_votewardenkick_per_round", "3", "Limit of kicks per round", FCVAR_NONE, true, 0.0, true, 100.0);
 	g_iLimitPerRound = g_hVoteLimitPerRound.IntValue;
