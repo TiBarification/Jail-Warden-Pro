@@ -12,12 +12,12 @@ Config file is located by this path:
 // Maximum: "100.000000"
 sm_jwp_votewardenkick_percent "60"
 
-// Limit of kicks per round
+// Limit of kicks per round. 0 - to disable
 // -
-// Default: "1"
-// Minimum: "1.000000"
+// Default: "3"
+// Minimum: "0.000000"
 // Maximum: "100.000000"
-sm_jwp_votewardenkick_per_round "1"
+sm_jwp_votewardenkick_per_round "3"
 ```
 
 ## How to add to menu
