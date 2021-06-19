@@ -648,4 +648,9 @@
 		"#format"	"{1:N}"
 		"en"		"{PURPLE}{1} {DEFAULT}<-- was killed"
 	}
+	
+	"healer"
+	{
+		"en"		"Healer"
+	}
 }

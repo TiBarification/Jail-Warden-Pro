@@ -5,15 +5,8 @@
 
 #pragma newdecls required
 
-#define PLUGIN_VERSION "2.0"
+#define PLUGIN_VERSION "2.1"
 #define ITEM "laserbeam"
-
-#define DEFAULT_RED_COLOR 255
-#define DEFAULT_GREEN_COLOR 0
-#define DEFAULT_BLUE_COLOR 0
-#define DEFAULT_ALPHA_COLOR 255
-#define DEFAULT_BEAM_WIDTH 2.0
-#define DEFAULT_BEAM_LIFE 25.0
 
 enum struct Target
 {
@@ -23,6 +16,7 @@ enum struct Target
 	int g_color;
 	int b_color;
 	int alpha;
+	int itemPos;
 	float laser_life; // Life of laser beam
 	float laser_width; // Width of laser beam
 	float lastAimPos[3]; // last aim position of client beam
@@ -34,7 +28,10 @@ bool g_bTCanUse;
 Target g_iClientData[MAXPLAYERS+1];
 int g_iGlowEnt, g_iHaloSprite;
 Menu g_mMainMenu, g_mColorMenu;
-ConVar g_CvarTFeature, g_hTurnOnByDefault;
+ConVar g_CvarTFeature, g_hTurnOnByDefault, g_CvarDefaultColor;
+char cDefaultColor[36];
+Target g_tConfig;
+KeyValues kv;
 
 public Plugin myinfo = 
 {
@@ -49,6 +46,9 @@ public void OnPluginStart()
 {
 	g_CvarTFeature = CreateConVar("jwp_laserbeam_t_feature", "1", "Warden can give this feature to terrorists", FCVAR_NONE, true, 0.0, true, 1.0);
 	g_hTurnOnByDefault = CreateConVar("jwp_laserbeam_default_on", "1", "Warden laserbeam is turned on by default", FCVAR_NONE, true, 0.0, true, 1.0);
+	g_CvarDefaultColor = CreateConVar("jwp_laserbeam_default_color", "rainbow", "Default color on laser turning on", FCVAR_NONE);
+	g_CvarDefaultColor.GetString(cDefaultColor, sizeof(cDefaultColor));
+	g_CvarDefaultColor.AddChangeHook(OnCvarChange);
 	RegConsoleCmd("sm_lpaints", Command_LPaints, "Ability to paint via laserbeam like warden");
 	
 	if (JWP_IsStarted()) JWP_Started();
@@ -61,6 +61,38 @@ public void OnPluginStart()
 	LoadTranslations("jwp.phrases");
 	
 	LoadMenus();
+}
+
+public void OnCvarChange(ConVar cvar, const char[] oldValue, const char[] newValue)
+{
+	strcopy(cDefaultColor, sizeof(cDefaultColor), newValue);
+	kv.Rewind();
+	int color[4];
+	int iPos;
+	char cBuffer[48];
+	g_tConfig.itemPos = -1;
+	if (kv.GotoFirstSubKey(true))
+	{
+		do
+		{
+			kv.GetSectionName(cBuffer, sizeof(cBuffer));
+			if (!strcmp(newValue, cBuffer, true))
+			{
+				kv.GetColor4("rgba", color);
+				g_tConfig.r_color = color[0]; // Color for client (global)
+				g_tConfig.g_color = color[1];
+				g_tConfig.b_color = color[2];
+				g_tConfig.alpha = color[3];
+				g_tConfig.laser_life = kv.GetFloat("life", 25.0);
+				g_tConfig.laser_width = kv.GetFloat("width", 2.0);
+				g_tConfig.itemPos = iPos;
+
+				break;
+			}
+			
+			iPos++;
+		} while (kv.GotoNextKey(true));
+	}
 }
 
 public void OnMapStart()
@@ -290,12 +322,12 @@ void DisableAllForClient(int client)
 {
 	g_iClientData[client].lightActive = false;
 	g_iClientData[client].paintActive = false;
-	g_iClientData[client].laser_life = DEFAULT_BEAM_LIFE;
-	g_iClientData[client].laser_width = DEFAULT_BEAM_WIDTH;
-	g_iClientData[client].r_color = DEFAULT_RED_COLOR;
-	g_iClientData[client].g_color = DEFAULT_GREEN_COLOR;
-	g_iClientData[client].b_color = DEFAULT_BLUE_COLOR;
-	g_iClientData[client].alpha = DEFAULT_ALPHA_COLOR;
+	g_iClientData[client].laser_life = g_tConfig.laser_life;
+	g_iClientData[client].laser_width = g_tConfig.laser_width;
+	g_iClientData[client].r_color = g_tConfig.r_color;
+	g_iClientData[client].g_color = g_tConfig.g_color;
+	g_iClientData[client].b_color = g_tConfig.b_color;
+	g_iClientData[client].alpha = g_tConfig.alpha;
 	g_iClientData[client].lastAimPos[0] = 0.0;
 	g_iClientData[client].lastAimPos[1] = 0.0;
 	g_iClientData[client].lastAimPos[2] = 0.0;
@@ -303,6 +335,7 @@ void DisableAllForClient(int client)
 	g_iClientData[client].lastLaserPos[1] = 0.0;
 	g_iClientData[client].lastLaserPos[2] = 0.0;
 	g_iClientData[client].lastButtons = 0;
+	g_iClientData[client].itemPos = g_tConfig.itemPos;
 	g_mColorMenu.Cancel();
 }
 
@@ -322,7 +355,7 @@ void LoadMenus()
 	g_mMainMenu.ExitBackButton = true;
 	
 	// Load colors menu
-	KeyValues kv = new KeyValues("Colors");
+	kv = new KeyValues("Colors");
 	
 	if (!kv.ImportFromFile("cfg/jwp/laserbeam/colors.txt"))
 	{
@@ -330,17 +363,18 @@ void LoadMenus()
 		SetFailState("Unable to load file cfg/jwp/laserbeam/colors.txt");
 	}
 	
-	g_mColorMenu = new Menu(ColorMenu_Callback);
+	g_mColorMenu = new Menu(ColorMenu_Callback, MENU_ACTIONS_ALL);
 	char buffer[64], langbuffer[64];
 	FormatEx(buffer, sizeof(buffer), "%T", "LaserBeam_ColorMenu", LANG_SERVER);
 	g_mColorMenu.SetTitle(buffer);
 	g_mColorMenu.ExitBackButton = true;
-	int color[4];
+	int color[4], iPos;
 	float fLife, fWidth;
 	if (kv.GotoFirstSubKey(true))
 	{
 		do
 		{
+			kv.GetSectionName(buffer, sizeof(buffer));
 			kv.GetString("name", langbuffer, sizeof(langbuffer));
 			if (StrContains(langbuffer, "COLOR_", false) != -1) // If name founded in translations file (jwp_modules.phrases.txt)
 			{
@@ -348,15 +382,25 @@ void LoadMenus()
 				Format(langbuffer, sizeof(langbuffer), "%T", langbuffer, LANG_SERVER);
 			}
 			kv.GetColor4("rgba", color);
-			fLife = kv.GetFloat("life", DEFAULT_BEAM_LIFE);
-			fWidth = kv.GetFloat("width", DEFAULT_BEAM_WIDTH);
+			fLife = kv.GetFloat("life", 25.0);
+			fWidth = kv.GetFloat("width", 2.0);
+			if (!strcmp(buffer, cDefaultColor, true))
+			{
+				g_tConfig.itemPos = iPos;
+				g_tConfig.r_color = color[0]; // Color for client (global)
+				g_tConfig.g_color = color[1];
+				g_tConfig.b_color = color[2];
+				g_tConfig.alpha = color[3];
+				g_tConfig.laser_life = fLife;
+				g_tConfig.laser_width = fWidth;
+				g_tConfig.itemPos = iPos;
+			}
 			
 			FormatEx(buffer, sizeof(buffer), "%d:%d:%d:%d:%.1f:%.1f", color[0], color[1], color[2], color[3], fLife, fWidth);
 			g_mColorMenu.AddItem(buffer, langbuffer);
+			iPos++;
 		} while (kv.GotoNextKey(true));
 	}
-	
-	delete kv;
 }
 
 public int MainMenu_Callback(Menu menu, MenuAction action, int param1, int param2)
@@ -414,31 +458,26 @@ public int MainMenu_Callback(Menu menu, MenuAction action, int param1, int param
 				}
 				else // if param2 == 1
 				{
-					if (g_iClientData[param1].lightActive)
+					g_bTCanUse = !g_bTCanUse;
+					for (int i = 1; i <=MaxClients; ++i)
 					{
-						g_bTCanUse = !g_bTCanUse;
-						for (int i = 1; i <=MaxClients; ++i)
+						if (i != param1 && IsClientInGame(i) && IsPlayerAlive(i) && GetClientTeam(i) == CS_TEAM_T)
 						{
-							if (i != param1 && IsClientInGame(i) && IsPlayerAlive(i) && GetClientTeam(i) == CS_TEAM_T)
+							DisableAllForClient(i);
+							if (g_bTCanUse)
 							{
-								DisableAllForClient(i);
-								if (g_bTCanUse)
-								{
-									g_iClientData[i].lightActive = true;
-									JWP_ActionMsg(i, "\x03%T", "LaserBeam_GrantAction", LANG_SERVER, param1);
-								}
-								else
-									JWP_ActionMsg(i, "\x03%T", "LaserBeam_TakeAction", LANG_SERVER, param1);
+								g_iClientData[i].lightActive = true;
+								JWP_ActionMsg(i, "\x03%T", "LaserBeam_GrantAction", LANG_SERVER, param1);
 							}
+							else
+								JWP_ActionMsg(i, "\x03%T", "LaserBeam_TakeAction", LANG_SERVER, param1);
 						}
 					}
 				}
 				g_mMainMenu.Display(param1, MENU_TIME_FOREVER);
-			}
-			else if (g_iClientData[param1].lightActive)
+			} else {
 				g_mColorMenu.Display(param1, MENU_TIME_FOREVER);
-			else
-				g_mMainMenu.Display(param1, MENU_TIME_FOREVER);
+			}
 		}
 	}
 	return 0;
@@ -452,13 +491,31 @@ public int ColorMenu_Callback(Menu menu, MenuAction action, int param1, int para
 		{
 			if (param2 == MenuCancel_ExitBack)
 			{
-				if (!JWP_IsWarden(param1)) return;
+				if (!JWP_IsWarden(param1)) return 0;
 				g_mMainMenu.Display(param1, MENU_TIME_FOREVER);
 			}
 		}
+		case MenuAction_DrawItem:
+		{
+			if (g_iClientData[param1].itemPos == -1) 
+				return ITEMDRAW_DEFAULT;
+			return (g_iClientData[param1].itemPos == param2) ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT;
+		}
+		case MenuAction_DisplayItem:
+		{
+			char cInfo[64], name[48];
+			menu.GetItem(param2, cInfo, sizeof(cInfo), _, name, sizeof(name));
+			if (g_iClientData[param1].itemPos == -1) 
+				return RedrawMenuItem(name);
+			if (g_iClientData[param1].itemPos == param2)
+			{
+				Format(name, sizeof(name), "[+] %s", name);
+			}
+			return RedrawMenuItem(name);
+		}
 		case MenuAction_Select:
 		{
-			if (!g_iClientData[param1].lightActive) return;
+			if (!g_iClientData[param1].lightActive) return 0;
 			char info[64], name[48];
 			menu.GetItem(param2, info, sizeof(info), _, name, sizeof(name));
 			char expl_str[6][18]; // 6 how many arguments to get from `info`
@@ -479,8 +536,11 @@ public int ColorMenu_Callback(Menu menu, MenuAction action, int param1, int para
 			g_iClientData[param1].alpha = color[3];
 			g_iClientData[param1].laser_life = other[0];
 			g_iClientData[param1].laser_width = other[1];
+			g_iClientData[param1].itemPos = param2;
 			
 			g_mColorMenu.Display(param1, MENU_TIME_FOREVER);
 		}
 	}
+	
+	return 0;
 }
