@@ -4,6 +4,130 @@
 	{
 		"flag"	""
 	}
+	"guns"
+	{
+		"flag"	""
+	}
+	"coloring"
+	{
+		"flag"	""
+	}
+	"door_aim_open"
+	{
+		"flag"	""
+	}
+	"door_aim_close"
+	{
+		"flag"	""
+	}
+	"door_open"
+	{
+		"flag"	""
+	}
+	"door_close"
+	{
+		"flag"	""
+	}
+	"mg"
+	{
+		"flag"	""
+	}
+	"ff"
+	{
+		"flag"	""
+	}
+	"freeday_give"
+	{
+		"flag"	""
+	}
+	"freeday_take"
+	{
+		"flag"	""
+	}
+	"handcuffs"
+	{
+		"flag"	""
+	}
+	"healthkit"
+	{
+		"flag"	""
+	}
+	"isolator"
+	{
+		"flag"	""
+	}
+	"laserbeam"
+	{
+		"flag"	""
+	}
+	"mcoloring"
+	{
+		"flag"	""
+	}
+	"mute_give"
+	{
+		"flag"	""
+	}
+	"mute_take"
+	{
+		"flag"	""
+	}
+	"noblock"
+	{
+		"flag"	""
+	}
+	"order"
+	{
+		"flag"	""
+	}
+	"otkaz"
+	{
+		"flag"	""
+	}
+	"playsound"
+	{
+		"flag"	""
+	}
+	"pris_counter"
+	{
+		"flag"	""
+	}
+	"respawn"
+	{
+		"flag"	""
+	}
+	"rextend"
+	{
+		"flag"	""
+	}
+	"slay"
+	{
+		"flag"	""
+	}
+	"speed"
+	{
+		"flag"	""
+	}
+	"stoplr"
+	{
+		"flag"	""
+	}
+	"stripknife"
+	{
+		"flag"	""
+	}
+	"tojail"
+	{
+		"flag"	""
+	}
+	"transwarden"
+	{
+		"flag"	""
+	}
+	"wtimer"
+	{
+		"flag"	""
+	}
 	"resign"
 	{
 		"flag"	""
