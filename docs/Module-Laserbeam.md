@@ -19,6 +19,11 @@ jwp_laserbeam_t_feature "1"
 // Minimum: "0.000000"
 // Maximum: "1.000000"
 jwp_laserbeam_default_on "1"
+
+// Default color on laser turning on
+// -
+// Default: "rainbow"
+jwp_laserbeam_default_color "rainbow"
 ```
 !!! note
     File with colors, you can add your own [`cfg/jwp/laserbeam/colors.txt`](https://github.com/TiBarification/Jail-Warden-Pro/blob/master/cfg/jwp/laserbeam/colors.txt)
