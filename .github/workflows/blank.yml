@@ -58,6 +58,7 @@ jobs:
         wget "https://raw.githubusercontent.com/FD-Forks/Shop-Core/master/addons/sourcemod/scripting/include/shop/items.inc" -O ${{ env.INCLUDE }}/shop/items.inc
         wget "https://raw.githubusercontent.com/FD-Forks/Shop-Core/master/addons/sourcemod/scripting/include/shop/players.inc" -O ${{ env.INCLUDE }}/shop/players.inc
         wget "https://raw.githubusercontent.com/FD-Forks/Shop-Core/master/addons/sourcemod/scripting/include/shop/register.inc" -O ${{ env.INCLUDE }}/shop/register.inc
+        wget "https://raw.githubusercontent.com/FD-Forks/Shop-Core/master/addons/sourcemod/scripting/include/shop/methodmaps.inc" -O ${{ env.INCLUDE }}/shop/methodmaps.inc
     
     - name: Build plugins on SM ${{ matrix.sm_version }}
       run: |
