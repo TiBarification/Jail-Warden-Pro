@@ -48,13 +48,14 @@ install:
     - wget "https://raw.githubusercontent.com/Bara/Multi-Colors/master/addons/sourcemod/scripting/include/multicolors.inc" -O $INCLUDE/multicolors.inc
     # Shop support
     - mkdir $INCLUDE/shop
-    - wget "https://raw.githubusercontent.com/FD-Forks/Shop-Core/master/addons/sourcemod/scripting/include/shop.inc" -O $INCLUDE/shop.inc
-    - wget "https://raw.githubusercontent.com/FD-Forks/Shop-Core/master/addons/sourcemod/scripting/include/shop/admin.inc" -O $INCLUDE/shop/admin.inc
-    - wget "https://raw.githubusercontent.com/FD-Forks/Shop-Core/master/addons/sourcemod/scripting/include/shop/db.inc" -O $INCLUDE/shop/db.inc
-    - wget "https://raw.githubusercontent.com/FD-Forks/Shop-Core/master/addons/sourcemod/scripting/include/shop/functions.inc" -O $INCLUDE/shop/functions.inc
-    - wget "https://raw.githubusercontent.com/FD-Forks/Shop-Core/master/addons/sourcemod/scripting/include/shop/items.inc" -O $INCLUDE/shop/items.inc
-    - wget "https://raw.githubusercontent.com/FD-Forks/Shop-Core/master/addons/sourcemod/scripting/include/shop/players.inc" -O $INCLUDE/shop/players.inc
-    - wget "https://raw.githubusercontent.com/FD-Forks/Shop-Core/master/addons/sourcemod/scripting/include/shop/register.inc" -O $INCLUDE/shop/register.inc
+    - wget "https://raw.githubusercontent.com/hlmod/Shop-Core/master/addons/sourcemod/scripting/include/shop.inc" -O $INCLUDE/shop.inc
+    - wget "https://raw.githubusercontent.com/hlmod/Shop-Core/master/addons/sourcemod/scripting/include/shop/admin.inc" -O $INCLUDE/shop/admin.inc
+    - wget "https://raw.githubusercontent.com/hlmod/Shop-Core/master/addons/sourcemod/scripting/include/shop/db.inc" -O $INCLUDE/shop/db.inc
+    - wget "https://raw.githubusercontent.com/hlmod/Shop-Core/master/addons/sourcemod/scripting/include/shop/functions.inc" -O $INCLUDE/shop/functions.inc
+    - wget "https://raw.githubusercontent.com/hlmod/Shop-Core/master/addons/sourcemod/scripting/include/shop/items.inc" -O $INCLUDE/shop/items.inc
+    - wget "https://raw.githubusercontent.com/hlmod/Shop-Core/master/addons/sourcemod/scripting/include/shop/players.inc" -O $INCLUDE/shop/players.inc
+    - wget "https://raw.githubusercontent.com/hlmod/Shop-Core/master/addons/sourcemod/scripting/include/shop/register.inc" -O $INCLUDE/shop/register.inc
+    - wget "https://raw.githubusercontent.com/hlmod/Shop-Core/master/addons/sourcemod/scripting/include/shop/methodmaps.inc" -O $INCLUDE/shop/methodmaps.inc
 
 before_script:
     - chmod +x $SCRIPTING/spcomp
