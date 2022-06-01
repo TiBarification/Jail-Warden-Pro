@@ -6,7 +6,7 @@
 // Force 1.7 syntax
 #pragma newdecls required;
 
-#define PLUGIN_VERSION "1.6"
+#define PLUGIN_VERSION "1.7"
 
 Handle hAdminMenu = null;
 Menu g_mAdminControlMain;
@@ -101,6 +101,8 @@ public int AdminControlMain_Callback(Menu menu, MenuAction action, int param1, i
 			}
 		}
 	}
+	
+	return 0;
 }
 
 public int mPlayerMenu_Callback(Menu menu, MenuAction action, int param1, int param2)
@@ -125,4 +127,6 @@ public int mPlayerMenu_Callback(Menu menu, MenuAction action, int param1, int pa
 			g_mAdminControlMain.Display(param1, MENU_TIME_FOREVER);
 		}
 	}
+	
+	return 0;
 }
