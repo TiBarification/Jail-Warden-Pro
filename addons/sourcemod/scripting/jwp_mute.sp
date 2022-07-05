@@ -37,7 +37,7 @@ public void OnPluginStart()
 	LoadTranslations("jwp_modules.phrases");
 }
 
-public Action Event_OnRoundEnd(Event event, const char[] name, bool dontBroadcast)
+public void Event_OnRoundEnd(Event event, const char[] name, bool dontBroadcast)
 {
 	for (int i = 1; i <= MaxClients; ++i)
 	{
@@ -50,8 +50,6 @@ public Action Event_OnRoundEnd(Event event, const char[] name, bool dontBroadcas
 			}
 		}
 	}
-
-	return Plugin_Continue;
 }
 
 public void Event_OnPlayerDeath(Event event, const char[] name, bool dontBroadcast)
