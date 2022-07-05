@@ -144,6 +144,8 @@ public int PreOrderPanel_Callback(Menu panel, MenuAction action, int client, int
 			if (JWP_IsWarden(client)) JWP_ShowMainMenu(client);
 		}
 	}
+
+	return 0;
 }
 
 void CreateOrderMsg(int client, const char[] order)
@@ -193,6 +195,8 @@ void CreateOrderMsg(int client, const char[] order)
 public int OrderMsg_Callback(Menu panel, MenuAction action, int client, int slot)
 {
 	panel.Close();
+
+	return 0;
 }
 
 void RecheckOrderMsg()

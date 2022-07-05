@@ -1,8 +1,7 @@
 #include <sourcemod>
 #include <sdktools>
 #include <cstrike>
-#include <hosties>
-#include <lastrequest>
+#include <emitsoundany>
 #include <jwp>
 
 #pragma newdecls required
@@ -10,6 +9,8 @@
 #define PLUGIN_VERSION "1.4"
 
 bool g_bEnabled = true;
+
+forward void OnAvailableLR(int Announced); //Hosties - LastRequest.inc
 
 public Plugin myinfo = 
 {

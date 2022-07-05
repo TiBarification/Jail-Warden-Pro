@@ -37,7 +37,7 @@ public void OnPluginStart()
 	LoadTranslations("jwp_modules.phrases");
 }
 
-public Action Event_OnRoundEnd(Event event, const char[] name, bool dontBroadcast)
+public void Event_OnRoundEnd(Event event, const char[] name, bool dontBroadcast)
 {
 	for (int i = 1; i <= MaxClients; ++i)
 	{
@@ -248,7 +248,7 @@ public int PList_Callback(Menu menu, MenuAction action, int client, int slot)
 						else
 						{
 							JWP_ActionMsg(client, "%T", "Mute_Dont_Have_Permission", LANG_SERVER, target);
-							return;
+							return 0;
 						}
 						
 						JWP_ActionMsgAll("%T", (g_bMuted[target]) ? "Mute_ActionMessage_Muted" : "Mute_ActionMessage_UnMuted", LANG_SERVER, client, target);
@@ -258,6 +258,8 @@ public int PList_Callback(Menu menu, MenuAction action, int client, int slot)
 			}
 		}
 	}
+
+	return 0;
 }
 
 public Action TempMute_Timer_Callback(Handle timer)
@@ -275,6 +277,8 @@ public Action TempMute_Timer_Callback(Handle timer)
 		JWP_ActionMsgAll("%T", "Mute_ActionMessage_MicroAvailable", LANG_SERVER);
 		TempMute_Timer = null;
 	}
+
+	return Plugin_Stop;
 }
 
 bool CheckClient(int client)

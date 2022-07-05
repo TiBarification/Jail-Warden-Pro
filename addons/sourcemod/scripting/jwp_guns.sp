@@ -121,7 +121,7 @@ public int g_WeaponMenu_Callback(Menu menu, MenuAction action, int client, int s
 				
 				if (!options[1])
 				{
-					if (JWP_IsFlood(client, 2)) return;
+					if (JWP_IsFlood(client, 2)) return 0;
 					int weapon = GetPlayerWeaponSlot(client, options[0]);
 					if (IsValidEdict(weapon))
 						AcceptEntityInput(weapon, "Kill");
@@ -142,4 +142,6 @@ public int g_WeaponMenu_Callback(Menu menu, MenuAction action, int client, int s
 			}
 		}
 	}
+
+	return 0;
 }

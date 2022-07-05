@@ -66,6 +66,8 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	MarkNativeAsOptional("Shop_GetCategoryId");
 	MarkNativeAsOptional("Shop_GetArrayItem");
 	MarkNativeAsOptional("Shop_IsClientItemToggled");
+
+	return APLRes_Success;
 }
 
 public void Event_OnPlayerSpawn(Event event, const char[] name, bool dontBroadcast)

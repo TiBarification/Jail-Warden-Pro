@@ -1,4 +1,6 @@
+#if SOURCEMOD_V_MINOR == 10
 #include <voiceannounce_ex> // Need DHooks: https://goo.gl/ZansZH and VoiceAnnounceEx: https://goo.gl/uYomu2
+#endif
 #include <sourcemod>
 #include <cstrike>
 #include <sdkhooks>
@@ -20,7 +22,11 @@ public void OnPluginStart()
 }
 
 //When Warden speaks or muted client wants to speak
+#if SOURCEMOD_V_MINOR == 10
 public void OnClientSpeakingEx(client)
+#else
+public void OnClientSpeaking(client)
+#endif
 {
 	if (client && IsClientInGame(client) && (JWP_IsWarden(client) || JWP_IsZamWarden(client)))
 	{

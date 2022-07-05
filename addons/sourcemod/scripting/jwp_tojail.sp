@@ -27,7 +27,7 @@ public void OnPluginStart()
 	LoadTranslations("jwp_modules.phrases");
 }
 
-public Action Event_OnRoundStart(Event event, const char[] name, bool dontBroadcast)
+public void Event_OnRoundStart(Event event, const char[] name, bool dontBroadcast)
 {
 	for (int i = 1; i <= MaxClients; i++)
 	{
@@ -113,6 +113,8 @@ public int ToJailMenu_Callback(Menu menu, MenuAction action, int client, int slo
 			}
 		}
 	}
+
+	return 0;
 }
 
 bool CheckClient(int client)

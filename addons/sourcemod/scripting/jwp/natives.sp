@@ -92,6 +92,8 @@ public int Native_ActionMsgAll(Handle plugin, int numParams)
 		CGOPrintToChatAll("%s %s", prefix, buffer);
 	else
 		CPrintToChatAll("%s %s", prefix, buffer);
+
+	return 1;
 }
 
 public int Native_ActionMsg(Handle plugin, int numParams)
@@ -104,6 +106,8 @@ public int Native_ActionMsg(Handle plugin, int numParams)
 		CGOPrintToChat(client, "%s %s", prefix, buffer);
 	else
 		CPrintToChat(client, "%s %s", prefix, buffer);
+
+	return 1;
 }
 
 public int Native_GetRandomTeamClient(Handle plugin, int numParams)

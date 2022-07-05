@@ -23,13 +23,6 @@ jobs:
       run: |
         wget --input-file=http://sourcemod.net/smdrop/${{ matrix.sm_version }}/sourcemod-latest-linux
         tar -xzf $(cat sourcemod-latest-linux)
-    - name: Download & install ${{ env.STEAMWORKS_VERS }}
-      run: |
-        wget http://users.alliedmods.net/~kyles/builds/SteamWorks/${{ env.STEAMWORKS_VERS }}-linux.tar.gz
-        wget http://users.alliedmods.net/~kyles/builds/SteamWorks/${{ env.STEAMWORKS_VERS }}-windows.zip
-        tar -xzf ${{ env.STEAMWORKS_VERS }}-linux.tar.gz ${{ env.EXTENSIONS }}/SteamWorks.ext.so ${{ env.INCLUDE }}/SteamWorks.inc
-        unzip -j ${{ env.STEAMWORKS_VERS }}-windows.zip ${{ env.EXTENSIONS }}/SteamWorks.ext.dll -d ${{ env.EXTENSIONS }}
-        wget "https://raw.githubusercontent.com/KyleSanderson/SteamWorks/master/Pawn/includes/SteamWorks.inc" -O ${{ env.INCLUDE }}/SteamWorks.inc
     - name: Download & install Morecolors
       run: wget "http://www.doctormckay.com/download/scripting/include/morecolors.inc" -O ${{ env.INCLUDE }}/morecolors.inc
     - name: Download & install VoiceAnnounceEX
@@ -38,10 +31,13 @@ jobs:
       run: wget "https://raw.githubusercontent.com/R1KO/VIP-Core/master/addons/sourcemod/scripting/include/vip_core.inc" -O ${{ env.INCLUDE }}/vip_core.inc
     - name: Kailo97 smart doors
       run: wget "https://raw.githubusercontent.com/Kailo97/smartjaildoors/master/addons/sourcemod/scripting/include/smartjaildoors.inc" -O ${{ env.INCLUDE }}/smartjaildoors.inc
-    - name: SM Hosties required includes
+    - name: Download & install ${{ env.STEAMWORKS_VERS }}
       run: |
-        wget "https://raw.githubusercontent.com/Bara/sm-hosties/beta/addons/sourcemod/scripting/include/hosties.inc" -O ${{ env.INCLUDE }}/hosties.inc
-        wget "https://raw.githubusercontent.com/Bara/sm-hosties/beta/addons/sourcemod/scripting/include/lastrequest.inc" -O ${{ env.INCLUDE }}/lastrequest.inc
+        wget http://users.alliedmods.net/~kyles/builds/SteamWorks/${{ env.STEAMWORKS_VERS }}-linux.tar.gz
+        wget http://users.alliedmods.net/~kyles/builds/SteamWorks/${{ env.STEAMWORKS_VERS }}-windows.zip
+        tar -xzf ${{ env.STEAMWORKS_VERS }}-linux.tar.gz ${{ env.EXTENSIONS }}/SteamWorks.ext.so ${{ env.INCLUDE }}/SteamWorks.inc
+        unzip -j ${{ env.STEAMWORKS_VERS }}-windows.zip ${{ env.EXTENSIONS }}/SteamWorks.ext.dll -d ${{ env.EXTENSIONS }}
+        wget "https://raw.githubusercontent.com/ExperimentFailed/SteamWorks/master/Pawn/includes/SteamWorks.inc" -O ${{ env.INCLUDE }}/SteamWorks.inc
     - name: Add multicolors from github repository
       run: |
         mkdir ${{ env.INCLUDE }}/multicolors

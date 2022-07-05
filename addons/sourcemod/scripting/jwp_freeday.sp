@@ -158,6 +158,8 @@ public int PList_Callback(Menu menu, MenuAction action, int client, int slot)
 			}
 		}
 	}
+
+	return 0;
 }
 
 bool CheckClient(int client)

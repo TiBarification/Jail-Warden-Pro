@@ -34,6 +34,8 @@ public int Cmd_AddToMainMenu(Handle plugin, int numParams)
 		if (g_iWarden > 0)
 			RehashMenu(false);
 	}
+
+	return 1;
 }
 
 public int Cmd_RemoveFromMainMenu(Handle plugin, int numParams)
@@ -86,11 +88,13 @@ public int Cmd_ShowMainMenu(Handle plugin, int numParams)
 	if (!CheckClient(client))
 	{
 		LogToFile(LOG_PATH, "[ERROR] Client index %d is not in game or a bot or doesn't exist on server", client);
-		return;
+		return 0;
 	}
-	else if (!IsWarden(client)) return;
+	else if (!IsWarden(client)) return 0;
 	else
 		Cmd_ShowMenu(client, g_iLastMenuItemPos);
+		
+	return 1;
 }
 
 void Cmd_ShowMenu(int client, int pos = 0, bool bAutoopen = false)
@@ -193,7 +197,7 @@ public int Cmd_ShowMenu_Handler(Menu menu, MenuAction action, int client, int sl
 	{
 		case MenuAction_Select:
 		{
-			if (!IsWarden(client)) return; // Block if not a warden
+			if (!IsWarden(client)) return 0; // Block if not a warden
 			char info[16], cName[MAX_NAME_LENGTH];
 			menu.GetItem(slot, info, sizeof(info));
 			// Get and save last position of element
@@ -272,10 +276,12 @@ public int Cmd_ShowMenu_Handler(Menu menu, MenuAction action, int client, int sl
 				
 				if (!result) Cmd_ShowMenu(client, menu.Selection);
 				
-				return;
+				return 0;
 			}
 		}
 	}
+	
+	return 0;
 }
 
 public int PList_Handler(Menu menu, MenuAction action, int client, int slot)
@@ -303,6 +309,8 @@ public int PList_Handler(Menu menu, MenuAction action, int client, int slot)
 			if (IsWarden(client)) Cmd_ShowMenu(client);
 		}
 	}
+
+	return 0;
 }
 
 void Resign_Confirm(int client)
@@ -337,12 +345,14 @@ public int ConfirmMenu_Callback(Menu menu, MenuAction action, int client, int sl
 				{
 					if (Forward_OnWardenResign(client))
 						RemoveCmd(true);
-					else return;
+					else return 0;
 				}
 				else Cmd_ShowMenu(client);
 			}
 		}
 	}
+	
+	return 0;
 }
 
 void EmptyPanel()

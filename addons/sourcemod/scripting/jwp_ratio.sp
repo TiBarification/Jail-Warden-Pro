@@ -554,6 +554,8 @@ public Action AdminCommand_ClearQueue(int client, int args)
 {
 	ClearArray(g_aGuardQueue);
 	CGOPrintToChatAll("%t %t", "ratio_tag", "ratio_clearqueue");
+
+	return Plugin_Handled;
 }
 
 public Action Command_ToggleRatio(int client, int args)
@@ -626,7 +628,7 @@ public void Event_PlayerTeam_Post(Event event, const char[] szName, bool bDontBr
 	return;
 }
 
-public Action Event_RoundEnd_Post(Event event, const char[] szName, bool bDontBroadcast)
+public void Event_RoundEnd_Post(Event event, const char[] szName, bool bDontBroadcast)
 {
 	if (g_bRatioEnable)
 	{
@@ -896,6 +898,8 @@ public int Handler_AcceptGuardRules(Handle menu, MenuAction action, int param1, 
 			}
 		}
 	}
+
+	return 0;
 }
 
 void Menu_GuardQuestions(int client)
@@ -1052,6 +1056,8 @@ public int Handler_GuardQuestions(Handle menu, MenuAction action, int param1, in
 			}
 		}
 	}
+
+	return 0;
 }
 
 public int ViewQueueMenuHandle(Menu hMenu, MenuAction action, int client, int option)
@@ -1077,6 +1083,8 @@ public int ViewQueueMenuHandle(Menu hMenu, MenuAction action, int client, int op
 	{
 		delete hMenu;
 	}
+
+	return 0;
 }
 
 /******************************************************************************
@@ -1087,12 +1095,16 @@ public Action Timer_ForceCTSide(Handle timer, any client)
 {
 	if (IsValidClient(client, true, true))
 		ChangeClientTeam(client, CS_TEAM_CT);
+
+	return Plugin_Stop;
 }
 
 public Action Timer_ForceTSide(Handle timer, any client)
 {
 	if (IsValidClient(client, true, true))
 		ChangeClientTeam(client, CS_TEAM_T);
+
+	return Plugin_Stop;
 }
 
 /******************************************************************************
@@ -1104,9 +1116,11 @@ bool RemovePlayerFromGuardQueue(int client)
 	int iIndex = FindValueInArray(g_aGuardQueue, client);
 
 	if (iIndex == -1)
-		return;
+		return false;
 
 	RemoveFromArray(g_aGuardQueue, iIndex);
+
+	return true;
 }
 
 bool RemovePlayerFromGuardList(int client)
@@ -1114,9 +1128,11 @@ bool RemovePlayerFromGuardList(int client)
 	int iIndex = FindValueInArray(g_aGuardList, client);
 
 	if (iIndex == -1)
-		return;
+		return false;
 
 	RemoveFromArray(g_aGuardList, iIndex);
+
+	return true;
 }
 
 
@@ -1432,7 +1448,7 @@ public int ChangeMenu(Menu menu, MenuAction action, int client, int selection)
 					}
 					else
 					{
-						return;
+						return 0;
 					}
 
 					if (!IsValidClient(newGuard, true, true))
@@ -1462,6 +1478,8 @@ public int ChangeMenu(Menu menu, MenuAction action, int client, int selection)
 	{
 		delete menu;
 	}
+
+	return 0;
 }
 
 bool IsValidClient(int client, bool bAllowBots = false, bool bAllowDead = true)

@@ -4,9 +4,7 @@
 #include <cstrike>
 #include <jwp>
 #include <csgo_colors>
-#undef REQUIRE_PLUGIN
-#include <hosties>
-#include <lastrequest>
+#include <emitsoundany>
 
 #define ITEM "handcuffs"
 #define PLUGIN_VERSION "1.6"
@@ -14,6 +12,8 @@
 int g_iClipOffset, g_iActiveWeaponOffset;
 bool g_bArrested[MAXPLAYERS+1];
 char g_cOverlayPath[] = "overlays/MyJailbreak/cuffs";
+
+forward void OnAvailableLR(int Announced); //Hosties - LastRequest.inc
 
 public Plugin myinfo =
 {

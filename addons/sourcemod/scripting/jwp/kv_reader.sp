@@ -11,6 +11,7 @@ void Load_SortingWardenMenu()
 			{
 				if (kv.GetSectionName(menuitem, sizeof(menuitem)))
 				{
+					StringToLower(menuitem);
 					g_aSortedMenu.PushString(menuitem);
 					// Flag finder
 					kv.GetString("flag", menuitem, sizeof(menuitem), "");

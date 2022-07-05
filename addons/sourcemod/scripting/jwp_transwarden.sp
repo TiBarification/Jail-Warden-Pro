@@ -92,4 +92,6 @@ public int ctList_Callback(Menu menu, MenuAction action, int param1, int param2)
 			}
 		}
 	}
+
+	return 0;
 }
