@@ -1,4 +1,6 @@
+#if SOURCEMOD_V_MINOR == 10
 #include <voiceannounce_ex> // Need DHooks: https://goo.gl/ZansZH and VoiceAnnounceEx: https://goo.gl/uYomu2
+#endif
 #include <sourcemod>
 #include <cstrike>
 #include <sdkhooks>
@@ -20,6 +22,7 @@ public void OnPluginStart()
 }
 
 //When Warden speaks or muted client wants to speak
+#if SOURCEMOD_V_MINOR == 10
 public void OnClientSpeakingEx(client)
 {
 	if (client && IsClientInGame(client) && (JWP_IsWarden(client) || JWP_IsZamWarden(client)))
@@ -40,6 +43,28 @@ public void OnClientSpeakingEx(client)
 		}
 	}
 }
+#else
+public void OnClientSpeaking(client)
+{
+	if (client && IsClientInGame(client) && (JWP_IsWarden(client) || JWP_IsZamWarden(client)))
+	{
+		for (int i = 1; i <= MaxClients; i++)
+		{
+			if (IsClientInGame(i))
+			{
+				if (GetClientTeam(i) == CS_TEAM_T)
+				{
+					PrintCenterText(i, "%T", "BeQuiet_Listen", LANG_SERVER);
+					if (GetUserAdmin(i) != INVALID_ADMIN_ID)
+						SetClientListeningFlags(i, VOICE_NORMAL);
+					else
+						SetClientListeningFlags(i, VOICE_MUTED);
+				}
+			}
+		}
+	}
+}
+#endif
 
 // When client stops talk
 public void OnClientSpeakingEnd(client)

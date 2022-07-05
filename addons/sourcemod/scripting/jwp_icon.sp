@@ -107,6 +107,8 @@ public Action Timer_Delay(Handle timer, Handle pack)
 
 		SpawnIcon(i);
 	}
+
+	return Plugin_Stop;
 }
 
 void SpawnIcon(int client)

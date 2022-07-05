@@ -99,7 +99,7 @@ public int g_VoteMenu_Callback(Menu menu, MenuAction action, int client, int slo
 				else
 				{
 					if (Forward_OnWardenChoosing() == false)
-						return;
+						return 0;
 					g_iVoteResult[target]++;
 					g_iVots++;
 					if (g_iVots >= g_iVotsMax)
@@ -115,6 +115,8 @@ public int g_VoteMenu_Callback(Menu menu, MenuAction action, int client, int slo
 			}
 		}
 	}
+	
+	return 0;
 }
 
 public Action g_VoteTimer_Callback(Handle timer)

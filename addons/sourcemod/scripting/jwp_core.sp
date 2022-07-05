@@ -639,6 +639,8 @@ public Action g_ChooseTimer_Callback(Handle timer)
 		}
 	}
 	g_hChooseTimer = null;
+
+	return Plugin_Stop;
 }
 
 stock int JWP_GetRandomTeamClient(int team, bool alive, bool ignore_resign, bool allow_bot)
@@ -665,7 +667,7 @@ stock int JWP_GetRandomTeamClient(int team, bool alive, bool ignore_resign, bool
 }
 
 /* Stats pusher */
-public int SteamWorks_SteamServersConnected()
+public void SteamWorks_SteamServersConnected()
 {
 	int iIp[4];
 	

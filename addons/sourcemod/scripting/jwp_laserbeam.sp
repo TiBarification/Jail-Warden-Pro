@@ -103,14 +103,14 @@ public void OnMapStart()
 	CreateTimer(0.1, PrintLaser, _, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
 }
 
-public Action Event_OnPlayerDeath(Event event, const char[] name, bool dontBroadcast)
+public void Event_OnPlayerDeath(Event event, const char[] name, bool dontBroadcast)
 {
 	int client = GetClientOfUserId(event.GetInt("userid"));
 	if (client && IsClientInGame(client) && g_iClientData[client].lightActive)
 		DisableAllForClient(client);
 }
 
-public Action Event_OnRoundStart(Event event, const char[] name, bool dontBroadcast)
+public void Event_OnRoundStart(Event event, const char[] name, bool dontBroadcast)
 {
 	for (int i = 1; i <= MaxClients; ++i)
 	{
@@ -140,6 +140,8 @@ public Action Command_LPaints(int client, int args)
 		else
 			JWP_ActionMsg(client, "%T", "LaserBeam_AccessForT", LANG_SERVER);
 	}
+
+	return Plugin_Handled;
 }
 
 public void JWP_Started()
@@ -316,6 +318,8 @@ public Action PrintLaser(Handle timer)
 			}
 		}
 	}
+
+	return Plugin_Continue;
 }
 
 void DisableAllForClient(int client)

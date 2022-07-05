@@ -1,6 +1,7 @@
 #include <sourcemod>
 #include <sdktools>
 #include <cstrike>
+#include <emitsoundany>
 #include <hosties>
 #include <lastrequest>
 #include <jwp>

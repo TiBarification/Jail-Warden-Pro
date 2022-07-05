@@ -99,4 +99,6 @@ public Action g_TimerColor_Callback(Handle timer, any client)
 	
 	JWP_PrisonerRebel(client, false);
 	g_TimerColor[client] = null;
+
+	return Plugin_Stop;
 }

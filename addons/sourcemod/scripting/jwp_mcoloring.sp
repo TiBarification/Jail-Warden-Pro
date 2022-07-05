@@ -78,6 +78,8 @@ public int plList_Callback(Menu menu, MenuAction action, int param1, int param2)
 			}
 		}
 	}
+
+	return 0;
 }
 
 public int ColorsMenu_Callback(Menu menu, MenuAction action, int param1, int param2)
@@ -112,6 +114,8 @@ public int ColorsMenu_Callback(Menu menu, MenuAction action, int param1, int par
 			}
 		}
 	}
+
+	return 0;
 }
 
 void PlayerListMenu(int client)

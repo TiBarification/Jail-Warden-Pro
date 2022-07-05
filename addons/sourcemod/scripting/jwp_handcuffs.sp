@@ -4,6 +4,7 @@
 #include <cstrike>
 #include <jwp>
 #include <csgo_colors>
+#include <emitsoundany>
 #undef REQUIRE_PLUGIN
 #include <hosties>
 #include <lastrequest>

@@ -138,6 +138,8 @@ public int RespawnMenu_Callback(Menu menu, MenuAction action, int client, int sl
 			}
 		}
 	}
+
+	return 0;
 }
 
 bool CheckClient(int client)

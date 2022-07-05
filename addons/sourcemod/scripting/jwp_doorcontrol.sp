@@ -54,6 +54,8 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 {
 	MarkNativeAsOptional("SJD_OpenDoors");
 	MarkNativeAsOptional("SJD_CloseDoors");
+
+	return APLRes_Success;
 }
 
 public void JWP_Started()

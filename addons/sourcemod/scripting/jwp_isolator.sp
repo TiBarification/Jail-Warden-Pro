@@ -200,6 +200,8 @@ public int IsolatorMenu_Callback(Menu menu, MenuAction action, int client, int s
 			}
 		}
 	}
+
+	return 0;
 }
 
 bool CheckClient(int client)
