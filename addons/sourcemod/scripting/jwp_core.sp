@@ -9,7 +9,7 @@
 // Force new syntax
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.4.1"
+#define PLUGIN_VERSION "1.4.2"
 
 #define UPDATE_URL "http://updater.tibari.dev/jwp/updatefile.txt"
 #define LOG_PATH "addons/sourcemod/logs/JWP_Log.log"
@@ -58,6 +58,7 @@ Handle g_hChooseTimer;
 #include "jwp/forwards.sp"
 #include "jwp/natives.sp"
 #include "jwp/voting.sp"
+#include "jwp/utils.sp"
 
 public Plugin myinfo = 
 {
