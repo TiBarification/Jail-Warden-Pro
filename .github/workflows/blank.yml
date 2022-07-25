@@ -1,7 +1,9 @@
 name: CI
 
-on: [push]
+on: [push, pull_request]
 env:
+  SM_PATH: sourcemod
+  SP_COMP: sourcemod/addons/sourcemod/scripting/spcomp64
   STEAMWORKS_VERS: SteamWorks-git132
   INCLUDE: addons/sourcemod/scripting/include
   SCRIPTING: addons/sourcemod/scripting
@@ -10,19 +12,28 @@ env:
 
 jobs:
   build:
-    name: Test building this plugin on ${{ matrix.sm_version }}
+    name: Building on SM ${{ matrix.sm_version }}
     runs-on: [ubuntu-18.04]
     strategy:
       matrix:
         sm_version: ["1.10", "1.11"]
 
     steps:
+    - name: Prepare env
+      shell: bash
+      run: |
+        echo "GITHUB_SHA_SHORT=${GITHUB_SHA::7}" >> $GITHUB_ENV
+
     - name: Checkout repository
       uses: actions/checkout@master
+
     - name: Download SourceMod ${{ matrix.sm_version }}
       run: |
+        mkdir ${{ env.SM_PATH }}
+        cd ${{ env.SM_PATH }}
         wget --input-file=http://sourcemod.net/smdrop/${{ matrix.sm_version }}/sourcemod-latest-linux
         tar -xzf $(cat sourcemod-latest-linux)
+
     - name: Download & install Morecolors
       run: wget "http://www.doctormckay.com/download/scripting/include/morecolors.inc" -O ${{ env.INCLUDE }}/morecolors.inc
     - name: Download & install VoiceAnnounceEX
@@ -58,6 +69,70 @@ jobs:
     
     - name: Build plugins on SM ${{ matrix.sm_version }}
       run: |
-        chmod +x ${{ env.SCRIPTING }}/spcomp
-        mkdir ${{ env.SCRIPTING }}/compiled
+        chmod +x ${{ env.SP_COMP }}
+        mkdir ${{ env.PLUGINS }}
         bash ci/test.sh
+    
+    - name: Upload artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: jwp-${{ matrix.sm_version }}-${{ env.GITHUB_SHA_SHORT }}
+        path: |
+          addons
+          cfg
+          materials
+          sound
+          LICENSE
+        retention-days: 2
+
+  release:
+    name: Release
+    if: github.ref_type == 'tag'
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v2
+      
+      - name: Prepare env
+        shell: bash
+        run: |
+          echo "GITHUB_SHA_SHORT=${GITHUB_SHA::7}" >> $GITHUB_ENV
+          echo "artifact-1_10=jwp-${{ github.ref_name }}-1.10-${GITHUB_SHA::7}.zip" >> $GITHUB_ENV
+          echo "artifact-1_11=jwp-${{ github.ref_name }}-1.11-${GITHUB_SHA::7}.zip" >> $GITHUB_ENV
+  
+      - name: Arhive Assets
+        run: |
+          zip -r ${{env.artifact-1_10}} jwp-1.10-${{ env.GITHUB_SHA_SHORT }}
+          zip -r ${{env.artifact-1_11}} jwp-1.11-${{ env.GITHUB_SHA_SHORT }}
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1.0.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref_name }}
+          release_name: Release ${{ github.ref_name }}
+          draft: true
+          prerelease: false
+      
+      - name: Upload Asset 1.10
+        uses: actions/upload-release-asset@v1.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ${{ env.artifact-1_10 }}
+          asset_name: ${{ env.artifact-1_10 }}
+          asset_content_type: application/zip
+
+      - name: Upload Asset 1.11
+        uses: actions/upload-release-asset@v1.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ${{ env.artifact-1_11 }}
+          asset_name: ${{ env.artifact-1_11 }}
+          asset_content_type: application/zip
