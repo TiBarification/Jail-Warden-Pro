@@ -90,22 +90,8 @@ jobs:
     if: github.ref_type == 'tag'
     needs: build
     runs-on: ubuntu-latest
+    
     steps:
-      - name: Download artifacts
-        uses: actions/download-artifact@v2
-      
-      - name: Prepare env
-        shell: bash
-        run: |
-          echo "GITHUB_SHA_SHORT=${GITHUB_SHA::7}" >> $GITHUB_ENV
-          echo "artifact-1_10=jwp-${{ github.ref_name }}-1.10-${GITHUB_SHA::7}.zip" >> $GITHUB_ENV
-          echo "artifact-1_11=jwp-${{ github.ref_name }}-1.11-${GITHUB_SHA::7}.zip" >> $GITHUB_ENV
-  
-      - name: Arhive Assets
-        run: |
-          zip -r ${{env.artifact-1_10}} jwp-1.10-${{ env.GITHUB_SHA_SHORT }}
-          zip -r ${{env.artifact-1_11}} jwp-1.11-${{ env.GITHUB_SHA_SHORT }}
-
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1.0.0
@@ -117,22 +103,35 @@ jobs:
           draft: true
           prerelease: false
       
-      - name: Upload Asset 1.10
+  upload:
+    name: Upload artifacts
+    if: github.ref_type == 'tag'
+    needs: release
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        sm_version: ["1.10", "1.11"]
+    
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v2
+      
+      - name: Prepare env
+        shell: bash
+        run: |
+          echo "GITHUB_SHA_SHORT=${GITHUB_SHA::7}" >> $GITHUB_ENV
+          echo "artifact=jwp-${{ github.ref_name }}-${{ matrix.sm_version }}-${GITHUB_SHA::7}.zip" >> $GITHUB_ENV
+  
+      - name: Arhive Assets
+        run: |
+          zip -r ${{env.artifact-1_10}} jwp-${{ matrix.sm_version }}-${{ env.GITHUB_SHA_SHORT }}
+      
+      - name: Upload Asset ${{ matrix.sm_version }}
         uses: actions/upload-release-asset@v1.0.1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ${{ env.artifact-1_10 }}
-          asset_name: ${{ env.artifact-1_10 }}
-          asset_content_type: application/zip
-
-      - name: Upload Asset 1.11
-        uses: actions/upload-release-asset@v1.0.1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ${{ env.artifact-1_11 }}
-          asset_name: ${{ env.artifact-1_11 }}
+          asset_path: ${{ env.artifact }}
+          asset_name: ${{ env.artifact }}
           asset_content_type: application/zip
