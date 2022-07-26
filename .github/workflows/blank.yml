@@ -124,7 +124,7 @@ jobs:
   
       - name: Arhive Assets
         run: |
-          zip -r ${{env.artifact-1_10}} jwp-${{ matrix.sm_version }}-${{ env.GITHUB_SHA_SHORT }}
+          zip -r ${{env.artifact}} jwp-${{ matrix.sm_version }}-${{ env.GITHUB_SHA_SHORT }}
       
       - name: Upload Asset ${{ matrix.sm_version }}
         uses: actions/upload-release-asset@v1.0.1
