@@ -49,7 +49,11 @@ ConVar	g_CvarChooseMode,
 		g_CvarVoteTime,
 		g_CvarDisableAntiFlood,
 		g_CvarAutoUpdate,
-		g_CvarMenuAutoOpen;
+		g_CvarMenuAutoOpen,
+		g_CvarFreeDayR,
+		g_CvarFreeDayG,
+		g_CvarFreeDayB,
+		g_CvarFreeDayA;
 
 Handle g_hChooseTimer;
 
@@ -78,7 +82,11 @@ public void OnPluginStart()
 	g_CvarDisableAntiFlood = CreateConVar("jwp_disable_antiflood", "0", "Disable menu protection from spam-clicking", FCVAR_SPONLY, true, 0.0, true, 1.0);
 	g_CvarAutoUpdate = CreateConVar("jwp_autoupdate", "1", "Enable (1) or disable (0) auto update. Need Updater!", FCVAR_SPONLY, true, 0.0, true, 1.0);
 	g_CvarMenuAutoOpen = CreateConVar("jwp_menuautoopen", "1", "Enable (1) or disable (0) warden menu auto open after warden chosen!", FCVAR_SPONLY, true, 0.0, true, 1.0);
-	
+	g_CvarFreeDayR = CreateConVar("jwp_freeday_r", "0", "Красный оттенок заключенного, который получил freeday (rgba)", _, true, 0.0, true, 255.0);
+	g_CvarFreeDayG = CreateConVar("jwp_freeday_g", "255", "Зеленый оттенок заключенного, который получил freeday (rgba)", _, true, 0.0, true, 255.0);
+	g_CvarFreeDayB = CreateConVar("jwp_freeday_b", "0", "Синий оттенок заключенного, который получил freeday (rgba)", _, true, 0.0, true, 255.0);
+	g_CvarFreeDayA = CreateConVar("jwp_freeday_a", "255", "Прозрачность заключенного, который получил freeday (rgba)", _, true, 0.0, true, 255.0);
+
 	RegConsoleCmd("sm_com", Command_BecomeWarden, "Warden menu");
 	RegConsoleCmd("sm_w", Command_BecomeWarden, "Warden menu");
 	RegConsoleCmd("sm_warden", Command_BecomeWarden, "Warden menu");
@@ -516,6 +524,15 @@ bool PrisonerSetFreeday(int client, bool state = true)
 	if (client <= MaxClients && CheckClient(client))
 	{
 		g_ClientAPIInfo[client].has_freeday = state;
+
+		SetEntityRenderMode(client, RENDER_TRANSCOLOR);
+		SetEntityRenderColor(client,
+			(state) ? g_CvarFreeDayR.IntValue : 255,
+			(state) ? g_CvarFreeDayG.IntValue : 255,
+			(state) ? g_CvarFreeDayB.IntValue : 255,
+			(state) ? g_CvarFreeDayA.IntValue : 255
+		);
+
 		return true;
 	}
 	return false;
