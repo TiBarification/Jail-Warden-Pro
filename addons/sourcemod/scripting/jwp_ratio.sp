@@ -66,7 +66,7 @@ public Plugin myinfo = {
 	name = "[JWP] - Ratio (Original MyJailbreak)",
 	author = "shanapu, Addicted",
 	description = "Jailbreak team balance / ratio plugin",
-	version = "1.0.4"
+	version = "1.0.5"
 };
 
 // Start
@@ -869,6 +869,11 @@ void Menu_AcceptGuardRules(int client)
 
 public int Handler_AcceptGuardRules(Handle menu, MenuAction action, int param1, int param2)
 {
+	if (action == MenuAction_End)
+	{
+		delete menu;
+		return 0;
+	}
 	int client = param1;
 
 	if (action == MenuAction_Select)
@@ -962,7 +967,12 @@ void Menu_GuardQuestions(int client)
 public int Handler_GuardQuestions(Handle menu, MenuAction action, int param1, int param2)
 {
 	int client = param1;
-
+	
+	if (action == MenuAction_End)
+	{
+		delete menu;
+		return 0;
+	}
 	if (action == MenuAction_Select)
 	{
 		switch(param2)
@@ -1494,6 +1504,10 @@ bool IsValidClient(int client, bool bAllowBots = false, bool bAllowDead = true)
 // Menu Handler for Panels
 stock int Handler_NullCancel(Handle menu, MenuAction action, int param1, int param2)
 {
+	if (action == MenuAction_End) {
+		delete menu;
+		return 0;
+	}
 	if (action == MenuAction_Select) 
 	{
 		switch (param2) 
