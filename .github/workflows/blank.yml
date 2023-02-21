@@ -50,7 +50,11 @@ jobs:
         unzip -j ${{ env.STEAMWORKS_VERS }}-windows.zip ${{ env.EXTENSIONS }}/SteamWorks.ext.dll -d ${{ env.EXTENSIONS }}
         wget "https://raw.githubusercontent.com/ExperimentFailed/SteamWorks/master/Pawn/includes/SteamWorks.inc" -O ${{ env.INCLUDE }}/SteamWorks.inc
     - name: Add multicolors from github repository
-      run: wget "https://raw.githubusercontent.com/Bara/Multi-Colors/master/addons/sourcemod/scripting/include/multicolors.inc" -O ${{ env.INCLUDE }}/multicolors.inc
+      run: |
+        wget "https://raw.githubusercontent.com/Bara/Multi-Colors/master/addons/sourcemod/scripting/include/multicolors.inc" -O ${{ env.INCLUDE }}/multicolors.inc
+        mkdir ${{ env.INCLUDE }}/multicolors
+        wget "https://raw.githubusercontent.com/Bara/Multi-Colors/master/addons/sourcemod/scripting/include/multicolors/colors.inc" -O ${{ env.INCLUDE }}/multicolors/colors.inc
+        wget "https://raw.githubusercontent.com/Bara/Multi-Colors/master/addons/sourcemod/scripting/include/multicolors/morecolors.inc" -O ${{ env.INCLUDE }}/multicolors/morecolors.inc
     - name: Shop support
       run: |
         mkdir ${{ env.INCLUDE }}/shop
