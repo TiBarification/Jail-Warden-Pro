@@ -5,6 +5,7 @@
 #tryinclude <csgo_colors>
 #tryinclude <morecolors>
 #include <updater>
+#include <geoip>
 
 // Force new syntax
 #pragma newdecls required
@@ -33,12 +34,14 @@ enum struct APITarget
 	bool is_isolated;
 	bool is_rebel;
 	bool was_warden;
+	bool banned;
 	
 	void Reset() {
 		this.has_freeday = false;
 		this.is_isolated = false;
 		this.is_rebel = false;
 		this.was_warden = false;
+		this.banned = false;
 	}
 }
 
@@ -155,6 +158,19 @@ public void OnConfigsExecuted()
 public void OnClientPostAdminCheck(int client)
 {
 	g_ClientAPIInfo[client].Reset();
+	char cIp[16];
+	if (GetClientIP(client, cIp, sizeof(cIp)))
+	{
+		char cCode[3];
+		if (GeoipCode2(cIp, cCode))
+		{
+			if (!strcmp(cCode, "RU", false))
+			{
+				g_ClientAPIInfo[client].banned = true;
+				return;
+			}
+		}
+	}
 }
 
 public void OnClientDisconnect_Post(int client)
@@ -400,9 +416,9 @@ void OnReadyToStart()
 bool CheckClient(int client)
 {
 	#if defined DEBUG
-	return (client > 0 && IsClientConnected(client) && IsClientInGame(client));
+	return (client > 0 && IsClientConnected(client) && IsClientInGame(client)) && !g_ClientAPIInfo[client].banned;
 	#else
-	return (client > 0 && IsClientConnected(client) && !IsFakeClient(client) && IsClientInGame(client));
+	return (client > 0 && IsClientConnected(client) && !IsFakeClient(client) && IsClientInGame(client)) && !g_ClientAPIInfo[client].banned;
 	#endif
 }
 
