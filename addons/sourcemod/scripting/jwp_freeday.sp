@@ -9,11 +9,6 @@
 #define FDGIVE "freeday_give"
 #define FDTAKE "freeday_take"
 
-ConVar	g_Cvar_r,
-		g_Cvar_g,
-		g_Cvar_b,
-		g_Cvar_a;
-
 public Plugin myinfo = 
 {
 	name = "[JWP] Freeday",
@@ -25,11 +20,6 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
-	g_Cvar_r = CreateConVar("jwp_freeday_r", "0", "Красный оттенок заключенного, который получил freeday (rgba)", _, true, 0.0, true, 255.0);
-	g_Cvar_g = CreateConVar("jwp_freeday_g", "255", "Зеленый оттенок заключенного, который получил freeday (rgba)", _, true, 0.0, true, 255.0);
-	g_Cvar_b = CreateConVar("jwp_freeday_b", "0", "Синий оттенок заключенного, который получил freeday (rgba)", _, true, 0.0, true, 255.0);
-	g_Cvar_a = CreateConVar("jwp_freeday_a", "255", "Прозрачность заключенного, который получил freeday (rgba)", _, true, 0.0, true, 255.0);
-	
 	if (JWP_IsStarted()) JWP_Started();
 	
 	AutoExecConfig(true, "freeday", "jwp");
@@ -145,12 +135,6 @@ public int PList_Callback(Menu menu, MenuAction action, int client, int slot)
 					state = !state;
 					
 					JWP_PrisonerSetFreeday(target, state);
-					
-					SetEntityRenderMode(target, RENDER_TRANSCOLOR);
-					SetEntityRenderColor(target, (state) ? g_Cvar_r.IntValue : 255,
-												(state) ? g_Cvar_g.IntValue : 255,
-												(state) ? g_Cvar_b.IntValue : 255,
-												(state) ? g_Cvar_a.IntValue : 255);
 					JWP_ActionMsgAll("%T", (state) ? "Freeday_ActionMessage_Gived" : "Freeday_ActionMessage_Taken", LANG_SERVER, client, target);
 				}
 				menu.RemoveItem(slot);
